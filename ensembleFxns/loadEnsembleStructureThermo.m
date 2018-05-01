@@ -1,4 +1,4 @@
-function ensemble = loadEnsembleStructure2(xlsxFile)
+function ensemble = loadEnsembleStructureThermo(xlsxFile)
 %--------------------------------------------------------------------------
 % This function builds the data structure of the ensemble
 %
