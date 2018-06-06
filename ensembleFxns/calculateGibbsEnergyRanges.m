@@ -7,7 +7,7 @@ function [DrG_ranges,logX_ranges] = calculateGibbsEnergyRanges(Sfull,DrG_std,met
 %
 %------------------------Pedro Saa 2016------------------------------------
 % Optimization parameters
-K  = 4e1;                        % large constant
+K  = 1e2;                        % large constant
 RT = 8.314*298.15/1e3;           % gas constant*temp (assumed 25 C temp.)
 params.outputflag     = 0;       % gurobi params
 params.OptimalityTol  = 1e-9;
