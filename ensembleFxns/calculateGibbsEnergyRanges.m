@@ -81,14 +81,14 @@ logX_ranges((logX_ranges(:,1)==0)&(logX_ranges(:,2)==0),:) = [];
 
 
 % Solve for maximum and minimum ratio of fld_red/fld_ox
-model.obj([35;36]) = [-1;1];
+%model.obj([35;36]) = [-1;1];
 
 % Minimization problem
-model.modelsense  = 'min';
-solmin            = gurobi(model,params);
-minimum_logratio_fld = solmin.objval
+%model.modelsense  = 'min';
+%solmin            = gurobi(model,params);
+%minimum_logratio_fld = solmin.objval
 
 % Maximization problem
-model.modelsense = 'max';
-solmax           = gurobi(model,params);
-maximum_logratio_fld = solmax.objval
+%model.modelsense = 'max';
+%solmax           = gurobi(model,params);
+%maximum_logratio_fld = solmax.objval
