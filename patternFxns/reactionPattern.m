@@ -46,8 +46,11 @@ for i = 1:size(KineticMatrix,1)
         end
     end
 end
+
 tempPath  = colVector(cycledPaths(unique(subsIndex(:,1)),unique(prodIndex(:,1)),forwardFlux));
+tempPath = tempPath(~cellfun('isempty',tempPath)); % get a column vector with all paths
 revMatrix = zeros(size(tempPath,1),size(forwardFlux,1));
+
 for k = 1:size(tempPath,1)
     tempPathList = [];
     
