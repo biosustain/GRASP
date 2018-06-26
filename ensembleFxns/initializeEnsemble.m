@@ -47,7 +47,14 @@ if (strcmpi(ensemble.sampler,'rejection')||strcmpi(ensemble.sampler,'SMC'))
                     
                     % Initialize prob parameters of reversibilities (check that there is no dead-end reversibility) ~ Dir(1)
                     revMatrix = ensemble.revMatrix{ensemble.kinActRxns(activRxnIdx),strucIdx};
-                    if (size(revMatrix,1)==1)
+                    
+                    promiscuity = ensemble.promiscuity{strucIdx}{ensemble.kinActRxns(activRxnIdx)};
+                    % For promiscuous reactions that do not share enzyme
+                    % intermediates set alphaReversibilities = revMatrix
+                    if size(promiscuity,1) > 0 && sum(sum(revMatrix)) == size(sum(revMatrix),2)  
+                        ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaReversibilities = revMatrix;
+                   
+                    elseif (size(revMatrix,1)==1)
                         ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaReversibilities = ones(1,sum(revMatrix));
                         
                         % Initialize modifiers (if any) ~ numModifiers x Beta(1)

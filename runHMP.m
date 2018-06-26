@@ -13,7 +13,7 @@ delete(gcp('nocreate'));       				            																% check first tha
 addpath('./patternFxns','./ensembleFxns','./reactions1');
 
 strain = 'HMP1489'
-replicate_list = [1];
+replicate_list = [0];
 time_point_list = [0];
 
 
@@ -24,7 +24,7 @@ for time_i = time_point_list
         disp(time_i);
         
         clearvars ensemble popIdx iter ensemble
-        model_id = strcat(strain, '_r', int2str(rep_i), '_t', int2str(time_i));
+        model_id = strcat(strain, '_r', int2str(rep_i), '_t', int2str(time_i), '_promiscuous2');
        
          % 1. Load information
         iter     = 1;
@@ -34,8 +34,7 @@ for time_i = time_point_list
         % 2. Initialize and perform rejection sampling
         ensemble = initializeEnsemble(ensemble,popIdx,1);
         
-       
-        finish()
+
         % Check whether the job is ran in parallel
         disp('Running rejection sampler. Population 1.');
 

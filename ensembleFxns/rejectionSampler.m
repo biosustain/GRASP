@@ -79,8 +79,15 @@ while true
 	gibbsEnergy = gibbsFactor.*ensemble.gibbsRanges(ensemble.thermoActive,2) + (1-gibbsFactor).*ensemble.gibbsRanges(ensemble.thermoActive,1);
 	models(1).gibbsFactor = gibbsFactor;
 	
-    % Calculation of reversibilities for each raction in the model
-	thermoCounter   = 1;
+    
+    % Determine gibbs free energy of reaction
+    ensemble = sampleGibbsReactionEnergies(ensemble, gibbsEnergy, strucIdx);
+    
+    % Sample Reversibilities
+    ensemble = sampleGeneralReversibilities(ensemble, models, RT, strucIdx);
+    
+    
+	%thermoCounter   = 1;
     for activRxnIdx = 1:numel(ensemble.kinActRxns)        
 		
         % Case 1: Diffusion and Exchanges
@@ -90,40 +97,16 @@ while true
         
         % Case 2: Enzymatic reactions
         else
-		
-            % Determine gibbs free energy of reaction
-            if ismember(ensemble.kinActRxns(activRxnIdx),ensemble.thermoActive)
-                gibbsTemp     = gibbsEnergy(thermoCounter);
-				thermoCounter = thermoCounter+1;
-            elseif (ensemble.gibbsRanges(activRxnIdx,1)==ensemble.gibbsRanges(activRxnIdx,2))
-                gibbsTemp     = ensemble.gibbsRanges(activRxnIdx,1);
-            end
-            
-            % Check whther the reaction is mass action
+		           
+            % Check whether the reaction is mass action
             if strcmp(ensemble.rxnMechanisms{strucIdx}{activRxnIdx},'massAction')
                reactionFlux = ensemble.fluxRef(ensemble.kinActRxns(activRxnIdx));
+               gibbsTemp =  ensemble.gibbsTemp{kinActRxns(activRxnIdx)};
                models(1).rxnParams(activRxnIdx).kineticParams = [1,exp(gibbsTemp/RT)]*reactionFlux/(1-exp(gibbsTemp/RT));
                continue;
             end
-            
-            % A. Sample reversibilities according to the Gibbs free energy previously sampled (Note: normalized reversibility)
-            revMatrix = ensemble.revMatrix{ensemble.kinActRxns(activRxnIdx),strucIdx};
-            alphaReversibility = ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaReversibilities;
-            revTemp            = randg(alphaReversibility');
-            randomRev          = revTemp/sum(revTemp);
-            if (size(revMatrix,1)==1)                
-                models(1).rxnParams(activRxnIdx).reversibilities = randomRev';                                           % Save transpose
-				randomRev(revMatrix~=0) = randomRev;                                                                     % Fill rev's for deadends with zeros
-				randomRev(revMatrix==0) = 0;
-            elseif (size(revMatrix,1)>1)                                                                                 % Determine whether there are branches for the reversibility calculation
-                lbRev     = randomRev;
-                randomRev = computeBranchedReversibilities(revMatrix,lbRev);
-                models(1).rxnParams(activRxnIdx).reversibilities = lbRev';                                               % Save transpose (note this has to be the lower bound!)
-            end
-            reverTemp = exp(randomRev*gibbsTemp/RT);                                                                     % Convert to the proper units for later calculation
-            
+ 
             % B. Sample enzyme abundances
-            forwardFlux    = ensemble.forwardFlux{ensemble.kinActRxns(activRxnIdx),strucIdx};
             alphaEnzymesR  = ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaEnzymeAbundances;
             randomEnzymesR = randg(alphaEnzymesR');                                                                      % Sample from the gamma distribution with parameter alpha
             randomEnzymesR = randomEnzymesR/sum(randomEnzymesR);
@@ -143,7 +126,7 @@ while true
 
             % D. Sample modifier elementary fluxes (positions are given were exp(R)=1)
             modifierElemFlux = [];
-            if (size(revMatrix,1)==1)&&any(revMatrix==0)
+            if (size(revMatrix,1)==1) && any(revMatrix==0)
                 modifierElemFlux = zeros(sum(reverTemp==1),1);
                 for ix = 1:sum(reverTemp==1)
                     aModifier              = randg(ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).betaModiferElemFlux(ix,:));                    
@@ -202,6 +185,7 @@ while true
 			end            
             
 			% VI. Calculate rate parameters
+            forwardFlux    = ensemble.forwardFlux{ensemble.kinActRxns(activRxnIdx),strucIdx};
 			models(1).rxnParams(activRxnIdx).kineticParams = ...
                 calculateKineticParams(reverTemp,forwardFlux,reactionFlux,randomEnzymesR,Nelem,branchFactor,modifierElemFlux);
         end                
