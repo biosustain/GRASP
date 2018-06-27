@@ -86,6 +86,9 @@ while true
     % Sample Reversibilities
     ensemble = sampleGeneralReversibilities(ensemble, models, RT, strucIdx);
     
+    %  Calculate rate parameters for allosteric reaction part;
+    [ensemble, models] = sampleAllostery(ensemble, models, strucIdx);
+    
     
 	%thermoCounter   = 1;
     for activRxnIdx = 1:numel(ensemble.kinActRxns)        
@@ -101,90 +104,71 @@ while true
             % Check whether the reaction is mass action
             if strcmp(ensemble.rxnMechanisms{strucIdx}{activRxnIdx},'massAction')
                reactionFlux = ensemble.fluxRef(ensemble.kinActRxns(activRxnIdx));
-               gibbsTemp =  ensemble.gibbsTemp{kinActRxns(activRxnIdx)};
+               gibbsTemp =  ensemble.gibbsTemp{ensemble.kinActRxns(activRxnIdx)};
                models(1).rxnParams(activRxnIdx).kineticParams = [1,exp(gibbsTemp/RT)]*reactionFlux/(1-exp(gibbsTemp/RT));
                continue;
             end
- 
+            
+            promisc_rxns_list = ensemble.promiscuity{strucIdx}{ensemble.kinActRxns(activRxnIdx)};
+            revMatrix = ensemble.revMatrix{ensemble.kinActRxns(activRxnIdx),strucIdx};
+            reverTemp = ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)};
+            reactionFlux = ensemble.reactionFluxAllosteric(ensemble.kinActRxns(activRxnIdx));
+            
+            
             % B. Sample enzyme abundances
             alphaEnzymesR  = ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaEnzymeAbundances;
-            randomEnzymesR = randg(alphaEnzymesR');                                                                      % Sample from the gamma distribution with parameter alpha
-            randomEnzymesR = randomEnzymesR/sum(randomEnzymesR);
+            
+            if size(promisc_rxns_list,1) > 0 && ensemble.kinActRxns(activRxnIdx) ~= promisc_rxns_list(1)
+                randomEnzymesR = models(1).rxnParams(promisc_rxns_list(1)).enzymeAbundances';
+            else
+                randomEnzymesR = randg(alphaEnzymesR');                                                                      % Sample from the gamma distribution with parameter alpha
+                randomEnzymesR = randomEnzymesR/sum(randomEnzymesR);
+            end
             models(1).rxnParams(activRxnIdx).enzymeAbundances = randomEnzymesR';
-
+      
             % C. Sample branching factor (if necessary)
             branchFactor = 1;
-            Nelem        = ensemble.Nelem{ensemble.kinActRxns(activRxnIdx),strucIdx};                        
-            if (size(Nelem,2)>1)
-                branchFactor = zeros(size(Nelem,2),1);           
-                for ix = 1:size(Nelem,2)
-                    aBranch            = randg(ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).betaBranchFactor(ix,:));                    
-                    branchFactor(ix,1) = aBranch(1)/sum(aBranch);
+            Nelem        = ensemble.Nelem{ensemble.kinActRxns(activRxnIdx),strucIdx};      
+            if size(promisc_rxns_list,1) > 0 && ensemble.kinActRxns(activRxnIdx) == promisc_rxns_list(1)
+                fluxSum = sum(ensemble.reactionFluxAllosteric(promisc_rxns_list));
+                branchFactor = ensemble.reactionFluxAllosteric(promisc_rxns_list);% / fluxSum;
+                reactionFlux = fluxSum;
+                
+            elseif size(promisc_rxns_list,1) > 0 && ensemble.kinActRxns(activRxnIdx) ~= promisc_rxns_list(1)
+                branchFactor = models(1).rxnParams(promisc_rxns_list(1)).branchFactor';
+                reactionFlux = sum(ensemble.reactionFluxAllosteric(promisc_rxns_list));
+            
+            else
+                if (size(Nelem,2)>1)
+                    branchFactor = zeros(size(Nelem,2),1);           
+                    for ix = 1:size(Nelem,2)
+                        aBranch            = randg(ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).betaBranchFactor(ix,:));                    
+                        branchFactor(ix,1) = aBranch(1)/sum(aBranch);
+                    end
                 end
             end
             models(1).rxnParams(activRxnIdx).branchFactor = branchFactor';
 
             % D. Sample modifier elementary fluxes (positions are given were exp(R)=1)
             modifierElemFlux = [];
-            if (size(revMatrix,1)==1) && any(revMatrix==0)
-                modifierElemFlux = zeros(sum(reverTemp==1),1);
-                for ix = 1:sum(reverTemp==1)
-                    aModifier              = randg(ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).betaModiferElemFlux(ix,:));                    
-                    modifierElemFlux(ix,1) = aModifier(1)/sum(aModifier);                    
+            if size(promisc_rxns_list,1) > 0 && ensemble.kinActRxns(activRxnIdx) ~= promisc_rxns_list(1)
+                modifierElemFlux = models(1).rxnParams(promisc_rxns_list(1)).modiferElemFlux';
+            else
+                if (size(revMatrix,1)==1) && any(revMatrix==0)
+                    modifierElemFlux = zeros(sum(reverTemp==1),1);
+                    for ix = 1:sum(reverTemp==1)
+                        aModifier              = randg(ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).betaModiferElemFlux(ix,:));                    
+                        modifierElemFlux(ix,1) = aModifier(1)/sum(aModifier);                    
+                    end
                 end
             end
             models(1).rxnParams(activRxnIdx).modiferElemFlux = modifierElemFlux';                       % save transpose of mod elem flux
-
+            
             % IV. Calculate rate parameters
-            reactionFlux = ensemble.fluxRef(ensemble.kinActRxns(activRxnIdx));              
-            
-            % If the reaction is allosteric
-            if ensemble.allosteric{strucIdx}(ensemble.kinActRxns(activRxnIdx))
-                
-                % I. Sample allosteric parameters
-				allostericParams = mvnrnd(ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).muAllostericParams,...
-									ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).sigmaAllostericParams);
-				allostericParams = exp(allostericParams)./(1 + exp(allostericParams));									    % Back-transform auxiliary parameters
-                models(1).rxnParams(ensemble.kinActRxns(activRxnIdx)).allostericFactors = allostericParams;                 % allosteric factors used in the calculation of L, KposEff & KnegEff				
-				subunits = ensemble.subunits{strucIdx}(ensemble.kinActRxns(activRxnIdx));
-				
-                % II. Back-calculate kinetic parameters (order: L, posEff & negEff)
-				DDG = DDG_min + allostericParams(1)*(DDG_max - DDG_min);
-				L   = exp(-DDG/RT);
-				models(1).rxnParams(activRxnIdx).L = L;                                                                     % Save allosteric constant
-                
-				% III. Compute regulatoy term					
-				Q = L*(randomEnzymesR(1))^subunits;                
-				if (numel(allostericParams)>1)																				% There are possitive and/or negative effectors
-					posEffectors = ensemble.posEffectors{strucIdx}{ensemble.kinActRxns(activRxnIdx)};                       % Possitive effectors
-					negEffectors = ensemble.negEffectors{strucIdx}{ensemble.kinActRxns(activRxnIdx)};                       % Negative effectors
-					
-					% IV. Back-calculate effector parameters
-					Keff = bind_min*exp(allostericParams(2:end)*log(bind_max/bind_min));
-					
-					% Both effectors present
-					if ~isempty(posEffectors) && ~isempty(negEffectors)						
-						KposEff = Keff(1:max(size(posEffectors)));
-						KnegEff = Keff(max(size(posEffectors))+1:max(size(posEffectors))+max(size(negEffectors)));
-						models(1).rxnParams(activRxnIdx).KposEff = KposEff;							       		            % transpose params
-						models(1).rxnParams(activRxnIdx).KnegEff = KnegEff;
-						Q = Q*((1 + sum(1./KnegEff))/((1 + sum(1./KposEff))))^subunits;												
-					elseif ~isempty(posEffectors)							
-						models(1).rxnParams(activRxnIdx).KposEff = Keff;							                        % transpose params
-						Q = Q*((1 + sum(1./Keff)))^-subunits;
-					elseif ~isempty(negEffectors)							
-						models(1).rxnParams(activRxnIdx).KnegEff = Keff;                        							% transpose params
-						Q = Q*((1 + sum(1./Keff)))^subunits;
-					end				                                      
-				end
-				regContribution = 1/(1 + Q);
-				
-				% V. Calculate regulatory and catalytic contributions at the reference state				
-				catContribution = reactionFlux/regContribution;
-                reactionFlux    = catContribution/subunits;  
-			end            
-            
-			% VI. Calculate rate parameters
+            %reactionFlux = ensemble.fluxRef(ensemble.kinActRxns(activRxnIdx));              
+            disp(ensemble.rxns(ensemble.kinActRxns(activRxnIdx)));
+			
+            % VI. Calculate rate parameters
             forwardFlux    = ensemble.forwardFlux{ensemble.kinActRxns(activRxnIdx),strucIdx};
 			models(1).rxnParams(activRxnIdx).kineticParams = ...
                 calculateKineticParams(reverTemp,forwardFlux,reactionFlux,randomEnzymesR,Nelem,branchFactor,modifierElemFlux);

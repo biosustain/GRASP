@@ -62,8 +62,7 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
                     ensemble.reverTemp{promisc_rxns_list(rxn_i)} = ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)};
                 end
             end
-            
-        % When promiscuous reactions share enzyme intermediates
+        % When promiscuous reactions share enzyme intermediates    
         elseif size(promisc_rxns_list,1) > 0 && size(alphaReversibility, 1) == 1
             if ensemble.kinActRxns(activRxnIdx) == promisc_rxns_list(1)
                 ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)} = exp(randomRev*gibbsTemp/RT);
@@ -71,7 +70,7 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
                 ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)} = ensemble.reverTemp{promisc_rxns_list(1)};
             end
                 
-        % Non-promiscuous reactions
+ 
         else
             ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)} = exp(randomRev*gibbsTemp/RT);  % Convert to the proper units for later calculation    
         end
