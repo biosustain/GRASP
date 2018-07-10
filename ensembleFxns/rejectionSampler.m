@@ -92,6 +92,7 @@ while true
     
 	%thermoCounter   = 1;
     for activRxnIdx = 1:numel(ensemble.kinActRxns)        
+        %disp(ensemble.rxns(ensemble.kinActRxns(activRxnIdx)));
 		
         % Case 1: Diffusion and Exchanges
         if strcmp(ensemble.rxnMechanisms{strucIdx}{activRxnIdx},'diffusion')||...
@@ -118,7 +119,8 @@ while true
             % B. Sample enzyme abundances
             alphaEnzymesR  = ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaEnzymeAbundances;
             
-            if size(promisc_rxns_list,1) > 0 && ensemble.kinActRxns(activRxnIdx) ~= promisc_rxns_list(1)
+            % If it's a promiscuous reaction and it' not the first one in the set of promiscuous reactions
+            if size(promisc_rxns_list,1) > 0 && ensemble.kinActRxns(activRxnIdx) ~= promisc_rxns_list(1)                    % Get the abundances from the first reaction in the set
                 randomEnzymesR = models(1).rxnParams(promisc_rxns_list(1)).enzymeAbundances';
             else
                 randomEnzymesR = randg(alphaEnzymesR');                                                                      % Sample from the gamma distribution with parameter alpha
@@ -129,15 +131,15 @@ while true
             % C. Sample branching factor (if necessary)
             branchFactor = 1;
             Nelem        = ensemble.Nelem{ensemble.kinActRxns(activRxnIdx),strucIdx};      
-            if size(promisc_rxns_list,1) > 0 && ensemble.kinActRxns(activRxnIdx) == promisc_rxns_list(1)
-                fluxSum = sum(ensemble.reactionFluxAllosteric(promisc_rxns_list));
-                branchFactor = ensemble.reactionFluxAllosteric(promisc_rxns_list);% / fluxSum;
-                reactionFlux = fluxSum;
-                
-            elseif size(promisc_rxns_list,1) > 0 && ensemble.kinActRxns(activRxnIdx) ~= promisc_rxns_list(1)
-                branchFactor = models(1).rxnParams(promisc_rxns_list(1)).branchFactor';
-                reactionFlux = sum(ensemble.reactionFluxAllosteric(promisc_rxns_list));
             
+            % If the reaction is promiscuous 
+            if size(promisc_rxns_list,1) > 0
+                branchFactor = ensemble.reactionFluxAllosteric(promisc_rxns_list);
+                if sum(sum(Nelem)) > size(Nelem,1)
+                    reactionFlux = sum(ensemble.reactionFluxAllosteric(promisc_rxns_list));   % promiscuous reactions share common steps
+                else
+                    reactionFlux = max(ensemble.reactionFluxAllosteric(promisc_rxns_list));   % promiscuous reactions are independent
+                end
             else
                 if (size(Nelem,2)>1)
                     branchFactor = zeros(size(Nelem,2),1);           
@@ -166,7 +168,7 @@ while true
             
             % IV. Calculate rate parameters
             %reactionFlux = ensemble.fluxRef(ensemble.kinActRxns(activRxnIdx));              
-            disp(ensemble.rxns(ensemble.kinActRxns(activRxnIdx)));
+            
 			
             % VI. Calculate rate parameters
             forwardFlux    = ensemble.forwardFlux{ensemble.kinActRxns(activRxnIdx),strucIdx};
@@ -178,7 +180,8 @@ while true
     % Test model consistency
     kineticFxn = str2func(ensemble.kineticFxn{strucIdx});	
     testFlux   = feval(kineticFxn,ones(size(ensemble.freeVars,1),1),models,ensemble.fixedExch(:,1),ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},0);
-
+    %disp(testFlux);
+    
     % If the model is consistent continue
     if all(abs(testFlux-ensemble.fluxRef)<1e-6)
 
