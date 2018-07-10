@@ -260,6 +260,7 @@ for jx = 1:ensemble.numStruct
             for rxn_i = 2:size(promiscuous_rxns_list, 2)
                 ensemble.promiscuity{jx}{ix} = [ensemble.promiscuity{jx}{ix} find(ismember(ensemble.rxns(ensemble.activeRxns), promiscuous_rxns_list{rxn_i}))];
             end
+            ensemble.promiscuity{jx}{ix} = sort(ensemble.promiscuity{jx}{ix});
         end
         if ~isempty(ensemble.inhibitors{jx}{ix})
             ensemble.inhibitors{jx}{ix}   = regexp(ensemble.inhibitors{jx}{ix},' ','split');
@@ -310,14 +311,21 @@ for jx = 1:ensemble.numStruct
             
             % Enzymatic reactions
         else
+            
+            if size(ensemble.promiscuity{jx}{ix}) > 0
+                promiscuousRxnI = find(ensemble.promiscuity{jx}{ix} == ix);
+            else 
+               promiscuousRxnI = 0; 
+            end
+            
             % Allosteric enzymes
             if ensemble.allosteric{jx}(ix)
-                [revMatrix,forwardFlux,metList] = reactionPattern(ensemble.rxnMechanisms{jx}{ix},ensemble.rxns{ix},2,jx);
+                [revMatrix,forwardFlux,metList] = reactionPattern(ensemble.rxnMechanisms{jx}{ix},ensemble.rxns{ix},2,jx, promiscuousRxnI);
                 buildAllosteric(metList,[ensemble.rxns{ix},num2str(jx)],ensemble.negEffectors{jx}{ix},ensemble.posEffectors{jx}{ix})
                 
                 % Non-allosteric enzymes
             else
-                [revMatrix,forwardFlux] = reactionPattern(ensemble.rxnMechanisms{jx}{ix},ensemble.rxns{ix},1,jx);
+                [revMatrix,forwardFlux] = reactionPattern(ensemble.rxnMechanisms{jx}{ix},ensemble.rxns{ix},1,jx, promiscuousRxnI);
             end
                         
             % Build Selem based on the mechanism stoichiometry

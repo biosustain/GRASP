@@ -47,8 +47,19 @@ fprintf(fid,'%s Reaction rates\n',c);
 for i = 1:numel(ensemble.activeRxns)
     reactants  = [];
 
-    % Extract and organize substrates
-    substrates  = (ensemble.mets(ensemble.S(:,ensemble.activeRxns(i))<0));   
+    % Extract and organize substrates    
+    metsInd = 1:size(ensemble.mets);
+    if size(ensemble.promiscuity{strucIdx}{i}) > 0     
+        substratesInd = [];
+        for rxnI = ensemble.promiscuity{strucIdx}{i}
+        	substratesIndTemp = metsInd(ensemble.S(:,ensemble.activeRxns(rxnI))<0);
+            substratesInd = [substratesInd substratesIndTemp];
+        end
+        substratesInd = unique(substratesInd);
+        substrates = ensemble.mets(substratesInd);
+    else
+        substrates  = (ensemble.mets(ensemble.S(:,ensemble.activeRxns(i))<0)); 
+    end
     substrates  = substrates(ismember(substrates,ensemble.mets(ensemble.metsSimulated)));         % Extract only active substrates
     stoicCoeffs = abs(ensemble.S(ismember(ensemble.mets,substrates),ensemble.activeRxns(i)));
     
@@ -63,10 +74,21 @@ for i = 1:numel(ensemble.activeRxns)
         end
     end
     
-    % Extract and organize products
-    products    = (ensemble.mets(ensemble.S(:,ensemble.activeRxns(i))>0));        
+    % Extract and organize products      
+    if size(ensemble.promiscuity{strucIdx}{i}) > 0
+        productsInd = [];
+        for rxnI = ensemble.promiscuity{strucIdx}{i}
+        	productsIndTemp = (metsInd(ensemble.S(:,ensemble.activeRxns(rxnI))>0));
+            productsInd = [productsInd productsIndTemp];
+        end
+        productsInd = unique(productsInd);
+        products = ensemble.mets(productsInd);
+    else
+        products    = (ensemble.mets(ensemble.S(:,ensemble.activeRxns(i))>0));  
+    end
     products    = products(ismember(products,ensemble.mets(ensemble.metsSimulated)));               % Extract only active products
     stoicCoeffs = abs(ensemble.S(ismember(ensemble.mets,products),ensemble.activeRxns(i)));
+
     
     % Products: Check the stoic coeff (relevant only if greater than 1)
     if any(stoicCoeffs>1)

@@ -1,4 +1,4 @@
-function buildReaction(state,rateList,metList,numTerm,prodNum,filename)
+function buildReaction(state,rateList,metList,numTerm,prodNum,filename, promiscuousRxnI)
 %--------------------------------------------------------------------------
 % Builds rate reaction file
 % 
@@ -59,11 +59,14 @@ for i = 1:len
 end
 fprintf(fid,'%s Reaction rate \n', c);
 fprintf(fid,'v = ');
+
 for i = 1:size(prodNum,1)
-    fprintf(fid,numTerm{i,1});
-    fprintf(fid,'.*E%i',prodNum(i,1));
-    fprintf(fid,numTerm{i,2});
-    fprintf(fid,'.*E%i',prodNum(i,2));
+    if promiscuousRxnI == 0 || promiscuousRxnI == i
+        fprintf(fid,numTerm{i,1});
+        fprintf(fid,'.*E%i',prodNum(i,1));
+        fprintf(fid,numTerm{i,2});
+        fprintf(fid,'.*E%i',prodNum(i,2));
+    end
 end
 fprintf(fid,';');
 fclose(fid);

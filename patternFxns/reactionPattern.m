@@ -1,4 +1,4 @@
-function [revMatrix,forwardFlux,metList] = reactionPattern(patternName,reactionName,flag,strucIdx)
+function [revMatrix,forwardFlux,metList] = reactionPattern(patternName,reactionName,flag,strucIdx, promiscuousRxnI)
 %--------------------------------------------------------------------------
 % Main function to build the reaction rate equation and to extract the
 % required parameters for the subsequent sampling
@@ -188,7 +188,7 @@ metList = unique(metList);
 % 6. Output the .m file (optional)
 reactionName = [reactionName,num2str(strucIdx)];
 if (flag == 1)                   % Non-allosteric reaction
-    buildReaction(state,rateList,metList,numTerm,prodNum,reactionName);
+    buildReaction(state,rateList,metList,numTerm,prodNum,reactionName, promiscuousRxnI);
 elseif (flag == 2)               % Allosteric reaction
-    buildReaction(state,rateList,metList,numTerm,prodNum,[reactionName,'Catalytic']);
+    buildReaction(state,rateList,metList,numTerm,prodNum,[reactionName,'Catalytic'], promiscuousRxnI);
 end
