@@ -21,14 +21,22 @@ revCalIrrev  = (1-revTemp).^(-1);
 
 % Compute branching flux structure
 elemFluxVector = Nelem*branchFactor/max(Nelem*branchFactor);
-disp('elemFluxVector');
-disp(elemFluxVector);
+%disp('Nelem');
+%disp(Nelem);
+%disp('branchFactor');
+%disp(branchFactor);
+%disp('Nelem*branchFactor');
+%disp(Nelem*branchFactor);
+%disp('max(Nelem*branchFactor)');
+%disp(max(Nelem*branchFactor));
+%disp('elemFluxVector');
+%disp(elemFluxVector);
 
 % Assuming that if the condition below is satisfied this is a promiscuous
 % reaction where no enzyme intermediates are shared.
 if size(Nelem,2) > 1 && sum(sum(Nelem)) == size(Nelem,1)
-    disp('IN');
-    disp(Nelem);
+    %disp('IN');
+    %disp(Nelem);
     revTemp = sum(revTemp,2);
     revCalIrrev = sum(revCalIrrev,2)-1;
 end
@@ -43,17 +51,17 @@ if any(isnan(elemenFlux))
     elemenFlux(isnan(elemenFlux)) = modifierElemFlux;
 end
 
-disp('reactionFlux');
-disp(reactionFlux);
+%disp('reactionFlux');
+%disp(reactionFlux);
 
-disp('elemenFlux');
-disp(elemenFlux);
+%disp('elemenFlux');
+%disp(elemenFlux);
 
-disp('enzymeVect');
-disp(enzymeVect);
+%disp('enzymeVect');
+%disp(enzymeVect);
 
 % 3. Output the kinetic parameters
 K = reactionFlux*elemenFlux.*(enzymeVect(:).^(-1));
-disp('K');
-disp(K);
-disp('----');
+%disp('K');
+%disp(K);
+%disp('----');
