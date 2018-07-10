@@ -44,7 +44,7 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
             models(1).rxnParams(activRxnIdx).reversibilities = lbRev';                                               % Save transpose (note this has to be the lower bound!)
         end
 
-        % When promiscuous reactions do not share enzyme intermediates,
+        % If the reaction is promiscuous and do not share enzyme intermediates,
         % except for free enzyme
         if size(promisc_rxns_list,1) > 0 && size(alphaReversibility, 1) > 1
 
@@ -62,7 +62,7 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
                     ensemble.reverTemp{promisc_rxns_list(rxn_i)} = ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)};
                 end
             end
-        % When promiscuous reactions share enzyme intermediates    
+        % If the reaction is promiscuous and shares enzyme intermediates    
         elseif size(promisc_rxns_list,1) > 0 && size(alphaReversibility, 1) == 1
             if ensemble.kinActRxns(activRxnIdx) == promisc_rxns_list(1)
                 ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)} = exp(randomRev*gibbsTemp/RT);
