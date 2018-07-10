@@ -1,8 +1,8 @@
 # GRASP 
 
-Branch with support for promiscuous reaction.
-Note that this branch is still experimental and is not guaranteed to work for the example included. 
-Use at your own risk.
+Branch with support for promiscuous reaction.  
+Note that this branch is still experimental and is not guaranteed to work for the example included.  
+Use at your own risk.  
 
 
 ### General overview of changes
