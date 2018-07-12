@@ -48,6 +48,7 @@ for ix = 1:n
     % Minimization problem
     model.modelsense = 'min';
     solmin           = gurobi(model,params);
+    assert(~strcmp(solmin.status, 'INFEASIBLE'), 'TMFA problem is infeasbile, most likely there is a conflict between the Gibbs energies and the reaction fluxes');   
     DrG_ranges(ix,1) = solmin.objval;
     
     % Maximization problem
