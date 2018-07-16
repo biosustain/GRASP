@@ -60,7 +60,7 @@ if (strcmpi(ensemble.sampler,'rejection')||strcmpi(ensemble.sampler,'SMC'))
                         
                         % Initialize modifiers (if any) ~ numModifiers x Beta(1)
                         if any(sum(revMatrix)==0)
-                            nRows = (sum(sum(revMatrix)==0)) * size(revMatrix,1);
+                            nRows = (sum(sum(revMatrix)==0));
                             ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).betaModiferElemFlux = ones(nRows,2);
                         end
                         
