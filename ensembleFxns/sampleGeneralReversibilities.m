@@ -1,4 +1,4 @@
-function [ensemble] = sampleGeneralReversibilities(ensemble, models, RT, strucIdx)
+function [ensemble, models] = sampleGeneralReversibilities(ensemble, models, RT, strucIdx)
 
 
 % Initialize reverTemp

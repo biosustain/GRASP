@@ -84,7 +84,7 @@ while true
     ensemble = sampleGibbsReactionEnergies(ensemble, gibbsEnergy, strucIdx);
     
     % Sample Reversibilities
-    ensemble = sampleGeneralReversibilities(ensemble, models, RT, strucIdx);
+    [ensemble, models] = sampleGeneralReversibilities(ensemble, models, RT, strucIdx);
     
     % Calculate rate parameters for allosteric reaction part;
     [ensemble, models] = sampleAllostery(ensemble, models, strucIdx);
