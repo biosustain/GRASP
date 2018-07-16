@@ -207,11 +207,12 @@ for jx = 1:ensemble.numStruct
             ensemble.allosteric{jx}(index)    = xKinetic(ix,1);                                  % boolean vector indicating whether the enzyme is allosteric or not
             ensemble.subunits{jx}(index)      = xKinetic(ix,2);                                  % number of subunits present in the enzyme
             ensemble.rxnMechanisms{jx}{index} = strKinetic{ix,2};                                % string array with catalytic mechanisms for every reaction
-            ensemble.promiscuity{jx}{index}   = strKinetic{ix,3};                                % string array with rxn names this one is promiscuous with
-            ensemble.inhibitors{jx}{index}    = strKinetic{ix,4};                                % string array with the inhibitor names for each reaction
-            ensemble.activators{jx}{index}    = strKinetic{ix,5};                                % string array with the activator names for each reaction
-            ensemble.negEffectors{jx}{index}  = strKinetic{ix,6};                                % string array with negative effector names for each reaction
-            ensemble.posEffectors{jx}{index}  = strKinetic{ix,7};                                % string array with positive effector names for each reaction
+            ensemble.mechOrder{jx}{index}     = strKinetic{ix,3};                                % string array with binding/release order for the reaction
+            ensemble.promiscuity{jx}{index}   = strKinetic{ix,4};                                % string array with rxn names this one is promiscuous with
+            ensemble.inhibitors{jx}{index}    = strKinetic{ix,5};                                % string array with the inhibitor names for each reaction
+            ensemble.activators{jx}{index}    = strKinetic{ix,6};                                % string array with the activator names for each reaction
+            ensemble.negEffectors{jx}{index}  = strKinetic{ix,7};                                % string array with negative effector names for each reaction
+            ensemble.posEffectors{jx}{index}  = strKinetic{ix,8};                                % string array with positive effector names for each reaction
         end
     else
         disp('The number of active rxns does not match the number of kinetic mechanisms.'); break;
@@ -261,6 +262,9 @@ for jx = 1:ensemble.numStruct
                 ensemble.promiscuity{jx}{ix} = [ensemble.promiscuity{jx}{ix} find(ismember(ensemble.rxns(ensemble.activeRxns), promiscuous_rxns_list{rxn_i}))];
             end
             ensemble.promiscuity{jx}{ix} = sort(ensemble.promiscuity{jx}{ix});
+        end
+        if ~isempty(ensemble.mechOrder{jx}{ix})
+            ensemble.mechOrder{jx}{ix}   = regexp(ensemble.mechOrder{jx}{ix},' ','split');
         end
         if ~isempty(ensemble.inhibitors{jx}{ix})
             ensemble.inhibitors{jx}{ix}   = regexp(ensemble.inhibitors{jx}{ix},' ','split');
