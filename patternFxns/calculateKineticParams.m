@@ -63,6 +63,12 @@ end
 revCal     = [(revCalIrrev.*elemFluxVector)';(revTemp.*revCalIrrev.*elemFluxVector)'];
 elemenFlux = revCal(:);
 
+%disp('elemenFlux');
+%disp(elemenFlux);
+
+%disp('modifierElemFlux');
+%disp(modifierElemFlux);
+
 % If the pattern contains modifiers (e.g. inhibitors/activators) compute
 % elementary fluxes based on the elem flux fraction
 if any(isnan(elemenFlux))

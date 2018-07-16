@@ -26,7 +26,7 @@ Example: for DDC the list of promiscuous is `DDC DDC_tryptm`, where the order do
 
 
 
-## General overview of code changes
+## General overview of code changes (developer notes)
 
 
 **Gibbs energies**
@@ -75,6 +75,88 @@ Example: for DDC the list of promiscuous is `DDC DDC_tryptm`, where the order do
 
 
 *Promiscuous reactions that share intermediate steps are actually just a special case of random mechanisms, assuming the gibbs energy is the same*
+
+
+**Notes on promiscuous reactions with common cofactors**
+
+* implementing it with common intermediate states+reactants implies both reaction having the same deltaG, example mechanism:
+
+```
+1 2 k01.*A
+2 1 k02
+2 3 k03.*B
+3 2 k04
+3 4 k05
+4 3 k06
+4 5 k07
+5 4 k08.*P1
+5 1 k09
+1 5 k10.*Q
+2 6 k11.*C
+6 2 k12
+6 7 k13
+7 6 k14
+7 5 k15
+5 7 k16.*P2
+```
+
+* implementing it as if reactions were independent but with common interdiate states + rate constants leads to errors because of repeated intermediate states, example mechanism:
+
+```
+1 2 k01.*A
+2 1 k02
+2 3 k03.*I
+3 2 k04
+2 4 k05.*B
+4 2 k06
+4 5 k07
+5 4 k08
+5 6 k09
+6 5 k10.*P1
+6 1 k11
+1 6 k12.*Q
+1 2 k01.*C
+2 1 k02
+2 3 k03.*I
+3 2 k04
+2 7 k13.*D
+7 2 k14
+7 8 k15
+8 7 k16
+8 6 k17
+6 8 k18.*P2
+6 1 k11
+1 6 k12.*R
+```
+
+* implementing it without repeated intermediate states but repeated rate contants doesn't work because of the kinetic parameters are calculated. It may be possible to change this though. Example mechanism:
+
+```
+1 2 k01.*A
+2 1 k02
+2 3 k03.*I
+3 2 k04
+2 4 k05.*B
+4 2 k06
+4 5 k07
+5 4 k08
+5 6 k09
+6 5 k10.*P1
+6 1 k11
+1 6 k12.*Q
+1 7 k01.*C
+7 1 k02
+7 8 k03.*I
+8 7 k04
+7 9 k13.*D
+9 7 k14
+9 10 k15
+10 9 k16
+10 11 k17
+11 10 k18.*P2
+11 1 k11
+1 11 k12.*R
+```
 
 
 **Notes from 27/6/2018**

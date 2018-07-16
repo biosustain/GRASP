@@ -321,7 +321,7 @@ for jx = 1:ensemble.numStruct
             else 
                promiscuousRxnI = 0; 
             end
-            disp(ensemble.rxns(ix));
+
             % Allosteric enzymes
             if ensemble.allosteric{jx}(ix)
                 [revMatrix,forwardFlux,metList] = reactionPattern(ensemble.rxnMechanisms{jx}{ix},ensemble.rxns{ix},2,jx, promiscuousRxnI);
@@ -331,8 +331,6 @@ for jx = 1:ensemble.numStruct
             else
                 [revMatrix,forwardFlux] = reactionPattern(ensemble.rxnMechanisms{jx}{ix},ensemble.rxns{ix},1,jx, promiscuousRxnI);
             end
-            disp('revMatrix');
-            disp(revMatrix);
                         
             % Build Selem based on the mechanism stoichiometry
             Selem = [];

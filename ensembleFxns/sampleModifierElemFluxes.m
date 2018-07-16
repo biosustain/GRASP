@@ -4,7 +4,7 @@ function [models] = sampleModifierElemFluxes(ensemble, models, strucIdx)
 
 
 for activRxnIdx = 1:numel(ensemble.kinActRxns)     
-    disp(ensemble.rxns(ensemble.kinActRxns(activRxnIdx)));
+    %disp(ensemble.rxns(ensemble.kinActRxns(activRxnIdx)));
 		
     % Case 1: Diffusion and Exchanges
     if ~(strcmp(ensemble.rxnMechanisms{strucIdx}{activRxnIdx},'diffusion')||...
@@ -25,6 +25,7 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
             
             nElemFluxes = size(ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).betaModiferElemFlux(ix,:), 2) ;
             modifierElemFlux = zeros(nElemFluxes, 2);
+            
             for ix = 1:nElemFluxes
                 aModifier              = randg(ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).betaModiferElemFlux(ix,:));                    
                 modifierElemFlux(ix,1) = aModifier(1)/sum(aModifier);       
@@ -34,14 +35,11 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
 
         else
             if ((size(revMatrix,1)==1) && any(revMatrix==0)) 
-                disp('oi');
                 modifierElemFlux = zeros(sum(reverTemp==1),1);
                 for ix = 1:sum(reverTemp==1)
                     aModifier              = randg(ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).betaModiferElemFlux(ix,:));                    
                     modifierElemFlux(ix,1) = aModifier(1)/sum(aModifier);                    
                 end
-            disp(modifierElemFlux);
-            %elseif size(promisc_rxns_list,1) > 0 && any(sum(revMatrix,1)==0)
             end
         end
         models(1).rxnParams(activRxnIdx).modiferElemFlux = modifierElemFlux';                       % save transpose of mod elem flux

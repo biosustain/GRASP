@@ -94,7 +94,7 @@ while true
     
 	%thermoCounter   = 1;
     for activRxnIdx = 1:numel(ensemble.kinActRxns)        
-        disp(ensemble.rxns(ensemble.kinActRxns(activRxnIdx)));
+        %disp(ensemble.rxns(ensemble.kinActRxns(activRxnIdx)));
 		
         % Case 1: Diffusion and Exchanges
         if strcmp(ensemble.rxnMechanisms{strucIdx}{activRxnIdx},'diffusion')||...
@@ -170,7 +170,7 @@ while true
     % Test model consistency
     kineticFxn = str2func(ensemble.kineticFxn{strucIdx});	
     testFlux   = feval(kineticFxn,ones(size(ensemble.freeVars,1),1),models,ensemble.fixedExch(:,1),ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},0);
-    disp(testFlux);
+    %disp(testFlux);
     
     % If the model is consistent continue
     if all(abs(testFlux-ensemble.fluxRef)<1e-6)

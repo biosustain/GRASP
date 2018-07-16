@@ -12,7 +12,7 @@ rng('default');																											% for reproducibility
 delete(gcp('nocreate'));       				            																% check first that no other process is running
 addpath('./patternFxns','./ensembleFxns','./reactions1');
 
-strain = 'HMP1489'
+strain = 'HMP1489';
 replicate_list = [0];
 time_point_list = [0:3];
 
@@ -34,7 +34,6 @@ for time_i = time_point_list
         % 2. Initialize and perform rejection sampling
         ensemble = initializeEnsemble(ensemble,popIdx,1);
         
-
         % Check whether the job is ran in parallel
         disp('Running rejection sampler. Population 1.');
 
