@@ -17,7 +17,9 @@ for i = 1:length(subsNodes)
     distCurrent = 100;        % Arbitrary large number
     for j = 1:length(prodNodes)
         [dist,shortPath] = shortestpath(adjMatrix,subsNodes(i),prodNodes(j));
-        if dist > 1 && distCurrent >= dist
+        % last condition ensure that it only finds paths to nodes j where
+        % j > i
+        if dist > 1 && distCurrent >= dist && subsNodes(i) < prodNodes(j)
             paths{i,j} = shortPath; % why was j set to 1?
             distCurrent = dist;
         end

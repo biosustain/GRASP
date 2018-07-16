@@ -86,13 +86,15 @@ while true
     % Sample Reversibilities
     ensemble = sampleGeneralReversibilities(ensemble, models, RT, strucIdx);
     
-    %  Calculate rate parameters for allosteric reaction part;
+    % Calculate rate parameters for allosteric reaction part;
     [ensemble, models] = sampleAllostery(ensemble, models, strucIdx);
     
+    % Sample modifier elementary fluxes (positions are given were exp(R)=1)
+    [models] = sampleModifierElemFluxes(ensemble, models, strucIdx);
     
 	%thermoCounter   = 1;
     for activRxnIdx = 1:numel(ensemble.kinActRxns)        
-        %disp(ensemble.rxns(ensemble.kinActRxns(activRxnIdx)));
+        disp(ensemble.rxns(ensemble.kinActRxns(activRxnIdx)));
 		
         % Case 1: Diffusion and Exchanges
         if strcmp(ensemble.rxnMechanisms{strucIdx}{activRxnIdx},'diffusion')||...
@@ -152,19 +154,7 @@ while true
             models(1).rxnParams(activRxnIdx).branchFactor = branchFactor';
 
             % D. Sample modifier elementary fluxes (positions are given were exp(R)=1)
-            modifierElemFlux = [];
-            if size(promisc_rxns_list,1) > 0 && ensemble.kinActRxns(activRxnIdx) ~= promisc_rxns_list(1)
-                modifierElemFlux = models(1).rxnParams(promisc_rxns_list(1)).modiferElemFlux';
-            else
-                if (size(revMatrix,1)==1) && any(revMatrix==0)
-                    modifierElemFlux = zeros(sum(reverTemp==1),1);
-                    for ix = 1:sum(reverTemp==1)
-                        aModifier              = randg(ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).betaModiferElemFlux(ix,:));                    
-                        modifierElemFlux(ix,1) = aModifier(1)/sum(aModifier);                    
-                    end
-                end
-            end
-            models(1).rxnParams(activRxnIdx).modiferElemFlux = modifierElemFlux';                       % save transpose of mod elem flux
+            modifierElemFlux = models(1).rxnParams(activRxnIdx).modiferElemFlux';
             
             % IV. Calculate rate parameters
             %reactionFlux = ensemble.fluxRef(ensemble.kinActRxns(activRxnIdx));              
@@ -180,7 +170,7 @@ while true
     % Test model consistency
     kineticFxn = str2func(ensemble.kineticFxn{strucIdx});	
     testFlux   = feval(kineticFxn,ones(size(ensemble.freeVars,1),1),models,ensemble.fixedExch(:,1),ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},0);
-    %disp(testFlux);
+    disp(testFlux);
     
     % If the model is consistent continue
     if all(abs(testFlux-ensemble.fluxRef)<1e-6)

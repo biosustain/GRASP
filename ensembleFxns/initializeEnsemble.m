@@ -49,11 +49,21 @@ if (strcmpi(ensemble.sampler,'rejection')||strcmpi(ensemble.sampler,'SMC'))
                     revMatrix = ensemble.revMatrix{ensemble.kinActRxns(activRxnIdx),strucIdx};
                     
                     promiscuity = ensemble.promiscuity{strucIdx}{ensemble.kinActRxns(activRxnIdx)};
-                    % For promiscuous reactions that do not share enzyme
-                    % intermediates set alphaReversibilities = revMatrix
+                    % For promiscuous reactions that do not share
+                    % intermediate steps set alphaReversibilities = revMatrix
                     if size(promiscuity,1) > 0 && sum(sum(revMatrix)) == size(sum(revMatrix),2)  
                         ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaReversibilities = revMatrix;
-                   
+                    
+                    % For promiscuous reactions that have inhibition steps
+                    elseif size(promiscuity,1) > 0 && size(sum(revMatrix),2) > sum(sum(revMatrix)~=0)
+                        ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaReversibilities = revMatrix;
+                        
+                        % Initialize modifiers (if any) ~ numModifiers x Beta(1)
+                        if any(sum(revMatrix)==0)
+                            nRows = (sum(sum(revMatrix)==0)) * size(revMatrix,1);
+                            ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).betaModiferElemFlux = ones(nRows,2);
+                        end
+                        
                     elseif (size(revMatrix,1)==1)
                         ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaReversibilities = ones(1,sum(revMatrix));
                         

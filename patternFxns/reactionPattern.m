@@ -27,7 +27,9 @@ for i = 1:size(KineticMatrix,1)
         % extract indices for reactions producing P, Q or R
         if (isempty(strfind(KineticMatrix{i,j},'P'))~=1 ||...
                 isempty(strfind(KineticMatrix{i,j},'Q'))~=1 ||...
-                isempty(strfind(KineticMatrix{i,j},'R'))~=1)
+                isempty(strfind(KineticMatrix{i,j},'R'))~=1 ||...
+                isempty(strfind(KineticMatrix{i,j},'S'))~=1)
+            
             prodIndex = [prodIndex;j,i];
             
             % indexes of P are saved for subsequent operations
@@ -41,7 +43,8 @@ for i = 1:size(KineticMatrix,1)
         % extract indices for reactions consuming A, B or C
         elseif  (isempty(strfind(KineticMatrix{i,j},'A'))~=1 ||...
                 isempty(strfind(KineticMatrix{i,j},'B'))~=1 ||...
-                isempty(strfind(KineticMatrix{i,j},'C'))~=1)
+                isempty(strfind(KineticMatrix{i,j},'C'))~=1 ||...
+                isempty(strfind(KineticMatrix{i,j},'D'))~=1)
             subsIndex = [subsIndex;i,j];
         end
     end
@@ -74,6 +77,7 @@ for k = 1:size(tempPath,1)
         end
     end
 end
+
 revMatrix = unique(revMatrix,'rows');
 
 % 2. Process using alpha-numerical algebra

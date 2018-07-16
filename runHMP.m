@@ -14,7 +14,7 @@ addpath('./patternFxns','./ensembleFxns','./reactions1');
 
 strain = 'HMP1489'
 replicate_list = [0];
-time_point_list = [0];
+time_point_list = [0:3];
 
 
 for time_i = time_point_list
@@ -24,7 +24,7 @@ for time_i = time_point_list
         disp(time_i);
         
         clearvars ensemble popIdx iter ensemble
-        model_id = strcat(strain, '_r', int2str(rep_i), '_t', int2str(time_i), '_promiscuous2');
+        model_id = strcat(strain, '_r', int2str(rep_i), '_t', int2str(time_i), '_promiscuous');
        
          % 1. Load information
         iter     = 1;

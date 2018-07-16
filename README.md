@@ -58,6 +58,7 @@ Example: for DDC the list of promiscuous is `DDC DDC_tryptm`, where the order do
 **Branch factor**
 
 * if the reaction is promiscuous set branchFactor to the promiscuous reactions fluxes and reactionFlux as the sum of all promiscuous reactions fluxes
+* when having promiscuous reaction with inhibitions, the inhibition entry in reverTemp is 0 and not 1 as for other reactions (accounting for that)
 
 
 **fluxReaction**
@@ -65,6 +66,12 @@ Example: for DDC the list of promiscuous is `DDC DDC_tryptm`, where the order do
 * if the reactions share common steps, the fluxReaction should be the sum of the promiscuous reactions fluxes
 * if the reactions are independent, the fluxReaction should be the maximum flux of the promisucous reactions
 * this is because otherwise the predicted fluxes will be wrong.
+
+
+**cycledPaths**
+
+* now it also stores paths depending on the prod node (`paths{i, 1} -> paths{i, j}`)
+* to avoid weird paths on AANAT when assuming independent promiscuous reactions, added condition `subsNodes(i) < prodNodes(j)`
 
 
 *Promiscuous reactions that share intermediate steps are actually just a special case of random mechanisms, assuming the gibbs energy is the same*

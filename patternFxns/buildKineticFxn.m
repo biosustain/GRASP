@@ -46,7 +46,7 @@ k = 1;
 fprintf(fid,'%s Reaction rates\n',c);
 for i = 1:numel(ensemble.activeRxns)
     reactants  = [];
-
+    disp(ensemble.rxns(i));
     % Extract and organize substrates    
     metsInd = 1:size(ensemble.mets);
     if size(ensemble.promiscuity{strucIdx}{i}) > 0     
@@ -55,7 +55,7 @@ for i = 1:numel(ensemble.activeRxns)
         	substratesIndTemp = metsInd(ensemble.S(:,ensemble.activeRxns(rxnI))<0);
             substratesInd = [substratesInd substratesIndTemp];
         end
-        substratesInd = unique(substratesInd);
+        %substratesInd = unique(substratesInd);
         substrates = ensemble.mets(substratesInd);
     else
         substrates  = (ensemble.mets(ensemble.S(:,ensemble.activeRxns(i))<0)); 
@@ -81,7 +81,8 @@ for i = 1:numel(ensemble.activeRxns)
         	productsIndTemp = (metsInd(ensemble.S(:,ensemble.activeRxns(rxnI))>0));
             productsInd = [productsInd productsIndTemp];
         end
-        productsInd = unique(productsInd);
+        %productsInd = unique(productsInd);
+        productsInd = sort(productsInd);
         products = ensemble.mets(productsInd);
     else
         products    = (ensemble.mets(ensemble.S(:,ensemble.activeRxns(i))>0));  
