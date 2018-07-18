@@ -6,7 +6,7 @@ function [DGr_rng,xrng,vrng] = TFBA(S,DGr_std,vmin,vmax,xmin,xmax,intMets)
 % Build the adapted TMFA problem (there is one reversible rxn)
 K       = 1e4;
 delta   = 1e-6;
-RT      = 8.314*293.15/1e3;  % [kJ/mol]
+RT      = 8.314*298.15/1e3;  % [kJ/mol]
 
 % Define bounds
 [m,n]    = size(S);
