@@ -87,7 +87,3 @@ while counter < burn_in + numSamples*thinning
     end
 end
 Rev = exp(Rev);       % Return actual reversibilities (not log)
-
-% % Find proportion of reversibilities outside the hypercube
-% bad_revs = sum((any(x>0,1) + any(x<min(DGr_RT),1))>0);
-% disp(['Number of badly calculated instances: ',num2str(bad_revs)]);
