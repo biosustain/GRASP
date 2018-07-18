@@ -1,7 +1,7 @@
 % Test TFBA algorithm 18/07/18
 clc,clearvars,close all
 
-%% Example 1
+% Example 1
 % Simple pathway with 1 balanced (internal) metabolite, 3 internal fluxes
 % and 3 non-balanced (external) metabolites
 clc,clearvars,close all
