@@ -5,31 +5,27 @@ clc,clearvars,close all
 numSamples = 5e4;
 thinning   = 1;
 
-%% Example 1
-% Linear mechanism: i) A <-> P
+%% Example 1: Linear mechanism: i) A <-> P
 Omega1  = [1,1,1];
 DGr1    = -10;                  % [kJ/mol]
 RT      = 8.314*298.15/1e3;     % [kJ/mol]
 Rev_1   = generalRevSampling(Omega1,DGr1/RT,numSamples,thinning);
 
-%% Example 2
-% 2 linear promiscuous mechanisms without common steps:
+%% Example 2: 2 linear promiscuous mechanisms without common steps:
 % i) A1 <-> P1 & ii) A2 <-> P2 
 Omega2  = [1,1,1.05,0,0,0;...
           0,0,0,1,1,1];
 DGr2    = [-10;-5];             % [kJ/mol]
 Rev_2   = generalRevSampling(Omega2,DGr2/RT,numSamples,thinning);
 
-%% Example 3
-% Linear promiscuous mechanism with 1 common step:
+%% Example 3: Linear promiscuous mechanism with 1 common step:
 % i) A <-> P1 & ii) A <-> P2
 Omega3  = [1,1,1.05,0,0;...
           1,0,0,1,1];
 DGr3    = [-10;-8];             % [kJ/mol]
 Rev_3    = generalRevSampling(Omega3,DGr3/RT,numSamples,thinning);
 
-%% Example 4
-% Linear promiscuous mechanism with 1 common step and 1 inhibitor:
+%% Example 4: Linear promiscuous mechanism with 1 common step and 1 inhibitor:
 % i) A <-> P1 & ii) A <-> P2
 Omega4  = [1,1,1.05,0,0,0;...
           1,0,0,1,1,0;...
