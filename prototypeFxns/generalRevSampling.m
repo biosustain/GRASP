@@ -56,7 +56,7 @@ end
 counter = 0;
 xcount  = 0;
 Rev     = zeros(size(N,1),numSamples);
-while counter < burn_in + numSamples*thinning
+while counter < burn_in + (numSamples-1)*thinning
     
     % Advance one step
     counter = counter+1;
