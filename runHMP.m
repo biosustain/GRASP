@@ -15,7 +15,7 @@ addpath('./patternFxns','./ensembleFxns','./reactions1');
 strain = 'HMP1489';
 replicate_list = [0];
 time_point_list = [0:3];
-
+label = '_unconstrained';
 
 for time_i = time_point_list
     for rep_i = replicate_list
@@ -24,16 +24,16 @@ for time_i = time_point_list
         disp(time_i);
         
         clearvars ensemble popIdx iter ensemble
-        model_id = strcat(strain, '_r', int2str(rep_i), '_t', int2str(time_i), '_promiscuous');
+        model_id = strcat(strain, '_r', int2str(rep_i), '_t', int2str(time_i));
        
          % 1. Load information
         iter     = 1;
         popIdx   = 1;
-        ensemble = loadEnsembleStructure(strcat('input/', model_id));		% This line loads the model in the Excel file
+        ensemble = loadEnsembleStructure(strcat('input', label, '/', model_id));		% This line loads the model in the Excel file
  
         % 2. Initialize and perform rejection sampling
         ensemble = initializeEnsemble(ensemble,popIdx,1);
-        
+        finish()
         % Check whether the job is ran in parallel
         disp('Running rejection sampler. Population 1.');
 
@@ -74,7 +74,7 @@ for time_i = time_point_list
         ensemble.populations(1).simFluxes = simFluxes;                                                                          % simulated fluxes
         ensemble.populations(1).models    = models;                                                                             % model particles    
         clearvars -except ensemble popIdx iter strain rep_i time_i replicate_list time_point_list model_id
-        save(strcat('output/ensembleSMC_rejection_', model_id, '.mat'));
+        save(strcat('output', label, '/ensembleSMC_rejection_', model_id, '.mat'));
         %save(strcat('ensembleSMC_rejection_HMP1489_r0_t0_MA.mat'));        
 
 
