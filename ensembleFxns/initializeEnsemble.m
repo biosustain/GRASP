@@ -51,12 +51,14 @@ if (strcmpi(ensemble.sampler,'rejection')||strcmpi(ensemble.sampler,'SMC'))
                     promiscuity = ensemble.promiscuity{strucIdx}{ensemble.kinActRxns(activRxnIdx)};
                     % For promiscuous reactions that do not share
                     % intermediate steps set alphaReversibilities = revMatrix
-                    if size(promiscuity,1) > 0 && sum(sum(revMatrix)) == size(sum(revMatrix),2)  
-                        ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaReversibilities = revMatrix;
+                    if size(promiscuity,1) > 0  %&& sum(sum(revMatrix)) == size(sum(revMatrix),2)  
+                        %ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaReversibilities = revMatrix;
                     
-                    % For promiscuous reactions that have inhibition steps
-                    elseif size(promiscuity,1) > 0 && size(sum(revMatrix),2) > sum(sum(revMatrix)~=0)
-                        ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaReversibilities = revMatrix;
+                        % For promiscuous reactions that have inhibition steps
+                        %elseif size(promiscuity,1) > 0 && size(sum(revMatrix),2) > sum(sum(revMatrix)~=0)
+                        revMatrixTemp = revMatrix;
+                        revMatrixTemp( :, ~any(revMatrixTemp,1) ) = [];
+                        ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaReversibilities = revMatrixTemp;
                         
                         % Initialize modifiers (if any) ~ numModifiers x Beta(1)
                         if any(sum(revMatrix)==0)
@@ -73,8 +75,20 @@ if (strcmpi(ensemble.sampler,'rejection')||strcmpi(ensemble.sampler,'SMC'))
                         end
                         
                     % For branched mechanisms do as follows
+                    % Marta: changing this to work with random mechanisms 
+                    % with inhibitions - hopefully it won't break
                     elseif (size(revMatrix,1)>1)
-                        ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaReversibilities = ones(1,size(revMatrix,2));
+                        %ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaReversibilities = ones(1,size(revMatrix,2));
+                        revMatrixTemp = revMatrix;
+                        revMatrixTemp( :, ~any(revMatrixTemp,1) ) = [];
+                        ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaReversibilities = revMatrixTemp;
+                        
+                        % Initialize modifiers (if any) ~ numModifiers x Beta(1)
+                        if any(sum(revMatrix)==0)
+                            nRows = (sum(sum(revMatrix)==0));
+                            ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).betaModiferElemFlux = ones(nRows,2);
+                        end
+                        
                     end
                     
                     % Initialize branch factors ~ Beta(1)

@@ -23,7 +23,7 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
 
         elseif size(promisc_rxns_list,1) > 0 && any(sum(revMatrix)==0)
             
-            nElemFluxes = size(ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).betaModiferElemFlux(ix,:), 2) ;
+            nElemFluxes = size(ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).betaModiferElemFlux, 1) ;
             modifierElemFlux = zeros(nElemFluxes, 2);
             
             for ix = 1:nElemFluxes
@@ -31,18 +31,20 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
                 modifierElemFlux(ix,1) = aModifier(1)/sum(aModifier);       
                 modifierElemFlux(ix,2) = modifierElemFlux(ix,1);
             end
-            modifierElemFlux = modifierElemFlux';
+            %modifierElemFlux = modifierElemFlux';
 
-        else
-            if ((size(revMatrix,1)==1) && any(revMatrix==0)) 
-                modifierElemFlux = zeros(sum(reverTemp==1),1);
-                for ix = 1:sum(reverTemp==1)
-                    aModifier              = randg(ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).betaModiferElemFlux(ix,:));                    
-                    modifierElemFlux(ix,1) = aModifier(1)/sum(aModifier);                    
-                end
+        %elseif ((size(revMatrix,1)==1) && any(revMatrix==0)) 
+        % Marta: changed this to make it work for random mechanisms
+        elseif ((size(revMatrix,1)==1) && any(revMatrix==0))  || ((size(revMatrix,1)>1) && any(sum(revMatrix)==0))
+            modifierElemFlux = zeros(sum(reverTemp==1),2);
+            for ix = 1:sum(reverTemp==1)
+                aModifier              = randg(ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).betaModiferElemFlux(ix,:));                    
+                modifierElemFlux(ix,1) = aModifier(1)/sum(aModifier);
+                modifierElemFlux(ix,2) = modifierElemFlux(ix,1);
             end
         end
-        models(1).rxnParams(activRxnIdx).modiferElemFlux = modifierElemFlux';                       % save transpose of mod elem flux
+        
+        models(1).rxnParams(activRxnIdx).modiferElemFlux = modifierElemFlux;                       % save transpose of mod elem flux
     end
 end
 

@@ -139,8 +139,10 @@ while true
                 branchFactor = ensemble.reactionFluxAllosteric(promisc_rxns_list);
                 if sum(sum(Nelem)) > size(Nelem,1)
                     reactionFlux = sum(ensemble.reactionFluxAllosteric(promisc_rxns_list));   % promiscuous reactions share common steps
+                    
                 else
                     reactionFlux = max(ensemble.reactionFluxAllosteric(promisc_rxns_list));   % promiscuous reactions are independent
+                    %branchFactor = ensemble.reactionFluxAllosteric(promisc_rxns_list);
                 end
             else
                 if (size(Nelem,2)>1)

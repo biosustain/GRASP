@@ -9,14 +9,14 @@ thinning   = 1;
 Omega1  = [1,1,1];
 DGr1    = -10;                  % [kJ/mol]
 RT      = 8.314*298.15/1e3;     % [kJ/mol]
-%Rev_1   = generalRevSampling(Omega1,DGr1/RT,numSamples,thinning);
+Rev_1   = generalRevSampling(Omega1,DGr1/RT,numSamples,thinning);
 
 % Example 2: 2 linear promiscuous mechanisms without common steps:
 % i) A1 <-> P1 & ii) A2 <-> P2
-Omega2  = [1,1,1.05,0,0,0;...
+Omega2  = [1,1,1,0,0,0;...
           0,0,0,1,1,1];
 DGr2    = [-10;-5];             % [kJ/mol]
-%Rev_2   = generalRevSampling(Omega2,DGr2/RT,numSamples,thinning);
+Rev_2   = generalRevSampling(Omega2,DGr2/RT,numSamples,thinning);
 
 % Example 3: Linear promiscuous mechanism with 1 common step:
 % i) A <-> P1 & ii) A <-> P2
