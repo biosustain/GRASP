@@ -23,7 +23,6 @@ uTol = 1e-6;
 % Define projection parameters
 A  = Omega;
 b  = DGr_RT;
-xcurr = pinv(A)*b;
 
 % General solutions is of the form x = N*alpha + xp. Let us first calculate
 % a basis for null(A)
@@ -51,6 +50,14 @@ for ix = 1:numel(f)
     % Reset objective
     f(ix) = 0;
 end
+
+% Solve 2 optimizations with random objectives and force them to be in the interior. Then,
+% build a convex combinations to ensure they are in the interior of the
+% feasible region
+xcurr1 = linprog(randn(size(f)),[],[],Aeq,beq,lb,1e-2*max(DGr_RT)*ones(size(ub)));
+xcurr2 = linprog(randn(size(f)),[],[],Aeq,beq,lb,1e-2*max(DGr_RT)*ones(size(ub)));
+alpha  = rand(1);
+xcurr  = alpha*xcurr1 + (1-alpha)*xcurr2;
 
 % Figure out the true max & min step sizes
 counter = 0;
