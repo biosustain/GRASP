@@ -45,8 +45,17 @@ Rev_5 = generalRevSampling(Omega5,DGr5/RT,numSamples,thinning);
 % Example 6: AANAT with inhibition
 Omega6 = [1, 0, 0, 0, 0, 1, 1, 1, 1;...
           1, 0, 1, 1, 1, 1, 0, 0, 0];
-DGr6 = [-30; -10]; % Rev_5 is Inf and 0 with [-30; -2];
+DGr6 = [-52.7925; -0.5728]; % Rev_5 is Inf and 0 with [-30; -2];
 Rev_6 = generalRevSampling(Omega6,DGr6/RT,numSamples,thinning);
+
+
+Omega7 = [0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1;
+          0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0;
+          1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1;
+          1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0];
+DGr7 = [-20; -20; -20; -20];
+Rev_7 = generalRevSampling(Omega7,DGr7/RT,numSamples,thinning);
+
 finish()
 
 % Compare sampling distributions for example 1 (where we know how the distribution looks like - example 2 is also possible)
