@@ -21,7 +21,7 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
         
         % If the reaction is promiscuous and not the first on in the promiscRxnsList
         if size(promiscRxnsList,1) > 0 && ensemble.kinActRxns(activRxnIdx) ~= promiscRxnsList(1)
-            modifierElemFlux = models(1).rxnParams(promiscRxnsList(1)).modiferElemFlux';
+            modifierElemFlux = models(1).rxnParams(promiscRxnsList(1)).modiferElemFlux;
         
         % If the reaction is promiscuous and has inhibition steps
         elseif size(promiscRxnsList,1) > 0 && any(sum(revMatrix)==0)
