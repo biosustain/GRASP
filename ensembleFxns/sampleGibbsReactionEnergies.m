@@ -1,6 +1,8 @@
 function [ensemble] = sampleGibbsReactionEnergies(ensemble, gibbsEnergy, strucIdx)
-%SAMPLEGIBBSREACTIONENERGIES Summary of this function goes here
-%   Detailed explanation goes here
+%--------------------------------------------------------------------------
+% Function used to sample Gibbs energies for each reaction
+%
+%------------------------Pedro Saa 2016, Marta Matos 2018------------------
 
 
 ensemble.gibbsTemp = cell(size(ensemble.thermoActive));

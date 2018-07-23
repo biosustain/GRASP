@@ -89,7 +89,7 @@ while true
     % Calculate rate parameters for allosteric reaction part;
     [ensemble, models] = sampleAllostery(ensemble, models, strucIdx);
     
-    % Sample modifier elementary fluxes (positions are given were exp(R)=1)
+    % Sample modifier elementary fluxes (positions are given where exp(R)=1)
     [models] = sampleModifierElemFluxes(ensemble, models, strucIdx);
     
 	%thermoCounter   = 1;
@@ -112,38 +112,39 @@ while true
                continue;
             end
             
-            promisc_rxns_list = ensemble.promiscuity{strucIdx}{ensemble.kinActRxns(activRxnIdx)};
+            promiscRxnsList = ensemble.promiscuity{strucIdx}{ensemble.kinActRxns(activRxnIdx)};
             revMatrix = ensemble.revMatrix{ensemble.kinActRxns(activRxnIdx),strucIdx};
             reverTemp = ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)};
             reactionFlux = ensemble.reactionFluxAllosteric(ensemble.kinActRxns(activRxnIdx));
             
             
-            % B. Sample enzyme abundances
+            % Sample enzyme abundances
             alphaEnzymesR  = ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaEnzymeAbundances;
             
-            % If it's a promiscuous reaction and it' not the first one in the set of promiscuous reactions
-            if size(promisc_rxns_list,1) > 0 && ensemble.kinActRxns(activRxnIdx) ~= promisc_rxns_list(1)                    % Get the abundances from the first reaction in the set
-                randomEnzymesR = models(1).rxnParams(promisc_rxns_list(1)).enzymeAbundances';
+            % If it's a promiscuous reaction and it's not the first one in the set of promiscuous reactions
+            if size(promiscRxnsList,1) > 0 && ensemble.kinActRxns(activRxnIdx) ~= promiscRxnsList(1)                    % Get the abundances from the first reaction in the set
+                randomEnzymesR = models(1).rxnParams(promiscRxnsList(1)).enzymeAbundances';
             else
-                randomEnzymesR = randg(alphaEnzymesR');                                                                      % Sample from the gamma distribution with parameter alpha
+                randomEnzymesR = randg(alphaEnzymesR');                                                                     % Sample from the gamma distribution with parameter alpha
                 randomEnzymesR = randomEnzymesR/sum(randomEnzymesR);
             end
             models(1).rxnParams(activRxnIdx).enzymeAbundances = randomEnzymesR';
       
-            % C. Sample branching factor (if necessary)
+            % Sample branching factor (if necessary)
             branchFactor = 1;
             Nelem        = ensemble.Nelem{ensemble.kinActRxns(activRxnIdx),strucIdx};      
             
             % If the reaction is promiscuous 
-            if size(promisc_rxns_list,1) > 0
-                branchFactor = ensemble.reactionFluxAllosteric(promisc_rxns_list);
+            if size(promiscRxnsList,1) > 0
+                branchFactor = ensemble.reactionFluxAllosteric(promiscRxnsList);
+                % If the promiscuous reactions share common steps 
                 if sum(sum(Nelem)) > size(Nelem,1)
-                    reactionFlux = sum(ensemble.reactionFluxAllosteric(promisc_rxns_list));   % promiscuous reactions share common steps
-                    
+                    reactionFlux = sum(ensemble.reactionFluxAllosteric(promiscRxnsList));   
+                % If the promiscuous reactions do not share any common steps 
                 else
-                    reactionFlux = max(ensemble.reactionFluxAllosteric(promisc_rxns_list));   % promiscuous reactions are independent
-                    %branchFactor = ensemble.reactionFluxAllosteric(promisc_rxns_list);
+                    reactionFlux = max(ensemble.reactionFluxAllosteric(promiscRxnsList)); 
                 end
+            % For non promiscuous reactions
             else
                 if (size(Nelem,2)>1)
                     branchFactor = zeros(size(Nelem,2),1);           
@@ -155,13 +156,9 @@ while true
             end
             models(1).rxnParams(activRxnIdx).branchFactor = branchFactor';
 
-            % D. Sample modifier elementary fluxes (positions are given were exp(R)=1)
+            % Get modifier elementary fluxes (positions are given were exp(R)=1)
             modifierElemFlux = models(1).rxnParams(activRxnIdx).modiferElemFlux';
-            
-            % IV. Calculate rate parameters
-            %reactionFlux = ensemble.fluxRef(ensemble.kinActRxns(activRxnIdx));              
-            
-			
+
             % VI. Calculate rate parameters
             forwardFlux    = ensemble.forwardFlux{ensemble.kinActRxns(activRxnIdx),strucIdx};
 			models(1).rxnParams(activRxnIdx).kineticParams = ...
@@ -173,7 +170,7 @@ while true
     kineticFxn = str2func(ensemble.kineticFxn{strucIdx});	
     testFlux   = feval(kineticFxn,ones(size(ensemble.freeVars,1),1),models,ensemble.fixedExch(:,1),ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},0);
     %disp(testFlux);
-    
+   
     % If the model is consistent continue
     if all(abs(testFlux-ensemble.fluxRef)<1e-6)
 

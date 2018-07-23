@@ -12,7 +12,7 @@ function [revMatrix,forwardFlux,metList] = reactionPattern(patternName,reactionN
 %                         reaction pattern
 %          (forwardFlux)  list with the edges of the forward reactions
 %              (metList)  list with the reaction metabolites
-%-----------------------Pedro Saa 2016-------------------------------------
+%-----------------------Pedro Saa 2016, Marta Matos 2018-------------------
 % 1. Read the input file and extract the required information
 [Nodes,Link,KineticMatrix,forwardFlux] = readInput(patternName);
 [LinkMatrix,LinkList] = getLink(Link);

@@ -250,8 +250,8 @@ for jx = 1:ensemble.numStruct
         end
     end          
         
-    % Include information related to the activators and inhibitors and
-    % promiscuous reactions
+    % Include information related to the activators and inhibitors, 
+    % promiscuous reactions and substrate binding/release order
     for ix = 1:size(ensemble.rxnMechanisms{jx},1)
         if ~isempty(ensemble.promiscuity{jx}{ix})
            

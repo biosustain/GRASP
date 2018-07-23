@@ -7,7 +7,7 @@ function paths = cycledPaths(subsNodes,prodNodes,forwardFlux)
 %             (forwardFlux)    list with the edges of the forward reactions
 %
 % Outputs:          (paths)    all possible paths (even redundants)
-%-----------------------Pedro Saa 2014-------------------------------------
+%-----------------Pedro Saa 2014, Marta Matos 2018-------------------------
 %% 1. Form adjacency matrix
 adjMatrix = biograph(sparse(forwardFlux(:,1)',forwardFlux(:,2)',...
     true,max(max(forwardFlux)),max(max(forwardFlux))));
@@ -26,7 +26,7 @@ for i = 1:length(subsNodes)
     end
 end
 
-% remove empty paths
+% Remove empty paths
 for i = 1:size(paths,1)
     noEmptyPaths(i,:) = paths(i, ~cellfun('isempty',paths(i,:)));
 end

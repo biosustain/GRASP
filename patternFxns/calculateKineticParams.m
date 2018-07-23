@@ -21,7 +21,7 @@ revCalIrrev  = (1-revTemp).^(-1);
 
 
 % Compute branching flux structure
-elemFluxVector = Nelem*branchFactor/max(Nelem*branchFactor);
+elemFluxVector = Nelem*branchFactor / max(Nelem*branchFactor);
 
 %elemFluxVector = Nelem*branchFactor/sum(Nelem*branchFactor);
 %disp('Nelem');
@@ -34,32 +34,6 @@ elemFluxVector = Nelem*branchFactor/max(Nelem*branchFactor);
 %disp(max(Nelem*branchFactor));
 %disp('elemFluxVector');
 %disp(elemFluxVector);
-
-% Assuming that if the condition below is satisfied this is a promiscuous
-% reaction where no enzyme intermediates are shared.
-% if size(Nelem,2) > 1 && sum(sum(Nelem)) <= size(Nelem,1)
-%     %disp('IN');
-%     %disp(Nelem);
-%     
-%     % set inhib entries to nan
-%     inhibEntries = find(all(revCalIrrev==1, 2));
-%     if size(inhibEntries) > 0
-%         nTracks = size(revCalIrrev, 2);
-%         
-%         for j = 1:nTracks;
-%             for i = 1:size(inhibEntries)
-%                 inhibEntry = inhibEntries(i);
-%                 if revCalIrrev(inhibEntry-1, j) ~= 1 && revCalIrrev(inhibEntry+1, j) ~=1
-%                     revCalIrrev(inhibEntry, j) = nan;
-%                 end
-%             end
-%         end
-%     end
-%      
-%     revTemp = sum(revTemp,2);
-%     revCalIrrev = sum(revCalIrrev,2)-1;
-%     
-% end
 
 % If the proposed branch vector is OK continue
 revCal     = [(revCalIrrev.*elemFluxVector)';(revTemp.*revCalIrrev.*elemFluxVector)'];

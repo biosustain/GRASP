@@ -11,7 +11,7 @@ function buildReaction(state,rateList,metList,numTerm,prodNum,filename, promiscu
 %        (filename)  pattern name
 %
 % Outputs:      --   writen .m file with the reaction mechanism
-%------------Pedro Saa 2016, adapted from Qi et al. 2009-------------------
+%--------Pedro Saa 2016, adapted from Qi et al. 2009, Marta Matos 2018-----
 % 1. Write initial parameters
 try
     fid = fopen(['reactions/',filename,'.m'],'w'); 

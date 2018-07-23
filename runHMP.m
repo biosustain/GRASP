@@ -10,12 +10,12 @@ clear
 
 rng('default');																											% for reproducibility
 delete(gcp('nocreate'));       				            																% check first that no other process is running
-addpath('./patternFxns','./ensembleFxns','./reactions1', './prototypeFxns');
+addpath('./patternFxns','./ensembleFxns','./reactions1');
 
 strain = 'HMP1489';
 replicate_list = [1];
 time_point_list = [0];
-label = '_unconstrained';
+label = '_test';
 
 for time_i = time_point_list
     for rep_i = replicate_list

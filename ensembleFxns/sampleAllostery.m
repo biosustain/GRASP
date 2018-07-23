@@ -1,6 +1,8 @@
 function [ensemble, models] = sampleAllostery(ensemble, models, strucIdx)
-%SAMPLEALLOSTERY Summary of this function goes here
-%   Detailed explanation goes here
+%--------------------------------------------------------------------------
+% Function used to sample allosteric fluxes for each reaction
+%
+%------------------------Pedro Saa 2016, Marta Matos 2018------------------
 
 
 ensemble.reactionFluxAllosteric =  ensemble.fluxRef;

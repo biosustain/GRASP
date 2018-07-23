@@ -5,7 +5,7 @@ function [rxnMetLinks,freeVars,metsActive] = buildKineticFxn(ensemble,kineticFxn
 % Inputs: ensemble    ensemble (structure), kinetic fxn name, strucIdx
 %
 % Outputs:    -       (writen .m file with the reaction mechanism)
-%------------------------Pedro Saa 2016------------------------------------
+%-----------------Pedro Saa 2014, Marta Matos 2018-------------------------
 % Define active species (mets/enzymes)
 metsActive = ensemble.metsSimulated(~ismember(ensemble.metsSimulated,ensemble.metsFixed));
 enzActive  = ensemble.activeRxns(~ismember(ensemble.activeRxns,ensemble.kinInactRxns));
@@ -70,7 +70,6 @@ for i = 1:numel(ensemble.activeRxns)
                 substratesIndTemp = metsInd(ensemble.S(:,ensemble.activeRxns(rxnI))<0);
                 substratesInd = [substratesInd substratesIndTemp];
             end
-            %substratesInd = unique(substratesInd);
             substrates = ensemble.mets(substratesInd);
         else
             substrates  = (ensemble.mets(ensemble.S(:,ensemble.activeRxns(i))<0)); 
@@ -96,7 +95,6 @@ for i = 1:numel(ensemble.activeRxns)
                 productsIndTemp = (metsInd(ensemble.S(:,ensemble.activeRxns(rxnI))>0));
                 productsInd = [productsInd productsIndTemp];
             end
-            %productsInd = unique(productsInd);
             products = ensemble.mets(productsInd);
         else
             products    = (ensemble.mets(ensemble.S(:,ensemble.activeRxns(i))>0));  
