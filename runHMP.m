@@ -73,7 +73,7 @@ for time_i = time_point_list
         ensemble.populations(1).xopt      = xopt;                                                                               % optimal value found
         ensemble.populations(1).simFluxes = simFluxes;                                                                          % simulated fluxes
         ensemble.populations(1).models    = models;                                                                             % model particles    
-        clearvars -except ensemble popIdx iter strain rep_i time_i replicate_list time_point_list model_id
+        clearvars -except ensemble popIdx iter strain rep_i time_i replicate_list time_point_list model_id label
         save(strcat('output', label, '/ensembleSMC_rejection_', model_id, '.mat'));
         %save(strcat('ensembleSMC_rejection_HMP1489_r0_t0_MA.mat'));        
 
