@@ -23,7 +23,7 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
         
         numSamples = 1;
         thinning = 1;
-        tol = 1e-12;
+        tol = 1e-10;
         
         % If the reaction is promiscuous
         if size(promiscRxnsList) > 0 
@@ -43,7 +43,7 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
                 for rowI = 1:size(revMatrix,1)
                     randomRev(rowI, revMatrix(rowI,:) ~= 0) = log(reverTemp2(revMatrix(rowI,:)~=0));
                     randomRev(rowI, :) = randomRev(rowI, :) / (gibbsTemp(rowI)/RT);
-                    assert(sum(randomRev(rowI, :)) < (1 + tol) && sum(randomRev(rowI, :)) > (1 - tol), 'Reversibilities do not sum up to 1');
+                    assert(sum(randomRev(rowI, :)) < (1 + tol) && sum(randomRev(rowI, :)) > (1 - tol), ['Reversibilities do not sum up to 1, ', num2str(sum(randomRev(rowI, :)))]);
                 end
                 
                 models(1).rxnParams(activRxnIdx).reversibilities = randomRev;
@@ -69,7 +69,7 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
             for rowI = 1:size(revMatrix,1)
                 randomRev(rowI, revMatrix(rowI,:) ~= 0) = log(reverTemp2(revMatrix(rowI,:)~=0));
                 randomRev(rowI, :) = randomRev(rowI, :) / (gibbsTemp(rowI)/RT);
-                assert(sum(randomRev(rowI, :)) < (1 + tol) && sum(randomRev(rowI, :)) > (1 - tol), 'Reversibilities do not sum up to 1');
+                assert(sum(randomRev(rowI, :)) < (1 + tol) && sum(randomRev(rowI, :)) > (1 - tol), ['Reversibilities do not sum up to 1, ', num2str(sum(randomRev(rowI, :)))]);
             end
 
             models(1).rxnParams(activRxnIdx).reversibilities = randomRev;
@@ -91,7 +91,7 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
             
             models(1).rxnParams(activRxnIdx).reversibilities = randomRev;
             
-            assert(sum(randomRev) < (1 + tol) && sum(randomRev) > (1 - tol), 'Reversibilities do not sum up to 1');
+            assert(sum(randomRev) < (1 + tol) && sum(randomRev) > (1 - tol), ['Reversibilities do not sum up to 1, ', num2str(sum(randomRev))]);
         end
       
     end
