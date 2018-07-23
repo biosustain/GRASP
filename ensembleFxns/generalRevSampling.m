@@ -36,16 +36,17 @@ lb  = min(DGr_RT)*ones(size(Omega,2),1);
 ub  = zeros(size(Omega,2),1);
 f   = zeros(size(N,1),1);
 x_bnd = zeros(size(N,1),2);
+options = optimoptions('linprog','Display','off');
 for ix = 1:numel(f)
     
     % Solve min problem
     f(ix) = 1;
-    [~,fval] = linprog(f,[],[],Aeq,beq,lb,ub);
+    [~,fval] = linprog(f,[],[],Aeq,beq,lb,ub, [], options);
     x_bnd(ix,1) = fval;
     
     % Solve max problem
     f(ix) = -1;
-    [~,fval] = linprog(f,[],[],Aeq,beq,lb,ub);
+    [~,fval] = linprog(f,[],[],Aeq,beq,lb,ub, [], options);
     x_bnd(ix,2) = -fval;
     
     % Reset objective
@@ -55,8 +56,8 @@ end
 % Solve 2 optimizations with random objectives and force them to be in the interior. Then,
 % build a convex combinations to ensure they are in the interior of the
 % feasible region
-xcurr1 = linprog(randn(size(f)),[],[],Aeq,beq,lb,1e-2*max(DGr_RT)*ones(size(ub)));
-xcurr2 = linprog(randn(size(f)),[],[],Aeq,beq,lb,1e-2*max(DGr_RT)*ones(size(ub)));
+xcurr1 = linprog(randn(size(f)),[],[],Aeq,beq,lb,1e-2*max(DGr_RT)*ones(size(ub)), [], options);
+xcurr2 = linprog(randn(size(f)),[],[],Aeq,beq,lb,1e-2*max(DGr_RT)*ones(size(ub)), [], options);
 alpha  = rand(1);
 xcurr  = alpha*xcurr1 + (1-alpha)*xcurr2;
 
