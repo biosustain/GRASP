@@ -23,7 +23,7 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
         
         numSamples = 1;
         thinning = 1;
-        tol = 1e-10;
+        tol = 1e-6;
         
         % If the reaction is promiscuous
         if size(promiscRxnsList) > 0 
