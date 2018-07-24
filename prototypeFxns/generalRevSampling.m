@@ -57,7 +57,7 @@ while counter < burn_in + numSamples*thinning
     flag = true;
     while flag
         
-        % Sample direction N*rand(size(N,2),1);%
+        % Sample direction
         udir = N(:,randi(size(N,2)));
         
         % Figure out where to move
