@@ -24,7 +24,7 @@ for time_i = time_point_list
         disp(time_i);
         
         clearvars ensemble popIdx iter ensemble
-        model_id = strcat(strain, '_r', int2str(rep_i), '_t', int2str(time_i), '_profile');
+        model_id = strcat(strain, '_r', int2str(rep_i), '_t', int2str(time_i));
        
          % 1. Load information
         iter     = 1;

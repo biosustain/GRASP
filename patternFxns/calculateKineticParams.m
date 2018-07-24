@@ -35,6 +35,26 @@ elemFluxVector = Nelem*branchFactor / max(Nelem*branchFactor);
 %disp('elemFluxVector');
 %disp(elemFluxVector);
 
+
+% For promiscuous reactions, set inhib entries to nan
+if size(Nelem,2) > 1 && sum(sum(Nelem)) <= size(Nelem,1)
+
+    inhibEntries = find(all(revCalIrrev==1, 2));
+    if size(inhibEntries) > 0
+        nTracks = size(revCalIrrev, 2);
+        
+        for j = 1:nTracks;
+            for i = 1:size(inhibEntries)
+                inhibEntry = inhibEntries(i);
+                if revCalIrrev(inhibEntry-1, j) ~= 1 && revCalIrrev(inhibEntry+1, j) ~=1
+                    revCalIrrev(inhibEntry, j) = nan;
+                end
+            end
+        end
+    end
+         
+end
+
 % If the proposed branch vector is OK continue
 revCal     = [(revCalIrrev.*elemFluxVector)';(revTemp.*revCalIrrev.*elemFluxVector)'];
 elemenFlux = revCal(:);
@@ -44,6 +64,8 @@ elemenFlux = revCal(:);
 
 %disp('modifierElemFlux');
 %disp(modifierElemFlux);
+
+
 
 % If the pattern contains modifiers (e.g. inhibitors/activators) compute
 % elementary fluxes based on the elem flux fraction

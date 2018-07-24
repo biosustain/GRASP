@@ -75,10 +75,9 @@ if (strcmpi(ensemble.sampler,'rejection')||strcmpi(ensemble.sampler,'SMC'))
                     % For branched mechanisms do as follows
                     % Marta: changing this to work with random mechanisms with inhibitions - hopefully it won't break
                     elseif (size(revMatrix,1)>1)
-                        %ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaReversibilities = ones(1,size(revMatrix,2));
                         revMatrixTemp = revMatrix;
                         revMatrixTemp( :, ~any(revMatrixTemp,1) ) = [];
-                        ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaReversibilities = revMatrixTemp;
+                        ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaReversibilities = ones(1,size(revMatrixTemp,2));
                         
                         % Initialize modifiers (if any) ~ numModifiers x Beta(1)
                         if any(sum(revMatrix)==0)
