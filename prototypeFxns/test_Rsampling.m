@@ -3,8 +3,8 @@ clc,clearvars,close all
 
 % Number of samples
 numSamples = 1000;
-thinning   = 10;
-burn_in = 100;
+thinning   = 100;
+burn_in = 100000;
 
 % Example 1: Linear mechanism: i) A <-> P
 Omega1  = [1,1,1];

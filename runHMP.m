@@ -13,9 +13,9 @@ delete(gcp('nocreate'));       				            																% check first tha
 addpath('./patternFxns','./ensembleFxns','./reactions1');
 
 strain = 'HMP1489';
-replicate_list = [1];
-time_point_list = [0];
-label = '_test';
+replicate_list = [0];
+time_point_list = [0:3];
+label = '_unconstrained_mix_promiscuous';
 
 for time_i = time_point_list
     for rep_i = replicate_list
