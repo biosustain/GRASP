@@ -12,7 +12,7 @@ rng('default');																											% for reproducibility
 delete(gcp('nocreate'));       				            																% check first that no other process is running
 addpath('./patternFxns','./ensembleFxns','./reactions1');
 
-strain = 'HMP1489';
+strain = 'HMP2360';
 replicate_list = [0];
 time_point_list = [0:3];
 label = '_unconstrained_mix_promiscuous';
