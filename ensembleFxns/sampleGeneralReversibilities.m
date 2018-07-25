@@ -16,7 +16,7 @@ end
 
 numSamples = 1;
 thinning = 10;
-burn_in = 100;
+burn_in = 500;
 tol = 1e-6;
 rTol = 1e-10;
 
@@ -46,7 +46,7 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
                 % If promiscuous reactions have steps in common
                 if any(sum(revMatrix) >1)
 
-                    gibbsTemp = cell2mat(ensemble.gibbsTemp(promiscRxnsList))';
+                    gibbsTemp = cell2mat(ensemble.gibbsTemp(promiscRxnsList));
                     reverTemp = generalRevSampling(alphaReversibility, gibbsTemp/RT, numSamples, thinning, burn_in);
 
                     reverTemp2 = ones(1, size(revMatrix, 2));
