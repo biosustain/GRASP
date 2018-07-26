@@ -39,7 +39,7 @@ Rev_4   = generalRevSampling(Omega4,DGr4/RT,numSamples,thinning);
 % i) A + B <-> P1 + Q & A + C <-> P2 + Q
 Omega5 = [1, 0, 0, 0, 1, 1, 1, 1;...
           1, 1, 1, 1, 1, 0, 0, 0];
-DGr5 = [-30; -10]; % Rev_5 is all NaN with [-30; -2];
+DGr5 = [-30; 1]; % Rev_5 is all NaN with [-30; -2];
 Rev_5 = generalRevSampling(Omega5,DGr5/RT,numSamples,thinning, burn_in);
 
 

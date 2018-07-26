@@ -2,7 +2,7 @@
 clc,clearvars,close all
 
 % Number of samples
-numSamples = 1;
+numSamples = 10000;
 thinning   = 10;
 burn_in    = 1000;
 
