@@ -1,10 +1,10 @@
 clear
 
-strain = 'HMP1489';
+strain = 'HMP2360';
 replicate_list = [0];
-time_point_list = [0];
+time_point_list = [3];
 
-label = '_unconstrained';
+label = '_unconstrained_old_promiscuous_mix_test';
 input_folder = strcat('./output', label, '/');
 output_folder = strcat('./output', label, '/dat_files/');
 
@@ -28,7 +28,7 @@ for time_i = time_point_list
               
         fileID = fopen(strcat(output_folder, 'ensembleSMC_rejection_', model_id, '_gibbsRanges.dat'),'w');
         fprintf(fileID,'%6s,%6s\n','dG_min', 'dG_max');
-        fprintf(fileID,'%6.5f,%6.5f\n', ensemble.gibbsRanges);
+        fprintf(fileID,'%6.5f,%6.5f\n', ensemble.gibbsRanges');
         fclose(fileID);
         parpool(2);
         parfor model_i = 1:n_models
@@ -36,5 +36,6 @@ for time_i = time_point_list
             writetable(struct2table(ensemble.populations.models(model_i).rxnParams), strcat(output_folder, 'ensembleSMC_rejection_',model_id, '_m', num2str(model_i), '.dat'))
             %writetable(struct2table(ensemble.populations.models(model_i).rxnParams), strcat(output_folder, 'ensembleSMC_rejection_HMP1489_r0_t0_MA_m', num2str(model_i), '.dat'))
         end     
+        delete(gcp('nocreate'));
     end
 end

@@ -3,7 +3,7 @@ function [ensemble, models] = sampleGeneralReversibilities(ensemble, models, RT,
 % Function used to calculate the reversibilities for each reaction
 % 
 % Uses the generalized method only for promiscuous reactions that have
-% common steps.
+% common steps. Not working yet.
 %
 %-------------------------Marta Matos 2018---------------------------------
 
@@ -14,10 +14,10 @@ for activRxnIdx = 1:numel(ensemble.populations(1).probParams(strucIdx).rxnParams
 end
 
 
-numSamples = 1;
-thinning = 10;
-burn_in = 500;
-tol = 1e-6;
+%numSamples = 1;
+%thinning = 10;
+%burn_in = 500;
+%tol = 1e-6;
 rTol = 1e-10;
 
 for activRxnIdx = 1:numel(ensemble.kinActRxns)     
@@ -43,28 +43,31 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
             % Otherwise calculate reversibilities
             else
                 
-                % If promiscuous reactions have steps in common
+                % If promiscuous reactions have steps in common - not
+                % working currently
                 if any(sum(revMatrix) >1)
+                    disp('Sampling of reversibilities for romiscuous reactions with steps in common is not working yet. Please change the reaction mechanism'); 
+                    exit();
 
-                    gibbsTemp = cell2mat(ensemble.gibbsTemp(promiscRxnsList));
-                    reverTemp = generalRevSampling(alphaReversibility, gibbsTemp/RT, numSamples, thinning, burn_in);
+                    %gibbsTemp = cell2mat(ensemble.gibbsTemp(promiscRxnsList));
+                    %reverTemp = generalRevSampling(alphaReversibility, gibbsTemp/RT, numSamples, thinning, burn_in);
 
-                    reverTemp2 = ones(1, size(revMatrix, 2));
-                    reverTemp2(sum(revMatrix) ~= 0) = reverTemp;
+                    %reverTemp2 = ones(1, size(revMatrix, 2));
+                    %reverTemp2(sum(revMatrix) ~= 0) = reverTemp;
 
-                    ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)} = reverTemp2';
+                    %ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)} = reverTemp2';
 
                     % Back calculate normalized reversibilities
-                    randomRev = zeros(size(revMatrix));
-                    for rowI = 1:size(revMatrix,1)
-                        randomRev(rowI, revMatrix(rowI,:) ~= 0) = log(reverTemp2(revMatrix(rowI,:)~=0));
-                        randomRev(rowI, :) = randomRev(rowI, :) / (gibbsTemp(rowI)/RT);
-                       
-                        % Double check calculations
-                        assert(sum(randomRev(rowI, :)) < (1 + tol) && sum(randomRev(rowI, :)) > (1 - tol), ['Reversibilities do not sum up to 1, ', num2str(sum(randomRev(rowI, :)))]);
-                    end
+                    %randomRev = zeros(size(revMatrix));
+                    %for rowI = 1:size(revMatrix,1)
+                    %    randomRev(rowI, revMatrix(rowI,:) ~= 0) = log(reverTemp2(revMatrix(rowI,:)~=0));
+                    %    randomRev(rowI, :) = randomRev(rowI, :) / (gibbsTemp(rowI)/RT);
+                    %   
+                    %    % Double check calculations
+                    %    assert(sum(randomRev(rowI, :)) < (1 + tol) && sum(randomRev(rowI, :)) > (1 - tol), ['Reversibilities do not sum up to 1, ', num2str(sum(randomRev(rowI, :)))]);
+                    %end
 
-                    models(1).rxnParams(activRxnIdx).reversibilities = randomRev;
+                    %models(1).rxnParams(activRxnIdx).reversibilities = randomRev;
 
                 % If the promiscuous reactions do not have any steps in common
                 else    

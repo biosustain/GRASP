@@ -13,10 +13,10 @@ rng('shuffle');
 delete(gcp('nocreate'));       				            																% check first that no other process is running
 addpath('./patternFxns','./ensembleFxns','./reactions1');
 
-strain = 'HMP2360';
+strain = 'HMP1489';
 replicate_list = [0];
 time_point_list = [3];
-label = '_unconstrained_mix_promiscuous';
+label = '_unconstrained_old_promiscuous_mix_test';
 
 for time_i = time_point_list
     for rep_i = replicate_list
