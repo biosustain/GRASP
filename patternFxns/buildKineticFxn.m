@@ -49,14 +49,19 @@ for i = 1:numel(ensemble.activeRxns)
     % If binding/release order is provided
     if ~isempty(ensemble.mechOrder{strucIdx}{i})
         reactants = ensemble.mechOrder{strucIdx}{i};
-        
+                
         for reactantI = 1:size(reactants, 2)
             if ismember(reactants{reactantI},ensemble.mets(ensemble.metsFixed))
                 reactants{reactantI} = strcat('ones(1,',num2str(totalEvals),')');
             end
         end
         
-        reactants = strjoin(reactants, ';');
+        
+        if strcmp('massAction',ensemble.rxnMechanisms{strucIdx}(i))
+            reactants = [strjoin(reactants, ',') ','];
+        else
+            reactants = strjoin(reactants, ';');
+        end
            
     else
     
