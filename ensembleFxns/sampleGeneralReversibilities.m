@@ -5,7 +5,7 @@ function [ensemble, models] = sampleGeneralReversibilities(ensemble, models, RT,
 % Uses the generalized method only for promiscuous reactions that have
 % common steps. Not working yet.
 %
-%-------------------------Marta Matos 2018---------------------------------
+%----------------------Pedro Saa 2016, Marta Matos 2018--------------------
 
 % Initialize reverTemp
 ensemble.reverTemp = cell(size(ensemble.populations(1).probParams(strucIdx).rxnParams));
