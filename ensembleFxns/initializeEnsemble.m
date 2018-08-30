@@ -9,7 +9,7 @@ function ensemble = initializeEnsemble(ensemble,popIdx,verbose)
 if (nargin<3); verbose = 0; end;
 
 % Determine the type of sampler selected (rejection is the only sampler currently supported)
-if (strcmpi(ensemble.sampler,'rejection')||strcmpi(ensemble.sampler,'SMC_rejection'))||strcmpi(ensemble.sampler,'SMC'))||strcmpi(ensemble.sampler,'MCMC-SMC'))
+if strcmpi(ensemble.sampler,'ORACLE')||strcmpi(ensemble.sampler,'rejection')||strcmpi(ensemble.sampler,'SMC_rejection')||strcmpi(ensemble.sampler,'SMC')||strcmpi(ensemble.sampler,'MCMC-SMC')
     
 	% Determine thermo-active reactions
 	ensemble.thermoActive = find((ensemble.gibbsRanges(:,1)~=-1e3)&(ensemble.gibbsRanges(:,1)~=ensemble.gibbsRanges(:,2)));
