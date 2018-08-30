@@ -8,8 +8,8 @@ function ensemble = initializeEnsemble(ensemble,popIdx,verbose)
 %------------------------Pedro Saa 2016, Marta Matos 2018------------------
 if (nargin<3); verbose = 0; end;
 
-% Determine the type of sampler selected
-if (strcmpi(ensemble.sampler,'rejection')||strcmpi(ensemble.sampler,'SMC'))
+% Determine the type of sampler selected (rejection is the only sampler currently supported)
+if (strcmpi(ensemble.sampler,'rejection')||strcmpi(ensemble.sampler,'SMC_rejection'))||strcmpi(ensemble.sampler,'SMC'))||strcmpi(ensemble.sampler,'MCMC-SMC'))
     
 	% Determine thermo-active reactions
 	ensemble.thermoActive = find((ensemble.gibbsRanges(:,1)~=-1e3)&(ensemble.gibbsRanges(:,1)~=ensemble.gibbsRanges(:,2)));
@@ -117,7 +117,7 @@ if (strcmpi(ensemble.sampler,'rejection')||strcmpi(ensemble.sampler,'SMC'))
         if any(ensemble.prevPrior); ensemble = extractPrior(ensemble); end;
     end
     
-    % Preallocate memory for sampled parameters
+    % Preallocate memory for sampling parameters
     ensemble.populations(popIdx).models(ensemble.replenishedParticles(popIdx)).poolFactor(numel(ensemble.kinActRxns))                  = 0;    % pool constraint factor ~ Dir(1)
     ensemble.populations(popIdx).models(ensemble.replenishedParticles(popIdx)).gibbsFactor(numel(ensemble.thermoActive))               = 0;    % gibbs free energy of reaction ~ MVN(0,1)
     ensemble.populations(popIdx).models(ensemble.replenishedParticles(popIdx)).rxnParams(numel(ensemble.kinActRxns)).reversibilities   = 0;    % microscopic reversibilites, assumed equal for the active (R) and tense (T) states ~ Dir(1)
