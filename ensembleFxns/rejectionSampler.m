@@ -14,14 +14,17 @@ DDG_min  = -25;															   % min. Gibbs free energy difference of conforma
 bind_max = 50;															   % max. fraction of Keff/Eff
 bind_min = .1;															   % min. fraction of Keff/Eff
 
-% % Solver parameters (NLOPT)
-% opt.algorithm = 40; 										   			   % 11(NLOPT_LD_LBFGS), options: 40(NLOPT_LD_SLSQP), 13(NLOPT_LD_VAR1), 14(NLOPT_LD_VAR2)
-% opt.ftol_abs  = 1e-11;
-% opt.xtol_abs  = 1e-10*ones(1,numel(ensemble.freeVars));
-% opt.maxeval   = 1e4;
+% Figure out NLP solver
+if strcmpi(ensemble.solver,'NLOPT')											   % Solver parameters for NLOPT
+    opt.algorithm = 40; 									   			   % 11(NLOPT_LD_LBFGS), options: 40(NLOPT_LD_SLSQP), 13(NLOPT_LD_VAR1), 14(NLOPT_LD_VAR2)
+    opt.ftol_abs  = 1e-11;
+    opt.xtol_abs  = 1e-10*ones(1,numel(ensemble.freeVars));
+    opt.maxeval   = 1e4;
+elseif strcmpi(ensemble.solver,'FMINCON') || isempty(ensemble.solver)							   % Solver parameters (FMINCON)
+     options = optimset('Display','off','Algorithm','sqp','MaxIter',1e4,'TolFun',1e-11,'TolX',1e-10);
+end
 
-% Solver parameters (FMINCON)
-options = optimset('Display','off','Algorithm','sqp','MaxIter',1e4,'TolFun',1e-11,'TolX',1e-10);
+% Check if there are pool constraints 
 if ~isempty(ensemble.poolConst)    
     for ix = 1:numel(ensemble.poolConst)
         A{ix} = ensemble.poolConst{ix}(1:numel(ensemble.metsActive));      % extract rhs of from pool constraint matrix
@@ -69,19 +72,18 @@ while true
             poolFactor{ix} = poolFactorTemp;
         end        
         models(1).poolFactor = poolFactor;
-	else
-		models(1).poolFactor = [];
+    else
+	models(1).poolFactor = [];
     end
 	
-	% Sample gibbs free energy of reactions
-	gibbsFactor = mvnrnd(ensemble.populations(1).probParams(strucIdx).muGibbsFactor,ensemble.populations(1).probParams(strucIdx).sigmaGibbsFactor)';
-	gibbsFactor = exp(gibbsFactor)./(1 + exp(gibbsFactor));	
-	gibbsEnergy = gibbsFactor.*ensemble.gibbsRanges(ensemble.thermoActive,2) + (1-gibbsFactor).*ensemble.gibbsRanges(ensemble.thermoActive,1);
-	models(1).gibbsFactor = gibbsFactor;
-	
+    % Sample gibbs free energy of reactions
+    gibbsFactor = mvnrnd(ensemble.populations(1).probParams(strucIdx).muGibbsFactor,ensemble.populations(1).probParams(strucIdx).sigmaGibbsFactor)';
+    gibbsFactor = exp(gibbsFactor)./(1 + exp(gibbsFactor));	
+    gibbsEnergy = gibbsFactor.*ensemble.gibbsRanges(ensemble.thermoActive,2) + (1-gibbsFactor).*ensemble.gibbsRanges(ensemble.thermoActive,1);
+    models(1).gibbsFactor = gibbsFactor;
     
     % Determine gibbs free energy of reaction
-    ensemble = sampleGibbsReactionEnergies(ensemble, gibbsEnergy, strucIdx);
+    ensemble = sampleGibbsReactionEnergies(ensemble,gibbsEnergy,strucIdx);
     
     % Sample Reversibilities
     [ensemble, models] = sampleGeneralReversibilities(ensemble, models, RT, strucIdx);
