@@ -30,7 +30,7 @@ if isempty(Rred)
     vStd(idxUnkn)  = diag(pinv(Sc)*Sm*Dm*Sm'*pinv(Sc)');
     vStd(~vStd)    = diag(Dm);
     
-    % Else, perform consistency analysis
+    % Else, perform gross error analysis
 else
     errX = Rred*xMean(idxMeas);    % Compute covariance matrix
     Derr = Rred*Dm*Rred';
@@ -42,7 +42,7 @@ else
     Rp        = Rred'*inv(Derr)*Rred;
     xMean_adj = (eye(size(Dm))-Dm*Rp)*xMean(idxMeas);
     xStd_adj  = Dm-Dm*Rp*Dm;   
-    vMean(idxUnkn) = -pinv(Sc)*Sm*xMean_adj;    % Adjust final answers
+    vMean(idxUnkn) = -pinv(Sc)*Sm*xMean_adj;    % Adjust final fluxes
     vMean(~vMean)  = xMean_adj;
     vStd(idxUnkn)  = diag(pinv(Sc)*Sm*xStd_adj*Sm'*pinv(Sc)');
     vStd(~vStd)    = diag(xStd_adj);
