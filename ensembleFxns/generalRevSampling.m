@@ -1,5 +1,5 @@
 function Rev = generalRevSampling(Omega,DGr_RT,numSamples,thinning,burn_in)
-% Thermodynamic-based Flux Balance Analysis
+% General purpose reversibility sampling using Hit-And-Run
 % 
 % ------------------ Pedro Saa 2018 ---------------------------------------
 %
