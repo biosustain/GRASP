@@ -6,39 +6,39 @@ function ensemble = loadEnsembleStructure(xlsxFile)
 %
 % Outputs:      ensemble basic data structure
 %--------------------- Pedro Saa 2016 -------------------------------------
-if nargin<1; disp('Not enough input arguments'); end; % Check inputs
+if nargin<1; disp('Not enough input arguments'); end                    % Check inputs
 
 %% 1. Load general data contained in .xlsx file
-xlsxFile            = [xlsxFile,'.xlsx'];                % add extension to the file
-[xData,strData]     = xlsread(xlsxFile,'general');       % load general info
-Sfull               = xlsread(xlsxFile,'stoic');         % load full stoichiometry
-[xRxns,rxnsList]    = xlsread(xlsxFile,'rxns');          % load rxn info
-[xMets,metsList]    = xlsread(xlsxFile,'mets');          % load mets info
-splitRatios         = xlsread(xlsxFile,'splitRatios');   % load split ratios
-poolConstraints     = xlsread(xlsxFile,'poolConst');     % load pool constraints
-[measRates,idxMeas] = xlsread(xlsxFile,'measRates');     % load meas rates data
-xDG_std             = xlsread(xlsxFile,'thermoRxns');    % load thermodynamic data (rxns)
-xMetsThermo         = xlsread(xlsxFile,'thermoMets');    % load thermodynamic data (mets)
-[protData,idxProt]  = xlsread(xlsxFile,'protData');      % load expression data
-[metsData,idxMets]  = xlsread(xlsxFile,'metsData');      % load metabolite data (mets)
+xlsxFile            = [xlsxFile,'.xlsx'];                               % add extension to the file
+[xData,strData]     = xlsread(xlsxFile,'general');                      % load general info
+Sfull               = xlsread(xlsxFile,'stoic');                        % load full stoichiometry
+[xRxns,rxnsList]    = xlsread(xlsxFile,'rxns');                         % load rxn info
+[xMets,metsList]    = xlsread(xlsxFile,'mets');                         % load mets info
+splitRatios         = xlsread(xlsxFile,'splitRatios');                  % load split ratios
+poolConstraints     = xlsread(xlsxFile,'poolConst');                    % load pool constraints
+[measRates,idxMeas] = xlsread(xlsxFile,'measRates');                    % load meas rates data
+xDG_std             = xlsread(xlsxFile,'thermoRxns');                   % load thermodynamic data (rxns)
+xMetsThermo         = xlsread(xlsxFile,'thermoMets');                   % load thermodynamic data (mets)
+[protData,idxProt]  = xlsread(xlsxFile,'protData');                     % load expression data
+[metsData,idxMets]  = xlsread(xlsxFile,'metsData');                     % load metabolite data (mets)
 ineqConstraints     = xlsread(xlsxFile,'thermo_ineq_constraints');      % load ineq. thermodynamic constraints
 
 % Build initial ensemble structure
 ensemble.description   = strData{2,2};
 ensemble.sampler       = strData{3,2};
+ensemble.solver        = strData{4,2};
 ensemble.numConditions = xData(1);
 ensemble.numStruct     = xData(2);
 ensemble.numParticles  = xData(3);
 ensemble.parallel      = xData(4);
 ensemble.numCores      = xData(5);
 ensemble.alphaAlive    = xData(6);
-ensemble.robustModSel  = xData(7);
-robustFluxes           = xData(8);
-computeThermo          = xData(9);
-if isnan(xData(10))
-    ensemble.tolerance = [Inf,xData(11)];
+robustFluxes           = xData(7);
+computeThermo          = xData(8);
+if isnan(xData(9))
+    ensemble.tolerance = [Inf,xData(10)];
 else
-    ensemble.tolerance = [xData(10),xData(11)];
+    ensemble.tolerance = [xData(9),xData(10)];
 end
 ensemble.S             = Sfull';
 ensemble.rxns          = rxnsList(2:end,1);
@@ -111,7 +111,7 @@ for ix = 1:ensemble.numConditions+1
     
     % Calculate reference state and exp conditions fluxes
     if (ix==1)
-        dirFluxRef          = sign(vMean);                             % Define directionality at Ref for thermo calculations
+%         dirFluxRef          = sign(vMean);                             % Define directionality at Ref for thermo calculations
         ensemble.fluxRef    = vMean(ensemble.activeRxns);              % Assign only the modelleded rxns
         ensemble.fluxRefStd = vStd(ensemble.activeRxns);
     else
@@ -121,7 +121,7 @@ for ix = 1:ensemble.numConditions+1
 end
 
 % Get free fluxes
-P = 1*(null(ensemble.Sred,'r')~=0);                                    % Extract nullspace pattern, build adjacency matrix and pivots
+P = 1*(null(ensemble.Sred,'r')~=0);                                                             % Extract nullspace pattern, build adjacency matrix and pivots
 ensemble.freeFluxes = [];
 for ix = 1:size(P,2)
     for jx = 1:size(P,1)
@@ -131,18 +131,23 @@ for ix = 1:size(P,2)
         end
     end
 end
-ensemble.simWeights = ensemble.expFluxes(ensemble.freeFluxes,:);       % Define simulation weights based on the magnitude of the fluxes
+ensemble.simWeights = ensemble.expFluxes(ensemble.freeFluxes,:);                                % Define simulation weights (these were based here on the flux magnitude)
 disp('Flux data computed and loaded.');
 
 %% 3. Perform thermodynamic calculations
 if computeThermo
-    idxNotExch  = find(~ismember(1:length(ensemble.rxns),ensemble.exchRxns));
-    xDG_std     = xDG_std(idxNotExch,:);                                                      % Use only reactions with known thermo
-    Sthermo     = Sfull(idxNotExch,:)';
-    gibbsRanges = calculateGibbsEnergyRanges(Sthermo,xDG_std,xMetsThermo,dirFluxRef(idxNotExch),ineqConstraints');
-    ensemble.gibbsRanges               = zeros(length(ensemble.rxns),2);                      % save proper thermodynamic information
-    ensemble.gibbsRanges(idxNotExch,:) = gibbsRanges;                                         % remove thermodynamic info from exchanges
-    ensemble.gibbsRanges               = ensemble.gibbsRanges(ensemble.activeRxns,:);
+    idxNotExch  = find(~ismember(1:numel(ensemble.rxns),ensemble.exchRxns));
+    Sthermo     = ensemble.S(:,idxNotExch);
+    DGr_std     = xDG_std(idxNotExch,:);                                                        % Use only reactions with known thermodynamics
+    vmin        = ensemble.fluxRef - 2*ensemble.fluxRefStd;
+    vmax        = ensemble.fluxRef + 2*ensemble.fluxRefStd;
+    xmin        = xMetsThermo(:,1);
+    xmax        = xMetsThermo(:,2);
+    DGr_std_min = DGr_std(:,1);
+    DGr_std_max = DGr_std(:,2);
+    gibbsRanges = computeGibbsFreeEnergyRanges(Sflux,Sthermo,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,idxNotExch,ineqConstraints');     
+    ensemble.gibbsRanges               = -1e2*ones(size(Sfull,1),2);                            % Allocate memory for DGr calculations
+    ensemble.gibbsRanges(idxNotExch,:) = gibbsRanges;                                           % Remove thermodynamic info from exchang rxns
 else
     ensemble.gibbsRanges = xDG_std;
 end
@@ -207,10 +212,12 @@ for jx = 1:ensemble.numStruct
             ensemble.allosteric{jx}(index)    = xKinetic(ix,1);                                  % boolean vector indicating whether the enzyme is allosteric or not
             ensemble.subunits{jx}(index)      = xKinetic(ix,2);                                  % number of subunits present in the enzyme
             ensemble.rxnMechanisms{jx}{index} = strKinetic{ix,2};                                % string array with catalytic mechanisms for every reaction
-            ensemble.inhibitors{jx}{index}    = strKinetic{ix,3};                                % string array with the inhibitor names for each reaction
-            ensemble.activators{jx}{index}    = strKinetic{ix,4};                                % string array with the activator names for each reaction
-            ensemble.negEffectors{jx}{index}  = strKinetic{ix,5};                                % string array with negative effector names for each reaction
-            ensemble.posEffectors{jx}{index}  = strKinetic{ix,6};                                % string array with positive effector names for each reaction
+            ensemble.mechOrder{jx}{index}     = strKinetic{ix,3};                                % string array with binding/release order for the reaction
+            ensemble.promiscuity{jx}{index}   = strKinetic{ix,4};                                % string array with rxn names this one is promiscuous with
+            ensemble.inhibitors{jx}{index}    = strKinetic{ix,5};                                % string array with the inhibitor names for each reaction
+            ensemble.activators{jx}{index}    = strKinetic{ix,6};                                % string array with the activator names for each reaction
+            ensemble.negEffectors{jx}{index}  = strKinetic{ix,7};                                % string array with negative effector names for each reaction
+            ensemble.posEffectors{jx}{index}  = strKinetic{ix,8};                                % string array with positive effector names for each reaction
         end
     else
         disp('The number of active rxns does not match the number of kinetic mechanisms.'); break;
@@ -231,8 +238,8 @@ for jx = 1:ensemble.numStruct
                 ensemble.protDataMax(index,lx)  = protData(kx,3*lx);
             end
         end
-        rxnWithNoProteinData = find(all(ensemble.protDataMax'==1)&all(ensemble.protDataMin'==1)&all(ensemble.protDataMean'==1));     % These rxns are a different kind of 'inactive rxns' thus they are still considered in the active field
-        ensemble.protDataMin(rxnWithNoProteinData,:)  = [];        % remove protein entries for rxns without protein information
+        rxnWithNoProteinData = find(all(ensemble.protDataMax'==1)&all(ensemble.protDataMin'==1)&all(ensemble.protDataMean'==1));        % These rxns are a different kind of 'inactive rxns' thus they are still considered in the active field
+        ensemble.protDataMin(rxnWithNoProteinData,:)  = [];                                                                             % remove protein entries for rxns without protein information
         ensemble.protDataMax(rxnWithNoProteinData,:)  = [];
         ensemble.protDataMean(rxnWithNoProteinData,:) = [];
         disp('Proteomics and exchange data loaded and consistent.');
@@ -248,8 +255,22 @@ for jx = 1:ensemble.numStruct
         end
     end          
         
-    % Include information related to the activators and inhibitors
+    % Include information related to the activators and inhibitors, 
+    % promiscuous reactions and substrate binding/release order
     for ix = 1:size(ensemble.rxnMechanisms{jx},1)
+        if ~isempty(ensemble.promiscuity{jx}{ix})
+           
+            promiscuous_rxns_list  = regexp(ensemble.promiscuity{jx}{ix},' ','split');
+            ensemble.promiscuity{jx}{ix} = find(ismember(ensemble.rxns(ensemble.activeRxns), promiscuous_rxns_list{1}));
+            
+            for rxn_i = 2:size(promiscuous_rxns_list, 2)
+                ensemble.promiscuity{jx}{ix} = [ensemble.promiscuity{jx}{ix} find(ismember(ensemble.rxns(ensemble.activeRxns), promiscuous_rxns_list{rxn_i}))];
+            end
+            ensemble.promiscuity{jx}{ix} = sort(ensemble.promiscuity{jx}{ix});
+        end
+        if ~isempty(ensemble.mechOrder{jx}{ix})
+            ensemble.mechOrder{jx}{ix}   = regexp(ensemble.mechOrder{jx}{ix},' ','split');
+        end
         if ~isempty(ensemble.inhibitors{jx}{ix})
             ensemble.inhibitors{jx}{ix}   = regexp(ensemble.inhibitors{jx}{ix},' ','split');
         end
@@ -299,14 +320,21 @@ for jx = 1:ensemble.numStruct
             
             % Enzymatic reactions
         else
+            
+            if size(ensemble.promiscuity{jx}{ix}) > 0
+                promiscuousRxnI = find(ensemble.promiscuity{jx}{ix} == ix);
+            else 
+               promiscuousRxnI = 0; 
+            end
+
             % Allosteric enzymes
             if ensemble.allosteric{jx}(ix)
-                [revMatrix,forwardFlux,metList] = reactionPattern(ensemble.rxnMechanisms{jx}{ix},ensemble.rxns{ix},2,jx);
+                [revMatrix,forwardFlux,metList] = reactionPattern(ensemble.rxnMechanisms{jx}{ix},ensemble.rxns{ix},2,jx, promiscuousRxnI);
                 buildAllosteric(metList,[ensemble.rxns{ix},num2str(jx)],ensemble.negEffectors{jx}{ix},ensemble.posEffectors{jx}{ix})
                 
                 % Non-allosteric enzymes
             else
-                [revMatrix,forwardFlux] = reactionPattern(ensemble.rxnMechanisms{jx}{ix},ensemble.rxns{ix},1,jx);
+                [revMatrix,forwardFlux] = reactionPattern(ensemble.rxnMechanisms{jx}{ix},ensemble.rxns{ix},1,jx, promiscuousRxnI);
             end
                         
             % Build Selem based on the mechanism stoichiometry

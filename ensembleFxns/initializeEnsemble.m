@@ -5,14 +5,14 @@ function ensemble = initializeEnsemble(ensemble,popIdx,verbose)
 % Inputs:   (ensemble)    ensemble (structure)
 %
 % Outputs:  (ensemble)    initialized ensemble (structure)
-%------------------------Pedro Saa 2016------------------------------------
-if (nargin<3); verbose = 0; end;
+%------------------------Pedro Saa 2016, Marta Matos 2018------------------
+if (nargin<3); verbose = 0; end
 
-% Determine the type of sampler selected
-if (strcmpi(ensemble.sampler,'rejection')||strcmpi(ensemble.sampler,'SMC'))
+% Determine the type of sampler selected (rejection is the only sampler currently supported)
+if strcmpi(ensemble.sampler,'ORACLE')||strcmpi(ensemble.sampler,'rejection')||strcmpi(ensemble.sampler,'SMC_rejection')||strcmpi(ensemble.sampler,'SMC')||strcmpi(ensemble.sampler,'MCMC-SMC')
     
 	% Determine thermo-active reactions
-	ensemble.thermoActive = find((ensemble.gibbsRanges(:,1)~=-1e3)&(ensemble.gibbsRanges(:,1)~=ensemble.gibbsRanges(:,2)));
+	ensemble.thermoActive = find((ensemble.gibbsRanges(:,1)~=-1e2)&(ensemble.gibbsRanges(:,1)~=ensemble.gibbsRanges(:,2)));
 	
     % Find independent variables for the any of the sampling algorithm (only the first time)
     if (popIdx==1)       
@@ -47,7 +47,24 @@ if (strcmpi(ensemble.sampler,'rejection')||strcmpi(ensemble.sampler,'SMC'))
                     
                     % Initialize prob parameters of reversibilities (check that there is no dead-end reversibility) ~ Dir(1)
                     revMatrix = ensemble.revMatrix{ensemble.kinActRxns(activRxnIdx),strucIdx};
-                    if (size(revMatrix,1)==1)
+                    
+                    promiscRxnsList = ensemble.promiscuity{strucIdx}{ensemble.kinActRxns(activRxnIdx)};
+                    % For promiscuous reactions set alphaReversibilities = revMatrix after removing columns with all zeroes 
+                    if size(promiscRxnsList,1) > 0  
+                        
+                        % Remove zero columns from revMatrix
+                        revMatrixTemp = revMatrix;
+                        revMatrixTemp( :, ~any(revMatrixTemp,1) ) = [];
+                        ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaReversibilities = revMatrixTemp;
+                        
+                        % Initialize modifiers (if any) ~ numModifiers x Beta(1)
+                        if any(sum(revMatrix)==0)
+                            nRows = (sum(sum(revMatrix)==0));
+                            ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).betaModiferElemFlux = ones(nRows,2);
+                        end
+                        
+                    % If the reaction is not promiscuous
+                    elseif (size(revMatrix,1)==1)
                         ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaReversibilities = ones(1,sum(revMatrix));
                         
                         % Initialize modifiers (if any) ~ numModifiers x Beta(1)
@@ -56,8 +73,18 @@ if (strcmpi(ensemble.sampler,'rejection')||strcmpi(ensemble.sampler,'SMC'))
                         end
                         
                     % For branched mechanisms do as follows
+                    % Marta: changing this to work with random mechanisms with inhibitions - hopefully it won't break
                     elseif (size(revMatrix,1)>1)
-                        ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaReversibilities = ones(1,size(revMatrix,2));
+                        revMatrixTemp = revMatrix;
+                        revMatrixTemp( :, ~any(revMatrixTemp,1) ) = [];
+                        ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaReversibilities = ones(1,size(revMatrixTemp,2));
+                        
+                        % Initialize modifiers (if any) ~ numModifiers x Beta(1)
+                        if any(sum(revMatrix)==0)
+                            nRows = (sum(sum(revMatrix)==0));
+                            ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).betaModiferElemFlux = ones(nRows,2);
+                        end
+                        
                     end
                     
                     % Initialize branch factors ~ Beta(1)
@@ -87,10 +114,10 @@ if (strcmpi(ensemble.sampler,'rejection')||strcmpi(ensemble.sampler,'SMC'))
         ensemble.populations(1).weights = ones(ensemble.replenishedParticles(popIdx),1); 
         
         % Check whether there are previous prior information
-        if any(ensemble.prevPrior); ensemble = extractPrior(ensemble); end;
+        if any(ensemble.prevPrior); ensemble = extractPrior(ensemble); end
     end
     
-    % Preallocate memory for sampled parameters
+    % Preallocate memory for sampling parameters
     ensemble.populations(popIdx).models(ensemble.replenishedParticles(popIdx)).poolFactor(numel(ensemble.kinActRxns))                  = 0;    % pool constraint factor ~ Dir(1)
     ensemble.populations(popIdx).models(ensemble.replenishedParticles(popIdx)).gibbsFactor(numel(ensemble.thermoActive))               = 0;    % gibbs free energy of reaction ~ MVN(0,1)
     ensemble.populations(popIdx).models(ensemble.replenishedParticles(popIdx)).rxnParams(numel(ensemble.kinActRxns)).reversibilities   = 0;    % microscopic reversibilites, assumed equal for the active (R) and tense (T) states ~ Dir(1)
@@ -106,4 +133,4 @@ if (strcmpi(ensemble.sampler,'rejection')||strcmpi(ensemble.sampler,'SMC'))
 else
     disp('Sampler selected not found.'); return;
 end
-if verbose; disp('Ensemble successfully initialized.'); end;
+if verbose; disp('Ensemble successfully initialized.'); end

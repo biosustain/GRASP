@@ -25,11 +25,12 @@ Rred     = Rred(abs(singVals)>1e-12,:);
 % If the system is fully determined, compute as follows
 if isempty(Rred)
     vMean(idxUnkn) = -pinv(Sc)*Sm*xMean(idxMeas);
-    vMean(~vMean)  = xMean(idxMeas);
+    assert(size(vMean(~vMean), 1) == size(xMean(idxMeas), 1), 'size(vMean(~vMean), 1) ~= size(xMean(idxMeas), 1), most likely some met that should be balanced was set as not balanced or vice versa. Check the met sheet.');    
+    vMean(~vMean)  = xMean(idxMeas);                                        
     vStd(idxUnkn)  = diag(pinv(Sc)*Sm*Dm*Sm'*pinv(Sc)');
     vStd(~vStd)    = diag(Dm);
     
-    % Else, perform consistency analysis
+    % Else, perform gross error analysis
 else
     errX = Rred*xMean(idxMeas);    % Compute covariance matrix
     Derr = Rred*Dm*Rred';
@@ -41,7 +42,7 @@ else
     Rp        = Rred'*inv(Derr)*Rred;
     xMean_adj = (eye(size(Dm))-Dm*Rp)*xMean(idxMeas);
     xStd_adj  = Dm-Dm*Rp*Dm;   
-    vMean(idxUnkn) = -pinv(Sc)*Sm*xMean_adj;    % Adjust final answers
+    vMean(idxUnkn) = -pinv(Sc)*Sm*xMean_adj;    % Adjust final fluxes
     vMean(~vMean)  = xMean_adj;
     vStd(idxUnkn)  = diag(pinv(Sc)*Sm*xStd_adj*Sm'*pinv(Sc)');
     vStd(~vStd)    = diag(xStd_adj);
