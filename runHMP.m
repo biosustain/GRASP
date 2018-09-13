@@ -8,14 +8,15 @@
 %--------------------- Pedro Saa 2017 -------------------------------------
 clear
 
-rng('default');																											% for reproducibility
+%rng('default');
+rng('shuffle');
 delete(gcp('nocreate'));       				            																% check first that no other process is running
 addpath('./patternFxns','./ensembleFxns','./reactions1');
 
-strain = 'HMP1489'
-replicate_list = [1];
-time_point_list = [0];
-
+strain = 'HMP1489';
+replicate_list = [0];
+time_point_list = [3];
+label = '_unconstrained_old_promiscuous_mix_test';
 
 for time_i = time_point_list
     for rep_i = replicate_list
@@ -29,13 +30,11 @@ for time_i = time_point_list
          % 1. Load information
         iter     = 1;
         popIdx   = 1;
-        ensemble = loadEnsembleStructure(strcat('input/', model_id));		% This line loads the model in the Excel file
+        ensemble = loadEnsembleStructure(strcat('input', label, '/', model_id));		% This line loads the model in the Excel file
  
         % 2. Initialize and perform rejection sampling
         ensemble = initializeEnsemble(ensemble,popIdx,1);
-        
-       
-        finish()
+   
         % Check whether the job is ran in parallel
         disp('Running rejection sampler. Population 1.');
 
@@ -75,8 +74,8 @@ for time_i = time_point_list
         ensemble.populations(1).xopt      = xopt;                                                                               % optimal value found
         ensemble.populations(1).simFluxes = simFluxes;                                                                          % simulated fluxes
         ensemble.populations(1).models    = models;                                                                             % model particles    
-        clearvars -except ensemble popIdx iter strain rep_i time_i replicate_list time_point_list model_id
-        save(strcat('output/ensembleSMC_rejection_', model_id, '.mat'));
+        clearvars -except ensemble popIdx iter strain rep_i time_i replicate_list time_point_list model_id label
+        save(strcat('output', label, '/ensembleSMC_rejection_', model_id, '.mat'));
         %save(strcat('ensembleSMC_rejection_HMP1489_r0_t0_MA.mat'));        
 
 

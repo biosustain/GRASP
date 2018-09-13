@@ -6,6 +6,7 @@ function ensemble = initializeEnsemble(ensemble,popIdx,verbose)
 %
 % Outputs:  (ensemble)    initialized ensemble (structure)
 %------------------------Pedro Saa 2016, Marta Matos 2018------------------
+
 if (nargin<3); verbose = 0; end
 
 % Determine the type of sampler selected (rejection is the only sampler currently supported)
@@ -133,4 +134,5 @@ if strcmpi(ensemble.sampler,'ORACLE')||strcmpi(ensemble.sampler,'rejection')||st
 else
     disp('Sampler selected not found.'); return;
 end
+
 if verbose; disp('Ensemble successfully initialized.'); end

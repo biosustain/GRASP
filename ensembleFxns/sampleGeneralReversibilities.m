@@ -1,4 +1,5 @@
-function [ensemble,models] = sampleGeneralReversibilities(ensemble, models, RT, strucIdx)
+function [ensemble, models] = sampleGeneralReversibilities(ensemble, models, RT, strucIdx)
+
 %--------------------------------------------------------------------------
 % Function used to calculate the reversibilities for each reaction
 % 
@@ -109,7 +110,9 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
             lbRev = randomRev;
             lbRev(sum(revMatrix)~=0) = lbRev;                                                                     % Fill rev's for deadends with zeros
             lbRev(sum(revMatrix)==0) = 0;
-            models(1).rxnParams(activRxnIdx).reversibilities = lbRev';
+
+            models(1).rxnParams(activRxnIdx).reversibilities = lbRev';     
+
             randomRev = computeBranchedReversibilities(revMatrix,lbRev);
             randomRev(randomRev==1) = 0;
             

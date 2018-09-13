@@ -13,6 +13,7 @@ addpath('./patternFxns','./ensembleFxns');
 % 1. Load information
 iter     = 1;
 popIdx   = 1;
+
 ensemble = loadEnsembleStructure('input_test/MEP_example');           % Here the test case MEP pathway model is chosen
 % ensemble = loadEnsembleStructure('input_test/HMP1489_r1_t0_profile');   % Here the test case HMP is chosen
 
@@ -79,4 +80,6 @@ ensemble.populations(1).xopt      = xopt;                                       
 ensemble.populations(1).simFluxes = simFluxes;                                                                          % simulated fluxes
 ensemble.populations(1).models    = models;                                                                             % model particles
 clearvars -except ensemble popIdx iter
+
 save('output_test/ensembleSMC_rejection_MEP.mat');
+

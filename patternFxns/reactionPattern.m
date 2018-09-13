@@ -1,4 +1,4 @@
-function [revMatrix,forwardFlux,metList] = reactionPattern(patternName,reactionName,flag,strucIdx)
+function [revMatrix,forwardFlux,metList] = reactionPattern(patternName,reactionName,flag,strucIdx, promiscuousRxnI)
 %--------------------------------------------------------------------------
 % Main function to build the reaction rate equation and to extract the
 % required parameters for the subsequent sampling
@@ -12,7 +12,7 @@ function [revMatrix,forwardFlux,metList] = reactionPattern(patternName,reactionN
 %                         reaction pattern
 %          (forwardFlux)  list with the edges of the forward reactions
 %              (metList)  list with the reaction metabolites
-%-----------------------Pedro Saa 2016-------------------------------------
+%-----------------------Pedro Saa 2016, Marta Matos 2018-------------------
 % 1. Read the input file and extract the required information
 [Nodes,Link,KineticMatrix,forwardFlux] = readInput(patternName);
 [LinkMatrix,LinkList] = getLink(Link);
@@ -27,7 +27,9 @@ for i = 1:size(KineticMatrix,1)
         % extract indices for reactions producing P, Q or R
         if (isempty(strfind(KineticMatrix{i,j},'P'))~=1 ||...
                 isempty(strfind(KineticMatrix{i,j},'Q'))~=1 ||...
-                isempty(strfind(KineticMatrix{i,j},'R'))~=1)
+                isempty(strfind(KineticMatrix{i,j},'R'))~=1 ||...
+                isempty(strfind(KineticMatrix{i,j},'S'))~=1)
+            
             prodIndex = [prodIndex;j,i];
             
             % indexes of P are saved for subsequent operations
@@ -41,13 +43,17 @@ for i = 1:size(KineticMatrix,1)
         % extract indices for reactions consuming A, B or C
         elseif  (isempty(strfind(KineticMatrix{i,j},'A'))~=1 ||...
                 isempty(strfind(KineticMatrix{i,j},'B'))~=1 ||...
-                isempty(strfind(KineticMatrix{i,j},'C'))~=1)
+                isempty(strfind(KineticMatrix{i,j},'C'))~=1 ||...
+                isempty(strfind(KineticMatrix{i,j},'D'))~=1)
             subsIndex = [subsIndex;i,j];
         end
     end
 end
+
 tempPath  = colVector(cycledPaths(unique(subsIndex(:,1)),unique(prodIndex(:,1)),forwardFlux));
+tempPath = tempPath(~cellfun('isempty',tempPath)); % get a column vector with all paths
 revMatrix = zeros(size(tempPath,1),size(forwardFlux,1));
+
 for k = 1:size(tempPath,1)
     tempPathList = [];
     
@@ -71,6 +77,7 @@ for k = 1:size(tempPath,1)
         end
     end
 end
+
 revMatrix = unique(revMatrix,'rows');
 
 % 2. Process using alpha-numerical algebra
@@ -185,7 +192,7 @@ metList = unique(metList);
 % 6. Output the .m file (optional)
 reactionName = [reactionName,num2str(strucIdx)];
 if (flag == 1)                   % Non-allosteric reaction
-    buildReaction(state,rateList,metList,numTerm,prodNum,reactionName);
+    buildReaction(state,rateList,metList,numTerm,prodNum,reactionName, promiscuousRxnI);
 elseif (flag == 2)               % Allosteric reaction
-    buildReaction(state,rateList,metList,numTerm,prodNum,[reactionName,'Catalytic']);
+    buildReaction(state,rateList,metList,numTerm,prodNum,[reactionName,'Catalytic'], promiscuousRxnI);
 end

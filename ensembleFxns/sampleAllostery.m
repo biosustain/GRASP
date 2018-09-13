@@ -64,4 +64,3 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
 end
 
 end
-
