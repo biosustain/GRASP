@@ -84,11 +84,14 @@ while true
     % Sample Reversibilities
     [ensemble, models] = sampleGeneralReversibilities(ensemble, models, RT, strucIdx);
     
+    % Sample enzyme abundances
+    models = sampleEnzymeAbundances(ensemble,models,strucIdx);
+     
+    % Sample modifier elementary fluxes (positions are given where exp(R)=1)
+    models = sampleModifierElemFluxes(ensemble, models, strucIdx);
+        
     % Calculate rate parameters for allosteric reaction part;
     [ensemble, models] = sampleAllostery(ensemble, models, strucIdx);
-    
-    % Sample modifier elementary fluxes (positions are given where exp(R)=1)
-    [models] = sampleModifierElemFluxes(ensemble, models, strucIdx);
     
     %thermoCounter   = 1;
     for activRxnIdx = 1:numel(ensemble.kinActRxns)
@@ -114,18 +117,8 @@ while true
             revMatrix = ensemble.revMatrix{ensemble.kinActRxns(activRxnIdx),strucIdx};
             reverTemp = ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)};
             reactionFlux = ensemble.reactionFluxAllosteric(ensemble.kinActRxns(activRxnIdx));
+            randomEnzymesR = models(1).rxnParams(activRxnIdx).enzymeAbundances';
                         
-            % Sample enzyme abundances
-            alphaEnzymesR  = ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaEnzymeAbundances;
-            
-            % If it's a promiscuous reaction and it's not the first one in the set of promiscuous reactions
-            if size(promiscRxnsList,1) > 0 && ensemble.kinActRxns(activRxnIdx) ~= promiscRxnsList(1)                    % Get the abundances from the first reaction in the set
-                randomEnzymesR = models(1).rxnParams(promiscRxnsList(1)).enzymeAbundances';
-            else
-                randomEnzymesR = randg(alphaEnzymesR');                                                                 % Sample from the gamma distribution with parameter alpha
-                randomEnzymesR = randomEnzymesR/sum(randomEnzymesR);
-            end
-            models(1).rxnParams(activRxnIdx).enzymeAbundances = randomEnzymesR';
             
             % Sample branching factor (if necessary)
             branchFactor = 1;
