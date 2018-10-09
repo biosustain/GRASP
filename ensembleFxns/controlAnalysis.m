@@ -1,8 +1,7 @@
 function controlAnalysis(ensemble,strucIdx)
 %--------------------------- Pedro Saa UQ 2018 ----------------------------
-clc,close all
-addpath('reactions1','reactions2','reactions3','reactions4',...
-    'reactions5','reactions6','reactions7','reactions8')
+% Add kinetic fxns to the path
+addKineticFxnsToPath(ensemble);
 
 % Find particles of the appropriate structure
 particleIdx = find(ensemble.populations(end).strucIdx==strucIdx);
@@ -17,14 +16,11 @@ Sred         = ensemble.Sred;
 kinInactRxns = ensemble.kinInactRxns;
 subunits     = ensemble.subunits{strucIdx};
 numFluxes    = size(ensemble.populations(end).simFluxes{1},1);
-ix_mets      = 1:22;
 ix_enz       = ix_mets(end)+1:freeVars;
 metNames     = ensemble.mets(ensemble.metsActive);
 rxnNames     = ensemble.rxns;
-metNames([6,7,21,22]) = {'fld[ox]','fld[red]','mecpp[e]','dxp[e]'};
-rxnNames([2,7,13,14]) = {'dxp[ex]','mecpp[ex]','iso[ex]','bio[ex]'};
-conditions   = {'MBo10','MBo25','MBo13','MBo17','MBo8'};
 
+% Define colormap for the heatmap
 try
     load('cmap_rgb.mat')
 catch
@@ -94,7 +90,7 @@ for ix = 1:nCondition
     set(gca,'yticklabel',metNames,'xticklabel',rxnNames)    
     ylabel('Metabolites')
     xlabel('Reactions')
-    title(['Concentration control coefficients condition: ',conditions{ix}])
+    title(['Concentration control coefficients condition: ',num2str(ix)])
     set(gca,'FontSize',6,'FontName','arial')
     caxis([-2.5 2.5])
     ax = subplot(2,1,1);
@@ -106,7 +102,7 @@ for ix = 1:nCondition
     set(gca,'xticklabel',rxnNames,'yticklabel',rxnNames)
     xlabel('Enzymes')
     ylabel('Reactions')
-    title(['Flux control coefficients condition: ',conditions{ix}])
+    title(['Flux control coefficients condition: ',num2str(ix)])
     set(gca,'FontSize',6,'FontName','arial')
     caxis([-2.5 2.5])
     ax=subplot(2,1,2);
