@@ -17,14 +17,21 @@ c = '%';
 fid = fopen(['reactions',num2str(strucIdx),'/',kineticFxn,'.m'],'w');
 fprintf(fid,['function [f,grad] = ',kineticFxn,'(x,model,fixedExch,Sred,kinInactRxns,subunits,flag)\n']);
 fprintf(fid,'%s Pre-allocation of memory\n',c);
+fprintf(fid,'h = 1e-8;\n');									% Step length
+fprintf(fid,'%s Defining metabolite and enzyme species\n',c);
+fprintf(fid,'if flag==1\n');
+fprintf(fid,'x = x(:);\n');									% Column vector
 fprintf(fid,['v = zeros(',num2str(size(ensemble.Sred,2)),',',num2str(totalEvals),');\n']);      % Preallocation of memory (rxns)
 fprintf(fid,['E = zeros(',num2str(size(ensemble.Sred,2)),',',num2str(totalEvals),');\n']);      % Preallocation of memory (enz)
-fprintf(fid,'h = 1e-8;\n');                                                                                               % Step length
-fprintf(fid,'x = x(:);\n');                                                                                               % Column vector
+fprintf(fid,['x = [x,x(:,ones(1,',num2str(totalEvals-1),')) + diag(h*1i*ones(',num2str(totalEvals-1),',1))];\n']);      % Preallocation of memory (free vars)                                                                                               
+fprintf(fid,'else\n');
+fprintf(fid,['v = zeros(',num2str(size(ensemble.Sred,2)),',size(x,2);\n']);      % Preallocation of memory (rxns)
+fprintf(fid,['E = zeros(',num2str(size(ensemble.Sred,2)),',size(x,2);\n']);      % Preallocation of memory (enz)
+fprintf(fid,'end\n');
 
 % Define metabolite species
 fprintf(fid,'%s Defining metabolite and enzyme species\n',c);
-fprintf(fid,['x = [x,x(:,ones(1,',num2str(totalEvals-1),')) + diag(h*1i*ones(',num2str(totalEvals-1),',1))];\n']);
+
 i = 1; r = 1;
 for j = 1:numel(metsActive)+numel(enzActive)
     if j<=numel(metsActive)
@@ -251,7 +258,7 @@ for i = 1:numel(ensemble.activeRxns)
 end
 
 % Definition of final rates
-fprintf(fid,'if flag\n');
+fprintf(fid,'if flag==1\n');
 fprintf(fid,'%s Final rates\n',c);
 fprintf(fid,'y = sum((Sred*(E.*v)).^2);\n');
 fprintf(fid,'f = real(y(1));\n');
@@ -259,7 +266,7 @@ fprintf(fid,'if (nargout>1) %s gradient is required\n',c);
 fprintf(fid,'grad = imag(y(2:end))/h;\n');
 fprintf(fid,'end\n');
 fprintf(fid,'else\n');
-fprintf(fid,'f = E(:,1).*v(:,1);\n');
+fprintf(fid,'f = E.*v;\n');
 fprintf(fid,'grad = [];\n');
 fprintf(fid,'end');
 fclose(fid);
