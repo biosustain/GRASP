@@ -1,5 +1,12 @@
 function controlAnalysis(ensemble,strucIdx)
 %--------------------------- Pedro Saa UQ 2018 ----------------------------
+if nargin<2
+    strucIdx = 1;
+    if ensemble.populations(end).strucIdx(1)==0
+        ensemble.populations(end).strucIdx = ones(numel(ensemble.populations(end).strucIdx),1);
+    end
+end
+
 % Add kinetic fxns to the path
 addKineticFxnsToPath(ensemble);
 
@@ -8,17 +15,24 @@ particleIdx = find(ensemble.populations(end).strucIdx==strucIdx);
 numModels   = numel(particleIdx);
 
 % Optimization & simulation parameters
-nCondition   = size(ensemble.expFluxes,2)+1;
 fixedExchs   = ensemble.fixedExch;
 kineticFxn   = str2func(ensemble.kineticFxn{strucIdx});
-freeVars     = size(ensemble.populations(end).xopt{1},1);
+freeVars     = numel(ensemble.freeVars);
 Sred         = ensemble.Sred;
 kinInactRxns = ensemble.kinInactRxns;
 subunits     = ensemble.subunits{strucIdx};
-numFluxes    = size(ensemble.populations(end).simFluxes{1},1);
+numFluxes    = numel(ensemble.fluxRef);
+ix_mets      = 1:numel(ensemble.metsActive);
 ix_enz       = ix_mets(end)+1:freeVars;
 metNames     = ensemble.mets(ensemble.metsActive);
 rxnNames     = ensemble.rxns;
+
+% Check sampler mode to determine the numer of conditions
+if ~strcmpi(ensemble.sampler,'ORACLE')
+    nCondition   = size(ensemble.expFluxes,2)+1;
+else
+    nCondition = 1;
+end
 
 % Define colormap for the heatmap
 try
@@ -48,7 +62,7 @@ for ix = 1:nCondition
         % Define reference state
         xref = xopt(ix_mets);
         Eref = xopt(ix_enz);
-
+        
         % Define step length
         hstep_x = hstep*xref;
         xmets   = repmat(xref,1,numel(xref)) + 1i*diag(hstep_x);
@@ -87,12 +101,12 @@ for ix = 1:nCondition
     subplot(2,1,1)
     imagesc(xControl{ix})
     set(gca,'xticklabel',[],'yticklabel',[],'ytick',1:numel(ix_mets),'xtick',1:numFluxes)
-    set(gca,'yticklabel',metNames,'xticklabel',rxnNames)    
+    set(gca,'yticklabel',metNames,'xticklabel',rxnNames)
     ylabel('Metabolites')
     xlabel('Reactions')
     title(['Concentration control coefficients condition: ',num2str(ix)])
     set(gca,'FontSize',6,'FontName','arial')
-    caxis([-2.5 2.5])
+    caxis([-3 3])
     ax = subplot(2,1,1);
     colormap(ax,cmap)
     colormap(cmap)
@@ -104,7 +118,7 @@ for ix = 1:nCondition
     ylabel('Reactions')
     title(['Flux control coefficients condition: ',num2str(ix)])
     set(gca,'FontSize',6,'FontName','arial')
-    caxis([-2.5 2.5])
+    caxis([-3 3])
     ax=subplot(2,1,2);
     colormap(ax,cmap)
 end
