@@ -59,7 +59,7 @@ for i = 1:numel(ensemble.activeRxns)
                 
         for reactantI = 1:size(reactants, 2)
             if ismember(reactants{reactantI},ensemble.mets(ensemble.metsFixed))
-                reactants{reactantI} = strcat('ones(1,',num2str(totalEvals),')');
+                reactants{reactantI} = strcat('ones(1,size(x,2))');
             end
         end
         
@@ -140,13 +140,13 @@ for i = 1:numel(ensemble.activeRxns)
                 reactants      = [reactants,substrates{1},','];
                 rxnMetLinks{i} = [rxnMetLinks{i},substrates(1)];
             else
-                reactants = [reactants,'ones(1,',num2str(totalEvals),'),'];
+                reactants = [reactants,'ones(1,size(x,2)),'];
             end
             if ~ismember(products{1},ensemble.mets(ensemble.metsFixed))
                 reactants      = [reactants,products{1},','];
                 rxnMetLinks{i} = [rxnMetLinks{i},products(1)];
             else
-                reactants = [reactants,'ones(1,',num2str(totalEvals),'),'];
+                reactants = [reactants,'ones(1,size(x,2)),'];
             end
 
         % Enzymatic reactions
@@ -156,7 +156,7 @@ for i = 1:numel(ensemble.activeRxns)
                     reactants      = [reactants,substrates{j},';'];
                     rxnMetLinks{i} = [rxnMetLinks{i},substrates(j)];
                 else
-                    reactants = [reactants,'ones(1,',num2str(totalEvals),');'];
+                    reactants = [reactants,'ones(1,size(x,2));'];
                 end
             end
 
@@ -179,14 +179,14 @@ for i = 1:numel(ensemble.activeRxns)
                         reactants      = [reactants,products{j},';'];
                         rxnMetLinks{i} = [rxnMetLinks{i},products(j)];
                     else
-                        reactants = [reactants,'ones(1,',num2str(totalEvals),');'];
+                        reactants = [reactants,'ones(1,size(x,2));'];
                     end
                 else
                     if ~ismember(products{j},ensemble.mets(ensemble.metsFixed))
                         reactants      = [reactants,products{j}];
                         rxnMetLinks{i} = [rxnMetLinks{i},products(j)];
                     else
-                        reactants = [reactants,'ones(1,',num2str(totalEvals),');'];
+                        reactants = [reactants,'ones(1,size(x,2));'];
                     end
                 end
             end
