@@ -43,7 +43,7 @@ for j = 1:numel(metsActive)+numel(enzActive)
     i = i+1;
 end
 if ~isempty(ensemble.kinInactRxns)
-    fprintf(fid,['E(kinInactRxns,:) = fixedExch(:,ones(1,size(x,2));\n']);  % Define fixed protein concentrations
+    fprintf(fid,['E(kinInactRxns,:) = fixedExch(:,ones(1,size(x,2)));\n']);  % Define fixed protein concentrations
 end
 
 % Define equations and determine connectivity between reactions and
