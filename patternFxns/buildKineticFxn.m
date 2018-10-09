@@ -25,8 +25,8 @@ fprintf(fid,['v = zeros(',num2str(size(ensemble.Sred,2)),',',num2str(totalEvals)
 fprintf(fid,['E = zeros(',num2str(size(ensemble.Sred,2)),',',num2str(totalEvals),');\n']);      % Preallocation of memory (enz)
 fprintf(fid,['x = [x,x(:,ones(1,',num2str(totalEvals-1),')) + diag(h*1i*ones(',num2str(totalEvals-1),',1))];\n']);      % Preallocation of memory (free vars)                                                                                               
 fprintf(fid,'else\n');
-fprintf(fid,['v = zeros(',num2str(size(ensemble.Sred,2)),',size(x,2);\n']);      % Preallocation of memory (rxns)
-fprintf(fid,['E = zeros(',num2str(size(ensemble.Sred,2)),',size(x,2);\n']);      % Preallocation of memory (enz)
+fprintf(fid,['v = zeros(',num2str(size(ensemble.Sred,2)),',size(x,2));\n']);      % Preallocation of memory (rxns)
+fprintf(fid,['E = zeros(',num2str(size(ensemble.Sred,2)),',size(x,2));\n']);      % Preallocation of memory (enz)
 fprintf(fid,'end\n');
 
 % Define metabolite species
