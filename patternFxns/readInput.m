@@ -15,6 +15,7 @@ try
 catch
     filename = ['patterns/',filename];
     InputFileFlow = textread([filename,'.txt'],'%s');
+   fprintf(2,'\nThe mechanism file you added could not be found.\nPlease make sure the kinetic mechanism name corresponds to a file with the same name in the folder patterns.\n Also the file extension should be ".txt"\n\n')
 end
 FileLength = length(InputFileFlow); nodeList = [];
 for i = 1 : FileLength/3     
