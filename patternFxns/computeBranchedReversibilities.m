@@ -9,9 +9,13 @@ function branchedRev = computeBranchedReversibilities(revMatrix,lbRev)
 % Outputs:    (randomRev) feasible random reversibilities from the pattern
 %-----------------------Pedro Saa 2016-------------------------------------
 % Cast optimization problem and solve branched Rev
-options     = optimset('Display','off');
 [m,n]       = size(revMatrix);
 ub          = ones(n,1);
 beq         = ones(m,1);
-branchedRev = linprog(-ones(n,1),[],[],revMatrix,beq,lbRev,ub,[],options);
-% branchedRev = linprog(-ones(n,1),[],[],revMatrix,beq,lbRev,ub);
+try
+    options.Display = 'off';
+    branchedRev = linprog(-ones(n,1),[],[],revMatrix,beq,lbRev,ub,options);
+catch
+    options     = optimset('Display','off');
+    branchedRev = linprog(-ones(n,1),[],[],revMatrix,beq,lbRev,ub,[],options);
+end
