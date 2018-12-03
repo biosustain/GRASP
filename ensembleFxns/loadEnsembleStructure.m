@@ -179,6 +179,7 @@ disp('Metabolomics data loaded.');
 %% 5. Extract kinetic information
 ensemble.prevPrior = zeros(1,ensemble.numStruct);
 ensemble.prevPriorInfo{ensemble.numStruct,2} = [];
+
 for jx = 1:ensemble.numStruct
     try
         [priorRxns,priorParams] = xlsread(xlsxFile,['prior',num2str(jx)]);
@@ -193,7 +194,7 @@ for jx = 1:ensemble.numStruct
     try
         [xKinetic,strKinetic] = xlsread(xlsxFile,['kinetics',num2str(jx)]);                    % read kinetic info from structure jx
     catch
-        disp(['Model structures loaded: ',num2str(jx-1)]);
+        error("The kinetics sheet couln't be read. Make sure it is named as kinetics1.");
         break;
     end
     
@@ -220,7 +221,8 @@ for jx = 1:ensemble.numStruct
             ensemble.posEffectors{jx}{index}  = strKinetic{ix,8};                                % string array with positive effector names for each reaction
         end
     else
-        disp('The number of active rxns does not match the number of kinetic mechanisms.'); break;
+        disp('The number of active rxns does not match the number of kinetic mechanisms.'); 
+        break;
     end    
     if (jx==1)
         ensemble.kinActRxns   = find(~strcmp(ensemble.rxnMechanisms{jx},'fixedExchange'));
@@ -385,4 +387,9 @@ for jx = 1:ensemble.numStruct
     buildKineticFxn(ensemble,ensemble.kineticFxn{jx},jx);
     disp(['Kinetic information loaded and kinetic model built: Structure ',num2str(jx),'.']);
 end
+
+assert(jx-1 > 0,'No module structures were loaded')
+
 disp('Ensemble structure ready.');
+
+
