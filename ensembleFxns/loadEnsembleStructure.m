@@ -388,8 +388,6 @@ for jx = 1:ensemble.numStruct
     disp(['Kinetic information loaded and kinetic model built: Structure ',num2str(jx),'.']);
 end
 
-assert(jx-1 > 0,'No module structures were loaded')
-
 disp('Ensemble structure ready.');
 
 
