@@ -13,9 +13,12 @@ function [nodeList,edge,kineticMatrix,forwardFlux] = readInput(filename)
 try
     InputFileFlow = textread([filename,'.txt'],'%s');
 catch
-    filename = ['patterns/',filename];
-    InputFileFlow = textread([filename,'.txt'],'%s');
-   fprintf(2,'\nThe mechanism file you added could not be found.\nPlease make sure the kinetic mechanism name corresponds to a file with the same name in the folder patterns.\n Also the file extension should be ".txt"\n\n')
+	try
+        filename = ['patterns/',filename];
+        InputFileFlow = textread([filename,'.txt'],'%s');
+    catch
+        error(strcat('The mechanism named ', filename, ' file you added could not be found. Please make sure the kinetic mechanism name corresponds to a file with the same name in the folder patterns. Also the file extension should be ".txt"'));
+    end
 end
 FileLength = length(InputFileFlow); nodeList = [];
 for i = 1 : FileLength/3     
