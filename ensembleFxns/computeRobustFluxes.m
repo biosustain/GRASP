@@ -25,7 +25,7 @@ Rred     = Rred(abs(singVals)>1e-12,:);
 % If the system is fully determined, compute as follows
 if isempty(Rred)
     vMean(idxUnkn) = -pinv(Sc)*Sm*xMean(idxMeas);
-    assert(size(vMean(~vMean), 1) == size(xMean(idxMeas), 1), 'size(vMean(~vMean), 1) ~= size(xMean(idxMeas), 1), most likely some met that should be balanced was set as not balanced or vice versa. Check the met sheet.');    
+    assert(size(vMean(~vMean), 1) == size(xMean(idxMeas), 1), 'size(vMean(~vMean), 1) ~= size(xMean(idxMeas), 1), most likely some met that should be balanced was set as not balanced or vice versa. Check the met sheet. Also make sure the reactions in measRates are part of the stoichiometry matrix.');    
     vMean(~vMean)  = xMean(idxMeas);                                        
     vStd(idxUnkn)  = diag(pinv(Sc)*Sm*Dm*Sm'*pinv(Sc)');
     vStd(~vStd)    = diag(Dm);
