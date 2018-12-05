@@ -1,11 +1,25 @@
 # GRASP 
 
-## Requirements
+## Matlab requirements
 
 * Matlab's Parallel Computing Toolbox
 * Matlab's Optimization Toobox
 * Matlab's Bioinformatics Toolbox
 * Gurobi
+
+## Python requirements (only for the scripts in `python_code`, which are not really part of GRASP)
+
+* numpy
+* pandas
+* altair (only for the jupyter notebook)
+
+## Checking your GRASP input Excel file
+
+To make sure your GRASP input file has no issues (or at least a few less) before running GRASP, you can use:
+ 1. the script `check_input_model.py` in `python_code` to check:
+    1. that the metaboltite/reaction order in all sheets is the same as in stoic;
+    2. that, in the kinetics sheet, there are no metabolites separated by commas, semi colons, or dots (these should be separated by a space).
+ 2. `explore_initial_dGs_and_fluxes` in `python_code`, to calculate and visualize each reaction flux and delta G (given a GRASP input model). It is useful to find the TMFA problematic reactions.
 
 
 ## How to specify the input and pitfalls
@@ -30,7 +44,6 @@ To check if the order of metabolites and reactions in all sheets is consistent w
 1. Go into the folder reactions1, find the `model_name.m` file and open it;
 2. check the order of metabolites in the flux function call;
 3. open the respective flux function and make sure that A,B,P,Q, etc correspond to the metabolites you expect.
-
 
 
 ## Using GRASP with promiscuous reactions
