@@ -14,7 +14,7 @@ addpath('./patternFxns','./ensembleFxns');
 iter     = 1;
 popIdx   = 1;
 
-ensemble = loadEnsembleStructure('input_test/MEP_example');           % Here the test case HMP pathway model is chosen
+ensemble = loadEnsembleStructure('input_test/HMP1489_r1_t0_test_gibbs');           % Here the test case HMP pathway model is chosen
 
 % 2. Initialize and perform rejection sampling
 ensemble = initializeEnsemble(ensemble,popIdx,1);
