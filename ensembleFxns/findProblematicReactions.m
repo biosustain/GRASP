@@ -11,14 +11,14 @@ row_list = [];
 dg_list = [];
 
 sol = runOptimization(DGr_std_min,DGr_std_max,K,delta,n,Sflux,ineqConstraints,model,params);
-        
-while strcmp(sol.status,'OPTIMAL') && row < numel(DGr_std_min)
+
+while strcmp(sol.status,'OPTIMAL') && row <= numel(DGr_std_min)
     
     DGr_std_min(row) = DGr_std_min_orig(row);
     DGr_std_max(row) = DGr_std_max_orig(row);
     
     sol = runOptimization(DGr_std_min,DGr_std_max,K,delta,n,Sflux,ineqConstraints,model,params);
-    
+
     if strcmp(sol.status,'INFEASIBLE')
         DGr_std_min(row) = -100;
         DGr_std_max(row) = 100;
@@ -28,7 +28,6 @@ while strcmp(sol.status,'OPTIMAL') && row < numel(DGr_std_min)
         sol = runOptimization(DGr_std_min,DGr_std_max,K,delta,n,Sflux,ineqConstraints,model,params);
 
     end 
-    
     row = row +1;
         
 end
