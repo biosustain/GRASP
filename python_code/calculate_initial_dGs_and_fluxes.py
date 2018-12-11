@@ -49,13 +49,11 @@ def calculate_dG(file_in, gas_constant, temperature, rxn_order=None):
     ma_df = pd.DataFrame()
 
     stoic_df = pd.read_excel(file_in, sheet_name='stoic')
-    stoic_df = stoic_df.iloc[:5, :]
 
     mets_conc_df = pd.read_excel(file_in, sheet_name='thermoMets')
     mets_conc_df['mean (M)'] = (mets_conc_df['min (M)'] + mets_conc_df['max (M)']) / 2.
 
     dG_std_df = pd.read_excel(file_in, sheet_name='thermoRxns')
-    dG_std_df = dG_std_df.iloc[:5, :]
     dG_std_df['∆Gr_mean'] = (dG_std_df['∆Gr\'_min (kJ/mol)'] + dG_std_df['∆Gr\'_max (kJ/mol)']) / 2.
 
     rxn_names = stoic_df['rxn ID'].values
@@ -162,8 +160,8 @@ def _get_meas_rates(file_in, rxn_list):
     for rxn_i, rxn in enumerate(rxn_list):
         for meas_rxn_i in range(len(meas_rates_df.index)):
             if rxn == meas_rates_ids[meas_rxn_i]:
-                meas_rates_mean[rxn_i] = meas_rates_df['vref_mean'].values[meas_rxn_i]
-                meas_rates_std[rxn_i] = meas_rates_df['vref_std'].values[meas_rxn_i]
+                meas_rates_mean[rxn_i] = meas_rates_df['MBo10_mean'].values[meas_rxn_i]
+                meas_rates_std[rxn_i] = meas_rates_df['MBo10_std'].values[meas_rxn_i]
 
     return meas_rates_mean, meas_rates_std
 
@@ -187,7 +185,7 @@ def get_robust_fluxes(file_in, rxn_order=None):
 
     fluxes_df = pd.DataFrame()
     stoic_balanced, rxn_list = _get_balanced_s_matrix(file_in)
-    n_reactions = len(rxn_order)
+    #n_reactions = len(rxn_order)
 
     meas_rates_mean, meas_rates_std = _get_meas_rates(file_in, rxn_list)
     inactive_rxns_ind = _get_inactive_reactions(file_in)
@@ -196,13 +194,11 @@ def get_robust_fluxes(file_in, rxn_order=None):
 
     v_mean[inactive_rxns_ind] = 0
     v_std[inactive_rxns_ind] = 0
-    v_mean = v_mean[:n_reactions]
-    v_std = v_std[:n_reactions]
 
     fluxes_df['flux'] = v_mean
     fluxes_df['flux_std'] = v_std
-
-    fluxes_df.index = rxn_list[:n_reactions]
+    
+    fluxes_df.index = rxn_list 
     if rxn_order:
         fluxes_df = fluxes_df.reindex(rxn_order)
 
