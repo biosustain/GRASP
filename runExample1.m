@@ -6,6 +6,7 @@
 %
 % Outputs:      (-)
 %--------------------- Pedro Saa 2017 -------------------------------------
+clear
 rng('default');																											% for reproducibility
 delete(gcp('nocreate'));       				            																% check first that no other process is running
 addpath('./patternFxns','./ensembleFxns');
