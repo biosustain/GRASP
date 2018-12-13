@@ -78,6 +78,9 @@ for ix = 1:nflux+n+m
     model.obj(ix)    = 1;
     model.modelsense = 'min';
     solmin           = gurobi(model,params);
+    if ~strcmp(solmin.status,'OPTIMAL')
+          error(strcat('Check your metabolite concentration ranges in thermoMets. In particular for minimum values set to 0 change them to a low number like 10^15.'));
+    end
     model.modelsense = 'max';
     solmax           = gurobi(model,params);
     if (ix<=nflux)
