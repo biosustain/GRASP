@@ -36,7 +36,7 @@ To make sure your GRASP input file has no issues (or at least a few less) before
 * if setting compute thermodynamics is set to 1, then in thermoRxns specify the Gibbs standard energies, otherwise specify the reaction Gibbs energies.
 
 
-To check if the order of metabolites and reactions in all sheets is consistent with stoic run your model through `check_input_model.xlsx`. This script will also check if there are any commas, semi-colons, and dots on the metabolites list in the kinetics sheet.
+To check if the order of metabolites and reactions in all sheets is consistent with stoic run your model through `check_input_model.py`. This script will also check if there are any commas, semi-colons, and dots on the metabolites list in the kinetics sheet.
 
 
 ### How to make sure reaction mechanisms are specified correctly:
