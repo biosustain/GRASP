@@ -23,6 +23,14 @@ xMetsThermo         = xlsread(xlsxFile,'thermoMets');                   % load t
 [metsData,idxMets]  = xlsread(xlsxFile,'metsData');                     % load metabolite data (mets)
 ineqConstraints     = xlsread(xlsxFile,'thermo_ineq_constraints');      % load ineq. thermodynamic constraints
 
+% Add m before any metabolite name and r before any reaction name to avoid
+% variables starting with a number
+fixVariableNames(rxnsList, 'r');
+fixVariableNames(metsList, 'm');
+fixVariableNames(idxMeas, 'r');
+fixVariableNames(idxProt, 'r');
+fixVariableNames(idxMets, 'm');
+
 % Build initial ensemble structure
 ensemble.description   = strData{2,2};
 ensemble.sampler       = strData{3,2};
