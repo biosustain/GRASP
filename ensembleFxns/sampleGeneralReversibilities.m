@@ -19,7 +19,7 @@ end
 %thinning = 10;
 %burn_in = 500;
 %tol = 1e-6;
-rTol = 1e-10;
+rTol = 1e-5;
 
 for activRxnIdx = 1:numel(ensemble.kinActRxns)     
 		
@@ -123,7 +123,7 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
             % Double check calculations
             logRev = log(ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)});
             logRev(logRev==-Inf) = 0;
-
+            
             for rxnI = 1:size(revMatrix, 1)
                 assert(abs(sum(logRev.*revMatrix(rxnI, :)') - gibbsTemp/RT) < abs(rTol * gibbsTemp/RT), 'Sum of log-reversibilities does not add up to the Gibbs energy'); 
             end
