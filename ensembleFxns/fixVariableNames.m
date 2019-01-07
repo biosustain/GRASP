@@ -1,15 +1,17 @@
 function outputCell = fixVariableNames(cellWithVariables, prefix)
-%FIXVARIABLENAMES Summary of this function goes here
-%   Detailed explanation goes here
+%--------------------------------------------------------------------------
+% Takes in a cell where the first column are metabolite or reaction names
+% and adds the specified prefix to each name.
+%
+% Inputs:       cellWithVariables (cell), prefix (string)
+%
+% Outputs:      outputCell (cell)
+%--------------------- Marta Matos 2019 -----------------------------------
 
-
-disp(cellWithVariables);
 
 for row=2:size(cellWithVariables,1)
     cellWithVariables{row,1} = strcat(prefix, '_', cellWithVariables{row,1});
 end
-
-disp(cellWithVariables);
 
 end
 
