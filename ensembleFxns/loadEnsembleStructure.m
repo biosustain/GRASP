@@ -25,11 +25,12 @@ ineqConstraints     = xlsread(xlsxFile,'thermo_ineq_constraints');      % load i
 
 % Add m before any metabolite name and r before any reaction name to avoid
 % variables starting with a number
-fixVariableNames(rxnsList, 'r');
-fixVariableNames(metsList, 'm');
-fixVariableNames(idxMeas, 'r');
-fixVariableNames(idxProt, 'r');
-fixVariableNames(idxMets, 'm');
+rxnsList = fixVariableNames(rxnsList, 'r');
+metsList = fixVariableNames(metsList, 'm');
+idxMeas = fixVariableNames(idxMeas, 'r');
+idxProt = fixVariableNames(idxProt, 'r');
+idxMets = fixVariableNames(idxMets, 'm');
+
 
 % Build initial ensemble structure
 ensemble.description   = strData{2,2};
@@ -201,6 +202,7 @@ for jx = 1:ensemble.numStruct
     end
     try
         [xKinetic,strKinetic] = xlsread(xlsxFile,['kinetics',num2str(jx)]);                    % read kinetic info from structure jx
+        strKinetic = fixVariableNames(strKinetic, 'r', 'kinetics');     
     catch
         error("The kinetics sheet couln't be read. Make sure it is named as kinetics1.");
         break;
