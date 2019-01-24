@@ -12,6 +12,7 @@
 * numpy
 * pandas
 * altair (only for the jupyter notebook)
+* vega (dependency of altair)
 
 ## Checking your GRASP input Excel file
 
