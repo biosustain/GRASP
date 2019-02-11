@@ -27,7 +27,11 @@ To make sure your GRASP input file has no issues (or at least a few less) before
 
 * The order of metabolites in every sheet of the input excel file needs to be the same as in the stoich sheet;
 * the order of reactions in every sheet of the input excel file needs to be the same as in the stoich sheet;
-* when setting the order of reactions in every sheet, make sure to put exchange reactions at the end;
+* when setting the order of reactions in every sheet the order of reactions should be:
+	1. all reactions with kinetic parameters (Uni-Uni, massAction, etc.);
+	2. all reactions with no kinetic parameters in the order:
+		1. freeExchange
+		2. fixedExchange
 * in the kinetics1 sheet
 	* if there are more than one inhibitor/activator/effector these should be separated by a single space;
 	* if you don't specify the order of ligand binding/release it will be taken from the stoichiometric matrix;
