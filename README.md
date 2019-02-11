@@ -1,4 +1,4 @@
-# GRASP 
+# GRASP
 
 ## Matlab requirements
 
@@ -27,6 +27,11 @@ To make sure your GRASP input file has no issues (or at least a few less) before
 
 * The order of metabolites in every sheet of the input excel file needs to be the same as in the stoich sheet;
 * the order of reactions in every sheet of the input excel file needs to be the same as in the stoich sheet;
+* when setting the order of reactions in every sheet the order of reactions should be:
+	1. all reactions with kinetic parameters (Uni-Uni, massAction, etc.);
+	2. all reactions with no kinetic parameters in the order:
+		1. freeExchange
+		2. fixedExchange
 * in the kinetics1 sheet
 	* if there are more than one inhibitor/activator/effector these should be separated by a single space;
 	* if you don't specify the order of ligand binding/release it will be taken from the stoichiometric matrix;
@@ -54,9 +59,5 @@ To check if the order of metabolites and reactions in all sheets is consistent w
 
 The flux through each reaction is generated based on the product ID.  
 By product ID i mean the letters used in the pattern definition.  
-For promiscuous reactions one needs to use `Pi` (`i` is an integer) as an ID for the first product to be released in each promiscuous reaction. 
+For promiscuous reactions one needs to use `Pi` (`i` is an integer) as an ID for the first product to be released in each promiscuous reaction.
 `i` is related to the order of the promiscuous reactions in the stoichiometric matrix, e.g. if DDC is defined before DDC_tryptm, then the first product to be released in DDC is `P1` and in DDC_tryptm is `P2`.  
-
-
-
-
