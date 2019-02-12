@@ -85,7 +85,7 @@ save('output_test/ensembleSMC_MEP_test.mat');
 mcaResults = controlAnalysis(ensemble);
 
 % Save MCA results
-save(strcat('output_HMP/MCA_', strain, '_r', num2str(rep_i), '_t', num2str(time_i), '.mat'), 'mcaResults')
+save(strcat('output_test/MCA_', strain, '_r', num2str(rep_i), '_t', num2str(time_i), '.mat'), 'mcaResults')
 
 %Plot MCA results
 plotControlAnalysis(mcaResults, ensemble);
