@@ -85,7 +85,11 @@ save('output_test/ensembleSMC_MEP_test.mat');
 mcaResults = controlAnalysis(ensemble);
 
 % Save MCA results
-save(strcat('output_test/MCA_', strain, '_r', num2str(rep_i), '_t', num2str(time_i), '.mat'), 'mcaResults')
+save(strcat('output_test/MCA_MEP_test.mat'), 'mcaResults')
+write(cell2table(ensemble.rxns(ensemble.activeRxns)), 'output_test/MEP_test_rxnsActive.dat');    
+write(cell2table(ensemble.mets(ensemble.metsActive)), 'output_test/MEP_test_metsActive.dat'); 
+write(cell2table(mcaResults.enzNames), 'output_test/MEP_test_enzNames.dat'); 
+       
 
 %Plot MCA results
 plotControlAnalysis(mcaResults, ensemble);
