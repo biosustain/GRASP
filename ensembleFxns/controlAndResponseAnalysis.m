@@ -1,0 +1,170 @@
+function mcaResults = controlAndResponseAnalysis(ensemble,strucIdx)
+%
+% Calculates both control coefficients and response coefficients.
+% Response coefficients here answer the question: What happens if one 
+% increases a given enzyme's concentration?
+%
+% This is mostly important when we are modeling promiscuous enzymes, since
+% response and control coefficients are the same when enzymes are
+% independent and an increase in enzyme concentration leads to a
+% proportional increase in the reaction flux.
+%
+% Explanation here: https://docs.google.com/presentation/d/19tkv1xblyVeMbdyqNdwonMKjcbAJM6iz0_UE5h4tQ_Q/edit?usp=sharing
+%
+%---------------- Pedro Saa UQ 2018, Marta Matos DTU 2018 -----------------
+
+if nargin<2
+    strucIdx = 1;
+    if ensemble.populations(end).strucIdx(1)==0
+        ensemble.populations(end).strucIdx = ones(numel(ensemble.populations(end).strucIdx),1);
+    end
+end
+
+% Add kinetic fxns to the path
+addKineticFxnsToPath(ensemble);
+
+% Find particles of the appropriate structure
+particleIdx = find(ensemble.populations(end).strucIdx==strucIdx);
+numModels   = numel(particleIdx);
+
+% Optimization & simulation parameters
+fixedExchs   = ensemble.fixedExch;
+kineticFxn   = str2func(ensemble.kineticFxn{strucIdx});
+freeVars     = numel(ensemble.freeVars);
+Sred         = ensemble.Sred;
+kinInactRxns = ensemble.kinInactRxns;
+subunits     = ensemble.subunits{strucIdx};
+numFluxes    = numel(ensemble.fluxRef);
+ix_mets      = 1:numel(ensemble.metsActive);
+ix_enz       = ix_mets(end)+1:freeVars;
+metNames     = ensemble.mets(ensemble.metsActive);
+rxnNames     = ensemble.rxns;
+
+% Check sampler mode to determine the numer of conditions
+if ~strcmpi(ensemble.sampler,'ORACLE')
+    nCondition   = size(ensemble.expFluxes,2)+1;
+else
+    nCondition = 1;
+end
+
+% Main loop
+hstep = 1e-10;              % Step size for control coefficient computations
+for ix = 1:nCondition
+    mcaResults.xControl{ix}     = [];
+    mcaResults.xControlAvg{ix}  = 0;
+    mcaResults.vControl{ix}     = [];
+    mcaResults.vControlAvg{ix}  = 0;
+    mcaResults.eResponse{ix}    = [];
+    mcaResults.eResponseAvg{ix} = 0;
+    mcaResults.xResponse{ix}    = [];
+    mcaResults.xResponseAvg{ix} = 0;
+    mcaResults.xcounter{ix}     = 0;
+    mcaResults.vcounter{ix}     = 0;
+    mcaResults.eRcounter{ix}    = 0;
+    mcaResults.xRcounter{ix}    = 0;
+    
+    for jx = 1:numModels
+        mcaResults.enzNames = rxnNames;
+        model = ensemble.populations(end).models(particleIdx(jx));
+        if ix == 1
+            xopt = ones(freeVars,1);
+            vref = feval(kineticFxn,xopt,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits,0);
+        else
+            xopt = ensemble.populations(end).xopt{particleIdx(jx)}(:,ix-1);
+            vref = ensemble.populations(end).simFluxes{particleIdx(jx)}(:,ix-1);
+        end
+        
+        % Define reference state
+        xref = xopt(ix_mets);
+        Eref = xopt(ix_enz);
+        
+        % Define step length to perturb metabolite concentrations
+        hstep_x = hstep*xref;
+        xmets   = repmat(xref,1,numel(xref)) + 1i*diag(hstep_x);
+        xenz    = repmat(Eref,1,numel(xref));
+        xstep   = [xmets;xenz];
+        
+        % Simulate flux for metabolite perturbation
+        simFlux = feval(kineticFxn,xstep,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits,0);
+        
+        % Define step length to perturb enzyme concentrations
+        hstep_e      = hstep*Eref;
+        xmets        = repmat(xref,1,numel(Eref));
+        xenz         = repmat(Eref,1,numel(Eref));
+        xenzImag     = 1i*diag(hstep_e);
+        origXenzImag = xenzImag;
+        
+        for rxnI=1:size(ensemble.promiscuity{ix},2)
+            if size(ensemble.promiscuity{ix}{rxnI},2) ~= 0
+                sumVector = zeros(numel(Eref),1);
+                for promiscuousRxnI=1:size(ensemble.promiscuity{ix}{rxnI},2)
+                     sumVector = sumVector + origXenzImag(:,ensemble.promiscuity{ix}{rxnI}(promiscuousRxnI));
+                end
+                xenzImag(:,rxnI) = sumVector;
+            end
+        end
+        
+        xenz    = xenz + xenzImag;
+        estep   = [xmets;xenz];
+        
+        % Simulate flux for enzyme perturbation
+        simFluxEnz = feval(kineticFxn,estep,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits,0);
+        
+        % Compute elasticiy matrices
+        E_x_abs  = -(imag(simFlux')./hstep_x(:,ones(1,numFluxes)))'; % equivalent to imag(simFlux)./1.0e-10 ? 
+        E_pi_abs = -(imag(simFluxEnz')./hstep_e(:,ones(1,numFluxes)))';% equivalent to imag(simFluxEnz)./1.0e-10 ? 
+        
+        % Normalize elasticity matrices
+        E_x_nor   = diag(vref.^-1)*E_x_abs*diag(xref);
+        E_pi_nor  = diag(vref.^-1)*E_pi_abs*diag(Eref);
+        
+        % Delete repeated columns
+        columnsToDelete = [];
+        for rxnI=1:size(ensemble.promiscuity{ix},2)
+            if size(ensemble.promiscuity{ix}{rxnI},2) ~= 0
+                for promiscuousRxnI=2:size(ensemble.promiscuity{ix}{rxnI},2)
+                    columnsToDelete = [columnsToDelete, ensemble.promiscuity{ix}{rxnI}(promiscuousRxnI)];
+                end
+            end
+        end
+        columnsToDelete = sort(unique(columnsToDelete), 'descend');
+                   
+        for colI=columnsToDelete
+            E_pi_nor(:, colI)           = [];
+            mcaResults.enzNames(colI,:) = [];
+        end
+                
+        % Compute control coefficients
+        C_x_abs   = -(pinv(Sred*E_x_abs))*Sred;
+        C_x       = diag(xref.^-1)*C_x_abs*diag(vref);
+        C_v       = eye(numel(vref)) + E_x_nor*C_x;
+        R_e       = C_v * E_pi_nor;
+        R_x       = C_x * E_pi_nor;
+        
+        % Save control coefficients only if the result is accurate
+        if all(abs(sum(C_x,2))<1e-5)
+            mcaResults.xControl{ix}     = [mcaResults.xControl{ix}; C_x];
+            mcaResults.xControlAvg{ix}  = mcaResults.xControlAvg{ix} + C_x;
+            mcaResults.xcounter{ix}     = mcaResults.xcounter{ix} + 1;
+            mcaResults.xResponse{ix}    = [mcaResults.xResponse{ix}; R_x];
+            mcaResults.xResponseAvg{ix} = mcaResults.xResponseAvg{ix} + R_x;
+            mcaResults.xRcounter{ix}    = mcaResults.xRcounter{ix} + 1;
+        end
+        if all(abs(sum(C_v,2))-1<1e-5)
+            mcaResults.vControl{ix}     = [mcaResults.vControl{ix}; C_v];
+            mcaResults.vControlAvg{ix}  = mcaResults.vControlAvg{ix} + C_v;
+            mcaResults.vcounter{ix}     = mcaResults.vcounter{ix} + 1;
+            mcaResults.eResponse{ix}    = [mcaResults.eResponse{ix}; R_e];
+            mcaResults.eResponseAvg{ix} = mcaResults.eResponseAvg{ix} + R_e;
+            mcaResults.eRcounter{ix}    = mcaResults.eRcounter{ix} + 1;
+        end
+    end
+    
+    % Determine expectancy for control coefficients
+    mcaResults.xControlAvg{ix } = mcaResults.xControlAvg{ix}/mcaResults.xcounter{ix};
+    mcaResults.vControlAvg{ix } = mcaResults.vControlAvg{ix}/mcaResults.vcounter{ix};
+    mcaResults.eResponseAvg{ix} = mcaResults.eResponseAvg{ix}/mcaResults.eRcounter{ix};
+    mcaResults.xResponseAvg{ix} = mcaResults.xResponseAvg{ix}/mcaResults.xRcounter{ix};
+end
+
+end
