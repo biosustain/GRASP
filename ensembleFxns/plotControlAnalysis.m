@@ -38,7 +38,7 @@ for ix = 1:nCondition
     title(['Concentration control coefficients condition: ',num2str(ix)])
     set(gca,'FontSize',6,'FontName','arial')
     caxis([-3 3])
-    ax = subplot(4,1,1);
+    ax = subplot(2,1,1);
     colormap(ax,cmap)
     colormap(cmap)
     
@@ -51,7 +51,7 @@ for ix = 1:nCondition
     title(['Flux control coefficients condition: ',num2str(ix)])
     set(gca,'FontSize',6,'FontName','arial')
     caxis([-3 3])
-    ax=subplot(4,1,2);
+    ax=subplot(2,1,2);
     colormap(ax,cmap)
     
 
