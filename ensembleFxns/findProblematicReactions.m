@@ -1,4 +1,4 @@
-function [row_list, dg_list] = findProblematicReactions(model,params,DGr_std_min,DGr_std_max,K,delta,n,Sflux,ineqConstraints,sol)
+function [row_list, dg_list] = findProblematicReactions(model,params,DGr_std_min,DGr_std_max,K,delta,n,Sflux,ineqConstraints,sol,rxnNames)
 %--------------------------------------------------------------------------
 %
 % Finds the reactions whose standard Gibbs energy bounds make the 
@@ -38,7 +38,7 @@ while strcmp(sol.status,'OPTIMAL') && row <= numel(DGr_std_min)
     if strcmp(sol.status,'INFEASIBLE')
         DGr_std_min(row) = -100;
         DGr_std_max(row) = 100;
-        row_list = [row_list, row];
+        row_list = [row_list, rxnNames(row)];
         dg_list = [dg_list, strcat('[', num2str(DGr_std_min_orig(row)),',', num2str(DGr_std_max_orig(row)),']')];
         
         sol = runOptimization(DGr_std_min,DGr_std_max,K,delta,n,Sflux,ineqConstraints,model,params);

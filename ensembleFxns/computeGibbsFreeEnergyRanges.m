@@ -1,4 +1,4 @@
-function [DGr_rng,xrng,vrng] = computeGibbsFreeEnergyRanges(Sflux,Sthermo,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,idxNotExch,ineqConstraints)
+function [DGr_rng,xrng,vrng] = computeGibbsFreeEnergyRanges(Sflux,Sthermo,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,idxNotExch,ineqConstraints, rxnNames)
 % Thermodynamic-based Flux Balance Analysis
 % 
 % ------------------ Pedro Saa, Marta Matos 2018 ---------------------------------------
@@ -65,9 +65,10 @@ params.outputflag = 0;
 sol = gurobi(model,params);
 
 if strcmp(sol.status,'INFEASIBLE')
-    [row_list, dg_list] = findProblematicReactions(model,params, DGr_std_min, DGr_std_max, K, delta, n, Sflux, ineqConstraints, sol);
+    [row_list, dg_list] = findProblematicReactions(model,params, DGr_std_min, DGr_std_max, K, delta, n, Sflux, ineqConstraints, sol,rxnNames);
 
-    error(strcat('The TMFA problem is infeasible. Verify that the standard Gibbs free energy and metabolite concentration values are valid/correct. Reactions in rows ', mat2str(idxNotExch(row_list)+1), ' with standard Gibbs energies ', mat2str(dg_list), ' seem to be the problem.'));
+    %error(strcat('The TMFA problem is infeasible. Verify that the standard Gibbs free energy and metabolite concentration values are valid/correct. Reactions in rows ', mat2str(idxNotExch(row_list)+1), ' with standard Gibbs energies ', mat2str(dg_list), ' seem to be the problem.'));
+    error(strcat('The TMFA problem is infeasible. Verify that the standard Gibbs free energy and metabolite concentration values are valid/correct. Reactions', strjoin(row_list, ', '), ' with standard Gibbs energies ', mat2str(dg_list), ' seem to be the problem.'));
 end
 
 % Run improved TMFA
