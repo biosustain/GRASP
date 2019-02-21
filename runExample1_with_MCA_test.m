@@ -79,7 +79,7 @@ ensemble.populations(1).tolScore  = tolScore;                              % tol
 ensemble.populations(1).xopt      = xopt;                                  % optimal value found
 ensemble.populations(1).simFluxes = simFluxes;                             % simulated fluxes
 ensemble.populations(1).models    = models;                                % model particles
-clearvars -except ensemble popIdx iter
+clearvars -except ensemble popIdx iter strucIdx saveResMatrices
 save('output_test/ensembleSMC_MEP_test.mat');
 
 % Run MCA analysis
