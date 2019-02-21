@@ -13,7 +13,7 @@ function mcaResults = controlAndResponseAnalysis(ensemble,saveResMatrices,strucI
 %
 %---------------- Pedro Saa UQ 2018, Marta Matos DTU 2018 -----------------
 
-if nargin<2
+if nargin<3
     strucIdx = 1;
     if ensemble.populations(end).strucIdx(1)==0
         ensemble.populations(end).strucIdx = ones(numel(ensemble.populations(end).strucIdx),1);

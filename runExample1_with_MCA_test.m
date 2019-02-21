@@ -83,7 +83,7 @@ clearvars -except ensemble popIdx iter strucIdx saveResMatrices
 save('output_test/ensembleSMC_MEP_test.mat');
 
 % Run MCA analysis
-mcaResults = controlAnalysis(ensemble, saveResMatrices, strucIdx);
+mcaResults = controlAnalysis(ensemble, saveResMatrices);
 
 % Save MCA results
 save(strcat('output_test/MCA_MEP_test.mat'), 'mcaResults')
