@@ -14,7 +14,7 @@ addpath('./patternFxns','./ensembleFxns');
 % 1. Load information
 iter     = 1;
 popIdx   = 1;
-ensemble = loadEnsembleStructure('input_test/MEP_test_for_mca');           % Here the test case MEP pathway model is chosen
+ensemble = loadEnsembleStructure('input_test/Glycolysis_Grasp_isoenzymes');           % Here the test case MEP pathway model is chosen
 
 % 2. Initialize and perform rejection sampling
 ensemble = initializeEnsemble(ensemble,popIdx,1);

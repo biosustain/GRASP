@@ -54,8 +54,11 @@ ensemble.rxns          = rxnsList(2:end,1);
 ensemble.rxnNames      = rxnsList(2:end,2);
 ensemble.exchRxns      = find(xRxns(:,1));
 ensemble.activeRxns    = find(xRxns(:,2));
+ensemble.isoenzymes    = rxnsList([2:end],5);
+ensemble.uni_iso       = unique(ensemble.isoenzymes(~cellfun(@isempty, ensemble.isoenzymes)));
 ensemble.mets          = metsList(2:end,1);
 ensemble.metNames      = metsList(2:end,2);
+ensemble.rxnMets       = cell(length(ensemble.rxnNames),1);
 ensemble.metsBalanced  = find(xMets(:,1));
 ensemble.metsSimulated = find(xMets(:,2));
 ensemble.metsFixed     = find(xMets(:,3));
@@ -223,12 +226,13 @@ for jx = 1:ensemble.numStruct
             ensemble.allosteric{jx}(index)    = xKinetic(ix,1);                                  % boolean vector indicating whether the enzyme is allosteric or not
             ensemble.subunits{jx}(index)      = xKinetic(ix,2);                                  % number of subunits present in the enzyme
             ensemble.rxnMechanisms{jx}{index} = strKinetic{ix,2};                                % string array with catalytic mechanisms for every reaction
-            ensemble.mechOrder{jx}{index}     = strKinetic{ix,3};                                % string array with binding/release order for the reaction
-            ensemble.promiscuity{jx}{index}   = strKinetic{ix,4};                                % string array with rxn names this one is promiscuous with
-            ensemble.inhibitors{jx}{index}    = strKinetic{ix,5};                                % string array with the inhibitor names for each reaction
-            ensemble.activators{jx}{index}    = strKinetic{ix,6};                                % string array with the activator names for each reaction
-            ensemble.negEffectors{jx}{index}  = strKinetic{ix,7};                                % string array with negative effector names for each reaction
-            ensemble.posEffectors{jx}{index}  = strKinetic{ix,8};                                % string array with positive effector names for each reaction
+            ensemble.subOrder{jx}{index}      = strKinetic{ix,3};                                % string array with the order of substrate bindings
+            ensemble.prodOrder{jx}{index}     = strKinetic{ix,4};                                % string array with the order of product release
+            ensemble.promiscuity{jx}{index}   = strKinetic{ix,5};                                % string array with rxn names this one is promiscuous with
+            ensemble.inhibitors{jx}{index}    = strKinetic{ix,6};                                % string array with the inhibitor names for each reaction
+            ensemble.activators{jx}{index}    = strKinetic{ix,7};                                % string array with the activator names for each reaction
+            ensemble.negEffectors{jx}{index}  = strKinetic{ix,8};                                % string array with negative effector names for each reaction
+            ensemble.posEffectors{jx}{index}  = strKinetic{ix,9};                                % string array with positive effector names for each reaction
         end
     else
         disp('The number of active rxns does not match the number of kinetic mechanisms.'); 
@@ -280,8 +284,11 @@ for jx = 1:ensemble.numStruct
             end
             ensemble.promiscuity{jx}{ix} = sort(ensemble.promiscuity{jx}{ix});
         end
-        if ~isempty(ensemble.mechOrder{jx}{ix})
-            ensemble.mechOrder{jx}{ix}   = regexp(ensemble.mechOrder{jx}{ix},' ','split');
+        if ~isempty(ensemble.subOrder{jx}{ix})
+            ensemble.subOrder{jx}{ix}   = regexp(ensemble.subOrder{jx}{ix},' ','split');
+        end
+        if ~isempty(ensemble.prodOrder{jx}{ix})
+            ensemble.prodOrder{jx}{ix}   = regexp(ensemble.prodOrder{jx}{ix},' ','split');
         end
         if ~isempty(ensemble.inhibitors{jx}{ix})
             ensemble.inhibitors{jx}{ix}   = regexp(ensemble.inhibitors{jx}{ix},' ','split');
@@ -343,10 +350,11 @@ for jx = 1:ensemble.numStruct
             if ensemble.allosteric{jx}(ix)
                 [revMatrix,forwardFlux,metList] = reactionPattern(ensemble.rxnMechanisms{jx}{ix},ensemble.rxns{ix},2,jx, promiscuousRxnI);
                 buildAllosteric(metList,[ensemble.rxns{ix},num2str(jx)],ensemble.negEffectors{jx}{ix},ensemble.posEffectors{jx}{ix})
-                
+                ensemble.MetLists{ix,1} = metList;
                 % Non-allosteric enzymes
             else
-                [revMatrix,forwardFlux] = reactionPattern(ensemble.rxnMechanisms{jx}{ix},ensemble.rxns{ix},1,jx, promiscuousRxnI);
+                [revMatrix,forwardFlux, metList] = reactionPattern(ensemble.rxnMechanisms{jx}{ix},ensemble.rxns{ix},1,jx, promiscuousRxnI);
+                ensemble.MetLists{ix,1} = metList;
             end
                         
             % Build Selem based on the mechanism stoichiometry

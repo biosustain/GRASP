@@ -90,8 +90,8 @@ if strcmpi(ensemble.sampler,'ORACLE')||strcmpi(ensemble.sampler,'rejection')||st
                     
                     % Initialize branch factors ~ Beta(1)
                     Nelem = ensemble.Nelem{ensemble.kinActRxns(activRxnIdx),strucIdx};
-                    if (size(Nelem,2)>1)
-                        ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).betaBranchFactor = ones(size(Nelem,2),2);                        
+                    if (size(revMatrix,1)>1)
+                        ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).betaBranchFactor = ones(size(revMatrix,1),1);                        
                     end
                     
                     % Initialize paramters for allosteric rxns
