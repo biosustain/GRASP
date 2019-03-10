@@ -1,7 +1,7 @@
-function mcaResults = controlAnalysis(ensemble,strucIdx)
+function mcaResults = controlAnalysis(ensemble,saveResMatrices,strucIdx)
 %---------------- Pedro Saa UQ 2018----------------------------------------
 
-if nargin<2
+if nargin<3
     strucIdx = 1;
     if ensemble.populations(end).strucIdx(1)==0
         ensemble.populations(end).strucIdx = ones(numel(ensemble.populations(end).strucIdx),1);
@@ -38,13 +38,16 @@ end
 % Main loop
 hstep = 1e-10;              % Step size for control coefficient computations
 for ix = 1:nCondition
-    mcaResults.xControl{ix}    = [];
+    if saveResMatrices
+        mcaResults.xControl{ix}    = [];
+        mcaResults.vControl{ix}    = [];
+        mcaResults.E_x_nor{ix}     = [];
+    end
+    
     mcaResults.xControlAvg{ix} = 0;
-    mcaResults.vControl{ix}    = [];
     mcaResults.vControlAvg{ix} = 0;
     mcaResults.xcounter{ix}    = 0;
     mcaResults.vcounter{ix}    = 0;
-    mcaResults.E_x_nor{ix}     = [];
     
     for jx = 1:numModels
         mcaResults.enzNames = rxnNames;
@@ -83,15 +86,20 @@ for ix = 1:nCondition
 
         % Save control coefficients only if the result is accurate
         if all(abs(sum(C_x,2))<1e-5)
-            mcaResults.xControl{ix}    = [mcaResults.xControl{ix}; C_x];
+            if saveResMatrices
+                mcaResults.xControl{ix}    = [mcaResults.xControl{ix}; C_x];
+            end
             mcaResults.xControlAvg{ix} = mcaResults.xControlAvg{ix} + C_x;
             mcaResults.xcounter{ix}    = mcaResults.xcounter{ix} + 1;
         end
         if all(abs(sum(C_v,2))-1<1e-5)
-            mcaResults.vControl{ix}    = [mcaResults.vControl{ix}; C_v];
+            if saveResMatrices
+                mcaResults.vControl{ix}    = [mcaResults.vControl{ix}; C_v];
+                mcaResults.E_x_nor{ix}     = [mcaResults.E_x_nor{ix}; E_x_nor];
+            end
+            
             mcaResults.vControlAvg{ix} = mcaResults.vControlAvg{ix} + C_v;
             mcaResults.vcounter{ix}    = mcaResults.vcounter{ix} + 1;
-            mcaResults.E_x_nor{ix}     = [mcaResults.E_x_nor{ix}; E_x_nor];
         end
     end
     
