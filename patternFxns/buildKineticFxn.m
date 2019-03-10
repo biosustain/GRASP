@@ -74,19 +74,6 @@ for i = 1:numel(ensemble.activeRxns)
 
         reactants  = [];
 
-        if ~isempty(ensemble.uni_iso)
-            for xi = 1:size(ensemble.uni_iso,1)
-                group = find(strcmp(ensemble.isoenzymes,ensemble.uni_iso{xi}));
-                splitFactor = zeros(size(group,1),1);
-                totalFlux = sum(ensemble.fluxRef(group));
-                for yi = 1:size(splitFactor,1)
-                    splitFactor(yi) = randg();
-                end
-                splitFactor = splitFactor./sum(splitFactor);
-                ensemble.fluxRef(group) = splitFactor.*totalFlux;
-            end
-        end
-
         % Extract and organize substrates
         metsInd = 1:size(ensemble.mets);
         if size(ensemble.promiscuity{strucIdx}{i}) > 0
