@@ -7,11 +7,12 @@
 % Outputs:      (-)
 %--------------------- Pedro Saa 2017 -------------------------------------
 clc,clearvars
-rng('default');																											% for reproducibility
-delete(gcp('nocreate'));       				            																% check first that no other process is running
+rng('default');															   % for reproducibility
+delete(gcp('nocreate'));       				            				   % check first that no other process is running
 addpath('./patternFxns','./ensembleFxns');
 
 % 1. Load information
+saveResMatrices = 0;                                                       % Define if you want to save the control coefficient matrices in the MCA step
 iter     = 1;
 popIdx   = 1;
 ensemble = loadEnsembleStructure('input_test/MEP_test_for_mca');           % Here the test case MEP pathway model is chosen
@@ -44,7 +45,7 @@ if ~strcmpi(ensemble.sampler,'ORACLE')
     progress = zeros(5,1);
     save progress.txt -ascii progress;
     if ensemble.parallel
-        parpool(ensemble.numCores);																								% Initiate parallel pool and run parallel foor loop
+        parpool(ensemble.numCores);										   % Initiate parallel pool and run parallel foor loop
         parfor ix = 1:ensemble.numParticles
             rng('shuffle');
             [models(ix),strucIdx(ix),xopt{ix},tolScore(ix),simFluxes{ix}] = initialSampler(ensemble);
@@ -59,7 +60,7 @@ if ~strcmpi(ensemble.sampler,'ORACLE')
     % In the ORACLE mode we are only interested in the models
 else
     if ensemble.parallel
-        parpool(ensemble.numCores);																								% Initiate parallel pool and run parallel foor loop
+        parpool(ensemble.numCores);										   % Initiate parallel pool and run parallel foor loop
         parfor ix = 1:ensemble.numParticles
             rng('shuffle');
             models(ix) = initialSampler(ensemble);
@@ -73,16 +74,16 @@ else
 end
 
 % Append sampling results
-ensemble.populations(1).strucIdx  = strucIdx;                                                                           % model structures
-ensemble.populations(1).tolScore  = tolScore;                                                                           % tolerance score
-ensemble.populations(1).xopt      = xopt;                                                                               % optimal value found
-ensemble.populations(1).simFluxes = simFluxes;                                                                          % simulated fluxes
-ensemble.populations(1).models    = models;                                                                             % model particles
-clearvars -except ensemble popIdx iter
+ensemble.populations(1).strucIdx  = strucIdx;                              % model structures
+ensemble.populations(1).tolScore  = tolScore;                              % tolerance score
+ensemble.populations(1).xopt      = xopt;                                  % optimal value found
+ensemble.populations(1).simFluxes = simFluxes;                             % simulated fluxes
+ensemble.populations(1).models    = models;                                % model particles
+clearvars -except ensemble popIdx iter strucIdx saveResMatrices
 save('output_test/ensembleSMC_MEP_test.mat');
 
 % Run MCA analysis
-mcaResults = controlAnalysis(ensemble);
+mcaResults = controlAnalysis(ensemble, saveResMatrices);
 
 % Save MCA results
 save(strcat('output_test/MCA_MEP_test.mat'), 'mcaResults')
