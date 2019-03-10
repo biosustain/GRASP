@@ -54,6 +54,8 @@ ensemble.rxns          = rxnsList(2:end,1);
 ensemble.rxnNames      = rxnsList(2:end,2);
 ensemble.exchRxns      = find(xRxns(:,1));
 ensemble.activeRxns    = find(xRxns(:,2));
+ensemble.isoenzymes    = rxnsList([2:end],5);
+ensemble.uni_iso       = unique(ensemble.isoenzymes(~cellfun(@isempty, ensemble.isoenzymes)));
 ensemble.mets          = metsList(2:end,1);
 ensemble.metNames      = metsList(2:end,2);
 ensemble.metsBalanced  = find(xMets(:,1));
@@ -105,7 +107,7 @@ for ix = 1:ensemble.numConditions+1
         xMean(index) = ensemble.measRates(jx,ix);
         xStd(index)  = ensemble.measRatesStd(jx,ix);
     end
-    
+
     % Compute fluxes robustly (add split ratios if any)
     if robustFluxes
         if (~isempty(ensemble.splitRatios) && any(ensemble.splitRatios(ix,:)))
@@ -117,7 +119,7 @@ for ix = 1:ensemble.numConditions+1
         vMean = xMean;
         vStd  = xStd;
     end
-    
+
     % Calculate reference state and exp conditions fluxes
     if (ix==1)
 %         dirFluxRef          = sign(vMean);                             % Define directionality at Ref for thermo calculations
@@ -154,7 +156,7 @@ if computeThermo
     xmax        = xMetsThermo(:,2);
     DGr_std_min = DGr_std(:,1);
     DGr_std_max = DGr_std(:,2);
-    gibbsRanges = computeGibbsFreeEnergyRanges(Sflux,Sthermo,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,idxNotExch,ineqConstraints');     
+    gibbsRanges = computeGibbsFreeEnergyRanges(Sflux,Sthermo,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,idxNotExch,ineqConstraints');
     ensemble.gibbsRanges               = -1e2*ones(size(Sfull,1),2);                            % Allocate memory for DGr calculations
     ensemble.gibbsRanges(idxNotExch,:) = gibbsRanges;                                           % Remove thermodynamic info from exchang rxns
 else
@@ -202,12 +204,12 @@ for jx = 1:ensemble.numStruct
     end
     try
         [xKinetic,strKinetic] = xlsread(xlsxFile,['kinetics',num2str(jx)]);                    % read kinetic info from structure jx
-        strKinetic = fixVariableNames(strKinetic, 'r', 'kinetics');     
+        strKinetic = fixVariableNames(strKinetic, 'r', 'kinetics');
     catch
         error("The kinetics sheet couln't be read. Make sure it is named as kinetics1.");
         break;
     end
-    
+
     % Load kinetic information
     strKinetic(1,:) = [];                                                                      % remove useless information
     if (size(strKinetic,1)==length(ensemble.activeRxns))
@@ -231,12 +233,12 @@ for jx = 1:ensemble.numStruct
             ensemble.posEffectors{jx}{index}  = strKinetic{ix,8};                                % string array with positive effector names for each reaction
         end
     else
-        disp('The number of active rxns does not match the number of kinetic mechanisms.'); 
+        disp('The number of active rxns does not match the number of kinetic mechanisms.');
         break;
-    end    
+    end
     if (jx==1)
         ensemble.kinActRxns   = find(~strcmp(ensemble.rxnMechanisms{jx},'fixedExchange'));
-        
+
         %% 5/6. Extract proteomic information
         idxProt = idxProt(2:end,1);               % Extract only the meaningful information
         ensemble.protDataMin  = zeros(length(ensemble.kinActRxns),ensemble.numConditions);
@@ -255,7 +257,7 @@ for jx = 1:ensemble.numStruct
         ensemble.protDataMax(rxnWithNoProteinData,:)  = [];
         ensemble.protDataMean(rxnWithNoProteinData,:) = [];
         disp('Proteomics and exchange data loaded and consistent.');
-        
+
         % Figure out inactive rxns
         ensemble.kinInactRxns = find(strcmp(ensemble.rxnMechanisms{jx},'fixedExchange'));
         ensemble.fixedExch    = [ensemble.fluxRef(ensemble.kinInactRxns,:),ensemble.expFluxes(ensemble.kinInactRxns,:)];
@@ -265,16 +267,16 @@ for jx = 1:ensemble.numStruct
         elseif ~isempty(rxnWithNoProteinData)
             ensemble.fixedExch = ones(numel(rxnWithNoProteinData),ensemble.numConditions+1);
         end
-    end          
-        
-    % Include information related to the activators and inhibitors, 
+    end
+
+    % Include information related to the activators and inhibitors,
     % promiscuous reactions and substrate binding/release order
     for ix = 1:size(ensemble.rxnMechanisms{jx},1)
         if ~isempty(ensemble.promiscuity{jx}{ix})
-           
+
             promiscuous_rxns_list  = regexp(ensemble.promiscuity{jx}{ix},' ','split');
             ensemble.promiscuity{jx}{ix} = find(ismember(ensemble.rxns(ensemble.activeRxns), promiscuous_rxns_list{1}));
-            
+
             for rxn_i = 2:size(promiscuous_rxns_list, 2)
                 ensemble.promiscuity{jx}{ix} = [ensemble.promiscuity{jx}{ix} find(ismember(ensemble.rxns(ensemble.activeRxns), promiscuous_rxns_list{rxn_i}))];
             end
@@ -296,73 +298,73 @@ for jx = 1:ensemble.numStruct
             ensemble.posEffectors{jx}{ix} = regexp(ensemble.posEffectors{jx}{ix},' ','split');
         end
     end
-    
+
     % Read each mechanism and write the reaction patterns
     ensemble.kineticFxn{jx} = [ensemble.description,'_Kinetics',num2str(jx)];      % string with kinetic function name
     mkdir('reactions');
     for ix = 1:size(ensemble.rxnMechanisms{jx},1)
-        
+
         % Non-enzymatic reactions: fixed exchange
         if strcmp(ensemble.rxnMechanisms{jx}{ix},'fixedExchange')
             buildFixedExchange(ensemble.rxns{ix},jx)
             ensemble.revMatrix{ix,jx}   = [];
             ensemble.forwardFlux{ix,jx} = [];
             ensemble.Nelem{ix,jx}       = [];
-        
+
         % Non-enzymatic reactions: free exchange
         elseif strcmp(ensemble.rxnMechanisms{jx}{ix},'freeExchange')
             buildFreeExchange(ensemble.rxns{ix},jx)
             ensemble.revMatrix{ix,jx}   = [];
             ensemble.forwardFlux{ix,jx} = [];
-            ensemble.Nelem{ix,jx}       = [];            
-            
+            ensemble.Nelem{ix,jx}       = [];
+
         % Non-enzymatic reactions: passive difusion
         elseif strcmp(ensemble.rxnMechanisms{jx}{ix},'diffusion')
             buildDiffusion(ensemble.rxns{ix},jx)
             ensemble.revMatrix{ix,jx}   = [];
             ensemble.forwardFlux{ix,jx} = [];
             ensemble.Nelem{ix,jx}       = [];
-        
+
         % Non-enzymatic reactions: mass action
         elseif strcmp(ensemble.rxnMechanisms{jx}{ix},'massAction')
             buildMassAction(ensemble.rxns{ix},jx)
             ensemble.revMatrix{ix,jx}   = [];
             ensemble.forwardFlux{ix,jx} = [];
             ensemble.Nelem{ix,jx}       = [];
-            
+
             % Enzymatic reactions
         else
-            
+
             if size(ensemble.promiscuity{jx}{ix}) > 0
                 promiscuousRxnI = find(ensemble.promiscuity{jx}{ix} == ix);
-            else 
-               promiscuousRxnI = 0; 
+            else
+               promiscuousRxnI = 0;
             end
 
             % Allosteric enzymes
             if ensemble.allosteric{jx}(ix)
                 [revMatrix,forwardFlux,metList] = reactionPattern(ensemble.rxnMechanisms{jx}{ix},ensemble.rxns{ix},2,jx, promiscuousRxnI);
                 buildAllosteric(metList,[ensemble.rxns{ix},num2str(jx)],ensemble.negEffectors{jx}{ix},ensemble.posEffectors{jx}{ix})
-                
+
                 % Non-allosteric enzymes
             else
                 [revMatrix,forwardFlux] = reactionPattern(ensemble.rxnMechanisms{jx}{ix},ensemble.rxns{ix},1,jx, promiscuousRxnI);
             end
-                        
+
             % Build Selem based on the mechanism stoichiometry
             Selem = [];
             for i = 1:max(forwardFlux(:))
                 Selem = [Selem;((forwardFlux(:,1)==i)-(forwardFlux(:,2)==i))'];
             end
-            
+
             % Save features of the kinetic mechanism
             ensemble.revMatrix{ix,jx}   = revMatrix;               % reversibility matrix for the reaction mechanism
             ensemble.forwardFlux{ix,jx} = forwardFlux;             % forward flux for the reaction mechanism
-            
+
             % Compute null(Selem) for branching calculations and precondition accordingly
             Ntemp    = null(Selem,'r');
             ixNnzCol = find(any(Ntemp<0),1,'first');
-            
+
             % Check that Nelem is suitable for branching calculations (loop until columns have only nonnegative entries)
             while ~isempty(ixNnzCol)
                 for cx = 1:size(Ntemp,2)
@@ -386,18 +388,16 @@ for jx = 1:ensemble.numStruct
     copyfile('./reactions',['./reactions',num2str(jx)]);
     addpath(['./reactions',num2str(jx)]);
     rmdir('./reactions','s');
-    
+
     % Build kinetic fxn and find active species (do not build hess partern)
     [rxnMetLinks,freeVars,metsActive] = buildKineticFxn(ensemble,ensemble.kineticFxn{jx},jx);
     if (jx==1)                                                 % freeVars and freeMets are the same for all the structure
         ensemble.rxnMetLinks = rxnMetLinks;
         ensemble.freeVars    = freeVars;
         ensemble.metsActive  = metsActive;
-    end    
+    end
     buildKineticFxn(ensemble,ensemble.kineticFxn{jx},jx);
     disp(['Kinetic information loaded and kinetic model built: Structure ',num2str(jx),'.']);
 end
 
 disp('Ensemble structure ready.');
-
-
