@@ -156,11 +156,7 @@ if computeThermo
     xmax        = xMetsThermo(:,2);
     DGr_std_min = DGr_std(:,1);
     DGr_std_max = DGr_std(:,2);
-<<<<<<< HEAD
-    gibbsRanges = computeGibbsFreeEnergyRanges(Sflux,Sthermo,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,idxNotExch,ineqConstraints');
-=======
     gibbsRanges = computeGibbsFreeEnergyRanges(Sflux,Sthermo,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,idxNotExch,ineqConstraints', ensemble.rxns);     
->>>>>>> master
     ensemble.gibbsRanges               = -1e2*ones(size(Sfull,1),2);                            % Allocate memory for DGr calculations
     ensemble.gibbsRanges(idxNotExch,:) = gibbsRanges;                                           % Remove thermodynamic info from exchang rxns
 else
