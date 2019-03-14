@@ -58,8 +58,7 @@ def _check_kinetics_met_separators(data_dict):
             flag = _check_kinetics_column(data_dict[key], 'positive effector')
             flag_list.append(flag)
 
-    flag = 1 if 1 in flag_list else 0
-    return flag
+    return any(flag_list)
 
 
 def _check_balanced_metabolites(data_dict):
@@ -134,7 +133,7 @@ def check_input_model(file_in):
     flag_dG_flux = _check_dG_and_flux(file_in)
     
     
-    if flag_order == 0 and flag_kinetics_sep == 0 and flag_balanced_mets == 0 and flag_dG_flux == 0:
+    if not any(flag_order == 0 and flag_kinetics_sep == 0 and flag_balanced_mets == 0 and flag_dG_flux == 0):
         print('\nYour model input seems to be all right! (take this with a grain of salt though)')
         flag = 0
     else:
