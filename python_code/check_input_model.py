@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from calculate_initial_dGs_and_fluxes import calculate_dG, get_robust_fluxes
 
 
 def _check_met_rxn_order(data_dict):
@@ -84,6 +85,25 @@ def _check_balanced_metabolites(data_dict):
     return flag
 
 
+def _check_dG_and_flux(file_in):
+    flag = 0
+    temperature = 298  # in K
+    gas_constant = 8.314 * 10**-3  # in kJ K^-1 mol^-1
+    ma_df, dG_Q_df, dG_df = calculate_dG(file_in, gas_constant, temperature)
+    flux_df = get_robust_fluxes(file_in)
+
+    for rxn in flux_df.index:
+        if flux_df.loc[rxn,'flux'] > 0 and dG_df.loc[rxn,'∆G_min'] > 0:
+            print('The flux and ∆G range seem to be incompatible for reaction', rxn)
+            flag = 1
+
+        if flux_df.loc[rxn,'flux'] < 0 and dG_df.loc[rxn,'∆G_max'] < 0:
+            print('The flux and ∆G range seem to be incompatible for reaction', rxn)
+            flag = 1
+
+    return flag 
+
+
 def check_input_model(file_in):
     """
     Given an excel file with the model input for GRASP it does two things
@@ -91,9 +111,12 @@ def check_input_model(file_in):
     sheet and checks if it is the same in the other sheets. If it isn't, prints out a message saying in which sheet the
     order is not the same and the lists of metabolite/reactions: both the one in the current sheet and the ones in the
     'stoic' sheet;
-     2. checks all lists of metabolites in the kinetics sheet to make sure there are no commas semi-colons or dots.
+     2. checks all lists of metabolites in the kinetics sheet to make sure there are no commas semi-colons or dots;
      3. checks if metabolites that are balanced are marked as balanced and metabolites that are not balanced are marked as
-        not balanced.
+        not balanced;
+     4. checks if reaction Gibbs energies are compatible with the respective fluxes, i.e. for a given reaction, if the range 
+        of Gibbs energies can be negative when the flux is positive, and if the range of Gibbs energies can be positive 
+        when then flux is negative.
 
     :param file_in: path to excel file with model input.
     :return: 0 or 1: 0 everything's fine, 1 there was an error.
@@ -108,11 +131,17 @@ def check_input_model(file_in):
     flag_order = _check_met_rxn_order(data_dict)
     flag_kinetics_sep = _check_kinetics_met_separators(data_dict)
     flag_balanced_mets = _check_balanced_metabolites(data_dict)
-
-    if flag_order == 0 and flag_kinetics_sep == 0 and flag_balanced_mets == 0:
-        print('Your model input seems to be all right! (take this with a grain of salt though)')
-
-    return 0
+    flag_dG_flux = _check_dG_and_flux(file_in)
+    
+    
+    if flag_order == 0 and flag_kinetics_sep == 0 and flag_balanced_mets == 0 and flag_dG_flux == 0:
+        print('\nYour model input seems to be all right! (take this with a grain of salt though)')
+        flag = 0
+    else:
+        print('\nAddress the above issues before running GRASP.')
+        flag = 1
+    
+    return flag
 
 
 def main():
