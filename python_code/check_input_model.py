@@ -3,6 +3,7 @@ import pandas as pd
 
 
 def _check_met_rxn_order(data_dict):
+    flag = 0
     rxn_list = data_dict['stoic']['rxn ID'].values
     met_list = data_dict['stoic'].columns.values[1:]
 
@@ -23,24 +24,64 @@ def _check_met_rxn_order(data_dict):
                 print('Metabolite list in stoichiometry matrix:\n', met_list)
                 print('Reaction list in stoichiometry matrix:\n', rxn_list)
                 print('\n')
+                flag = 1
+
+    return flag
 
 
 def _check_kinetics_column(data_dict, col_name):
+    flag = 0
     col_data = data_dict[col_name].dropna()
     for row in col_data:
         if row.find(',') != -1 or row.find(';') != -1 or row.find('.') != -1:
             print('Make sure all metabolites are separated by a single space in column "', col_name, '" row:\n', row)
+            flag = 1
+    
+    return flag
 
 
 def _check_kinetics_met_separators(data_dict):
+    flag_list = []
     for key in list(data_dict.keys()):
         if key.startswith('kinetics'):
-            _check_kinetics_column(data_dict[key], 'order')
-            _check_kinetics_column(data_dict[key], 'promiscuous')
-            _check_kinetics_column(data_dict[key], 'inhibitors')
-            _check_kinetics_column(data_dict[key], 'activators')
-            _check_kinetics_column(data_dict[key], 'negative effector')
-            _check_kinetics_column(data_dict[key], 'positive effector')
+            flag = _check_kinetics_column(data_dict[key], 'order')
+            flag_list.append(flag)
+            flag = _check_kinetics_column(data_dict[key], 'promiscuous')
+            flag_list.append(flag)
+            flag = _check_kinetics_column(data_dict[key], 'inhibitors')
+            flag_list.append(flag)
+            flag = _check_kinetics_column(data_dict[key], 'activators')
+            flag_list.append(flag)
+            flag = _check_kinetics_column(data_dict[key], 'negative effector')
+            flag_list.append(flag)
+            flag = _check_kinetics_column(data_dict[key], 'positive effector')
+            flag_list.append(flag)
+
+    flag = 1 if 1 in flag_list else 0
+    return flag
+
+
+def _check_balanced_metabolites(data_dict):
+    flag = 0
+    stoic_df = data_dict['stoic']
+    stoic_df.index = stoic_df['rxn ID']
+    stoic_df = stoic_df.drop('rxn ID', axis=1)
+    mets_df = data_dict['mets']
+
+    for i, met in enumerate(stoic_df.columns):
+        if stoic_df[met].gt(0).any() and stoic_df[met].lt(0).any():
+            if mets_df['balanced?'][i] == 0:
+                print(met, 'is marked as not balanced but it seems to be balanced.')
+                flag = 1
+        else:
+            if mets_df['balanced?'][i] == 1:
+                print(met, 'is marked as balanced but it does not seem to be balanced.')
+                flag = 1
+            if mets_df['fixed?'][i] == 0:
+                print(met, 'is not set as constant but maybe it should, since it does not seem to be balanced.')
+                flag = 1
+
+    return flag
 
 
 def check_input_model(file_in):
@@ -51,6 +92,8 @@ def check_input_model(file_in):
     order is not the same and the lists of metabolite/reactions: both the one in the current sheet and the ones in the
     'stoic' sheet;
      2. checks all lists of metabolites in the kinetics sheet to make sure there are no commas semi-colons or dots.
+     3. checks if metabolites that are balanced are marked as balanced and metabolites that are not balanced are marked as
+        not balanced.
 
     :param file_in: path to excel file with model input.
     :return: 0 or 1: 0 everything's fine, 1 there was an error.
@@ -62,14 +105,18 @@ def check_input_model(file_in):
         print('File wasn\'t found: ', file_in)
         return 1
 
-    _check_met_rxn_order(data_dict)
-    _check_kinetics_met_separators(data_dict)
+    flag_order = _check_met_rxn_order(data_dict)
+    flag_kinetics_sep = _check_kinetics_met_separators(data_dict)
+    flag_balanced_mets = _check_balanced_metabolites(data_dict)
+
+    if flag_order == 0 and flag_kinetics_sep == 0 and flag_balanced_mets == 0:
+        print('Your model input seems to be all right! (take this with a grain of salt though)')
 
     return 0
 
 
 def main():
-    file_in = '/home/mrama/GRASP_test/GRASP/GRASP_yeast_blackbox.xlsx'
+    file_in = '/home/mrama/GRASP_test/GRASP/input_test/HMP1489_r1_t0.xlsx'
     check_input_model(file_in)
 
 
