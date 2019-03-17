@@ -205,34 +205,42 @@ for i = 1:numel(ensemble.activeRxns)
                 if ~isempty(strfind(ensemble.metLists{i,1}{react}, 'A'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'B'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'C'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'D'))
                     if elemCount < w
                         reactants = [reactants,substrates{subCount}, ';'];
+                        rxnMetLinks{i} = [rxnMetLinks{i}, substrates{subCount}];
                         subCount = subCount+1;
                         elemCount = elemCount+1;
                     else
                         reactants = [reactants, substrates{subCount}];
+                        rxnMetLinks{i} = [rxnMetLinks{i}, substrates{subCount}];
                     end
                 elseif ~isempty(strfind(ensemble.metLists{i,1}{react}, 'P'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'Q'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'R'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'S'))
                     if elemCount < w
                         reactants = [reactants,products{prodCount},';'];
+                        rxnMetLinks{i} = [rxnMetLinks{i}, products{prodCount}];
                         prodCount = prodCount+1;
                         elemCount = elemCount+1;
                     else
                         reactants = [reactants,products{prodCount}];
+                        rxnMetLinks{i} = [rxnMetLinks{i}, products{prodCount}];
                     end
                 elseif ~isempty(strfind(ensemble.metLists{i,1}{react}, 'I'))
                     if elemCount < w
                         reactants = [reactants, ensemble.inhibitors{1, 1}{i}{inhCount},';'];
+                        rxnMetLinks{i} = [rxnMetLinks{i}, ensemble.inhibitors{1, 1}{i}{inhCount}];
                         inhCount = inhCount+1;
                         elemCount = elemCount+1;
                     else
                         reactants = [reactants, ensemble.inhibitors{1, 1}{i}{inhCount}];
+                        rxnMetLinks{i} = [rxnMetLinks{i}, ensemble.inhibitors{1, 1}{i}{inhCount}];
                     end
                 elseif ~isempty(strfind(ensemble.metLists{i,1}{react}, 'Z'))
                     if elemCount < w
                         reactants = [reactants,ensemble.activators{1, 1}{i}{actCount}, ';'];
+                        rxnMetLinks{i} = [rxnMetLinks{i}, ensemble.activators{1, 1}{i}{actCount}];
                         actCount = actCount+1;
                         elemCount = elemCount+1;
                     else
                         reactants = [reactants,ensemble.activators{1, 1}{i}{actCount}];
+                        rxnMetLinks{i} = [rxnMetLinks{i}, ensemble.activators{1, 1}{i}{actCount}];
                     end
                 end
             end
