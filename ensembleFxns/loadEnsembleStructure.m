@@ -55,7 +55,7 @@ ensemble.rxnNames      = rxnsList(2:end,2);
 ensemble.exchRxns      = find(xRxns(:,1));
 ensemble.activeRxns    = find(xRxns(:,2));
 ensemble.isoenzymes    = rxnsList([2:end],5);
-ensemble.uni_iso       = unique(ensemble.isoenzymes(~cellfun(@isempty, ensemble.isoenzymes)));
+ensemble.uniqueIso       = unique(ensemble.isoenzymes(~cellfun(@isempty, ensemble.isoenzymes)));
 ensemble.mets          = metsList(2:end,1);
 ensemble.metNames      = metsList(2:end,2);
 ensemble.rxnMets       = cell(length(ensemble.rxnNames),1);
@@ -350,11 +350,11 @@ for jx = 1:ensemble.numStruct
             if ensemble.allosteric{jx}(ix)
                 [revMatrix,forwardFlux,metList] = reactionPattern(ensemble.rxnMechanisms{jx}{ix},ensemble.rxns{ix},2,jx, promiscuousRxnI);
                 buildAllosteric(metList,[ensemble.rxns{ix},num2str(jx)],ensemble.negEffectors{jx}{ix},ensemble.posEffectors{jx}{ix})
-                ensemble.MetLists{ix,1} = metList;
+                ensemble.metLists{ix,1} = metList;
                 % Non-allosteric enzymes
             else
                 [revMatrix,forwardFlux, metList] = reactionPattern(ensemble.rxnMechanisms{jx}{ix},ensemble.rxns{ix},1,jx, promiscuousRxnI);
-                ensemble.MetLists{ix,1} = metList;
+                ensemble.metLists{ix,1} = metList;
             end
                         
             % Build Selem based on the mechanism stoichiometry

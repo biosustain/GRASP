@@ -23,7 +23,7 @@ fprintf(fid,'if flag==1\n');
 fprintf(fid,'x = x(:);\n');									% Column vector
 fprintf(fid,['v = zeros(',num2str(size(ensemble.Sred,2)),',',num2str(totalEvals),');\n']);      % Preallocation of memory (rxns)
 fprintf(fid,['E = zeros(',num2str(size(ensemble.Sred,2)),',',num2str(totalEvals),');\n']);      % Preallocation of memory (enz)
-fprintf(fid,['x = [x,x(:,ones(1,',num2str(totalEvals-1),')) + diag(h*1i*ones(',num2str(totalEvals-1),',1))];\n']);      % Preallocation of memory (free vars)                                                                                               
+fprintf(fid,['x = [x,x(:,ones(1,',num2str(totalEvals-1),')) + diag(h*1i*ones(',num2str(totalEvals-1),',1))];\n']);      % Preallocation of memory (free vars)
 fprintf(fid,'else\n');
 fprintf(fid,['v = zeros(',num2str(size(ensemble.Sred,2)),',size(x,2));\n']);      % Preallocation of memory (rxns)
 fprintf(fid,['E = zeros(',num2str(size(ensemble.Sred,2)),',size(x,2));\n']);      % Preallocation of memory (enz)
@@ -52,7 +52,7 @@ rxnMetLinks{length(ensemble.activeRxns)} = [];
 k = 1;
 fprintf(fid,'%s Reaction rates\n',c);
 for i = 1:numel(ensemble.activeRxns)
-    
+
     % If binding/release order is provided
     % Does not take into account different models
     if ~isempty(ensemble.subOrder{strucIdx}{i})||~isempty(ensemble.subOrder{strucIdx}{i})
@@ -63,8 +63,8 @@ for i = 1:numel(ensemble.activeRxns)
         subCount = 1;
         inhCount = 1;
         actCount = 1;
-        for react = 1:length(ensemble.MetLists{i,1})
-            if ~isempty(strfind(ensemble.MetLists{i,1}{react}, 'A'))||~isempty(strfind(ensemble.MetLists{i,1}{react}, 'B'))||~isempty(strfind(ensemble.MetLists{i,1}{react}, 'C'))||~isempty(strfind(ensemble.MetLists{i,1}{react}, 'D'))
+        for react = 1:length(ensemble.metLists{i,1})
+            if ~isempty(strfind(ensemble.metLists{i,1}{react}, 'A'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'B'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'C'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'D'))
                 if elemCount < w
                     reactants = [reactants, ensemble.subOrder{1, 1}{i}{subCount}, ';'];
                     subCount = subCount+1;
@@ -72,7 +72,7 @@ for i = 1:numel(ensemble.activeRxns)
                 else
                     reactants = [reactants, ensemble.subOrder{1, 1}{i}{subCount}];
                 end
-            elseif ~isempty(strfind(ensemble.MetLists{i,1}{react}, 'P'))||~isempty(strfind(ensemble.MetLists{i,1}{react}, 'Q'))||~isempty(strfind(ensemble.MetLists{i,1}{react}, 'R'))||~isempty(strfind(ensemble.MetLists{i,1}{react}, 'S'))
+            elseif ~isempty(strfind(ensemble.metLists{i,1}{react}, 'P'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'Q'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'R'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'S'))
                 if elemCount < w
                     reactants = [reactants,ensemble.prodOrder{1, 1}{i}{prodCount},';'];
                     prodCount = prodCount+1;
@@ -80,7 +80,7 @@ for i = 1:numel(ensemble.activeRxns)
                 else
                     reactants = [reactants,ensemble.prodOrder{1, 1}{i}{prodCount}];
                 end
-            elseif ~isempty(strfind(ensemble.MetLists{i,1}{react}, 'I'))
+            elseif ~isempty(strfind(ensemble.metLists{i,1}{react}, 'I'))
                 if elemCount < w
                     reactants = [reactants, ensemble.inhibitors{1, 1}{i}{inhCount},';'];
                     inhCount = inhCount+1;
@@ -88,7 +88,7 @@ for i = 1:numel(ensemble.activeRxns)
                 else
                     reactants = [reactants, ensemble.inhibitors{1, 1}{i}{inhCount}];
                 end
-            elseif ~isempty(strfind(ensemble.MetLists{i,1}{react}, 'Z'))
+            elseif ~isempty(strfind(ensemble.metLists{i,1}{react}, 'Z'))
                 if elemCount < w
                     reactants = [reactants,ensemble.activators{1, 1}{i}{actCount}, ';'];
                     actCount = actCount+1;
@@ -98,27 +98,28 @@ for i = 1:numel(ensemble.activeRxns)
                 end
             end
         end
-            
-                
+
+        reactants = strsplit(reactants, ';');
+
         for reactantI = 1:size(reactants, 2)
             if ismember(reactants{reactantI},ensemble.mets(ensemble.metsFixed))
                 reactants{reactantI} = strcat('ones(1,size(x,2))');
             end
         end
-        
-        
+
+
         if strcmp('massAction',ensemble.rxnMechanisms{strucIdx}(i))
             reactants = [strjoin(reactants, ',') ','];
         else
             reactants = strjoin(reactants, ';');
         end
     else
-    
+
         reactants  = [];
-    
-        % Extract and organize substrates    
+
+        % Extract and organize substrates
         metsInd = 1:size(ensemble.mets);
-        if size(ensemble.promiscuity{strucIdx}{i}) > 0     
+        if size(ensemble.promiscuity{strucIdx}{i}) > 0
             substratesInd = [];
             for rxnI = ensemble.promiscuity{strucIdx}{i}
                 substratesIndTemp = metsInd(ensemble.S(:,ensemble.activeRxns(rxnI))<0);
@@ -126,7 +127,7 @@ for i = 1:numel(ensemble.activeRxns)
             end
             substrates = ensemble.mets(substratesInd);
         else
-            substrates  = (ensemble.mets(ensemble.S(:,ensemble.activeRxns(i))<0)); 
+            substrates  = (ensemble.mets(ensemble.S(:,ensemble.activeRxns(i))<0));
         end
         substrates  = substrates(ismember(substrates,ensemble.mets(ensemble.metsSimulated)));         % Extract only active substrates
         stoicCoeffs = abs(ensemble.S(ismember(ensemble.mets,substrates),ensemble.activeRxns(i)));
@@ -142,7 +143,7 @@ for i = 1:numel(ensemble.activeRxns)
             end
         end
 
-        % Extract and organize products      
+        % Extract and organize products
         if size(ensemble.promiscuity{strucIdx}{i}) > 0
             productsInd = [];
             for rxnI = ensemble.promiscuity{strucIdx}{i}
@@ -151,7 +152,7 @@ for i = 1:numel(ensemble.activeRxns)
             end
             products = ensemble.mets(productsInd);
         else
-            products    = (ensemble.mets(ensemble.S(:,ensemble.activeRxns(i))>0));  
+            products    = (ensemble.mets(ensemble.S(:,ensemble.activeRxns(i))>0));
         end
         products    = products(ismember(products,ensemble.mets(ensemble.metsSimulated)));               % Extract only active products
         stoicCoeffs = abs(ensemble.S(ismember(ensemble.mets,products),ensemble.activeRxns(i)));
@@ -192,10 +193,59 @@ for i = 1:numel(ensemble.activeRxns)
             end
 
         % Enzymatic reactions
-        else
-            for j = 1:length(ensemble.MetLists{i,1})
+        elseif  ~strcmp('fixedExchange',ensemble.rxnMechanisms{strucIdx}(i))
+
+            w = sum(length(ensemble.inhibitors{1,1}{i})+length(ensemble.activators{1,1}{i})+length(substrates)+length(products));
+            elemCount = 1;
+            prodCount = 1;
+            subCount = 1;
+            inhCount = 1;
+            actCount = 1;
+            for react = 1:length(ensemble.metLists{i,1})
+                if ~isempty(strfind(ensemble.metLists{i,1}{react}, 'A'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'B'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'C'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'D'))
+                    if elemCount < w
+                        reactants = [reactants,substrates{subCount}, ';'];
+                        subCount = subCount+1;
+                        elemCount = elemCount+1;
+                    else
+                        reactants = [reactants, substrates{subCount}];
+                    end
+                elseif ~isempty(strfind(ensemble.metLists{i,1}{react}, 'P'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'Q'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'R'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'S'))
+                    if elemCount < w
+                        reactants = [reactants,products{prodCount},';'];
+                        prodCount = prodCount+1;
+                        elemCount = elemCount+1;
+                    else
+                        reactants = [reactants,products{prodCount}];
+                    end
+                elseif ~isempty(strfind(ensemble.metLists{i,1}{react}, 'I'))
+                    if elemCount < w
+                        reactants = [reactants, ensemble.inhibitors{1, 1}{i}{inhCount},';'];
+                        inhCount = inhCount+1;
+                        elemCount = elemCount+1;
+                    else
+                        reactants = [reactants, ensemble.inhibitors{1, 1}{i}{inhCount}];
+                    end
+                elseif ~isempty(strfind(ensemble.metLists{i,1}{react}, 'Z'))
+                    if elemCount < w
+                        reactants = [reactants,ensemble.activators{1, 1}{i}{actCount}, ';'];
+                        actCount = actCount+1;
+                        elemCount = elemCount+1;
+                    else
+                        reactants = [reactants,ensemble.activators{1, 1}{i}{actCount}];
+                    end
+                end
             end
-                
+
+        reactants = strsplit(reactants, ';');
+
+        for reactantI = 1:size(reactants, 2)
+            if ismember(reactants{reactantI},ensemble.mets(ensemble.metsFixed))
+                reactants{reactantI} = strcat('ones(1,size(x,2))');
+            end
+        end
+
+        reactants = strjoin(reactants, ';');
 %             for j = 1:length(substrates)
 %                 if ~ismember(substrates{j},ensemble.mets(ensemble.metsFixed))
 %                     reactants      = [reactants,substrates{j},';'];
@@ -204,7 +254,7 @@ for i = 1:numel(ensemble.activeRxns)
 %                     reactants = [reactants,'ones(1,size(x,2));'];
 %                 end
 %             end
-% 
+%
 %             % If there is any inhibitors/activators we include them in the model
 %             if ~isempty(ensemble.inhibitors{strucIdx}{i})
 %                 for j = 1:length(ensemble.inhibitors{strucIdx}{i})
@@ -242,7 +292,7 @@ for i = 1:numel(ensemble.activeRxns)
     if ensemble.allosteric{strucIdx}(i)
         negEffectors = [];
         posEffectors = [];
-        
+
         % Both positive and negative effectors
         if ~isempty(ensemble.negEffectors{strucIdx}{i}) && ~isempty(ensemble.posEffectors{strucIdx}{i})
             for j = 1:length(ensemble.negEffectors{strucIdx}{i})-1
@@ -255,7 +305,7 @@ for i = 1:numel(ensemble.activeRxns)
             posEffectors = [posEffectors,char(ensemble.posEffectors{strucIdx}{i}(length(ensemble.posEffectors{strucIdx}{i})))];
             fprintf(fid,['v(%i,:) = ',ensemble.rxns{i},num2str(strucIdx),'([',reactants,'],[',negEffectors,'],[',posEffectors,'],model.rxnParams(%i).kineticParams,model.rxnParams(%i).KnegEff,model.rxnParams(%i).KposEff,model.rxnParams(%i).L,subunits(%i));\n'],i,k,k,k,k,k);
             k = k+1;
-            
+
         % Only negative effectors
         elseif ~isempty(ensemble.negEffectors{strucIdx}{i})
             for j = 1:length(ensemble.negEffectors{strucIdx}{i})-1
@@ -264,7 +314,7 @@ for i = 1:numel(ensemble.activeRxns)
             negEffectors = [negEffectors,char(ensemble.negEffectors{strucIdx}{i}(length(ensemble.negEffectors{strucIdx}{i})))];
             fprintf(fid,['v(%i,:) = ',ensemble.rxns{i},num2str(strucIdx),'([',reactants,'],[',negEffectors,'],model.rxnParams(%i).kineticParams,model.rxnParams(%i).KnegEff,model.rxnParams(%i).L,subunits(%i));\n'],i,k,k,k,k);
             k = k+1;
-            
+
         % Only positive effectors
         elseif ~isempty(ensemble.posEffectors{strucIdx}{i})
             for j = 1:length(ensemble.posEffectors{strucIdx}{i})-1
@@ -273,13 +323,13 @@ for i = 1:numel(ensemble.activeRxns)
             posEffectors = [posEffectors,char(ensemble.posEffectors{strucIdx}{i}(length(ensemble.posEffectors{strucIdx}{i})))];
             fprintf(fid,['v(%i,:) = ',ensemble.rxns{i},num2str(strucIdx),'([',reactants,'],[',posEffectors,'],model.rxnParams(%i).kineticParams,model.rxnParams(%i).KposEff,model.rxnParams(%i).L,subunits(%i));\n'],i,k,k,k,k);
             k = k+1;
-            
+
         % No effectors, only cooperative binding
         else
             fprintf(fid,['v(%i,:) = ',ensemble.rxns{i},num2str(strucIdx),'([',reactants,'],model.rxnParams(%i).kineticParams,model.rxnParams(%i).L,subunits(%i));\n'],i,k,k,k);
             k = k+1;
         end
-        
+
         % Non-allosteric reaction
     else
         if strcmp('fixedExchange',ensemble.rxnMechanisms{strucIdx}(i))
@@ -295,7 +345,7 @@ for i = 1:numel(ensemble.activeRxns)
             k = k+1;
         end
     end
-    
+
     % Add enzyme links to the rxnMet links (only if the reaction is not an exch)
     if ~isempty(reactants)
         rxnMetLinks{i} = [rxnMetLinks{i},ensemble.rxns{ensemble.activeRxns(i)}];

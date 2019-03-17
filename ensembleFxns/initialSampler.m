@@ -74,9 +74,9 @@ while true
     
     % Randomly distribute flux between isoenzymes
     
-    if ~isempty(ensemble.uni_iso)
-        for xi = 1:size(ensemble.uni_iso,1)
-            group = find(strcmp(ensemble.isoenzymes,ensemble.uni_iso{xi}));
+    if ~isempty(ensemble.uniqueIso)
+        for xi = 1:size(ensemble.uniqueIso,1)
+            group = find(strcmp(ensemble.isoenzymes,ensemble.uniqueIso{xi}));
             splitFactor = zeros(size(group,1),1);
             totalFlux = sum(ensemble.fluxRef(group));
             for yi = 1:size(splitFactor,1)
