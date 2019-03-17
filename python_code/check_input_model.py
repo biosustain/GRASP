@@ -69,7 +69,7 @@ def check_input_model(file_in):
 
 
 def main():
-    file_in = '/home/mrama/GRASP_test/GRASP/GRASP_yeast_blackbox.xlsx'
+    file_in = '/
     check_input_model(file_in)
 
 

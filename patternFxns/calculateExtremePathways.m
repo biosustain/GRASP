@@ -1,14 +1,20 @@
-% Defining Extreme Pathways
-% Input is the elementary matrix
-% Output is the Transpose of the flux vector for the extreme pathways
+function [extremePath] = calculateExtremePathways(Selem)
+%--------------------------------------------------------------------------
+% This function constructs the extreme pathways of the elementary flux
+% matrix
+%
+% Inputs:       Selem (Elementary Flux Matrix)
+%
+% Outputs:      Transpose of the flux vector for the extreme pathways
+%--------------------- Nicholas Cowie 2016 --------------------------------
 
-clear cell
 
+S = Selem';
 
-S = [-1 1 0 0 0 0 0; -1 0 1 0 0 0 0; 0 -1 0 1 0 0 0; 0 0 -1 1 0 0 0;... 
-  0 0 0 -1 1 0 0; 0 0 0 0 -1 1 0; 0 0 0 0 -1 0 1; 1 0 0 0 0 -1 0; 1 0 0 0 0 0 -1];
-S = [S; -1.*S];
+S = [S; -1*S];
 
+% Removes the reverse of each flux in order to ensure that the flux is only
+% going in the forward direction
 for xi = 1:size(S, 1)
     s = S(xi,:);
     Q = S == -1.*s;
@@ -20,11 +26,16 @@ for xi = 1:size(S, 1)
 end
     
     
-
+% Appending the identity matrix with as many rows as metabolites
 I = eye(size(S,1));
 
 A = [I S];
 
+% For each metabolite, ensures that the combination of reactions create a
+% steady state solution.
+% The row operations required to do this are stored in the identiy matrix
+% which will become the basis vectors for the elementary rays of the flux
+% cone.
 for j = size(S,1)+1:size(S,1)+size(S,2)
     A_temp = A;
     A = A_temp(A_temp(:,j) == 0,:);
@@ -55,15 +66,13 @@ for j = size(S,1)+1:size(S,1)+size(S,2)
             
         end
     end
-    
-
-    
-
 end
 
 
 % Removing all rows that have a set of zeros as a subset of another row
-B = cell(size(A,1),1);
+cell_dim = size(A,1);
+
+B = cell(cell_dim,1);
 for o = 1:size(S,2)
     for q = 1:size(A,1)
         if A(q,o) == 0
@@ -74,11 +83,11 @@ end
 
 C = [];
 
-for cell = 1:size(B,1)
+for cells = 1:size(B,1)
     for comp = 1:size(B,1)
-        if all(ismember(B{cell}, B{comp})) && cell ~= comp
-            C = [C, cell];
-            B(cell) = {randg};
+        if all(ismember(B{cells}, B{comp})) && cells ~= comp
+            C = [C, cells];
+            B(cells) = {randg};
         end
     end
 end
@@ -87,4 +96,5 @@ A(C,:) = [];
 
 A = A(:,[1:size(S,1)]);
 
-A'
+extremePath = A';
+end

@@ -217,6 +217,7 @@ for jx = 1:ensemble.numStruct
         ensemble.allosteric{jx} = zeros(size(ensemble.activeRxns));
         ensemble.subunits{jx}   = zeros(size(ensemble.activeRxns));
         ensemble.rxnMechanisms{jx}{size(strKinetic,1),1} = [];
+        ensemble.extremePathways{jx}{size(strKinetic,1),1} = [];
         ensemble.inhibitors{jx}{size(strKinetic,1),1}    = [];
         ensemble.activators{jx}{size(strKinetic,1),1}    = [];
         ensemble.negEffectors{jx}{size(strKinetic,1),1}  = [];
@@ -362,6 +363,8 @@ for jx = 1:ensemble.numStruct
             for i = 1:max(forwardFlux(:))
                 Selem = [Selem;((forwardFlux(:,1)==i)-(forwardFlux(:,2)==i))'];
             end
+            
+            ensemble.extremePathways{jx}{ix} = calculateExtremePathways(Selem);
             
             % Save features of the kinetic mechanism
             ensemble.revMatrix{ix,jx}   = revMatrix;               % reversibility matrix for the reaction mechanism
