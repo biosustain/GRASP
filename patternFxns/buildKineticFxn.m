@@ -246,45 +246,6 @@ for i = 1:numel(ensemble.activeRxns)
         end
 
         reactants = strjoin(reactants, ';');
-%             for j = 1:length(substrates)
-%                 if ~ismember(substrates{j},ensemble.mets(ensemble.metsFixed))
-%                     reactants      = [reactants,substrates{j},';'];
-%                     rxnMetLinks{i} = [rxnMetLinks{i},substrates(j)];
-%                 else
-%                     reactants = [reactants,'ones(1,size(x,2));'];
-%                 end
-%             end
-%
-%             % If there is any inhibitors/activators we include them in the model
-%             if ~isempty(ensemble.inhibitors{strucIdx}{i})
-%                 for j = 1:length(ensemble.inhibitors{strucIdx}{i})
-%                     reactants      = [reactants,char(ensemble.inhibitors{strucIdx}{i}(j)),';'];
-%                     rxnMetLinks{i} = [rxnMetLinks{i},ensemble.inhibitors{strucIdx}{i}];
-%                 end
-%             end
-%             if ~isempty(ensemble.activators{strucIdx}{i})
-%                 for j = 1:length(ensemble.activators{strucIdx}{i})
-%                     reactants      = [reactants,char(ensemble.activators{strucIdx}{i}(j)),';'];
-%                     rxnMetLinks{i} = [rxnMetLinks{i},ensemble.activators{strucIdx}{i}];
-%                 end
-%             end
-%             for j = 1:length(products)
-%                 if j<length(products)
-%                     if ~ismember(products{j},ensemble.mets(ensemble.metsFixed))
-%                         reactants      = [reactants,products{j},';'];
-%                         rxnMetLinks{i} = [rxnMetLinks{i},products(j)];
-%                     else
-%                         reactants = [reactants,'ones(1,size(x,2));'];
-%                     end
-%                 else
-%                     if ~ismember(products{j},ensemble.mets(ensemble.metsFixed))
-%                         reactants      = [reactants,products{j}];
-%                         rxnMetLinks{i} = [rxnMetLinks{i},products(j)];
-%                     else
-%                         reactants = [reactants,'ones(1,size(x,2));'];
-%                     end
-%                 end
-%             end
         end
     end
 
