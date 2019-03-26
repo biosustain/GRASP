@@ -1,4 +1,4 @@
-function mcaResults = controlAndResponseAnalysis(ensemble,strucIdx)
+function mcaResults = controlAndResponseAnalysis(ensemble,saveResMatrices,strucIdx)
 %
 % Calculates both control coefficients and response coefficients.
 % Response coefficients here answer the question: What happens if one 
@@ -13,7 +13,7 @@ function mcaResults = controlAndResponseAnalysis(ensemble,strucIdx)
 %
 %---------------- Pedro Saa UQ 2018, Marta Matos DTU 2018 -----------------
 
-if nargin<2
+if nargin<3
     strucIdx = 1;
     if ensemble.populations(end).strucIdx(1)==0
         ensemble.populations(end).strucIdx = ones(numel(ensemble.populations(end).strucIdx),1);
@@ -50,13 +50,16 @@ end
 % Main loop
 hstep = 1e-10;              % Step size for control coefficient computations
 for ix = 1:nCondition
-    mcaResults.xControl{ix}     = [];
+    if saveResMatrices
+        mcaResults.xControl{ix}     = [];
+        mcaResults.vControl{ix}     = [];
+        mcaResults.eResponse{ix}    = [];
+        mcaResults.xResponse{ix}    = [];
+    end
+    
     mcaResults.xControlAvg{ix}  = 0;
-    mcaResults.vControl{ix}     = [];
     mcaResults.vControlAvg{ix}  = 0;
-    mcaResults.eResponse{ix}    = [];
     mcaResults.eResponseAvg{ix} = 0;
-    mcaResults.xResponse{ix}    = [];
     mcaResults.xResponseAvg{ix} = 0;
     mcaResults.xcounter{ix}     = 0;
     mcaResults.vcounter{ix}     = 0;
@@ -143,18 +146,24 @@ for ix = 1:nCondition
         
         % Save control coefficients only if the result is accurate
         if all(abs(sum(C_x,2))<1e-5)
-            mcaResults.xControl{ix}     = [mcaResults.xControl{ix}; C_x];
+            if saveResMatrices
+                mcaResults.xControl{ix}     = [mcaResults.xControl{ix}; C_x];
+                mcaResults.xResponse{ix}    = [mcaResults.xResponse{ix}; R_x];
+            end
+            
             mcaResults.xControlAvg{ix}  = mcaResults.xControlAvg{ix} + C_x;
             mcaResults.xcounter{ix}     = mcaResults.xcounter{ix} + 1;
-            mcaResults.xResponse{ix}    = [mcaResults.xResponse{ix}; R_x];
             mcaResults.xResponseAvg{ix} = mcaResults.xResponseAvg{ix} + R_x;
             mcaResults.xRcounter{ix}    = mcaResults.xRcounter{ix} + 1;
         end
         if all(abs(sum(C_v,2))-1<1e-5)
-            mcaResults.vControl{ix}     = [mcaResults.vControl{ix}; C_v];
+            if saveResMatrices
+                mcaResults.vControl{ix}     = [mcaResults.vControl{ix}; C_v];
+                mcaResults.eResponse{ix}    = [mcaResults.eResponse{ix}; R_e];
+            end
+            
             mcaResults.vControlAvg{ix}  = mcaResults.vControlAvg{ix} + C_v;
             mcaResults.vcounter{ix}     = mcaResults.vcounter{ix} + 1;
-            mcaResults.eResponse{ix}    = [mcaResults.eResponse{ix}; R_e];
             mcaResults.eResponseAvg{ix} = mcaResults.eResponseAvg{ix} + R_e;
             mcaResults.eRcounter{ix}    = mcaResults.eRcounter{ix} + 1;
         end
