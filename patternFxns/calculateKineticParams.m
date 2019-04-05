@@ -21,7 +21,7 @@ revCalIrrev  = (1-revTemp).^(-1);
 
 
 % Compute branching flux structure
-elemFluxVector = Nelem*branchFactor / max(Nelem*branchFactor);
+elemFluxVector = Nelem*branchFactor';
 
 %elemFluxVector = Nelem*branchFactor/sum(Nelem*branchFactor);
 %disp('Nelem');

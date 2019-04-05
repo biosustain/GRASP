@@ -15,7 +15,7 @@ addpath('./patternFxns','./ensembleFxns');
 iter     = 1;
 popIdx   = 1;
 
-ensemble = loadEnsembleStructure('input_test/Isoenzyme_Test');           % Here the test case HMP pathway model is chosen
+ensemble = loadEnsembleStructure('input_test/Glycolysis_Grasp_isoenzymes');           % Here the test case HMP pathway model is chosen
 
 % 2. Initialize and perform rejection sampling
 ensemble = initializeEnsemble(ensemble,popIdx,1);
@@ -98,7 +98,7 @@ disp('HMP1489_r1_t0_inhibitors ran fine');
 
 
 % This last tests throws an error on purpose, the error message should be:
-% "The TMFA problem is infeasible. Verify that the standard Gibbs free energy and 
+% "The TMFA problem is infeasible. Verify that the standard Gibbs free energy and
 % metabolite concentration values are valid/correct. Reactions
 % in rows[4 7] with standard Gibbs energies'[100,200][10,20]' seem to be the problem."
 
@@ -118,6 +118,3 @@ ensemble = initializeEnsemble(ensemble,popIdx,1);
 addKineticFxnsToPath(ensemble);
 
 disp('HMP1489_r1_t0_test_gibbs ran fine');
-
-
-

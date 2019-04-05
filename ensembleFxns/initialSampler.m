@@ -72,11 +72,11 @@ while true
         models(1).poolFactor = [];
     end
 
-% Randomly distribute flux between isoenzymes
+    % Randomly distribute flux between isoenzymes
 
-    if ~isempty(ensemble.uni_iso)
-        for xi = 1:size(ensemble.uni_iso,1)
-            group = find(strcmp(ensemble.isoenzymes,ensemble.uni_iso{xi}));
+    if ~isempty(ensemble.uniqueIso)
+        for xi = 1:size(ensemble.uniqueIso,1)
+            group = find(strcmp(ensemble.isoenzymes,ensemble.uniqueIso{xi}));
             splitFactor = zeros(size(group,1),1);
             totalFlux = sum(ensemble.fluxRef(group));
             for yi = 1:size(splitFactor,1)
@@ -135,6 +135,7 @@ while true
             reverTemp = ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)};
             reactionFlux = ensemble.reactionFluxAllosteric(ensemble.kinActRxns(activRxnIdx));
             randomEnzymesR = models(1).rxnParams(activRxnIdx).enzymeAbundances';
+            extremePathways = ensemble.extremePathways{strucIdx}{activRxnIdx};
 
 
             % Sample branching factor (if necessary)
@@ -156,12 +157,13 @@ while true
 
                 % For non promiscuous reactions
             else
-                if (size(Nelem,2)>1)
-                    branchFactor = zeros(size(Nelem,2),1);
-                    for ix = 1:size(Nelem,2)
+                if (size(extremePathways,2)>1)
+                    branchFactor = zeros(1,size(extremePathways,2));
+                    for ix = 1:size(extremePathways,2)
                         aBranch            = randg(ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).betaBranchFactor(ix,:));
-                        branchFactor(ix,1) = aBranch(1)/sum(aBranch);
+                        branchFactor(1, ix) = aBranch;
                     end
+                    branchFactor = branchFactor/sum(branchFactor);
                 end
             end
             models(1).rxnParams(activRxnIdx).branchFactor = branchFactor';
@@ -172,7 +174,7 @@ while true
             % VI. Calculate rate parameters
             forwardFlux    = ensemble.forwardFlux{ensemble.kinActRxns(activRxnIdx),strucIdx};
             models(1).rxnParams(activRxnIdx).kineticParams = ...
-                calculateKineticParams(reverTemp,forwardFlux,reactionFlux,randomEnzymesR,Nelem,branchFactor,modifierElemFlux);
+                calculateKineticParams(reverTemp,forwardFlux,reactionFlux,randomEnzymesR,extremePathways,branchFactor,modifierElemFlux);
         end
     end
 

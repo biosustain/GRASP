@@ -7,6 +7,7 @@
 % Outputs:      (-)
 %--------------------- Pedro Saa 2017 -------------------------------------
 clear
+tic
 rng('default');																											% for reproducibility
 delete(gcp('nocreate'));       				            																% check first that no other process is running
 addpath('./patternFxns','./ensembleFxns');
@@ -15,7 +16,7 @@ addpath('./patternFxns','./ensembleFxns');
 iter     = 1;
 popIdx   = 1;
 
-ensemble = loadEnsembleStructure('input_test/Isoenzyme_Test');           % Here the test case HMP pathway model is chosen
+ensemble = loadEnsembleStructure('input_test/Glycolysis_Grasp_isoenzymes');           % Here the test case HMP pathway model is chosen
 
 % 2. Initialize and perform rejection sampling
 ensemble = initializeEnsemble(ensemble,popIdx,1);
@@ -40,7 +41,7 @@ simFluxes{ensemble.replenishedParticles(popIdx),1} = [];
 
 % Figure out the sampling mode
 if ~strcmpi(ensemble.sampler,'ORACLE')
-    
+
     % Initiate progress report for rejection sampling
     progress = zeros(5,1);
     save progress.txt -ascii progress;
@@ -56,7 +57,7 @@ if ~strcmpi(ensemble.sampler,'ORACLE')
             [models(ix),strucIdx(ix),xopt{ix},tolScore(ix),simFluxes{ix}] = initialSampler(ensemble);
         end
     end
-    
+
     % In the ORACLE mode we are only interested in the models
 else
     if ensemble.parallel
@@ -83,3 +84,4 @@ clearvars -except ensemble popIdx iter
 
 save('output_test/ensembleSMC_rejection_MEP.mat');
 
+toc
