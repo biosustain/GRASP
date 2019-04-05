@@ -51,28 +51,28 @@ def calculate_dG(file_in, gas_constant, temperature, rxn_order=None):
     stoic_df = pd.read_excel(file_in, sheet_name='stoic')
 
     mets_conc_df = pd.read_excel(file_in, sheet_name='thermoMets')
-    mets_conc_df['mean (M)'] = (mets_conc_df['min (M)'] + mets_conc_df['max (M)']) / 2.
+    mets_conc_df['mean (M)'] = (mets_conc_df.iloc[:,1] + mets_conc_df.iloc[:,2]) / 2.
 
     dG_std_df = pd.read_excel(file_in, sheet_name='thermoRxns')
-    dG_std_df['∆Gr_mean'] = (dG_std_df['∆Gr\'_min (kJ/mol)'] + dG_std_df['∆Gr\'_max (kJ/mol)']) / 2.
+    dG_std_df['∆Gr_mean'] = (dG_std_df.iloc[:,1] + dG_std_df.iloc[:,2]) / 2.
 
     rxn_names = stoic_df['rxn ID'].values
 
     stoic_matrix = stoic_df.iloc[:, 1:].values
 
-    min_met_conc = mets_conc_df['min (M)'].values
-    max_met_conc = mets_conc_df['max (M)'].values
-
+    min_met_conc = mets_conc_df.iloc[:,1].values
+    max_met_conc = mets_conc_df.iloc[:,2].values
+ 
     dG_list_mean, dG_Q_list_mean, ma_ratio_list_mean = _get_dG_list(rxn_names, stoic_matrix,
                                                                     mets_conc_df['mean (M)'].values,
                                                                     mets_conc_df['mean (M)'].values,
                                                                     dG_std_df['∆Gr_mean'].values,
                                                                     gas_constant, temperature)
     dG_list_min, dG_Q_list_min, ma_ratio_list_min = _get_dG_list(rxn_names, stoic_matrix, max_met_conc, min_met_conc,
-                                                                 dG_std_df['∆Gr\'_min (kJ/mol)'].values,
+                                                                 dG_std_df.iloc[:,1].values,
                                                                  gas_constant, temperature)
     dG_list_max, dG_Q_list_max, ma_ratio_list_max = _get_dG_list(rxn_names, stoic_matrix, min_met_conc, max_met_conc,
-                                                                 dG_std_df['∆Gr\'_max (kJ/mol)'].values,
+                                                                 dG_std_df.iloc[:,2].values,
                                                                  gas_constant, temperature)
 
     ma_df['ma_min'] = ma_ratio_list_min
@@ -153,15 +153,16 @@ def _get_balanced_s_matrix(file_in):
 
 def _get_meas_rates(file_in, rxn_list):
     meas_rates_df = pd.read_excel(file_in, sheet_name='measRates')
-    meas_rates_ids = meas_rates_df['Fluxes (umol/gCDW/h)'].values
+    meas_rates_ids = meas_rates_df.iloc[:,0].values
 
     meas_rates_mean = np.zeros(len(rxn_list))
     meas_rates_std = np.zeros(len(rxn_list))
     for rxn_i, rxn in enumerate(rxn_list):
         for meas_rxn_i in range(len(meas_rates_df.index)):
             if rxn == meas_rates_ids[meas_rxn_i]:
-                meas_rates_mean[rxn_i] = meas_rates_df['MBo10_mean'].values[meas_rxn_i]
-                meas_rates_std[rxn_i] = meas_rates_df['MBo10_std'].values[meas_rxn_i]
+                meas_rates_mean[rxn_i] = meas_rates_df.iloc[meas_rxn_i,1]
+                meas_rates_std[rxn_i] = meas_rates_df.iloc[meas_rxn_i,2]
+               
 
     return meas_rates_mean, meas_rates_std
 
