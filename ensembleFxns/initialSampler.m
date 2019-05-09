@@ -144,7 +144,8 @@ while true
 
             % If the reaction is promiscuous
             if size(promiscRxnsList,1) > 0
-                branchFactor = ensemble.reactionFluxAllosteric(promiscRxnsList);
+                branchFactor = ensemble.reactionFluxAllosteric(promiscRxnsList)';
+                branchFactor = branchFactor/max(branchFactor);
 
                 % If the promiscuous reactions share common steps
                 if sum(sum(Nelem)) > size(Nelem,1)
