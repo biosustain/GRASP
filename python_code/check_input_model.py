@@ -144,11 +144,8 @@ def check_input_model(file_in):
 
 
 def main():
-<<<<<<< HEAD
-    file_in = '/
-=======
+
     file_in = '/home/mrama/GRASP_test/GRASP/input_test/HMP1489_r1_t0.xlsx'
->>>>>>> master
     check_input_model(file_in)
 
 
