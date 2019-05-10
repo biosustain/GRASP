@@ -39,7 +39,11 @@ To make sure your GRASP input file has no issues (or at least a few less) before
 	* A,B,C refer to substrates
 	* P,Q,R refer to products
 	* I refers to inhibitors, if there is more than one, try I1, I2, I3 and make sure it worked by looking into the reactions functions.
+	* Z referes to the activators, if there is more than one, try Z1, Z2, Z3 and mke sure it worked by looking into the reactions functions.
 * if setting compute thermodynamics is set to 1, then in thermoRxns specify the Gibbs standard energies, otherwise specify the reaction Gibbs energies.
+* when including isoenzymes, in the rxns tab call each of the isoenzymes by their 'parent' enzyme name e.g. 'HEX' for HEX1 and HEX2:
+	* they will be grouped by this name so make sure none are conflicting,
+	* it is not essential to include names if there aren't isoenzymes, however the isoenzyme column is neccessary.
 
 
 To check if the order of metabolites and reactions in all sheets is consistent with stoic run your model through `check_input_model.py`. This script will also check if there are any commas, semi-colons, and dots on the metabolites list in the kinetics sheet.
