@@ -93,4 +93,10 @@ write(cell2table(mcaResults.enzNames), 'output_test/MEP_test_enzNames.dat');
 
 
 %Plot MCA results
-plotControlAnalysis(mcaResults, ensemble);
+
+% Optional, Define ranges for displaying the MCA results: {1st category, range; 2nd category, range}  
+%For example, categories = {'Glycolysis',[1,20]; 'Pentose Phosphate Pathway',[21,30];'Others', [31,37] ;'Ethanol metabolism', [38,49];'TCA cycle', [50,76] ;'ATP ADP NADH', [77,83]; 'Exchange reactions', [84,88]};
+categories = {};
+
+plotControlAnalysis(mcaResults, ensemble, categories);
+
