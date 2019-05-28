@@ -97,7 +97,12 @@ Pattern = tempPath;       % all possible pattern list
 PatternNumber = length(Pattern);
 pathway = [];
 for i = 1:PatternNumber
-    pattern = Pattern(i,:)';
+    try
+        pattern = Pattern(i,:)';
+    catch error
+        error('There is  a good chance your mechanism has an error in the enzyme states numbering.');
+    end
+    
     pathway_tempPath = [];
     for j = 1:length(pattern)
         pathway_tempPath = [pathway_tempPath;LinkList(pattern(j),:)];
