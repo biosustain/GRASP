@@ -55,7 +55,7 @@ for i = 1:numel(ensemble.activeRxns)
 
     % If binding/release order is provided
     % Does not take into account different models
-    if ~isempty(ensemble.subOrder{strucIdx}{i})||~isempty(ensemble.subOrder{strucIdx}{i})
+    if ~isempty(ensemble.subOrder{strucIdx}{i})||~isempty(ensemble.prodOrder{strucIdx}{i})
         reactants = [];
         w = sum(length(ensemble.inhibitors{1,1}{i})+length(ensemble.activators{1,1}{i})+length(ensemble.subOrder{1,1}{i})+length(ensemble.prodOrder{1,1}{i}));
         elemCount = 1;
@@ -98,7 +98,7 @@ for i = 1:numel(ensemble.activeRxns)
                 end
             end
         end
-
+        
         reactants = strsplit(reactants, ';');
 
         for reactantI = 1:size(reactants, 2)

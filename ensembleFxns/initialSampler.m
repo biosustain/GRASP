@@ -171,21 +171,20 @@ while true
 
             % Get modifier elementary fluxes (positions are given were exp(R)=1)
             modifierElemFlux = models(1).rxnParams(activRxnIdx).modiferElemFlux';
-
             % VI. Calculate rate parameters
             forwardFlux    = ensemble.forwardFlux{ensemble.kinActRxns(activRxnIdx),strucIdx};
             models(1).rxnParams(activRxnIdx).kineticParams = ...
                 calculateKineticParams(reverTemp,forwardFlux,reactionFlux,randomEnzymesR,extremePathways,branchFactor,modifierElemFlux);
         end
     end
-
+    
     % Test model consistency
     kineticFxn = str2func(ensemble.kineticFxn{strucIdx});
     testFlux   = feval(kineticFxn,ones(size(ensemble.freeVars,1),1),models,ensemble.fixedExch(:,1),ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},0);
 
     % If the model is consistent continue
     condition = true;
-    if any(abs(testFlux-ensemble.fluxRef)>1e-6)
+    if any(abs(testFlux-ensemble.fluxRef)>1e-6) || any(isnan(testFlux))
         condition = false;
         disp(['There are consistency problems during the reaction sampling. Model ID: ',num2str(strucIdx)]);
     end
