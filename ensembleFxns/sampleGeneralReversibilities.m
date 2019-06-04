@@ -48,8 +48,8 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
                 % If promiscuous reactions have steps in common - not
                 % working currently
                 if any(sum(revMatrix) >1)
-                    disp('Sampling of reversibilities for romiscuous reactions with steps in common is not working yet. Please change the reaction mechanism'); 
-                    exit();
+                    error('Sampling of reversibilities for romiscuous reactions with steps in common is not working yet. Please change the reaction mechanism'); 
+                    
 
                     %gibbsTemp = cell2mat(ensemble.gibbsTemp(promiscRxnsList));
                     %reverTemp = generalRevSampling(alphaReversibility, gibbsTemp/RT, numSamples, thinning, burn_in);
@@ -150,8 +150,7 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
             assert(abs(sum(logRev.*revMatrix') - gibbsTemp/RT) < abs(rTol * gibbsTemp/RT), ['Sum of log-reversibilities does not add up to the Gibbs energy', num2str(abs(sum(logRev.*revMatrix') - gibbsTemp/RT))]); 
 
         else
-            disp('Oooops, something went wrong');
-            exit
+            error("Oooops, something went wrong. You shouldn\'t be here.");            
         end
       
     end
