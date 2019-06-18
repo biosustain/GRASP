@@ -43,7 +43,7 @@ if size(Nelem,2) > 1 && sum(sum(Nelem)) <= size(Nelem,1)
     if size(inhibEntries) > 0
         nTracks = size(revCalIrrev, 2);
         
-        for j = 1:nTracks;
+        for j = 1:nTracks
             for i = 1:size(inhibEntries)
                 inhibEntry = inhibEntries(i);
                 if revCalIrrev(inhibEntry-1, j) ~= 1 && revCalIrrev(inhibEntry+1, j) ~=1
@@ -70,10 +70,10 @@ elemenFlux = revCal(:);
 % If the pattern contains modifiers (e.g. inhibitors/activators) compute
 % elementary fluxes based on the elem flux fraction
 if any(isnan(elemenFlux))
-    elemenFlux(isnan(elemenFlux)) = modifierElemFlux;
+    elemenFlux(isnan(elemenFlux)) = sign(reactionFlux)*modifierElemFlux;
 end
 
-
+ 
 %disp('reactionFlux');
 %disp(reactionFlux);
 
@@ -85,6 +85,8 @@ end
 
 % 3. Output the kinetic parameters
 K = reactionFlux*elemenFlux.*(enzymeVect(:).^(-1));
+
+assert(all(K >= 0), 'There are negative kinetic parameters, good luck! :)');
 %disp('K');
 %disp(K);
 %disp('----');

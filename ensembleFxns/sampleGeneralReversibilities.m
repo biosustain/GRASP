@@ -28,10 +28,13 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
         ~strcmp(ensemble.rxnMechanisms{strucIdx}{activRxnIdx},'freeExchange')&&...
         ~strcmp(ensemble.rxnMechanisms{strucIdx}{activRxnIdx},'fixedExchange')&&...
         ~strcmp(ensemble.rxnMechanisms{strucIdx}{activRxnIdx},'massAction')
-            
+
+        %disp(ensemble.rxns{ensemble.kinActRxns(activRxnIdx),strucIdx});
+        
         promiscRxnsList = ensemble.promiscuity{strucIdx}{ensemble.kinActRxns(activRxnIdx)};
         revMatrix = ensemble.revMatrix{ensemble.kinActRxns(activRxnIdx),strucIdx};
         alphaReversibility = ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaReversibilities;
+        fluxSign = sign(ensemble.fluxRef(ensemble.kinActRxns(activRxnIdx)));
 
         
         % If the reaction is promiscuous
@@ -90,12 +93,12 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
                     
                     reverTemp = zeros(size(revMatrix'));
                     for rxnI = 1:size(revMatrix, 1)
-                        reverTemp(:, rxnI) = exp(randomRev*gibbsTemp(rxnI)/RT).*revMatrix(rxnI,:)';  % Convert to the proper units for later calculation   
+                        reverTemp(:, rxnI) = exp(fluxSign*randomRev*gibbsTemp(rxnI)/RT).*revMatrix(rxnI,:)';  % Convert to the proper units for later calculation   
                         
                         % Double check calculations
                         logRev = log(reverTemp);
                         logRev(logRev==-Inf) = 0;
-                        assert(abs(sum(logRev(:,rxnI).*revMatrix(rxnI,:)') - gibbsTemp(rxnI)/RT) < abs(rTol * gibbsTemp(rxnI)/RT), ['Sum of log-reversibilities does not add up to the Gibbs energy', num2str(abs(sum(logRev(:,rxnI).*revMatrix(rxnI,:)') - gibbsTemp(rxnI)/RT))]); 
+                        assert(abs(sum(logRev(:,rxnI).*revMatrix(rxnI,:)') - fluxSign*gibbsTemp(rxnI)/RT) < abs(rTol * gibbsTemp(rxnI)/RT), ['Sum of log-reversibilities does not add up to the Gibbs energy', num2str(abs(sum(logRev(:,rxnI).*revMatrix(rxnI,:)') - gibbsTemp(rxnI)/RT))]); 
                     end
                     
                     ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)} = sum(reverTemp,2);
@@ -119,14 +122,14 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
             
             % Calculate reversibilities
             gibbsTemp = ensemble.gibbsTemp{ensemble.kinActRxns(activRxnIdx)};
-            ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)} = exp(randomRev*gibbsTemp/RT);  % Convert to the proper units for later calculation  
+            ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)} = exp(fluxSign*randomRev*gibbsTemp/RT);  % Convert to the proper units for later calculation  
             
             % Double check calculations
             logRev = log(ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)});
             logRev(logRev==-Inf) = 0;
             
             for rxnI = 1:size(revMatrix, 1)
-                assert(abs(sum(logRev.*revMatrix(rxnI, :)') - gibbsTemp/RT) < abs(rTol * gibbsTemp/RT), 'Sum of log-reversibilities does not add up to the Gibbs energy'); 
+                assert(abs(sum(logRev.*revMatrix(rxnI, :)') - fluxSign*gibbsTemp/RT) < abs(rTol * gibbsTemp/RT), 'Sum of log-reversibilities does not add up to the Gibbs energy'); 
             end
   
         % If the mechanism has only one track, e.g. ordered
@@ -142,12 +145,12 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
             
             % Calculate reversibilities
             gibbsTemp = ensemble.gibbsTemp{ensemble.kinActRxns(activRxnIdx)};
-            ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)} = exp(randomRev*gibbsTemp/RT);  % Convert to the proper units for later calculation  
+            ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)} = exp(fluxSign*randomRev*gibbsTemp/RT);  % Convert to the proper units for later calculation  
             
             % Double check calculations
             logRev = log(ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)});
             logRev(logRev==-Inf) = 0;
-            assert(abs(sum(logRev.*revMatrix') - gibbsTemp/RT) < abs(rTol * gibbsTemp/RT), ['Sum of log-reversibilities does not add up to the Gibbs energy', num2str(abs(sum(logRev.*revMatrix') - gibbsTemp/RT))]); 
+            assert(abs(sum(logRev.*revMatrix') - fluxSign*gibbsTemp/RT) < abs(rTol * gibbsTemp/RT), ['Sum of log-reversibilities does not add up to the Gibbs energy', num2str(abs(sum(logRev.*revMatrix') - gibbsTemp/RT))]); 
 
         else
             error("Oooops, something went wrong. You shouldn\'t be here.");            
