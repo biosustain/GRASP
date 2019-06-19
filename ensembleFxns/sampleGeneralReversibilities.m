@@ -36,7 +36,6 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
         alphaReversibility = ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaReversibilities;
         fluxSign = sign(ensemble.fluxRef(ensemble.kinActRxns(activRxnIdx)));
 
-        
         % If the reaction is promiscuous
         if size(promiscRxnsList) > 0 
          
@@ -90,9 +89,12 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
 
                     % Calculate reversibilities
                     gibbsTemp = cell2mat(ensemble.gibbsTemp(promiscRxnsList))';
-                    
                     reverTemp = zeros(size(revMatrix'));
+                    
                     for rxnI = 1:size(revMatrix, 1)
+                        fluxSign = sign(ensemble.fluxRef(ensemble.kinActRxns(promiscRxnsList(rxnI))));
+                        assert(sign(gibbsTemp(rxnI)) ~= fluxSign, strcat('The sampled Gibbs energy and the flux sign for ', ensemble.rxns{ensemble.kinActRxns(activRxnIdx),strucIdx},' is incompatible'));
+                        
                         reverTemp(:, rxnI) = exp(fluxSign*randomRev*gibbsTemp(rxnI)/RT).*revMatrix(rxnI,:)';  % Convert to the proper units for later calculation   
                         
                         % Double check calculations
@@ -100,7 +102,6 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
                         logRev(logRev==-Inf) = 0;
                         assert(abs(sum(logRev(:,rxnI).*revMatrix(rxnI,:)') - fluxSign*gibbsTemp(rxnI)/RT) < abs(rTol * gibbsTemp(rxnI)/RT), ['Sum of log-reversibilities does not add up to the Gibbs energy', num2str(abs(sum(logRev(:,rxnI).*revMatrix(rxnI,:)') - gibbsTemp(rxnI)/RT))]); 
                     end
-                    
                     ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)} = sum(reverTemp,2);
                 end
             end
@@ -122,6 +123,8 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
             
             % Calculate reversibilities
             gibbsTemp = ensemble.gibbsTemp{ensemble.kinActRxns(activRxnIdx)};
+            assert(sign(gibbsTemp) ~= fluxSign, strcat('The sampled Gibbs energy and the flux sign for ', ensemble.rxns{ensemble.kinActRxns(activRxnIdx),strucIdx},' is incompatible'));
+            
             ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)} = exp(fluxSign*randomRev*gibbsTemp/RT);  % Convert to the proper units for later calculation  
             
             % Double check calculations
@@ -145,7 +148,10 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
             
             % Calculate reversibilities
             gibbsTemp = ensemble.gibbsTemp{ensemble.kinActRxns(activRxnIdx)};
+            assert(sign(gibbsTemp) ~= fluxSign, strcat('The sampled Gibbs energy and the flux sign for ', ensemble.rxns{ensemble.kinActRxns(activRxnIdx),strucIdx},' is incompatible'));
+            
             ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)} = exp(fluxSign*randomRev*gibbsTemp/RT);  % Convert to the proper units for later calculation  
+            
             
             % Double check calculations
             logRev = log(ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)});
