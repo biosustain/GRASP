@@ -394,8 +394,9 @@ for jx = 1:ensemble.numStruct
             ensemble.Nelem{ix,jx} = Ntemp;                         % assign final positive null basis
         end
     end
-    copyfile('./reactions',['./reactions',num2str(jx)]);
-    addpath(['./reactions',num2str(jx)]);
+    
+    copyfile('./reactions', strcat('./reactions_', ensemble.description, '_', num2str(jx)));
+    addpath(strcat('./reactions_', ensemble.description, '_', num2str(jx)));
     rmdir('./reactions','s');
 
     % Build kinetic fxn and find active species (do not build hess partern)

@@ -14,7 +14,7 @@ freeVars   = [ensemble.mets(metsActive);ensemble.rxns(enzActive)];              
 
 % Write initial parameters
 c = '%';
-fid = fopen(['reactions',num2str(strucIdx),'/',kineticFxn,'.m'],'w');
+fid = fopen(['reactions_',ensemble.description,'_', num2str(strucIdx),'/',kineticFxn,'.m'],'w');
 fprintf(fid,['function [f,grad] = ',kineticFxn,'(x,model,fixedExch,Sred,kinInactRxns,subunits,flag)\n']);
 fprintf(fid,'%s Pre-allocation of memory\n',c);
 fprintf(fid,'h = 1e-8;\n');									% Step length
