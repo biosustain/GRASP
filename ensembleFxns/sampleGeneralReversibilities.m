@@ -1,4 +1,4 @@
-function [ensemble, models] = sampleGeneralReversibilities(ensemble, models, RT, strucIdx)
+function [ensemble, models, isModelValid] = sampleGeneralReversibilities(ensemble, models, RT, strucIdx)
 
 %--------------------------------------------------------------------------
 % Function used to calculate the reversibilities for each reaction
@@ -30,7 +30,7 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
         ~strcmp(ensemble.rxnMechanisms{strucIdx}{activRxnIdx},'massAction')
 
         %disp(ensemble.rxns{ensemble.kinActRxns(activRxnIdx),strucIdx});
-        
+
         promiscRxnsList = ensemble.promiscuity{strucIdx}{ensemble.kinActRxns(activRxnIdx)};
         revMatrix = ensemble.revMatrix{ensemble.kinActRxns(activRxnIdx),strucIdx};
         alphaReversibility = ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaReversibilities;
@@ -93,8 +93,10 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
                     
                     for rxnI = 1:size(revMatrix, 1)
                         fluxSign = sign(ensemble.fluxRef(ensemble.kinActRxns(promiscRxnsList(rxnI))));
-                        assert(sign(gibbsTemp(rxnI)) ~= fluxSign, strcat('The sampled Gibbs energy and the flux sign for ', ensemble.rxns{ensemble.kinActRxns(activRxnIdx),strucIdx},' is incompatible'));
-                        
+                        isModelValid = checkModelConsistency(gibbsTemp(rxnI), fluxSign, ensemble.rxns{ensemble.kinActRxns(activRxnIdx),strucIdx});
+                        if ~isModelValid
+                            return
+                        end
                         reverTemp(:, rxnI) = exp(fluxSign*randomRev*gibbsTemp(rxnI)/RT).*revMatrix(rxnI,:)';  % Convert to the proper units for later calculation   
                         
                         % Double check calculations
@@ -123,8 +125,10 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
             
             % Calculate reversibilities
             gibbsTemp = ensemble.gibbsTemp{ensemble.kinActRxns(activRxnIdx)};
-            assert(sign(gibbsTemp) ~= fluxSign, strcat('The sampled Gibbs energy and the flux sign for ', ensemble.rxns{ensemble.kinActRxns(activRxnIdx),strucIdx},' is incompatible'));
-            
+            isModelValid = checkModelConsistency(gibbsTemp, fluxSign, ensemble.rxns{ensemble.kinActRxns(activRxnIdx),strucIdx});
+            if ~isModelValid
+                return
+            end
             ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)} = exp(fluxSign*randomRev*gibbsTemp/RT);  % Convert to the proper units for later calculation  
             
             % Double check calculations
@@ -148,8 +152,10 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
             
             % Calculate reversibilities
             gibbsTemp = ensemble.gibbsTemp{ensemble.kinActRxns(activRxnIdx)};
-            assert(sign(gibbsTemp) ~= fluxSign, strcat('The sampled Gibbs energy and the flux sign for ', ensemble.rxns{ensemble.kinActRxns(activRxnIdx),strucIdx},' is incompatible'));
-            
+            isModelValid = checkModelConsistency(gibbsTemp, fluxSign, ensemble.rxns{ensemble.kinActRxns(activRxnIdx),strucIdx});
+            if ~isModelValid
+                return
+            end
             ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)} = exp(fluxSign*randomRev*gibbsTemp/RT);  % Convert to the proper units for later calculation  
             
             
@@ -167,3 +173,19 @@ end
 
 end
 
+
+function isModelValid = checkModelConsistency(gibbsTemp, fluxSign, rxnName)
+%--------------------------------------------------------------------------
+%
+% Checks if the sampled Gibbs free energy and the reaction flux direction
+%  are compatible.
+%
+%---------------------------Marta Matos 2019-------------------------------
+
+    isModelValid = true;
+    
+	if sign(gibbsTemp) == fluxSign
+        disp(['The sampled Gibbs energy and the flux sign for ', rxnName ,' is incompatible.']);
+        isModelValid = false;
+	end
+end
