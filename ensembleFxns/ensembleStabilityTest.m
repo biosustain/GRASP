@@ -87,8 +87,7 @@ for ix = 1:nCondition
         end
         
     end
-    stabilityRes.unstableModels = [stabilityRes.unstableModels, 2]
-    stabilityRes.unstableModels = [stabilityRes.unstableModels, 10]
+    
     disp(['*** Out of ', num2str(numModels), ' models, ', num2str(size(stabilityRes.unstableModels, 2)), ' models are unstable ***']);
 end
 
