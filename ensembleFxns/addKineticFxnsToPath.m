@@ -4,7 +4,7 @@ function addKineticFxnsToPath(ensemble)
 % ------------------ Pedro Saa, Marta Matos 2018 ---------------------------------------
 %
 rootName =  strcat('./reactions_', ensemble.description, '_');
-disp(rootName);
+
 for ix = 1:ensemble.numStruct
     tmpName = [rootName,num2str(ix)];
     addpath(tmpName);
