@@ -180,7 +180,6 @@ while true
             modifierElemFlux = models(1).rxnParams(activRxnIdx).modiferElemFlux';
             % VI. Calculate rate parameters
             %disp(ensemble.rxns{ensemble.kinActRxns(activRxnIdx),strucIdx});
-
             forwardFlux    = ensemble.forwardFlux{ensemble.kinActRxns(activRxnIdx),strucIdx};
             models(1).rxnParams(activRxnIdx).kineticParams = ...
                 calculateKineticParams(reverTemp,forwardFlux,reactionFlux,randomEnzymesR,extremePathways,branchFactor,modifierElemFlux,rxnIsPromiscuous);
@@ -199,11 +198,10 @@ while true
     
     % Test if the real part of the jacobian's eigenvalue is greater than
     %  threshold
-    eigThreshold = 10^-5;
     maxRealEigenvalue = checkStability(ensemble,models,strucIdx);
-    if maxRealEigenvalue > eigThreshold
+    if maxRealEigenvalue > ensemble.eigThreshold
         isModelValid = false;
-        disp(['There are eigenvalues larger than ', num2str(eigThreshold), '. Model ID: ',num2str(strucIdx)]);
+        disp(['There are eigenvalues larger than ', num2str(ensemble.eigThreshold), '. Model ID: ',num2str(strucIdx)]);
     end
     
 
