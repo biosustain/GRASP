@@ -1,4 +1,10 @@
 function stabilityRes = ensembleStabilityTest(ensemble,eigThreshold,strucIdx)
+%
+% Takes in a model ensemble, calculates the jacobian and respective
+% eigenvalues for each model.
+% If any eigenvalue's real part is higher than eighThreshold, the model
+% is considered unstable.
+%
 %---------------- Pedro Saa UQ 2018, Marta Matos 2019 ---------------------
 
 if nargin<3
