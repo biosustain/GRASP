@@ -29,20 +29,8 @@ rxnNames     = ensemble.rxns;
 for ix = 1:nCondition
     % Plot final results
     figure (ix)
+
     subplot(4,1,1)
-    imagesc(mcaResults.xControlAvg{ix})
-    set(gca,'xticklabel',[],'yticklabel',[],'ytick',1:numel(ix_mets),'xtick',1:numFluxes)
-    set(gca,'yticklabel',metNames,'xticklabel',rxnNames)
-    ylabel('Metabolites')
-    xlabel('Reactions')
-    title(['Concentration control coefficients condition: ',num2str(ix)])
-    set(gca,'FontSize',6,'FontName','arial')
-    caxis([-3 3])
-    ax = subplot(4,1,1);
-    colormap(ax,cmap)
-    colormap(cmap)
-    
-    subplot(4,1,2)
     imagesc(mcaResults.vControlAvg{ix})
     set(gca,'xticklabel',[],'yticklabel',[],'xtick',1:numFluxes,'ytick',1:numFluxes)
     set(gca,'xticklabel',rxnNames,'yticklabel',rxnNames)
@@ -53,6 +41,20 @@ for ix = 1:nCondition
     caxis([-3 3])
     ax=subplot(4,1,2);
     colormap(ax,cmap)
+    
+    subplot(4,1,2)
+    imagesc(mcaResults.xControlAvg{ix})
+    set(gca,'xticklabel',[],'yticklabel',[],'ytick',1:numel(ix_mets),'xtick',1:numFluxes)
+    set(gca,'yticklabel',metNames,'xticklabel',rxnNames)
+    xlabel('Reactions')
+    ylabel('Metabolites')
+    title(['Concentration control coefficients condition: ',num2str(ix)])
+    set(gca,'FontSize',6,'FontName','arial')
+    caxis([-3 3])
+    ax = subplot(4,1,1);
+    colormap(ax,cmap)
+    colormap(cmap)
+    
     
     subplot(4,1,3)
     imagesc(mcaResults.eResponseAvg{ix})

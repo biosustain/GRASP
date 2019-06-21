@@ -1,4 +1,4 @@
-function mcaResults = controlAnalysis(ensemble,modelID,outputFolder,saveResMatrices,strucIdx)
+function mcaResults = controlAnalysis(ensemble,saveResMatrices,strucIdx)
 %---------------- Pedro Saa UQ 2018----------------------------------------
 
 if nargin<3
@@ -108,12 +108,6 @@ for ix = 1:nCondition
     mcaResults.vControlAvg{ix} = mcaResults.vControlAvg{ix}/mcaResults.vcounter{ix};
     
 end
-
-% Write output
-save(strcat(outputFolder, '/MCA', modelID, '.mat'), 'mcaResults');
-write(cell2table(ensemble.rxns(ensemble.activeRxns)), strcat(outputFolder, '/', modelID, '_rxnsActive.dat'));
-write(cell2table(ensemble.mets(ensemble.metsActive)), strcat(outputFolder, '/', modelID, '_metsActive.dat'));
-write(cell2table(mcaResults.enzNames), strcat(outputFolder, '/', modelID, '_enzNames.dat'));
 
 end
 
