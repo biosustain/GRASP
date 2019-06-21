@@ -399,8 +399,12 @@ for jx = 1:ensemble.numStruct
         end
     end
     
-    copyfile('./reactions', strcat('./reactions_', ensemble.description, '_', num2str(jx)));
-    addpath(strcat('./reactions_', ensemble.description, '_', num2str(jx)));
+    modelFolder = strcat('./reactions_', ensemble.description, '_', num2str(jx));
+    if exist(modelFolder, 'dir')
+       rmdir(modelFolder,'s');
+    end
+    copyfile('./reactions', modelFolder);
+    addpath(modelFolder);
     rmdir('./reactions','s');
 
     % Build kinetic fxn and find active species (do not build hess partern)
