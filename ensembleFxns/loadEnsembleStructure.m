@@ -147,7 +147,7 @@ ensemble.simWeights = ensemble.expFluxes(ensemble.freeFluxes,:);                
 disp('Flux data computed and loaded.');
 
 % Make sure that S.v = 0
-assert(all(ensemble.Sred * ensemble.fluxRef)  == 0, "Your model doesn\'t seem to be at steady-state. Sred * fluxRef != 0");
+assert(all(abs(ensemble.Sred * ensemble.fluxRef) <10^-8), "Your model doesn\'t seem to be at steady-state. Sred * fluxRef != 0");
 
 
 %% 3. Perform thermodynamic calculations
