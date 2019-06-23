@@ -1,13 +1,6 @@
-% Example 1. Sample a kinetic model of the MEP pathway (reference point)
-%--------------------------------------------------------------------------
-% Executes GRASP workflow
 %
-% Inputs:       (-)
+% Test cases for GRASP
 %
-% Outputs:      (-)
-%--------------------- Pedro Saa 2017 -------------------------------------
-
-
 %% Case 1: Nick's model Glycolysis_Grasp_isoenzymes
 clear
 rng('default');																											% for reproducibility
