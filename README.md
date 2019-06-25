@@ -14,7 +14,7 @@ It also performs Metabolic Control Analysis (MCA) and stability analysis on the 
 * [Installation](#installation)
 * [Usage](#usage)
   * [Specifying the input](#specifying-the-input)
-  * [Building models](#building_models)
+  * [Building models](#building-models)
   * [Analyzing model ensembles](#analyzing-model-ensembles)
 * [Known issues and limitations](#known-issues-and-limitations)
 
