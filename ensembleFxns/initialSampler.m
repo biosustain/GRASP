@@ -89,7 +89,7 @@ while true
     end
       
     models.refFlux =  ensemble.fluxRef;
-    assert(all(ensemble.Sred * ensemble.fluxRef)  == 0, "Your model doesn\'t seem to be at steady-state. Sred * fluxRef != 0");
+    assert(all(abs(ensemble.Sred * ensemble.fluxRef) <10^-8), "Your model doesn\'t seem to be at steady-state. Sred * fluxRef != 0");
 
     % Sample gibbs free energy of reactions
     gibbsFactor = mvnrnd(ensemble.populations(1).probParams(strucIdx).muGibbsFactor,ensemble.populations(1).probParams(strucIdx).sigmaGibbsFactor)';

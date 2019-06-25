@@ -1,5 +1,11 @@
-function mcaResults = controlAnalysis(ensemble,saveResMatrices,strucIdx)
-%---------------- Pedro Saa UQ 2018----------------------------------------
+function stabilityRes = ensembleStabilityTest(ensemble,eigThreshold,strucIdx)
+%
+% Takes in a model ensemble, calculates the jacobian and respective
+% eigenvalues for each model.
+% If any eigenvalue's real part is higher than eighThreshold, the model
+% is considered unstable.
+%
+%---------------- Pedro Saa UQ 2018, Marta Matos 2019 ---------------------
 
 if nargin<3
     strucIdx = 1;
@@ -13,7 +19,10 @@ addKineticFxnsToPath(ensemble);
 
 % Find particles of the appropriate structure
 particleIdx = find(ensemble.populations(end).strucIdx==strucIdx);
-numModels   = numel(particleIdx);
+numModels = size(ensemble.populations.models, 2);
+if numModels > numel(particleIdx) 
+    numModels   = numel(particleIdx);
+end
 
 % Optimization & simulation parameters
 fixedExchs   = ensemble.fixedExch;
@@ -37,20 +46,13 @@ end
 
 % Main loop
 hstep = 1e-10;              % Step size for control coefficient computations
+
+stabilityRes.unstableModels = [];
 for ix = 1:nCondition
-    if saveResMatrices
-        mcaResults.xControl{ix}    = [];
-        mcaResults.vControl{ix}    = [];
-        mcaResults.E_x_nor{ix}     = [];
-    end
-    
-    mcaResults.xControlAvg{ix} = 0;
-    mcaResults.vControlAvg{ix} = 0;
-    mcaResults.xcounter{ix}    = 0;
-    mcaResults.vcounter{ix}    = 0;
-    
+   
     for jx = 1:numModels
-        mcaResults.enzNames = rxnNames;
+        stabilityRes.posEig{jx} = [];
+        %mcaResults.enzNames = rxnNames;
         model = ensemble.populations(end).models(particleIdx(jx));
         if ix == 1
             xopt = ones(freeVars,1);
@@ -75,39 +77,27 @@ for ix = 1:nCondition
         
         % Compute elasticiy matrices
         E_x_abs  = -(imag(simFlux')./hstep_x(:,ones(1,numFluxes)))'; % equivalent to imag(simFlux)./1.0e-10 ? 
+                      
+        % Compute Jacobian eigenvalues
+        %C_x_abs   = -(pinv(Sred*E_x_abs))*Sred;
+        jacobian   = Sred*E_x_abs;
+        eigenvalues = eig(jacobian);
         
-        % Normalize elasticity matrices
-        E_x_nor   = diag(vref.^-1)*E_x_abs*diag(xref);        
-              
-        % Compute control coefficients
-        C_x_abs   = -(pinv(Sred*E_x_abs))*Sred;
-        C_x       = diag(xref.^-1)*C_x_abs*diag(vref);
-        C_v       = eye(numel(vref)) + E_x_nor*C_x;
-
-        % Save control coefficients only if the result is accurate
-        if all(abs(sum(C_x,2))<1e-5)
-            if saveResMatrices
-                mcaResults.xControl{ix}    = [mcaResults.xControl{ix}; C_x];
-            end
-            mcaResults.xControlAvg{ix} = mcaResults.xControlAvg{ix} + C_x;
-            mcaResults.xcounter{ix}    = mcaResults.xcounter{ix} + 1;
+        % Look for positive real eigenvalues
+        indList = find(real(eigenvalues) > eigThreshold);
+        posEigMets = ensemble.mets(ensemble.metsActive(indList));
+                
+        if size(indList, 1) > 0
+            stabilityRes.posEig{jx} = {posEigMets, real(eigenvalues(indList))};
+            stabilityRes.unstableModels = [stabilityRes.unstableModels, jx];
         end
-        if all(abs(sum(C_v,2))-1<1e-5)
-            if saveResMatrices
-                mcaResults.vControl{ix}    = [mcaResults.vControl{ix}; C_v];
-                mcaResults.E_x_nor{ix}     = [mcaResults.E_x_nor{ix}; E_x_nor];
-            end
-            
-            mcaResults.vControlAvg{ix} = mcaResults.vControlAvg{ix} + C_v;
-            mcaResults.vcounter{ix}    = mcaResults.vcounter{ix} + 1;
-        end
+        
     end
     
-    % Determine expectancy for control coefficients
-    mcaResults.xControlAvg{ix} = mcaResults.xControlAvg{ix}/mcaResults.xcounter{ix};
-    mcaResults.vControlAvg{ix} = mcaResults.vControlAvg{ix}/mcaResults.vcounter{ix};
-    
+    disp(['*** Out of ', num2str(numModels), ' models, ', num2str(size(stabilityRes.unstableModels, 2)), ' models are unstable ***']);
 end
 
-end
+
+
+
 

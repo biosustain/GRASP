@@ -147,7 +147,7 @@ ensemble.simWeights = ensemble.expFluxes(ensemble.freeFluxes,:);                
 disp('Flux data computed and loaded.');
 
 % Make sure that S.v = 0
-assert(all(ensemble.Sred * ensemble.fluxRef)  == 0, "Your model doesn\'t seem to be at steady-state. Sred * fluxRef != 0");
+assert(all(abs(ensemble.Sred * ensemble.fluxRef) <10^-8), "Your model doesn\'t seem to be at steady-state. Sred * fluxRef != 0");
 
 
 %% 3. Perform thermodynamic calculations
@@ -399,13 +399,13 @@ for jx = 1:ensemble.numStruct
         end
     end
     
-    modelFolder = strcat('./reactions_', ensemble.description, '_', num2str(jx));
+    modelFolder = strcat('reactions_', ensemble.description, '_', num2str(jx));
     if exist(modelFolder, 'dir')
        rmdir(modelFolder,'s');
     end
-    copyfile('./reactions', modelFolder);
+    copyfile('reactions', modelFolder);
     addpath(modelFolder);
-    rmdir('./reactions','s');
+    rmdir('reactions','s');
 
     % Build kinetic fxn and find active species (do not build hess partern)
     [rxnMetLinks,freeVars,metsActive] = buildKineticFxn(ensemble,ensemble.kineticFxn{jx},jx);
