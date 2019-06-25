@@ -87,6 +87,8 @@ Once the input excel file and respective pattern files are done, run `build_mode
 
 Don't forget to change the modelID to be the name of your input excel file, as well as the input and output folders in `inputFile` and `outputFile`.
 
+In principle now GRASP only outputs models that are stable and thermodynamically feasible. This means that models which don't satisfy all the constraints are discarded and GRASP will keep sampling models until the number of (stable) models specified in the excel file is reached. 
+To avoid that GRASP keeps sampling models forever (can happen when it doesn't sample any stable model), a new variable `maxNumberOfSamples` was introduced to set an upper limit to how many models can actually be sampled, irrespective of how many are stable. 
 
 ## Analyzing model ensembles
 
