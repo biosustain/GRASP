@@ -8,7 +8,7 @@ As input it takes an excel file containing the model stoichiometry, a flux distr
 It also performs Metabolic Control Analysis (MCA) and stability analysis on the resulting ensembles. The resulting ensembles can also be simulated. 
 
 
-##Table of contents
+## Table of contents
 
 * [Introduction](#introduction)
 * [Installation](#installation)
