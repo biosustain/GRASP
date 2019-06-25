@@ -1,4 +1,4 @@
-function [models,strucIdx,xopt,tolScore,simulatedFlux] = initialSampler(ensemble)
+function [isModelValid,models,strucIdx,xopt,tolScore,simulatedFlux] = initialSampler(ensemble)
 %--------------------------------------------------------------------------
 % Sampling initial ensemble of kinetic models using rejection scheme
 %
@@ -43,7 +43,8 @@ counter        = 0;
 
 % Loop until the number of valid particles is reached
 while true
-
+    isModelValid = true;
+    
     % Update attempt counter
     counter = counter+1;
 
@@ -86,8 +87,9 @@ while true
             ensemble.fluxRef(group) = splitFactor.*totalFlux;
         end
     end
-
+      
     models.refFlux =  ensemble.fluxRef;
+    assert(all(ensemble.Sred * ensemble.fluxRef)  == 0, "Your model doesn\'t seem to be at steady-state. Sred * fluxRef != 0");
 
     % Sample gibbs free energy of reactions
     gibbsFactor = mvnrnd(ensemble.populations(1).probParams(strucIdx).muGibbsFactor,ensemble.populations(1).probParams(strucIdx).sigmaGibbsFactor)';
@@ -99,7 +101,10 @@ while true
     ensemble = sampleGibbsReactionEnergies(ensemble,gibbsEnergy,strucIdx);
 
     % Sample Reversibilities
-    [ensemble, models] = sampleGeneralReversibilities(ensemble, models, RT, strucIdx);
+    [ensemble, models, isModelValid] = sampleGeneralReversibilities(ensemble, models, RT, strucIdx);
+    if ~isModelValid
+        break;
+    end
 
     % Sample enzyme abundances
     models = sampleEnzymeAbundances(ensemble,models,strucIdx);
@@ -144,6 +149,7 @@ while true
 
             % If the reaction is promiscuous
             if size(promiscRxnsList,1) > 0
+                rxnIsPromiscuous = true;
                 branchFactor = ensemble.reactionFluxAllosteric(promiscRxnsList)';
                 branchFactor = branchFactor/max(branchFactor);
 
@@ -158,6 +164,7 @@ while true
 
                 % For non promiscuous reactions
             else
+                rxnIsPromiscuous = false;
                 if (size(extremePathways,2)>1)
                     branchFactor = zeros(1,size(extremePathways,2));
                     for ix = 1:size(extremePathways,2)
@@ -172,9 +179,10 @@ while true
             % Get modifier elementary fluxes (positions are given were exp(R)=1)
             modifierElemFlux = models(1).rxnParams(activRxnIdx).modiferElemFlux';
             % VI. Calculate rate parameters
+            %disp(ensemble.rxns{ensemble.kinActRxns(activRxnIdx),strucIdx});
             forwardFlux    = ensemble.forwardFlux{ensemble.kinActRxns(activRxnIdx),strucIdx};
             models(1).rxnParams(activRxnIdx).kineticParams = ...
-                calculateKineticParams(reverTemp,forwardFlux,reactionFlux,randomEnzymesR,extremePathways,branchFactor,modifierElemFlux);
+                calculateKineticParams(reverTemp,forwardFlux,reactionFlux,randomEnzymesR,extremePathways,branchFactor,modifierElemFlux,rxnIsPromiscuous);
         end
     end
     
@@ -183,18 +191,26 @@ while true
     testFlux   = feval(kineticFxn,ones(size(ensemble.freeVars,1),1),models,ensemble.fixedExch(:,1),ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},0);
 
     % If the model is consistent continue
-    condition = true;
     if any(abs(testFlux-ensemble.fluxRef)>1e-6) || any(isnan(testFlux))
-        condition = false;
+        isModelValid = false;
         disp(['There are consistency problems during the reaction sampling. Model ID: ',num2str(strucIdx)]);
     end
+    
+    % Test if the real part of the jacobian's eigenvalue is greater than
+    %  threshold
+    maxRealEigenvalue = checkStability(ensemble,models,strucIdx);
+    if maxRealEigenvalue > ensemble.eigThreshold
+        isModelValid = false;
+        disp(['There are eigenvalues larger than ', num2str(ensemble.eigThreshold), '. Model ID: ',num2str(strucIdx)]);
+    end
+    
 
     % Check sampling mode. For the ORACLE mode, no need to simulate
     if strcmpi(ensemble.sampler,'ORACLE'); break;
 
         % For the remaining modes, we need to simulate the model in the
         % experimental conditions
-    elseif ~strcmpi(ensemble.sampler,'ORACLE') && condition
+    elseif ~strcmpi(ensemble.sampler,'ORACLE') && isModelValid
 
         % Simulate fluxes
         tolScore      = [];
@@ -241,17 +257,17 @@ while true
 
                 % Check tolerance inmediately for this condition
                 if (tolScore(end)>ensemble.tolerance(1))
-                    condition = false;
+                    isModelValid = false;
                     break;
                 end
             else
-                condition = false;
+                isModelValid = false;
                 break;
             end
         end
 
         % Compute tolerance, acceptance rate and break
-        if condition
+        if isModelValid
             tolScore       = max(tolScore);                 % Infinity norm as discrepancy measure
             acceptanceRate = 1/counter;
             break;
