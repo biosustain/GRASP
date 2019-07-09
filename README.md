@@ -7,6 +7,18 @@ As input it takes an excel file containing the model stoichiometry, a flux distr
 
 It also performs Metabolic Control Analysis (MCA) and stability analysis on the resulting ensembles. The resulting ensembles can also be simulated. 
 
+
+## Table of contents
+
+* [Introduction](#introduction)
+* [Installation](#installation)
+* [Usage](#usage)
+  * [Specifying the input](#specifying-the-input)
+  * [Building models](#building-models)
+  * [Analyzing model ensembles](#analyzing-model-ensembles)
+* [Known issues and limitations](#known-issues-and-limitations)
+
+
 ## Installation
 
 ### Matlab requirements
@@ -81,7 +93,7 @@ For promiscuous reactions one needs to use `Pi` (`i` is an integer) as an ID for
 `i` is related to the order of the promiscuous reactions in the stoichiometric matrix, e.g. if DDC is defined before DDC_tryptm, then the first product to be released in DDC is `P1` and in DDC_tryptm is `P2`.  
 
 
-## Building models
+### Building models
 
 Once the input excel file and respective pattern files are done, run `build_model.m`.
 
@@ -90,7 +102,7 @@ Don't forget to change the modelID to be the name of your input excel file, as w
 In principle now GRASP only outputs models that are stable and thermodynamically feasible. This means that models which don't satisfy all the constraints are discarded and GRASP will keep sampling models until the number of (stable) models specified in the excel file is reached. 
 To avoid that GRASP keeps sampling models forever (can happen when it doesn't sample any stable model), a new variable `maxNumberOfSamples` was introduced to set an upper limit to how many models can actually be sampled, irrespective of how many are stable. 
 
-## Analyzing model ensembles
+### Analyzing model ensembles
 
 Once the model ensemble is generated you might want to analyze the results:
  - to do Metabolic Control Analysis (MCA), use the `MCA_analysis.m` script;
