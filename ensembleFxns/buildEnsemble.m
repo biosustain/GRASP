@@ -68,7 +68,7 @@ else
             if sampleCount == 0                                             % if no models have been sampled yet, sample ensemble.numParticles models
                 nSamples = ensemble.numParticles;
             else                                                            % else check how many more should be sampled based on the percentage of valid models
-                nSamples = 1 / (nValidModels / sampleCount)* sampleCount;
+                nSamples = 1 / (nValidModels / sampleCount)*(sampleCount - nValidModels);
                 nSamples = round(nSamples);
                 
                 if nSamples > maxNumberOfSamples - sampleCount
