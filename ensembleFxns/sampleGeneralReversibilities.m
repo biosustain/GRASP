@@ -88,7 +88,7 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
                     models(1).rxnParams(activRxnIdx).reversibilities = randomRev';                                           % Save transpose
 
                     % Calculate reversibilities
-                    gibbsTemp = cell2mat(ensemble.gibbsTemp(promiscRxnsList))';
+                    gibbsTemp = ensemble.gibbsTemp(promiscRxnsList)';
                     reverTemp = zeros(size(revMatrix'));
                     
                     for rxnI = 1:size(revMatrix, 1)
@@ -124,7 +124,7 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
             randomRev(randomRev==1) = 0;
             
             % Calculate reversibilities
-            gibbsTemp = ensemble.gibbsTemp{ensemble.kinActRxns(activRxnIdx)};
+            gibbsTemp = ensemble.gibbsTemp(ensemble.kinActRxns(activRxnIdx));
             isModelValid = checkModelConsistency(gibbsTemp, fluxSign, ensemble.rxns{ensemble.kinActRxns(activRxnIdx),strucIdx});
             if ~isModelValid
                 return
@@ -151,7 +151,7 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
             models(1).rxnParams(activRxnIdx).reversibilities = randomRev';                                           % Save transpose
             
             % Calculate reversibilities
-            gibbsTemp = ensemble.gibbsTemp{ensemble.kinActRxns(activRxnIdx)};
+            gibbsTemp = ensemble.gibbsTemp(ensemble.kinActRxns(activRxnIdx));
             isModelValid = checkModelConsistency(gibbsTemp, fluxSign, ensemble.rxns{ensemble.kinActRxns(activRxnIdx),strucIdx});
             if ~isModelValid
                 return

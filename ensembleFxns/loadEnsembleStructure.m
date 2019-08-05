@@ -23,6 +23,7 @@ xMetsThermo         = xlsread(xlsxFile,'thermoMets');                   % load t
 [metsData,idxMets]  = xlsread(xlsxFile,'metsData');                     % load metabolite data (mets)
 ineqConstraints     = xlsread(xlsxFile,'thermo_ineq_constraints');      % load ineq. thermodynamic constraints
 
+
 % Add m before any metabolite name and r before any reaction name to avoid
 % variables starting with a number
 rxnsList = fixVariableNames(rxnsList, 'r');
@@ -31,6 +32,11 @@ idxMeas = fixVariableNames(idxMeas, 'r');
 idxProt = fixVariableNames(idxProt, 'r');
 idxMets = fixVariableNames(idxMets, 'm');
 
+% Get measured metabolites
+if size(xMetsThermo, 2) == 3
+    ensemble.measuredMets = find(xMetsThermo(:,3));
+    xMetsThermo = xMetsThermo(:,[1,2]);
+end
 
 % Build initial ensemble structure
 ensemble.description   = strData{2,2};
@@ -153,7 +159,7 @@ assert(all(abs(ensemble.Sred * ensemble.fluxRef) <10^-8), "Your model doesn\'t s
 %% 3. Perform thermodynamic calculations
 if computeThermo
     idxNotExch  = find(~ismember(1:numel(ensemble.rxns),ensemble.exchRxns));
-    Sthermo     = ensemble.S(:,idxNotExch);
+    ensemble.Sthermo     = ensemble.S(:,idxNotExch);
     DGr_std     = xDG_std(idxNotExch,:);                                                        % Use only reactions with known thermodynamics
     vmin        = ensemble.fluxRef - 2*ensemble.fluxRefStd;
     vmax        = ensemble.fluxRef + 2*ensemble.fluxRefStd;
@@ -161,9 +167,13 @@ if computeThermo
     xmax        = xMetsThermo(:,2);
     DGr_std_min = DGr_std(:,1);
     DGr_std_max = DGr_std(:,2);
-    gibbsRanges = computeGibbsFreeEnergyRanges(Sflux,Sthermo,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,idxNotExch,ineqConstraints', ensemble.rxns);
+    [gibbsRanges, metRanges, fluxRanges] = computeGibbsFreeEnergyRanges(Sflux,ensemble.Sthermo,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,idxNotExch,ineqConstraints', ensemble.rxns);
     ensemble.gibbsRanges               = -1e2*ones(size(Sfull,1),2);                            % Allocate memory for DGr calculations
     ensemble.gibbsRanges(idxNotExch,:) = gibbsRanges;                                           % Remove thermodynamic info from exchang rxns
+    ensemble.metRanges = metRanges;
+    ensemble.G0Ranges = -1e2*ones(size(Sfull,1),2);      
+    ensemble.G0Ranges(idxNotExch,:) = DGr_std;
+    
 else
     ensemble.gibbsRanges = xDG_std;
 end
