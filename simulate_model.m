@@ -7,6 +7,9 @@ addpath('patternFxns','ensembleFxns');
 modelID = 'HMP2360_r0_t3_new';
 outputFolder = 'output_test';
 
+% Define how many seconds until ODE solver is interrupted. The idea is to
+% skip models that take ages to simulate.
+interruptTime = 40;
 
 load(fullfile(outputFolder, [modelID, '.mat']))
 
@@ -27,7 +30,7 @@ metsIC(5) = 2;
 % Specifiy the time of simulation (probably in hours)
 finalTime = 1;
 
-simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC);
+simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC, interruptTime);
 
 save(fullfile(outputFolder, ['simulation_', modelID, '.mat']), 'simulationRes')
 write(cell2table(ensemble.mets(ensemble.metsActive)), fullfile(outputFolder, [modelID, '_metsActive.dat']));

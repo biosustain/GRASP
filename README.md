@@ -142,6 +142,8 @@ It will create a new file: `reactions_model_v2_3_all/model_v2_3_all_Kinetics1_od
 
 The `simulateEnsemble` functions expects to find the ODE file in the reactions folder of the respective model (named as `reactions_modelID`) with the name `modelID_Kinetics1_ode.m`.
 
+In `simulate_model.m` the user can define the maximum time the simulation of each model can take by defining `interruptTime` (in seconds). If the simulation of a given model takes longer than the defined time it is interrupted and continues on to the next model.
+
 
 ## Know issues and limitations
 
