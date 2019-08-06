@@ -32,12 +32,6 @@ idxMeas = fixVariableNames(idxMeas, 'r');
 idxProt = fixVariableNames(idxProt, 'r');
 idxMets = fixVariableNames(idxMets, 'm');
 
-% Get measured metabolites
-if size(xMetsThermo, 2) == 3
-    ensemble.measuredMets = find(xMetsThermo(:,3));
-    xMetsThermo = xMetsThermo(:,[1,2]);
-end
-
 % Build initial ensemble structure
 ensemble.description   = strData{2,2};
 ensemble.sampler       = strData{3,2};
@@ -68,6 +62,7 @@ ensemble.rxnMets       = cell(length(ensemble.rxnNames),1);
 ensemble.metsBalanced  = find(xMets(:,1));
 ensemble.metsSimulated = find(xMets(:,2));
 ensemble.metsFixed     = find(xMets(:,3));
+ensemble.measuredMets  = find(xMets(:,4));
 ensemble.Sred          = ensemble.S(ensemble.metsBalanced,ensemble.activeRxns);   % Reduced stoichiometry for kinetic model simulation
 ensemble.Sred(sum(abs(ensemble.Sred),2)==0,:) = [];                               % Remove zero rows
 ensemble.Sred(sum(ensemble.Sred~=0,2)==1,:)   = [];                               % Remove unbalanced mets
