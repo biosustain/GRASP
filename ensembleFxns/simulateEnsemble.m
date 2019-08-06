@@ -43,8 +43,7 @@ simulationRes = cell(1, numModels);
 disp ('Simulating models.');
 
 for jx = 1:numModels
-    disp(['Model: ', num2str(jx), '.']);
-    
+   
     model = ensemble.populations(end).models(particleIdx(jx));
     metConcRef = model.metConcRef(ensemble.metsBalanced);
     
