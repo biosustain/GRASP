@@ -11,13 +11,13 @@ addpath('./patternFxns','./ensembleFxns');
 iter     = 1;
 popIdx   = 1;
 
-ensemble = loadEnsembleStructure('input_test/Glycolysis_Grasp_isoenzymes');           % Here the test case HMP pathway model is chosen
+ensemble = loadEnsembleStructure('input_test/glycolysis_isoenzymes');           % Here the test case HMP pathway model is chosen
 
 % 2. Initialize and perform rejection sampling
 ensemble = initializeEnsemble(ensemble,popIdx,1);
 addKineticFxnsToPath(ensemble);
 
-disp('Glycolysis_Grasp_isoenzymes ran fine');
+disp([newline, newline, '--- glycolysis_isoenzymes ran fine ---',newline, newline]);
 
 %% Case 2: Pedro's MEP_example
 clear
@@ -35,7 +35,7 @@ ensemble = loadEnsembleStructure('input_test/MEP_example');           % Here the
 ensemble = initializeEnsemble(ensemble,popIdx,1);
 addKineticFxnsToPath(ensemble);
 
-disp('MEP_example ran fine');
+disp([newline, newline, '--- MEP_example ran fine ---',newline, newline]);
 
 
 %% Case 3: Pedro's MEP_example_inhibitors, to test inhibitors
@@ -54,10 +54,10 @@ ensemble = loadEnsembleStructure('input_test/MEP_example_inhibitors');          
 ensemble = initializeEnsemble(ensemble,popIdx,1);
 addKineticFxnsToPath(ensemble);
 
-disp('MEP_example_inhibitors ran fine');
+disp([newline, newline, '--- MEP_example_inhibitors ran fine ---', newline, newline]);
 
 
-%% Case 4: HMP2360_r0_t0_nick, all models should be built without issues
+%% Case 4: HMP2360_r0_t0_nick, all models should be set up without issues
 
 clearvars
 rng('shuffle');																											% for reproducibility
@@ -74,7 +74,7 @@ ensemble = loadEnsembleStructure('input_test/HMP2360_r0_t0_nick');           % H
 ensemble = initializeEnsemble(ensemble,popIdx,1);
 addKineticFxnsToPath(ensemble);
 
-disp('HMP2360_r0_t0_nick ran fine');
+disp([newline, newline, '--- HMP2360_r0_t0_nick ran fine ---', newline, newline]);
 
 
 %% Case 5: HMP2360_r0_t3_new, all models should be stable
@@ -100,10 +100,10 @@ outputFile = fullfile('output_test', [modelID, '.mat']);
 ensemble = buildEnsemble(inputFile, outputFile, maxNumberOfSamples, eigThreshold);
 
 
-disp('HMP2360_r0_t3_new ran fine');
+disp([newline, newline, '--- HMP2360_r0_t3_new ran fine ---', newline, newline]);
 
 
-%% Case 6: HMP2360_r0_t3_no_promiscuous2, includes random mechanisms, about 10-20% of models are usually unstable
+%% Case 6: HMP2360_r0_t3_no_promiscuous2, includes random mechanisms, about 10-20% of models were usually unstable before the Gibbs energy fix, now less than 5% should be unstable.
 
 clearvars
 rng('shuffle');																											% for reproducibility
@@ -126,7 +126,7 @@ outputFile = fullfile('output_test', [modelID, '.mat']);
 ensemble = buildEnsemble(inputFile, outputFile, maxNumberOfSamples, eigThreshold);
 
 
-disp('HMP2360_r0_t3_no_promiscuous2 ran fine');
+disp([newline, newline,'--- HMP2360_r0_t3_no_promiscuous2 ran fine ---', newline, newline]);
 
 
 %% Case 7: HMP1489_r1_t0_test_gibbs, should crash with an error on TMFA
@@ -151,4 +151,4 @@ ensemble = loadEnsembleStructure('input_test/HMP1489_r1_t0_test_gibbs');        
 ensemble = initializeEnsemble(ensemble,popIdx,1);
 addKineticFxnsToPath(ensemble);
 
-disp('HMP1489_r1_t0_test_gibbs ran fine');
+disp([newline, newline, '--- HMP1489_r1_t0_test_gibbs ran fine ---', newline, newline]);
