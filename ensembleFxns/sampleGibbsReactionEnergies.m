@@ -54,17 +54,21 @@ rxnList = randperm(nRxns);
 [lb, ub, varList] = sampleVariables(gurobiModel, lb, ub, varList, rxnList, G0Factor, offset);
 
 % Sample measured metabolites
-offset = nRxns;
-metList = ensemble.measuredMets(randperm(numel(ensemble.measuredMets)));   
-[lb, ub, varList] = sampleVariables(gurobiModel, lb, ub, varList, metList, metsFactor, offset);
+if numel(ensemble.measuredMets) > 0
+    offset = nRxns;
+    metList = ensemble.measuredMets(randperm(numel(ensemble.measuredMets)));   
+    [lb, ub, varList] = sampleVariables(gurobiModel, lb, ub, varList, metList, metsFactor, offset);
+end
 
 % Sample not measured metabolites
-offset = nRxns;
-allMets = 1:nMets;
-notMeasMets = allMets(~ismember(allMets, ensemble.measuredMets));
-metList = notMeasMets(randperm(numel(notMeasMets)));    
-[lb, ub, varList] = sampleVariables(gurobiModel, lb, ub, varList, metList, metsFactor, offset);
-
+if numel(ensemble.measuredMets) <= nMets
+    offset = nRxns;
+    allMets = 1:nMets;
+    notMeasMets = allMets(~ismember(allMets, ensemble.measuredMets));
+    metList = notMeasMets(randperm(numel(notMeasMets)));    
+    [lb, ub, varList] = sampleVariables(gurobiModel, lb, ub, varList, metList, metsFactor, offset);
+end
+    
 assert(max(abs(ub-lb)) < 10^-5, 'dG values are not fully determined');
 
 % Calculate Gibbs energies and save sampled metabolite reference concentrations.
