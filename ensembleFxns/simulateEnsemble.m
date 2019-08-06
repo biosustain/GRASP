@@ -1,15 +1,10 @@
-function simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC, metsRefConc)
+function simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC)
 %
 % Takes in a model ensemble, and initial conditions for enzymes and 
 % metabolite concentrations and simulates all models in the ensemble.
 %
 %---------------- Pedro Saa UQ 2018, Marta Matos 2019 ---------------------
 
-
-
-if nargin == 4
-    metsRefConc = ones(size(metsIC));
-end
 
 strucIdx = 1;
 if ensemble.populations(end).strucIdx(1)==0
@@ -46,9 +41,10 @@ end
 for jx = 1:numModels
     
     model = ensemble.populations(end).models(particleIdx(jx));
+    metConcRef = model.metConcRef(ensemble.metsBalanced);
 
     % Simulate metabolite concentrations
-    [t, y] = ode15s(@(t,y) odeFunction(y,enzymesIC,metsRefConc,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits), [0,finalTime], metsIC);
+    [t, y] = ode15s(@(t,y) odeFunction(y,enzymesIC,metConcRef,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits), [0,finalTime], metsIC);
   
     simulationRes{jx}.t = t;
     simulationRes{jx}.conc = y;   

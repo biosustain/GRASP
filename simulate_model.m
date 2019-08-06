@@ -20,15 +20,6 @@ metsIC = xopt(ix_mets);
 enzymesIC = xopt(ix_enz);
 
 
-% If you have reference metabolite concentrations provide them below,
-% otherwise comment the code and remove metsRefConc from the argument
-% list.
-inputFolder = 'input_test';
-metsRefConc = readtable(fullfile(inputFolder, 'ref_mets_v2_3.csv'));
-metsRefConc = table2array(metsRefConc(:,2));
-metsRefConc = metsRefConc(ensemble.metsActive);
-
-
 % Change initial conditions here if you want
 enzymesIC(2) = 1.5;
 metsIC(5) = 2;
@@ -36,7 +27,7 @@ metsIC(5) = 2;
 % Specifiy the time of simulation (probably in hours)
 finalTime = 1;
 
-simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC, metsRefConc);
+simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC);
 
 save(fullfile(outputFolder, ['simulation_', modelID, '.mat']), 'simulationRes')
 write(cell2table(ensemble.mets(ensemble.metsActive)), fullfile(outputFolder, [modelID, '_metsActive.dat']));
