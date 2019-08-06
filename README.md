@@ -49,14 +49,14 @@ To build a model ensemble using GRASP you first need to have an excel input file
 * The order of metabolites in every sheet of the input excel file needs to be the same as in the stoich sheet.
 * The order of reactions in every sheet of the input excel file needs to be the same as in the stoich sheet.
 * When setting the order of reactions in every sheet the order of reactions should be:
-	1. all reactions with enzymatic mechanisms (Uni-Uni, orderedBiBi, etc.);
+	1. all reactions with enzymatic mechanisms (UniUni, orderedBiBi, etc.);
 	2. massAction and diffusion;
 	3. all reactions with no kinetic parameters in the order:
 		1. freeExchange;
 		2. fixedExchange.
 * In the kinetics sheet
 	* if there are more than one inhibitor/activator/effector these should be separated by a single space;
-	* substrate and product order columns should be filled in for all reactions with enzymatic mechanisms.
+	* substrate and product order columns should be filled in for all reactions with enzymatic mechanisms, and metabolite names should be separated by a single space.
 * When specifying pattern files, the convention is:
 	* A, B, C, D refer to substrates;
 	* P, Q, R, S refer to products;
@@ -65,8 +65,10 @@ To build a model ensemble using GRASP you first need to have an excel input file
 * If setting compute thermodynamics to 1, then in thermoRxns specify the Gibbs standard energies, otherwise specify the reaction Gibbs energies.
 * When including isoenzymes, in the rxns tab call each of the isoenzymes by their 'parent' enzyme name e.g. 'HEX' for HEX1 and HEX2:
 	* they will be grouped by this name so make sure none are conflicting;
+	* this column is used when you know how much flux goes through the reaction but not how much is due to each isoenzyme, so the fraction of the total flux that is due to each isoenzyme is sampled;
 	* it is not essential to include names if there aren't isoenzymes, however the isoenzyme column is neccessary;
 	* this column can also be used for promiscuous reactions if you don't know how much of the total flux goes through each reaction.
+* In the column 'measured?' in the mets sheet, you should put 0 if the metabolite concentration was not measured and 1 if it was measured. This is important to sample Gibbs energies, since these are now calculated based on sampled values of standard Gibbs energies and metabolite concentrations. Measured metabolite concentrations should be sampled before unmeasured concentrations. The metabolite concentrations are needed for model simulations. 
 
 
 [set_up_grasp_models](https://github.com/biosustain/set_up_grasp_models) can also be used to generate pattern files.
@@ -100,7 +102,7 @@ Once the input excel file and respective pattern files are done, run `build_mode
 Don't forget to change the modelID to be the name of your input excel file, as well as the input and output folders in `inputFile` and `outputFile`.
 
 In principle now GRASP only outputs models that are stable and thermodynamically feasible. This means that models which don't satisfy all the constraints are discarded and GRASP will keep sampling models until the number of (stable) models specified in the excel file is reached. 
-To avoid that GRASP keeps sampling models forever (can happen when it doesn't sample any stable model), a new variable `maxNumberOfSamples` was introduced to set an upper limit to how many models can actually be sampled, irrespective of how many are stable. 
+To avoid that GRASP keeps sampling models forever (can happen when it doesn't sample any stable models), a new variable `maxNumberOfSamples` was introduced to set an upper limit to how many models can actually be sampled, irrespective of how many are stable. 
 
 ### Analyzing model ensembles
 
@@ -144,7 +146,7 @@ The `simulateEnsemble` functions expects to find the ODE file in the reactions f
 ## Know issues and limitations
 
  - massAction mechanisms only work for one substrate and one product;
- - if the Gibbs energy range for a given reaction is large enough, it is possible that GRASP samples Gibbs energies incompatible with the reference flux. These models are discarded at the moment;
+ - if the uncertainty in the flux is such that it can be both positive and negative, it is possible that GRASP samples Gibbs energies incompatible with the reference flux. These models are discarded at the moment;
  - when using altair in the jupyter notebooks you might get the error `<VegaLite 2 object>` when trying to plot something. 
     - you should add `alt.renderers.enable('default')` after importing altair. 
     
