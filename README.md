@@ -149,8 +149,4 @@ The `simulateEnsemble` functions expects to find the ODE file in the reactions f
  - if the uncertainty in the flux is such that it can be both positive and negative, it is possible that GRASP samples Gibbs energies incompatible with the reference flux. These models are discarded at the moment;
  - when using altair in the jupyter notebooks you might get the error `<VegaLite 2 object>` when trying to plot something. 
     - you should add `alt.renderers.enable('default')` after importing altair. 
-    
-    
- 
-
-
+ - GRASP might no longer work with more than one model structure.

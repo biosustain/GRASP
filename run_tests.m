@@ -129,7 +129,59 @@ ensemble = buildEnsemble(inputFile, outputFile, maxNumberOfSamples, eigThreshold
 disp([newline, newline,'--- HMP2360_r0_t3_no_promiscuous2 ran fine ---', newline, newline]);
 
 
-%% Case 7: HMP1489_r1_t0_test_gibbs, should crash with an error on TMFA
+%% Case 7: putida model, should run fine.
+
+clearvars
+rng('shuffle');																											% for reproducibility
+delete(gcp('nocreate'));       				            																% check first that no other process is running
+addpath('patternFxns','ensembleFxns');
+
+% only valid/stable models are kept, and it will keep sampling until the
+%  "Number of particles" defined in the excel is reached, however, it is a
+%  good idea to define the maximum number of models to be sampled in total, 
+%  otherwise if no stable models are found it will go on sampling forever.
+maxNumberOfSamples = 10000;   
+
+% threshold of the jacobian's eigenvalues
+eigThreshold = 10^-5;
+
+modelID = 'putida_v2_3_all_fixed_flux_debug';
+inputFile = fullfile('input_test', modelID);
+outputFile = fullfile('output_test', [modelID, '.mat']);
+
+ensemble = buildEnsemble(inputFile, outputFile, maxNumberOfSamples, eigThreshold);
+
+
+disp([newline, newline,'--- putida_v2_3_all_fixed_flux_debug ran fine ---', newline, newline]);
+
+
+%% Case 8: putida model with set Gibbs energies to sample directly. Might take a while to finish sampling 5 models.
+
+clearvars
+rng('shuffle');																											% for reproducibility
+delete(gcp('nocreate'));       				            																% check first that no other process is running
+addpath('patternFxns','ensembleFxns');
+
+% only valid/stable models are kept, and it will keep sampling until the
+%  "Number of particles" defined in the excel is reached, however, it is a
+%  good idea to define the maximum number of models to be sampled in total, 
+%  otherwise if no stable models are found it will go on sampling forever.
+maxNumberOfSamples = 100;   
+
+% threshold of the jacobian's eigenvalues
+eigThreshold = 10^-5;
+
+modelID = 'putida_v2_3_all_fixed_flux_dGs';
+inputFile = fullfile('input_test', modelID);
+outputFile = fullfile('output_test', [modelID, '.mat']);
+
+ensemble = buildEnsemble(inputFile, outputFile, maxNumberOfSamples, eigThreshold);
+
+
+disp([newline, newline,'--- putida_v2_3_all_fixed_flux_dGs ran fine ---', newline, newline]);
+
+
+%% Case 9: HMP1489_r1_t0_test_gibbs, should crash with an error on TMFA
 
 % This last tests throws an error on purpose, the error message should be:
 % "The TMFA problem is infeasible. Verify that the standard Gibbs free energy and

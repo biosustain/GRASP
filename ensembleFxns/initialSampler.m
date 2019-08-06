@@ -87,12 +87,12 @@ while true
             ensemble.fluxRef(group) = splitFactor.*totalFlux;
         end
     end
-      
-    models.refFlux =  ensemble.fluxRef;
+  
+    models.refFlux =  ensemble.fluxRef; 
     assert(all(abs(ensemble.Sred * ensemble.fluxRef) <10^-8), "Your model doesn\'t seem to be at steady-state. Sred * fluxRef != 0");
 
     % Determine gibbs free energy of reaction
-    [ensemble, models] = sampleGibbsReactionEnergies(ensemble, models);
+    [ensemble, models] = sampleGibbsReactionEnergies(ensemble, models, strucIdx);
 
     % Sample Reversibilities
     [ensemble, models, isModelValid] = sampleGeneralReversibilities(ensemble, models, RT, strucIdx);
