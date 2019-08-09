@@ -1,2 +1,10 @@
 *.m~
 *.mat
+*.ipynb
+
+reactions*
+
+*putida*
+*RBC*
+*HMP*
+
