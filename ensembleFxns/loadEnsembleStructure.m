@@ -156,8 +156,8 @@ if computeThermo
     idxNotExch  = find(~ismember(1:numel(ensemble.rxns),ensemble.exchRxns));
     ensemble.Sthermo     = ensemble.S(:,idxNotExch);
     DGr_std     = xDG_std(idxNotExch,:);                                                        % Use only reactions with known thermodynamics
-    vmin        = ensemble.fluxRef - 2*ensemble.fluxRefStd;
-    vmax        = ensemble.fluxRef + 2*ensemble.fluxRefStd;
+    vmin        = ensemble.fluxRef; % - 2*ensemble.fluxRefStd;
+    vmax        = ensemble.fluxRef; % + 2*ensemble.fluxRefStd;
     xmin        = xMetsThermo(:,1);
     xmax        = xMetsThermo(:,2);
     DGr_std_min = DGr_std(:,1);
