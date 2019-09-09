@@ -48,7 +48,7 @@ for jx = 1:numModels
     metConcRef = model.metConcRef(ensemble.metsBalanced);
     
     outputFun= @(t,y,flag)interuptFun(t,y,flag,interruptTime);
-    opts = odeset('AbsTol',1e-8,'RelTol',1e-5,'OutputFcn',outputFun);
+    opts = odeset('RelTol',1e-13,'OutputFcn',outputFun);
 
     try
         % Simulate metabolite concentrations
