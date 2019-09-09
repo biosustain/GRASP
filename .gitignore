@@ -2,9 +2,16 @@
 *.mat
 *.ipynb
 
-reactions*
+stuff
 
-*putida*
-*RBC*
-*HMP*
+reactions/*
 
+io/*putida*
+io/*RBC*
+io/*HMP*
+
+examples/*putida*
+examples/*RBC*
+examples/*HMP*
+
+matlab_code/otherFxns
