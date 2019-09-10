@@ -31,7 +31,7 @@ subunits     = ensemble.subunits{strucIdx};
 ix = 1;
 simulationRes = {};
 
-folderName =  strcat('reactions_', ensemble.description, '_', num2str(ix));
+folderName =  fullfile('..', 'reactions', strcat(ensemble.description, '_', num2str(ix)));
 if isfile(fullfile(folderName, strcat(func2str(kineticFxn), '_ode.m')))
     odeFunction = str2func(strcat(func2str(kineticFxn), '_ode'));
 else

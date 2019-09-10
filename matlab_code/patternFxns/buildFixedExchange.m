@@ -1,4 +1,4 @@
-function buildFixedExchange(filename,strucIdx)
+function buildFixedExchange(reactionName,strucIdx)
 %--------------------------------------------------------------------------
 % Build exchange kinetic fxn
 %
@@ -6,15 +6,17 @@ function buildFixedExchange(filename,strucIdx)
 %
 % Outputs:    -       (writen .m file with the reaction mechanism)
 %------------------------Pedro Saa 2016------------------------------------
-filename = [filename,num2str(strucIdx)];
+reactionName = [reactionName,num2str(strucIdx)];
 try
-    fid = fopen(['reactions/',filename,'.m'],'w'); 
+    currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+    filepath = fullfile(currentPath{1}, '..', '..', 'temp', 'reactions', [reactionName,'.m']);
+    fid = fopen(filepath, 'w'); 
 catch
-    fid = fopen([filename,'.m'],'w'); 
+    fid = fopen([reactionName,'.m'],'w'); 
 end
 %% 1. Write exchange mechanism
 c = '%';
-fprintf(fid,['function v = ',filename,'(X,K)\n']);
+fprintf(fid,['function v = ',reactionName,'(X,K)\n']);
 fprintf(fid,'%s Constant exchange definition \n',c);
 fprintf(fid,'v = 1;\n');
 fclose(fid);

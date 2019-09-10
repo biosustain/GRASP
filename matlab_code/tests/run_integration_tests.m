@@ -1,17 +1,19 @@
 %
-% Test cases for GRASP
+% Integration test cases for GRASP
 %
 %% Case 1: Nick's model Glycolysis_Grasp_isoenzymes
 clear
 rng('default');																											% for reproducibility
 delete(gcp('nocreate'));       				            																% check first that no other process is running
-addpath('./patternFxns','./ensembleFxns');
+addpath(fullfile('..', 'patternFxns'), ...
+        fullfile('..', 'ensembleFxns'));
 
 % 1. Load information
 iter     = 1;
 popIdx   = 1;
 
-ensemble = loadEnsembleStructure('input_test/glycolysis_isoenzymes');           % Here the test case HMP pathway model is chosen
+modelPath = fullfile('..', '..', 'io', 'input_test', 'glycolysis_isoenzymes');
+ensemble = loadEnsembleStructure(modelPath);          
 
 % 2. Initialize and perform rejection sampling
 ensemble = initializeEnsemble(ensemble,popIdx,1);
@@ -23,13 +25,15 @@ disp([newline, newline, '--- glycolysis_isoenzymes ran fine ---',newline, newlin
 clear
 rng('default');																											% for reproducibility
 delete(gcp('nocreate'));       				            																% check first that no other process is running
-addpath('./patternFxns','./ensembleFxns');
+addpath(fullfile('..', 'patternFxns'), ...
+        fullfile('..', 'ensembleFxns'));
 
 % 1. Load information
 iter     = 1;
 popIdx   = 1;
 
-ensemble = loadEnsembleStructure('input_test/MEP_example');           % Here the test case HMP pathway model is chosen
+modelPath = fullfile('..', '..', 'io', 'input_test', 'MEP_example');
+ensemble = loadEnsembleStructure(modelPath);          
 
 % 2. Initialize and perform rejection sampling
 ensemble = initializeEnsemble(ensemble,popIdx,1);
@@ -42,13 +46,15 @@ disp([newline, newline, '--- MEP_example ran fine ---',newline, newline]);
 clear
 rng('default');																											% for reproducibility
 delete(gcp('nocreate'));       				            																% check first that no other process is running
-addpath('./patternFxns','./ensembleFxns');
-
+addpath(fullfile('..', 'patternFxns'), ...
+        fullfile('..', 'ensembleFxns'));
+    
 % 1. Load information
 iter     = 1;
 popIdx   = 1;
 
-ensemble = loadEnsembleStructure('input_test/MEP_example_inhibitors');           % Here the test case HMP pathway model is chosen
+modelPath = fullfile('..', '..', 'io', 'input_test', 'MEP_example_inhibitors');
+ensemble = loadEnsembleStructure(modelPath);          
 
 % 2. Initialize and perform rejection sampling
 ensemble = initializeEnsemble(ensemble,popIdx,1);
@@ -62,13 +68,15 @@ disp([newline, newline, '--- MEP_example_inhibitors ran fine ---', newline, newl
 clearvars
 rng('shuffle');																											% for reproducibility
 delete(gcp('nocreate'));       				            																% check first that no other process is running
-addpath('patternFxns','ensembleFxns');
+addpath(fullfile('..', 'patternFxns'), ...
+        fullfile('..', 'ensembleFxns'));
 
 % 1. Load information
 iter     = 1;
 popIdx   = 1;
 
-ensemble = loadEnsembleStructure('input_test/HMP2360_r0_t0_nick');           % Here the test case HMP pathway model is chosen
+modelPath = fullfile('..', '..', 'io', 'input_test', 'HMP2360_r0_t0_nick');
+ensemble = loadEnsembleStructure(modelPath);          
 
 % 2. Initialize and perform rejection sampling
 ensemble = initializeEnsemble(ensemble,popIdx,1);
@@ -82,7 +90,8 @@ disp([newline, newline, '--- HMP2360_r0_t0_nick ran fine ---', newline, newline]
 clearvars
 rng('shuffle');																											% for reproducibility
 delete(gcp('nocreate'));       				            																% check first that no other process is running
-addpath('patternFxns','ensembleFxns');
+addpath(fullfile('..', 'patternFxns'), ...
+        fullfile('..', 'ensembleFxns'));
 
 % only valid/stable models are kept, and it will keep sampling until the
 %  "Number of particles" defined in the excel is reached, however, it is a
@@ -94,11 +103,11 @@ maxNumberOfSamples = 10000;
 eigThreshold = 10^-5;
 
 modelID = 'HMP2360_r0_t3_new';
-inputFile = fullfile('input_test', modelID);
-outputFile = fullfile('output_test', [modelID, '.mat']);
+
+inputFile = fullfile('..', '..', 'io', 'input_test', modelID);
+outputFile = fullfile('..', '..', 'io', 'output_test', [modelID, '.mat']);
 
 ensemble = buildEnsemble(inputFile, outputFile, maxNumberOfSamples, eigThreshold);
-
 
 disp([newline, newline, '--- HMP2360_r0_t3_new ran fine ---', newline, newline]);
 
@@ -108,7 +117,8 @@ disp([newline, newline, '--- HMP2360_r0_t3_new ran fine ---', newline, newline])
 clearvars
 rng('shuffle');																											% for reproducibility
 delete(gcp('nocreate'));       				            																% check first that no other process is running
-addpath('patternFxns','ensembleFxns');
+addpath(fullfile('..', 'patternFxns'), ...
+        fullfile('..', 'ensembleFxns'));
 
 % only valid/stable models are kept, and it will keep sampling until the
 %  "Number of particles" defined in the excel is reached, however, it is a
@@ -120,8 +130,8 @@ maxNumberOfSamples = 10000;
 eigThreshold = 10^-5;
 
 modelID = 'HMP2360_r0_t3_no_promiscuous2';
-inputFile = fullfile('input_test', modelID);
-outputFile = fullfile('output_test', [modelID, '.mat']);
+inputFile = fullfile('..', '..', 'io', 'input_test', modelID);
+outputFile = fullfile('..', '..', 'io', 'output_test', [modelID, '.mat']);
 
 ensemble = buildEnsemble(inputFile, outputFile, maxNumberOfSamples, eigThreshold);
 
@@ -134,7 +144,8 @@ disp([newline, newline,'--- HMP2360_r0_t3_no_promiscuous2 ran fine ---', newline
 clearvars
 rng('shuffle');																											% for reproducibility
 delete(gcp('nocreate'));       				            																% check first that no other process is running
-addpath('patternFxns','ensembleFxns');
+addpath(fullfile('..', 'patternFxns'), ...
+        fullfile('..', 'ensembleFxns'));
 
 % only valid/stable models are kept, and it will keep sampling until the
 %  "Number of particles" defined in the excel is reached, however, it is a
@@ -146,8 +157,8 @@ maxNumberOfSamples = 10000;
 eigThreshold = 10^-5;
 
 modelID = 'putida_v2_3_all_fixed_flux_debug';
-inputFile = fullfile('input_test', modelID);
-outputFile = fullfile('output_test', [modelID, '.mat']);
+inputFile = fullfile('..', '..', 'io', 'input_test', modelID);
+outputFile = fullfile('..', '..', 'io', 'output_test', [modelID, '.mat']);
 
 ensemble = buildEnsemble(inputFile, outputFile, maxNumberOfSamples, eigThreshold);
 
@@ -160,7 +171,8 @@ disp([newline, newline,'--- putida_v2_3_all_fixed_flux_debug ran fine ---', newl
 clearvars
 rng('shuffle');																											% for reproducibility
 delete(gcp('nocreate'));       				            																% check first that no other process is running
-addpath('patternFxns','ensembleFxns');
+addpath(fullfile('..', 'patternFxns'), ...
+        fullfile('..', 'ensembleFxns'));
 
 % only valid/stable models are kept, and it will keep sampling until the
 %  "Number of particles" defined in the excel is reached, however, it is a
@@ -172,8 +184,8 @@ maxNumberOfSamples = 100;
 eigThreshold = 10^-5;
 
 modelID = 'putida_v2_3_all_fixed_flux_dGs';
-inputFile = fullfile('input_test', modelID);
-outputFile = fullfile('output_test', [modelID, '.mat']);
+inputFile = fullfile('..', '..', 'io', 'input_test', modelID);
+outputFile = fullfile('..', '..', 'io', 'output_test', [modelID, '.mat']);
 
 ensemble = buildEnsemble(inputFile, outputFile, maxNumberOfSamples, eigThreshold);
 
@@ -191,13 +203,15 @@ disp([newline, newline,'--- putida_v2_3_all_fixed_flux_dGs ran fine ---', newlin
 clear
 rng('default');																											% for reproducibility
 delete(gcp('nocreate'));       				            																% check first that no other process is running
-addpath('./patternFxns','./ensembleFxns');
+addpath(fullfile('..', 'patternFxns'), ...
+        fullfile('..', 'ensembleFxns'));
 
 % 1. Load information
 iter     = 1;
 popIdx   = 1;
 
-ensemble = loadEnsembleStructure('input_test/HMP1489_r1_t0_test_gibbs');           % Here the test case HMP pathway model is chosen
+modelPath = fullfile('..', '..', 'io', 'input_test', 'HMP1489_r1_t0_test_gibbs');
+ensemble = loadEnsembleStructure(modelPath);          
 
 % 2. Initialize and perform rejection sampling
 ensemble = initializeEnsemble(ensemble,popIdx,1);

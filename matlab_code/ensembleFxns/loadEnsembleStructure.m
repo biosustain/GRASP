@@ -316,7 +316,11 @@ for jx = 1:ensemble.numStruct
 
     % Read each mechanism and write the reaction patterns
     ensemble.kineticFxn{jx} = [ensemble.description,'_Kinetics',num2str(jx)];      % string with kinetic function name
-    mkdir('reactions');
+    
+    currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+    tempReactionsFolder = fullfile(currentPath{1}, '..', '..', 'temp', 'reactions');
+    mkdir(tempReactionsFolder);
+    
     for ix = 1:size(ensemble.rxnMechanisms{jx},1)
 
         % Non-enzymatic reactions: fixed exchange
@@ -404,13 +408,19 @@ for jx = 1:ensemble.numStruct
         end
     end
     
-    modelFolder = strcat('reactions_', ensemble.description, '_', num2str(jx));
+    modelFolder = fullfile(currentPath{1}, ...
+                           '..', ...
+                           '..', ...
+                           'reactions', ...
+                           strcat(ensemble.description, '_', num2str(jx)));
+    
     if exist(modelFolder, 'dir')
        rmdir(modelFolder,'s');
     end
-    copyfile('reactions', modelFolder);
+    
+    copyfile(tempReactionsFolder, modelFolder);
     addpath(modelFolder);
-    rmdir('reactions','s');
+    rmdir(tempReactionsFolder,'s');
 
     % Build kinetic fxn and find active species (do not build hess partern)
     [rxnMetLinks,freeVars,metsActive] = buildKineticFxn(ensemble,ensemble.kineticFxn{jx},jx);

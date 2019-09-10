@@ -1,7 +1,8 @@
 % Simulate a model ensemble
 
 clear
-addpath('patternFxns','ensembleFxns');
+addpath(fullfile('..', 'matlab_code', 'patternFxns'), ...
+        fullfile('..', 'matlab_code', 'ensembleFxns'));
 
 
 modelID = 'HMP2360_r0_t3_new';

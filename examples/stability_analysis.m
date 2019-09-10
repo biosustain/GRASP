@@ -2,8 +2,8 @@
 % than the given threshold
 
 clear				            																
-addpath('patternFxns','ensembleFxns');
-
+addpath(fullfile('..', 'matlab_code', 'patternFxns'), ...
+        fullfile('..', 'matlab_code', 'ensembleFxns'));
 
 % threshold of the jacobian's eigenvalues
 eigThreshold = 10^-5;

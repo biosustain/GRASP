@@ -3,7 +3,9 @@ function addKineticFxnsToPath(ensemble)
 % 
 % ------------------ Pedro Saa, Marta Matos 2018 ---------------------------------------
 %
-rootName =  strcat('reactions_', ensemble.description, '_');
+
+currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+rootName =  fullfile(currentPath{1}, '..', '..', 'reactions', strcat(ensemble.description, '_'));
 
 for ix = 1:ensemble.numStruct
     tmpName = [rootName,num2str(ix)];

@@ -1,4 +1,4 @@
-function buildMassAction(filename,strucIdx)
+function buildMassAction(reactionName,strucIdx)
 %--------------------------------------------------------------------------
 % Build mass action kinetic fxn
 %
@@ -6,15 +6,17 @@ function buildMassAction(filename,strucIdx)
 %
 % Outputs:    -       (writen .m file with the reaction mechanism)
 %------------------------Pedro Saa 2016------------------------------------
-filename = [filename,num2str(strucIdx)];
+reactionName = [reactionName,num2str(strucIdx)];
 try
-    fid = fopen(['reactions/',filename,'.m'],'w'); 
+    currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+    filepath = fullfile(currentPath{1}, '..', '..', 'temp', 'reactions', [reactionName,'.m']);
+    fid = fopen(filepath, 'w'); 
 catch
-    fid = fopen([filename,'.m'],'w'); 
+    fid = fopen([reactionName,'.m'],'w'); 
 end
 %% 1. Write exchange mechanism
 c = '%';
-fprintf(fid,['function v = ',filename,'(S,P,K)\n']);
+fprintf(fid,['function v = ',reactionName,'(S,P,K)\n']);
 fprintf(fid,'%s Mass action definition \n',c);
 fprintf(fid,'v = K(1)*prod(S,1)-K(2)*prod(P,1);');
 fclose(fid);

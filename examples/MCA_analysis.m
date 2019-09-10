@@ -1,8 +1,8 @@
 % Run MCA analysis on your model ensemble
 
 clear      				   
-addpath('patternFxns','ensembleFxns');
-
+addpath(fullfile('..', 'matlab_code', 'patternFxns'), ...
+        fullfile('..', 'matlab_code', 'ensembleFxns'));
 
 saveMCAMatrices = 1;    % whether or not to save the MCA results for all models and not just mean values
 modelID = 'HMP2360_r0_t3_new';

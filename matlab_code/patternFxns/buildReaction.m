@@ -1,4 +1,4 @@
-function buildReaction(state,rateList,metList,numTerm,prodNum,filename, promiscuousRxnI)
+function buildReaction(state,rateList,metList,numTerm,prodNum,reactionName, promiscuousRxnI)
 %--------------------------------------------------------------------------
 % Builds rate reaction file
 % 
@@ -8,22 +8,24 @@ function buildReaction(state,rateList,metList,numTerm,prodNum,filename, promiscu
 %                    pseudo-first-order rate constants 
 %         (numTerm)  numerator terms
 %         (prodNum)  products terms
-%        (filename)  pattern name
+%    (reactionName)  pattern name
 %
 % Outputs:      --   writen .m file with the reaction mechanism
 %--------Pedro Saa 2016, adapted from Qi et al. 2009, Marta Matos 2018-----
 % 1. Write initial parameters
 try
-    fid = fopen(['reactions/',filename,'.m'],'w'); 
+    currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+    filepath = fullfile(currentPath{1}, '..', '..', 'temp', 'reactions', [reactionName,'.m']);
+    fid = fopen(filepath, 'w'); 
 catch
-    fid = fopen([filename,'.m'],'w'); 
+    fid = fopen([reactionName,'.m'],'w'); 
 end
 c = '%';
 if (isempty(metList))
-    fprintf(fid,['function [v,E1,E2] = ',filename,'(K)\n']);
+    fprintf(fid,['function [v,E1,E2] = ',reactionName,'(K)\n']);
 end
 if(~isempty(metList))
-    fprintf(fid,['function [v,E1,E2] = ',filename,'(X,K)\n']);   
+    fprintf(fid,['function [v,E1,E2] = ',reactionName,'(X,K)\n']);   
     fprintf(fid,'%s Metabolites definition \n',c);
     len = length(metList);
     for i = 1:len

@@ -12,7 +12,9 @@ function buildAllosteric(metList,reactionName,negEffectors,posEffectors)
 %--------------------- Pedro Saa 2016 -------------------------------------
 % 1. Write initial parameters
 try
-    fid = fopen(['reactions/',reactionName,'.m'],'w'); 
+    currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+    filepath = fullfile(currentPath{1}, '..', '..', 'temp', 'reactions', [reactionName,'.m']);
+    fid = fopen(filepath, 'w'); 
 catch
     fid = fopen([reactionName,'.m'],'w'); 
 end

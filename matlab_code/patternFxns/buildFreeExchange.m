@@ -1,4 +1,4 @@
-function buildFreeExchange(filename,strucIdx)
+function buildFreeExchange(reactionName,strucIdx)
 %--------------------------------------------------------------------------
 % Build free exchange kinetic fxn
 %
@@ -6,15 +6,17 @@ function buildFreeExchange(filename,strucIdx)
 %
 % Outputs:    -       (writen .m file with the reaction mechanism)
 %------------------------Pedro Saa 2016------------------------------------
-filename = [filename,num2str(strucIdx)];
+reactionName = [reactionName,num2str(strucIdx)];
 try
-    fid = fopen(['reactions/',filename,'.m'],'w'); 
+    currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+    filepath = fullfile(currentPath{1}, '..', '..', 'temp', 'reactions', [reactionName,'.m']);
+    fid = fopen(filepath, 'w'); 
 catch
-    fid = fopen([filename,'.m'],'w'); 
+    fid = fopen([reactionName,'.m'],'w'); 
 end
 %% 1. Write exchange mechanism
 c = '%';
-fprintf(fid,['function v = ',filename,'(K,numConditions)\n']);
+fprintf(fid,['function v = ',reactionName,'(K,numConditions)\n']);
 fprintf(fid,'%s Free exchange definition \n',c);
 fprintf(fid,'v = K(ones(1,numConditions));\n');
 fclose(fid);
