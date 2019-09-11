@@ -1,15 +1,10 @@
-function simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC, metsRefConc)
+function simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC, interruptTime)
 %
 % Takes in a model ensemble, and initial conditions for enzymes and 
 % metabolite concentrations and simulates all models in the ensemble.
 %
 %---------------- Pedro Saa UQ 2018, Marta Matos 2019 ---------------------
 
-
-
-if nargin == 4
-    metsRefConc = ones(size(metsIC));
-end
 
 strucIdx = 1;
 if ensemble.populations(end).strucIdx(1)==0
@@ -43,22 +38,63 @@ else
     error(['You need a model function to be used for the model ode simulations. It should be named as ', strcat(func2str(kineticFxn), '_ode')]);
 end
 
+simulationRes = cell(1, numModels);
+
+disp ('Simulating models.');
+
 for jx = 1:numModels
-    
+   
     model = ensemble.populations(end).models(particleIdx(jx));
+    metConcRef = model.metConcRef(ensemble.metsBalanced);
+    
+    outputFun= @(t,y,flag)interuptFun(t,y,flag,interruptTime);
+    opts = odeset('RelTol',1e-13,'OutputFcn',outputFun);
 
-    % Simulate metabolite concentrations
-    [t, y] = ode15s(@(t,y) odeFunction(y,enzymesIC,metsRefConc,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits), [0,finalTime], metsIC);
-  
-    simulationRes{jx}.t = t;
-    simulationRes{jx}.conc = y;   
-    simulationRes{jx}.flux = calculateFluxes(t,y,enzymesIC,kineticFxn,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits);   
-    simulationRes{jx}.flux = simulationRes{jx}.flux ./ ensemble.fluxRef';
+    try
+        % Simulate metabolite concentrations
+        [t, y] = ode15s(@(t,y) odeFunction(y,enzymesIC,metConcRef,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits), [0,finalTime], metsIC, opts);
+
+        simulationRes{jx}.t = t;
+        simulationRes{jx}.conc = y;   
+        simulationRes{jx}.flux = calculateFluxes(t,y,enzymesIC,kineticFxn,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits);   
+        simulationRes{jx}.flux = simulationRes{jx}.flux ./ ensemble.fluxRef';
+        
+    catch ME
+        if strcmp(ME.identifier,'interuptFun:Interupt')
+            disp(ME.message);
+        else
+            rethrow(ME); % It's possible the error was due to something else
+        end
+    end
 
 end
 
 end
 
+
+function status = interuptFun(t,y,flag,interruptTime)   
+%
+% Interrupts ODE solver if it takes more than interruptTime (in seconds);
+%
+
+persistent INIT_TIME;
+status = 0;
+
+switch(flag)
+    case 'init'
+        INIT_TIME = tic;
+    case 'done'
+        clear INIT_TIME;
+    otherwise
+        elapsedTime = toc(INIT_TIME);
+        if elapsedTime > interruptTime
+            clear INIT_TIME;
+            error('interuptFun:Interupt',...
+                 ['Interupted integration. Elapsed time is ' sprintf('%.6f',elapsedTime) ' seconds.']);
+        end
+
+end
+end
 
 function flux = calculateFluxes(timePoints,metConcs,enzymesIC,kineticFxn,model,fixedExchs,Sred,kinInactRxns,subunits)
     

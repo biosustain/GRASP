@@ -87,18 +87,12 @@ while true
             ensemble.fluxRef(group) = splitFactor.*totalFlux;
         end
     end
-      
-    models.refFlux =  ensemble.fluxRef;
+  
+    models.refFlux =  ensemble.fluxRef; 
     assert(all(abs(ensemble.Sred * ensemble.fluxRef) <10^-8), "Your model doesn\'t seem to be at steady-state. Sred * fluxRef != 0");
 
-    % Sample gibbs free energy of reactions
-    gibbsFactor = mvnrnd(ensemble.populations(1).probParams(strucIdx).muGibbsFactor,ensemble.populations(1).probParams(strucIdx).sigmaGibbsFactor)';
-    gibbsFactor = exp(gibbsFactor)./(1 + exp(gibbsFactor));
-    gibbsEnergy = gibbsFactor.*ensemble.gibbsRanges(ensemble.thermoActive,2) + (1-gibbsFactor).*ensemble.gibbsRanges(ensemble.thermoActive,1);
-    models(1).gibbsFactor = gibbsFactor;
-
     % Determine gibbs free energy of reaction
-    ensemble = sampleGibbsReactionEnergies(ensemble,gibbsEnergy,strucIdx);
+    [ensemble, models] = sampleGibbsReactionEnergies(ensemble, models, strucIdx);
 
     % Sample Reversibilities
     [ensemble, models, isModelValid] = sampleGeneralReversibilities(ensemble, models, RT, strucIdx);
@@ -130,7 +124,7 @@ while true
             % Check whether the reaction is mass action
             if strcmp(ensemble.rxnMechanisms{strucIdx}{activRxnIdx},'massAction')
                 reactionFlux = ensemble.fluxRef(ensemble.kinActRxns(activRxnIdx));
-                gibbsTemp =  ensemble.gibbsTemp{ensemble.kinActRxns(activRxnIdx)};
+                gibbsTemp =  ensemble.gibbsTemp(ensemble.kinActRxns(activRxnIdx));
                 models(1).rxnParams(activRxnIdx).kineticParams = [1,exp(gibbsTemp/RT)]*reactionFlux/(1-exp(gibbsTemp/RT));
                 continue;
             end
