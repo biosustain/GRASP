@@ -10,6 +10,11 @@ function [isModelValid,models,strucIdx,xopt,tolScore,simulatedFlux] = initialSam
 RT       = 8.314*298.15/1e3;                                               % gas constant times the absolute temperature (298.15 K)
 massTol  = size(ensemble.Sred,1)*1e-10;								       % #balances*tol^2
 
+% Just so the tests don't crash because these variables were not assigned
+xopt = 0';
+tolScore = 0;
+simulatedFlux = 0;
+
 % Figure out NLP solver
 if strcmpi(ensemble.solver,'NLOPT')											   % Solver parameters for NLOPT
     opt.algorithm = 40; 									   			   % 11(NLOPT_LD_LBFGS), options: 40(NLOPT_LD_SLSQP), 13(NLOPT_LD_VAR1), 14(NLOPT_LD_VAR2)
