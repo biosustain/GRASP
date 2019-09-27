@@ -46,7 +46,6 @@ if ~strcmpi(ensemble.sampler,'ORACLE')
     if ensemble.parallel
         parpool(ensemble.numCores);																								% Initiate parallel pool and run parallel foor loop
         parfor ix = 1:ensemble.numParticles
-            rng('shuffle');
             [isModelValid,models(ix),strucIdx(ix),xopt{ix},tolScore(ix),simFluxes{ix}] = initialSampler(ensemble);
         end
         delete(gcp);
@@ -78,7 +77,6 @@ else
             
             parpool(ensemble.numCores);
             parfor ix = (sampleCount+1):(sampleCount+nSamples)
-                rng('shuffle');
                 [validModelList(ix),models(ix)] =  initialSampler(ensemble);
             end
             delete(gcp);
@@ -93,7 +91,6 @@ else
     else
         sampleCount = 1;
         ix = 1;
-        rng('shuffle');
         
         while ix <= ensemble.numParticles && sampleCount <= maxNumberOfSamples
             
