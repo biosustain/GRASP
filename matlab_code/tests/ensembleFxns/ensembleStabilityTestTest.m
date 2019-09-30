@@ -1,4 +1,4 @@
-classdef controlAnalysisTest < matlab.unittest.TestCase
+classdef ensembleStabilityTestTest < matlab.unittest.TestCase
    
     properties
         currentPath
@@ -9,8 +9,7 @@ classdef controlAnalysisTest < matlab.unittest.TestCase
             testCase.currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
         end
     end
-  
-    
+ 
     methods(TestMethodTeardown)
         function removeReactionsFolder(testCase)           
 
@@ -19,13 +18,12 @@ classdef controlAnalysisTest < matlab.unittest.TestCase
             if exist(reactionsFolder, 'dir')
                 rmdir(reactionsFolder, 's');
             end
-            
         end
-        
     end
     
+    
     methods (Test)
-        function testControlAnalysis1(testCase)
+        function testEnsembleStabilityTest1(testCase)
                         
             % To make sure reaction files are created properly
             xlsxFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_random2');
@@ -34,13 +32,13 @@ classdef controlAnalysisTest < matlab.unittest.TestCase
             ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'final_ensemble_toy_model1_random2.mat'));
             ensemble = ensemble.ensemble;
             
-            saveResMatrices = 0;
-            mcaResults = controlAnalysis(ensemble,saveResMatrices);
+            eigThreshold = -0.5;
+            stabilityRes = ensembleStabilityTest(ensemble,eigThreshold);
 
-            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResControlAnalysis1'));
-            trueRes = trueRes.mcaResults;
+            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResEnsembleStabilityTest1'));
+            trueRes = trueRes.stabilityRes;
                    
-            testCase.verifyEqual(trueRes, mcaResults)
+            testCase.verifyEqual(trueRes, stabilityRes)
         end
     end
 end

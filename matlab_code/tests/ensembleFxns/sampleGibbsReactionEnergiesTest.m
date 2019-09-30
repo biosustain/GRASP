@@ -1,23 +1,38 @@
-classdef sampleGibbsReactionEnergiesTest
-    %SAMPLEGIBBSREACTIONENERGIESTEST Summary of this class goes here
-    %   Detailed explanation goes here
-    
+classdef sampleGibbsReactionEnergiesTest < matlab.unittest.TestCase
+
     properties
-        Property1
+        currentPath
     end
     
-    methods
-        function obj = sampleGibbsReactionEnergiesTest(inputArg1,inputArg2)
-            %SAMPLEGIBBSREACTIONENERGIESTEST Construct an instance of this class
-            %   Detailed explanation goes here
-            obj.Property1 = inputArg1 + inputArg2;
+    methods(TestClassSetup)
+        function defineCurrentPath(testCase)
+            testCase.currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
         end
-        
-        function outputArg = method1(obj,inputArg)
-            %METHOD1 Summary of this method goes here
-            %   Detailed explanation goes here
-            outputArg = obj.Property1 + inputArg;
+    end
+    
+ 
+    methods (Test)
+        function testSampleGibbsReactionEnergies1(testCase)
+            
+            seed = 1;
+            rng(seed)
+           
+            ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'initializedEnsemble_toy_model1_measuredMets'));
+            ensemble = ensemble.ensemble;
+            models(1).poolFactor = [];
+            strucIdx = 1;
+ 
+            [ensemble, models] = sampleGibbsReactionEnergies(ensemble, models, strucIdx);
+
+            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSampleGibbsReactionEnergies1'));
+            trueResModels = trueRes.models;
+            trueResEnsemble = trueRes.ensemble;
+                   
+            testCase.verifyEqual(trueResModels, models);
+            testCase.verifyEqual(trueResEnsemble, ensemble);
         end
+       
     end
 end
+
 

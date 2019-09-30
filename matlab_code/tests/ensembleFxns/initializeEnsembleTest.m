@@ -1,10 +1,20 @@
 classdef initializeEnsembleTest < matlab.unittest.TestCase
 
+    properties
+        currentPath
+    end
+    
+    methods(TestClassSetup)
+        function defineCurrentPath(testCase)
+            testCase.currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+        end
+    end
+    
+ 
     methods (Test)
         function testInitializeEnsemble(testCase)
             
-            currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
-            filepath = fullfile(currentPath{1}, 'testFiles', 'ensemble_toy_model1.mat');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'ensemble_toy_model1.mat');
             ensemble = load(filepath);
             ensemble = ensemble.ensemble;
             popIdx = 1;
@@ -12,15 +22,14 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             
             ensemble = initializeEnsemble(ensemble,popIdx,verbose);
             
-            trueRes = load(fullfile(currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model1.mat'));
+            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model1.mat'));
             testCase.verifyEqual(trueRes.ensemble,ensemble);   
             
         end
         
         function testInitializeEnsembleWithRandom(testCase)
             
-            currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
-            filepath = fullfile(currentPath{1}, 'testFiles', 'ensemble_toy_model1_random.mat');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'ensemble_toy_model1_random.mat');
             ensemble = load(filepath);
             ensemble = ensemble.ensemble;
             popIdx = 1;
@@ -28,7 +37,7 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             
             ensemble = initializeEnsemble(ensemble,popIdx,verbose);
             
-            trueRes = load(fullfile(currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model1_random.mat'));
+            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model1_random.mat'));
             testCase.verifyEqual(trueRes.ensemble,ensemble);   
             
         end
