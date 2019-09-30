@@ -1,5 +1,27 @@
 classdef buildMassActionTest < matlab.unittest.TestCase
     
+    properties
+        currentPath
+        tempReactionsFolder
+    end
+    
+    methods(TestClassSetup)
+        function createReactionsTempFolder(testCase)
+            testCase.currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+            testCase.tempReactionsFolder = fullfile(testCase.currentPath{1}, '..', '..', '..', 'temp', 'reactions');
+            mkdir(testCase.tempReactionsFolder);
+        end
+    end
+ 
+    methods(TestClassTeardown)
+        function removeReactionsTempFolder(testCase)           
+            if exist(testCase.tempReactionsFolder, 'dir')
+                rmdir(testCase.tempReactionsFolder, 's');
+            end
+        end
+    end
+ 
+    
     methods (Test)
         function testBuildMassAction1(testCase)
             
@@ -7,13 +29,10 @@ classdef buildMassActionTest < matlab.unittest.TestCase
             strucIdx = 1;
             buildMassAction(reactionName,strucIdx)
             
-            currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
-            tempReactionsFolder = fullfile(currentPath{1}, '..', '..', '..', 'temp', 'reactions');
-            
-            filepath = fullfile(tempReactionsFolder, [reactionName, '1.m']);
+            filepath = fullfile(testCase.tempReactionsFolder, [reactionName, '1.m']);
             res = textread(filepath,'%s');
             
-            filepath = fullfile(currentPath{1}, 'testFiles', 'trueResBuildMassAction1.txt');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildMassAction1.txt');
             trueRes = textread(filepath,'%s');
             
             testCase.verifyEqual(trueRes,res);            

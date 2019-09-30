@@ -1,5 +1,27 @@
 classdef reactionPatternTest < matlab.unittest.TestCase
     
+    properties
+        currentPath
+        tempReactionsFolder
+    end
+    
+    methods(TestClassSetup)
+        function createReactionsTempFolder(testCase)
+            testCase.currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+            testCase.tempReactionsFolder = fullfile(testCase.currentPath{1}, '..', '..', '..', 'temp', 'reactions');
+            mkdir(testCase.tempReactionsFolder);
+        end
+    end
+ 
+    methods(TestClassTeardown)
+        function removeReactionsTempFolder(testCase)           
+            if exist(testCase.tempReactionsFolder, 'dir')
+                rmdir(testCase.tempReactionsFolder, 's');
+            end
+        end
+    end
+    
+    
     methods (Test)
         
         function testReactionPattern1(testCase)

@@ -1,13 +1,35 @@
 classdef buildKineticFxnTest < matlab.unittest.TestCase
+        
+    properties
+        currentPath
+        reactionsFolder
+    end
+    
+    methods(TestClassSetup)
+        function createReactionsFolder(testCase)
+            testCase.currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+            testCase.reactionsFolder = fullfile(testCase.currentPath{1}, '..', '..', '..', 'reactions', 'toy_model1_1');
+            mkdir(testCase.reactionsFolder);
+        end
+    end
+ 
+    methods(TestClassTeardown)
+        function removeReactionsFolder(testCase)           
+            if exist(testCase.reactionsFolder, 'dir')
+                rmdir(testCase.reactionsFolder, 's');
+            end
+        end
+    end
+    
     
     methods (Test)
         function testKineticFxn1(testCase)
-            currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
-            filepath = fullfile(currentPath{1}, 'testFiles', 'ensemble_toy_model1.mat');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'ensemble_toy_model1.mat');
             ensemble = load(filepath);
             ensemble = ensemble.ensemble;
             kineticFxn = 'toy_model1_Kinetics1';
             strucIdx = 1;
+            
             [rxnMetLinks,freeVars,metsActive] = buildKineticFxn(ensemble,kineticFxn,strucIdx);
             
             trueResRxnMetLinks = {'r_r1', 'r_r2', 'r_r3', 'r_r4', 'r_r5', 'r_r6', ...

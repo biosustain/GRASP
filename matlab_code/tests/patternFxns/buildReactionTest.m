@@ -1,5 +1,27 @@
 classdef buildReactionTest < matlab.unittest.TestCase
     
+    properties
+        currentPath
+        tempReactionsFolder
+    end
+    
+    methods(TestClassSetup)
+        function createReactionsTempFolder(testCase)
+            testCase.currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+            testCase.tempReactionsFolder = fullfile(testCase.currentPath{1}, '..', '..', '..', 'temp', 'reactions');
+            mkdir(testCase.tempReactionsFolder);
+        end
+    end
+ 
+    methods(TestClassTeardown)
+        function removeReactionsTempFolder(testCase)           
+            if exist(testCase.tempReactionsFolder, 'dir')
+                rmdir(testCase.tempReactionsFolder, 's');
+            end
+        end
+    end
+    
+    
     methods (Test)
         function testBuildReaction(testCase)
             state = {'E1= k02*k04*k11*k06*k08+k02*k04*k11*k06*k09+k02*k04*k11*k09*k07+k02*k04*k06*k08*k10.*P+k04*k11*k09*k07*k05.*B;', ...
@@ -15,15 +37,13 @@ classdef buildReactionTest < matlab.unittest.TestCase
             prodNum = [5 6];
             reactionName = 'r_r11';
             promiscuousRxnI = 0;
+            
             buildReaction(state,rateList,metList,numTerm,prodNum,reactionName, promiscuousRxnI)
-            
-            currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
-            tempReactionsFolder = fullfile(currentPath{1}, '..', '..', '..', 'temp', 'reactions');
-            
-            filepath = fullfile(tempReactionsFolder, [reactionName, '.m']);
+           
+            filepath = fullfile(testCase.tempReactionsFolder, [reactionName, '.m']);
             res = textread(filepath,'%s');
             
-            filepath = fullfile(currentPath{1}, 'testFiles', 'trueResBuildReaction.txt');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildReaction.txt');
             trueRes = textread(filepath,'%s');
             
             testCase.verifyEqual(trueRes,res);   
@@ -51,15 +71,13 @@ classdef buildReactionTest < matlab.unittest.TestCase
             prodNum = [5 6; 10 11];
             reactionName = 'r_r31';
             promiscuousRxnI = 1;
+            
             buildReaction(state,rateList,metList,numTerm,prodNum,reactionName, promiscuousRxnI)
           
-            currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
-            tempReactionsFolder = fullfile(currentPath{1}, '..', '..', '..', 'temp', 'reactions');
-            
-            filepath = fullfile(tempReactionsFolder, [reactionName, '.m']);
+            filepath = fullfile(testCase.tempReactionsFolder, [reactionName, '.m']);
             res = textread(filepath,'%s');
             
-            filepath = fullfile(currentPath{1}, 'testFiles', 'trueResBuildReactionPromiscuous1.txt');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildReactionPromiscuous1.txt');
             trueRes = textread(filepath,'%s');
             
             testCase.verifyEqual(trueRes,res);   
@@ -80,15 +98,13 @@ classdef buildReactionTest < matlab.unittest.TestCase
             prodNum = [3 1; 5 1];
             reactionName = 'r_r51';
             promiscuousRxnI = 2;
+            
             buildReaction(state,rateList,metList,numTerm,prodNum,reactionName, promiscuousRxnI)
           
-            currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
-            tempReactionsFolder = fullfile(currentPath{1}, '..', '..', '..', 'temp', 'reactions');
-            
-            filepath = fullfile(tempReactionsFolder, [reactionName, '.m']);
+            filepath = fullfile(testCase.tempReactionsFolder, [reactionName, '.m']);
             res = textread(filepath,'%s');
             
-            filepath = fullfile(currentPath{1}, 'testFiles', 'trueResBuildReactionPromiscuous2.txt');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildReactionPromiscuous2.txt');
             trueRes = textread(filepath,'%s');
             
             testCase.verifyEqual(trueRes,res);              
