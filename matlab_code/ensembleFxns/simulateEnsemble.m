@@ -31,7 +31,8 @@ subunits     = ensemble.subunits{strucIdx};
 ix = 1;
 simulationRes = {};
 
-folderName =  fullfile('..', 'reactions', strcat(ensemble.description, '_', num2str(ix)));
+currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');  
+folderName =  fullfile(currentPath{1}, '..', '..', 'reactions', strcat(ensemble.description, '_', num2str(ix)));
 if isfile(fullfile(folderName, strcat(func2str(kineticFxn), '_ode.m')))
     odeFunction = str2func(strcat(func2str(kineticFxn), '_ode'));
 else
@@ -98,7 +99,7 @@ end
 
 function flux = calculateFluxes(timePoints,metConcs,enzymesIC,kineticFxn,model,fixedExchs,Sred,kinInactRxns,subunits)
     
-flux = zeros(numel(timePoints), numel(enzymesIC));
+flux = zeros(numel(timePoints), size(Sred,2));
 
 for t=1:numel(timePoints)
     x = [metConcs(t,:)'; enzymesIC];
