@@ -1,29 +1,19 @@
 clearvars
-
 import matlab.unittest.TestSuite;
-suitePatterFxns = TestSuite.fromFolder('patternFxns');
 
-						   				            																% check first that no other process is running
+suitePatternFxns = TestSuite.fromFolder('patternFxns');
+suiteEnsembleFxns = TestSuite.fromFolder('ensembleFxns');
+
 addpath(fullfile('..',  'patternFxns'), ...
-        fullfile('..',  'ensembleFxns'), ...
-        'ensembleFxns');
-    
-    
-currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
-tempReactionsFolder = fullfile(currentPath{1}, '..', '..', 'temp', 'reactions');
-mkdir(tempReactionsFolder);
+        fullfile('..',  'ensembleFxns'));
 
 
-result = run(suitePatterFxns)
-
-% ensembleFxns tests - temporary
-run(loadEnsembleStructureTest)
-run(initializeEnsembleTest)
-run(initialSamplerTest)
-run(sampleEnzymeAbundancesTest)
+resultPatternFxns = run(suitePatternFxns);
+resultEnsembleFxns = run(suiteEnsembleFxns);
 
 
-
-if exist(tempReactionsFolder, 'dir')
-    rmdir(tempReactionsFolder, 's');
-end
+disp([newline, newline, 'Result summary:', newline, newline])
+disp('Pattern functions')
+table(resultPatternFxns)
+disp('Ensemble functions')
+table(resultEnsembleFxns)
