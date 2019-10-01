@@ -13,7 +13,7 @@ classdef simulateEnsembleTest < matlab.unittest.TestCase
     methods(TestMethodTeardown)
         function removeReactionsFolder(testCase)           
 
-            reactionsFolder = fullfile(testCase.currentPath{1}, '..', '..', '..', 'reactions', 'toy_model1_random_1');
+            reactionsFolder = fullfile(testCase.currentPath{1}, '..', '..', '..', 'reactions', 'toy_model1_random2_1');
             
             if exist(reactionsFolder, 'dir')
                 rmdir(reactionsFolder, 's');
