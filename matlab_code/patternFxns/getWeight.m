@@ -1,12 +1,23 @@
 function W = getWeight(shortPath,forwardFlux)
-%--------------------------------------------------------------------------
 % Function used re-weight a path in order to obtain alternative paths
 %
-% Inputs:        (shortPath)   common path
-%              (forwardFlux)   list with the edges of the forward reactions
+% USAGE:
 %
-% Outputs:               (W)   weight vector
-%-----------------------Pedro Saa 2014-------------------------------------
+%    W = getWeight(shortPath, forwardFlux)
+%
+% INPUTS:
+%    shortPath (`int vector`):      common path
+%    forwardFlux (`int matrix`):	list with the edges of the forward 
+%                                   reactions
+% 
+% OUTPUT:
+%    W (`int vector`):  weight vector
+%
+% .. Authors:
+%       - Pedro Saa     2014 original code
+
+
+
 %% 1. Define edges to re-weight
 idx = []; pathDist = length(shortPath)-1;
 for i = 1:size(forwardFlux,1)

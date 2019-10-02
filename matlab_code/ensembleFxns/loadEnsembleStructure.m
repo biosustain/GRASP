@@ -1,11 +1,25 @@
 function ensemble = loadEnsembleStructure(xlsxFile)
-%--------------------------------------------------------------------------
-% This function builds the data structure of the ensemble
+% Takes in an excel file and sets up the model ensemble data structure.
+% 
+% Also calculates reactions fluxes and Gibbs energies if wanted.
 %
-% Inputs:       excel file with the invariant information of the ensemble
+% USAGE:
 %
-% Outputs:      ensemble basic data structure
-%--------------------- Pedro Saa 2016 -------------------------------------
+%    ensemble = loadEnsembleStructure(xlsxFile)
+%
+% INPUTS:
+%    xlsxFile (`char`):     path to input excel file
+%
+% OUTPUT:
+%    ensemble (`struct`):   model ensemble data structure
+%
+% .. Authors:
+%       - Pedro Saa         2016 original code
+%       - Marta Matos       2018 generalized it for promiscuous  
+%                           reactions, added function to build the ODE 
+%                           function for simulations, defined path based 
+%                           on this file location
+
 if nargin<1; disp('Not enough input arguments'); end                    % Check inputs
 
 %% 1. Load general data contained in .xlsx file
@@ -22,7 +36,7 @@ xMetsThermo         = xlsread(xlsxFile,'thermoMets');                   % load t
 [protData,idxProt]  = xlsread(xlsxFile,'protData');                     % load expression data
 [metsData,idxMets]  = xlsread(xlsxFile,'metsData');                     % load metabolite data (mets)
 ineqConstraints     = xlsread(xlsxFile,'thermo_ineq_constraints');      % load ineq. thermodynamic constraints
-
+disp('Testing testing, 1, 2, 3')
 
 % Add m before any metabolite name and r before any reaction name to avoid
 % variables starting with a number

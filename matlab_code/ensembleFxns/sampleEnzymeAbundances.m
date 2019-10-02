@@ -1,8 +1,23 @@
 function [models] = sampleEnzymeAbundances(ensemble,models,strucIdx)
-%--------------------------------------------------------------------------
 % Function used to sample enzyme abundances
 %
-%------------------------Pedro Saa 2016, Marta Matos 2018------------------
+% USAGE:
+%
+%    models = sampleEnzymeAbundances(ensemble, models, strucIdx)
+%
+% INPUTS:
+%    ensemble (`struct`):	model ensemble
+%    models (`struct`):     model
+%    strucIdx (`int`):      number of the model structure considered
+%
+% OUTPUT:
+%    models (`struct`):     model structure with added enzyme abundances
+%
+% .. Authors:
+%       - Pedro Saa         2016 original code
+%       - Marta Matos       2018 generalized it for promiscuous reactions 
+                         
+
 for activRxnIdx = 1:numel(ensemble.kinActRxns)
     
     if ~(strcmp(ensemble.rxnMechanisms{strucIdx}{activRxnIdx},'diffusion')||...

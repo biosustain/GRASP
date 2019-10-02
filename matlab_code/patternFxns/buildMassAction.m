@@ -1,11 +1,20 @@
 function buildMassAction(reactionName,strucIdx)
-%--------------------------------------------------------------------------
 % Build mass action kinetic fxn
 %
-% Inputs: ensemble    (ensemble structure)
+% USAGE:
 %
-% Outputs:    -       (writen .m file with the reaction mechanism)
-%------------------------Pedro Saa 2016------------------------------------
+%    buildMassAction(reactionName, strucIdx)
+%
+% INPUTS:
+%    reactionName (`char`):   reaction name
+%    strucIdx (`int`):        ID of the model structure
+%
+% OUTPUT:
+%    written .m file with the reaction mechanism
+%
+% .. Authors:
+%       - Pedro Saa     2016 original code 
+
 reactionName = [reactionName,num2str(strucIdx)];
 try
     currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');

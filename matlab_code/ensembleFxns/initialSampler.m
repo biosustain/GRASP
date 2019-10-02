@@ -1,11 +1,39 @@
 function [isModelValid,models,strucIdx,xopt,tolScore,simulatedFlux] = initialSampler(ensemble)
-%--------------------------------------------------------------------------
-% Sampling initial ensemble of kinetic models using rejection scheme
+% Samples initial ensemble of kinetic models.
 %
-% Inputs:       ensemble (structure) , workerIdx (double)
+% [TODO: Pedro write a bit more about the ABC part?]
 %
-% Outputs:      initial sampled ensemble structure
-%--------------------- Pedro Saa 2016 -------------------------------------
+% Checks if sampled models are valid. A model is considered valid if:
+%  - for all reactions the fluxes and respective Gibbs energies are 
+%    compatible;
+%  - the real part of the jacobian eigenvalues is lower than the defined 
+%    threshold;
+%  - the difference between the predicted flux and the reference flux
+%    is negligible.
+%
+% USAGE:
+%
+%    [isModelValid, models, strucIdx, xopt, tolScore, simulatedFlux] = initialSampler(ensemble)
+%
+% INPUTS:
+%    ensemble (`struct`):  initialized model ensemble
+%
+% OUTPUT:
+%    isModelValid (`logical`):   whether or not model is valid.
+%    models (`struct`):          sampled model
+%    strucIdx (`int`):           model structure ID
+%    xopt (`logical`):           [TODO: Pedro]
+%    tolScore (`logical`):       [TODO: Pedro]
+%    simulatedFlux (`logical`):  [TODO: Pedro]
+%
+% .. Authors:
+%       - Pedro Saa         2016 original code
+%       - Marta Matos       2018, 2019 generalized it for promiscuous  
+%                           reactions and random mechanisms, added model 
+%                           validity checks
+%       - Nicholas Cowie	2019 added extreme pathways and random flux 
+%                           distribution for isoenzymes
+
 %% Initialze parameters
 RT       = 8.314*298.15/1e3;                                               % gas constant times the absolute temperature (298.15 K)
 massTol  = size(ensemble.Sred,1)*1e-10;								       % #balances*tol^2
@@ -197,9 +225,8 @@ while true
     
     % Test if the real part of the jacobian's eigenvalue is greater than
     %  threshold
-    maxRealEigenvalue = checkStability(ensemble,models,strucIdx);
-    if maxRealEigenvalue > ensemble.eigThreshold
-        isModelValid = false;
+    isModelValid = checkStability(ensemble,models,strucIdx, ensemble.eigThreshold);
+    if ~isModelValid
         disp(['There are eigenvalues larger than ', num2str(ensemble.eigThreshold), '. Model ID: ',num2str(strucIdx)]);
     end
     

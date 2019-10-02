@@ -1,11 +1,26 @@
 function ensemble = initializeEnsemble(ensemble,popIdx,verbose)
-%--------------------------------------------------------------------------
 % Initialize ensemble structure
 %
-% Inputs:   (ensemble)    ensemble (structure)
+% USAGE:
 %
-% Outputs:  (ensemble)    initialized ensemble (structure)
-%------------------------Pedro Saa 2016, Marta Matos 2018------------------
+%    ensemble = initializeEnsemble(ensemble, popIdx, verbose)
+%
+% INPUTS:
+%    ensemble (`struct`):  model ensemble
+%    popIdx (`int`):       population ID
+%
+% OPTIONAL INPUTS:
+%    verbose (`int`):      verbosity level
+%                                  
+% OUTPUT:
+%    ensemble (`struct`):  initialized model ensemble
+%
+% .. Authors:
+%       - Pedro Saa         2016 original code
+%       - Marta Matos       2018 generalized it for promiscuous reactions 
+%                           and random mechanisms
+%       - Nicholas Cowie	2019 added extreme pathways
+
 
 if (nargin<3); verbose = 0; end
 

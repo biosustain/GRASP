@@ -1,12 +1,29 @@
 function [ensemble, models, isModelValid] = sampleGeneralReversibilities(ensemble, models, RT, strucIdx)
-
-%--------------------------------------------------------------------------
 % Function used to calculate the reversibilities for each reaction
-% 
-% Uses the generalized method only for promiscuous reactions that have
-% common steps. Not working yet.
 %
-%----------------------Pedro Saa 2016, Marta Matos 2018--------------------
+% It doesn't work yet for promiscuous reactions with common steps.
+% 
+% USAGE:
+%
+%    [ensemble, models, isModelValid] = sampleGeneralReversibilities(ensemble, models, RT, strucIdx)
+%
+% INPUTS:
+%    ensemble (`struct`):	model ensemble
+%    models (`struct`):     model
+%    RT (`double`):         product of the gas constant and
+%                           temperature
+%    strucIdx (`int`):      number of the model structure considered
+%
+% OUTPUT:
+%    ensemble (`struct`):       model ensemble
+%    models (`struct`):         model structure with added reversibilities
+%    isModelValid (`logical`):  whether or not the model is valid
+%
+% .. Authors:
+%       - Pedro Saa         2016 original code
+%       - Marta Matos       2018 generalized it for promiscuous reactions
+%                           and reactions with random mechanisms
+
 
 % Initialize reverTemp
 ensemble.reverTemp = cell(size(ensemble.populations(1).probParams(strucIdx).rxnParams));

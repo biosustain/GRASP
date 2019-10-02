@@ -1,18 +1,35 @@
 function [revMatrix,forwardFlux,metList] = reactionPattern(patternName,reactionName,flag,strucIdx, promiscuousRxnI)
-%--------------------------------------------------------------------------
 % Main function to build the reaction rate equation and to extract the
 % required parameters for the subsequent sampling
 %
-% Inputs:   (patternName) input file which descrips the enzyme system
-%                 (flag)  if 1, write the reaction rate function (optional)
-%                         else if 2, write the corresponding allosteric
-%                         mechanism
+% USAGE:
 %
-% Outputs:   (revMatrix)  reversibility matrix with all the cycles in the
-%                         reaction pattern
-%          (forwardFlux)  list with the edges of the forward reactions
-%              (metList)  list with the reaction metabolites
-%-----------------------Pedro Saa 2016, Marta Matos 2018-------------------
+%    [revMatrix, forwardFlux, metList] = reactionPattern(patternName, 
+%                                                        reactionName, 
+%                                                        flag, strucIdx,
+%                                                        promiscuousRxnI)
+%
+% INPUTS:
+%    patternName (`char vector`):   input file which descrips the enzyme
+%                                   mechanism
+%    reactionName (`char`):         name of the reaction
+%    flag (`int`):                  if 1, write the reaction rate function 
+%                                   (optional) else if 2, write the 
+%                                   corresponding allosteric mechanism
+%    strucIdx (`int`):              ID of the model structure
+%    promiscuousRxnI (`int`):       index of promiscuous reaction
+% 
+% OUTPUT:
+%    revMatrix (`int vector`):    reversibility matrix with all the cycles in the
+%                                 reaction pattern
+%    forwardFlux (`int matrix`):  list with the edges of the forward reactions
+%    metList (`char cell`):       list with the reaction metabolites
+%
+% .. Authors:
+%       - Pedro Saa         2014 original code
+%       - Marta Matos       2018 extended for promiscuous reactions
+%       - Nicholas Cowie	2019 [TODO what were you doing?]
+
 % 1. Read the input file and extract the required information
 [Nodes,Link,KineticMatrix,forwardFlux] = readInput(patternName);
 [LinkMatrix,LinkList] = getLink(Link);

@@ -1,4 +1,20 @@
-function buildOdeFxn(ensemble,kineticFxn,strucIdx)
+function buildOdeFxn(ensemble, kineticFxn, strucIdx)
+% Builds the ODE function .m file that is used to simulate the model.
+%
+% USAGE:
+%
+%    buildOdeFxn(ensemble, kineticFxn, strucIdx)
+%
+% INPUTS:
+%    ensemble (`struct`):   model ensemble
+%    kineticFxn (`char`):	name of the kinetic function
+%    strucIdx (`int`):      ID of the model structure
+%
+% OUTPUT:
+%    written .m file with the ODEs 
+%
+% .. Authors:
+%       - Marta Matos	2019 original code 
 
 currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
 filepath = fullfile(currentPath{1}, '..', '..', 'reactions', [ensemble.description, '_', num2str(strucIdx)], [kineticFxn,'.m']);

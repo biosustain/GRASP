@@ -1,15 +1,26 @@
 function expression = getExpression(node,pattern,kineticMatrix,expression)
-%--------------------------------------------------------------------------
 % Get the expression given an enzyme form, patterns, and kineticMatrix
-% 
-% Inputs:        (node)  initial node index
-%             (pattern)  specific pattern
-%       (kineticMatrix)  stoichmetric matrix of the system, element are
-%                        pseudo-first rate constants
-%          (expression)  equation expression
 %
-% Outputs: (expression)  equation expression
-%------------Pedro Saa 2014, adapted from Qi et al. 2009-------------------
+% Based on https://doi.org/10.1186/1471-2105-10-238 
+%
+% USAGE:
+%
+%    expression = getExpression(node, pattern, kineticMatrix, expression)
+%
+% INPUTS:
+%    node (`int vector`):       initial node index
+%    pattern (`int matrix`):    specific pattern
+%    kineticMatrix (`cell`):	stoichmetric matrix of the system, element 
+%                               are pseudo-first rate constants
+%    expression (`cell`):       equation expression
+% 
+% OUTPUT:
+%    expression (`int cell`):	equation expression
+%
+% .. Authors:
+%       - Pedro Saa     2014 original code, adapted from Qi et al. 2009
+
+
 %% 1. Use the singleNode to process the first node
 [expression,pattern,nodes] = singleNode(node,pattern,kineticMatrix,expression);
 node_new = nodes;

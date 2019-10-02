@@ -1,17 +1,27 @@
 function cellWithVariables = fixVariableNames(cellWithVariables, prefix, flag)
-%--------------------------------------------------------------------------
 % Takes in a cell where the first column are metabolite or reaction names
 % and adds the specified prefix to each name.
 %
-% If flag is defined the same is done on the kinetics sheet for the columns
-% order, promiscuous, inhibitors, activators, negative effector,
-% positive effector, allosteric.
+% If flag is defined (independently of its value) the same is done on the 
+% kinetics sheet for the columns order, promiscuous, inhibitors, 
+% activators, negative effector, positive effector, allosteric.
 %
+% USAGE:
 %
-% Inputs:       cellWithVariables (cell), prefix (string)
+%    cellWithVariables = fixVariableNames(cellWithVariables, prefix, flag)
 %
-% Outputs:      cellWithVariables (cell)
-%--------------------- Marta Matos 2019 -----------------------------------
+% INPUTS:
+%    cellWithVariables (`char cell`):  variable names
+%    prefix (`char`):                  prefix to add to variable names
+%    flag (`logical`):                 whether or not to do this for the 
+%                                      kinetics sheet.
+%                                  
+%
+% OUTPUT:
+%    cellWithVariables (`cell`):	variable names with prefixes
+%
+% .. Authors:
+%       - Marta Matos	2019 original code
 
 
 for row=2:size(cellWithVariables,1)

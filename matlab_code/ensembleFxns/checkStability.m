@@ -1,5 +1,26 @@
-function maxEigenvalue = checkStability(ensemble,models,strucIdx)
-%---------------- Pedro Saa UQ 2018, Marta Matos 2019 ---------------------
+function isModelValid = checkStability(ensemble,models,strucIdx,eigThreshold)
+% Given a model, checks if the largest real part of the jacobian
+% eigenvalues is greater than the given threshold (eigThreshold), if so the
+% model is considered invalid.
+%
+% USAGE:
+%
+%    isModelValid = checkStability(ensemble, models, strucIdx, eigThreshold)
+%
+% INPUTS:
+%    ensemble (`struct`):       model ensemble
+%    models (`struct`):         model
+%    strucIdx (`int`):          ID of the model structure considered
+%    eigThreshold (`double`):	threshold for positive eigenvalues' real
+%                               part
+%
+% OUTPUT:
+%    isModelValid (`logical`):	whether or not the model is valid
+%
+% .. Authors:
+%       - Pedro Saa     2018 original code
+%       - Marta Matos	2019 refactored code to be used in initialSampler
+
 
 % Optimization & simulation parameters
 kineticFxn   = str2func(ensemble.kineticFxn{strucIdx});
@@ -31,12 +52,17 @@ simFlux = feval(kineticFxn,xstep,models,ensemble.fixedExch(:,1),ensemble.Sred,en
 E_x_abs  = -(imag(simFlux')./hstep_x(:,ones(1,numFluxes)))'; % equivalent to imag(simFlux)./1.0e-10 ? 
 
 % Compute Jacobian eigenvalues
-%C_x_abs   = -(pinv(Sred*E_x_abs))*Sred;
 jacobian   = Sred*E_x_abs;
 eigenvalues = eig(jacobian);
 
 % Look for positive real eigenvalues
 maxEigenvalue = max(real(eigenvalues));
+
+isModelValid = true;
+
+if maxEigenvalue > eigThreshold
+    isModelValid = false;
+end
 
 end
 

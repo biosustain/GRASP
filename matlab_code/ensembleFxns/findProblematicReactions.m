@@ -1,6 +1,4 @@
-function [rowList, dGList] = findProblematicReactions(model,params,DGr_std_min,DGr_std_max,K,delta,n,Sflux,ineqConstraints,sol,rxnNames)
-%--------------------------------------------------------------------------
-%
+function [rowList, dGList] = findProblematicReactions(model,params,DGr_std_min,DGr_std_max,K,delta,n,Sflux,ineqConstraints,rxnNames)
 % Finds the reactions whose standard Gibbs energy bounds make the 
 % TMFA problem infeasible.
 %
@@ -11,9 +9,37 @@ function [rowList, dGList] = findProblematicReactions(model,params,DGr_std_min,D
 % the reaction dG bounds to [-100, 100] kJ/mol again.
 % In the end it returns a list of all reactions whose dG bounds are 
 % [-100, 100] kJ/mol, i.e. the reactions that cause the linear problem
-% solution to be infeasible when their dG bounds are the original.% 
+% solution to be infeasible when their dG bounds are the original. 
 %
-%--------------------- Marta Matos 2019 -----------------------------------
+% USAGE:
+%
+%    [rowList, dGList] = findProblematicReactions(model, params, 
+%                                                 DGr_std_min, DGr_std_max,
+%                                                 K, delta ,n, Sflux,
+%                                                 ineqConstraints, sol,
+%                                                 rxnNames)
+%
+% INPUTS:
+%    model (`struct`):              gurobi LP model
+%    params (`struct`):             parameters for gurobi LP model
+%    DGr_std_min (`double vector`): lower bound for standard Gibbs energies
+%    DGr_std_max (`double vector`):	upper bound for standard Gibbs energies
+%    K (`double`):                  arbitrarily large number for LP model
+%    delta (`double`):              tolerance for LP model
+%    n (`double`):                  number of reactions in the model
+%    Sflux (`double`):              stoichiometric matrix used for flux
+%                                   calculations
+%    ineqConstraints (`double`):	inequality constraints
+%    rxnNames (`char vector`):      reaction names
+%
+% OUTPUT:
+%    rowList (`int vector`):	names of reactions that make the LP 
+%                               infeasible
+%    dGList (`double vector`):  dG values of reactions that make the LP
+%                               infeasible
+%
+% .. Authors:
+%       - Marta Matos	2019 original code
 
 
 DGr_std_min_orig = DGr_std_min;

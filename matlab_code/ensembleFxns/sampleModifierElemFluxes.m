@@ -1,9 +1,22 @@
 function [models] = sampleModifierElemFluxes(ensemble, models, strucIdx)
-%--------------------------------------------------------------------------
 % Function used to sample modifier elementary fluxes for each reaction
 %
-%------------------------Pedro Saa 2016, Marta Matos 2018------------------
-
+% USAGE:
+%
+%    models = sampleModifierElemFluxes(ensemble, models, strucIdx)
+%
+% INPUTS:
+%    ensemble (`struct`):	model ensemble
+%    models (`struct`):     model
+%    strucIdx (`int`):      number of the model structure considered
+%
+% OUTPUT:
+%    models (`struct`):         model structure with added reversibilities
+%
+% .. Authors:
+%       - Pedro Saa         2016 original code
+%       - Marta Matos       2018 generalized it for promiscuous reactions
+%                           and reactions with random mechanisms
 
 for activRxnIdx = 1:numel(ensemble.kinActRxns)     
 		

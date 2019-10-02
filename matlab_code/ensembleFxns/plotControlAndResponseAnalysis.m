@@ -1,6 +1,30 @@
 function plotControlAndResponseAnalysis(mcaResults, ensemble)
-%---------------- Pedro Saa UQ 2018, Marta Matos DTU 2018 -----------------
-
+% Plots the results from the control and response analysis, four subplots 
+% are generated: one for flux control coefficients, one for concentration
+% control, one for enzyme response coefficients, and one for concentration
+% response coefficients.
+%
+% To plot only some of the reactions/enzymes, the categories argument
+% should be used to specify which reactions should be included in the 
+% plot.
+% The categories cell should look like: 
+%  {reactionGroupName1, listOfReactions1; reactionGroupName2, listOfReactions2}
+% Example: 
+%  {'Glycolysis',[1,20]; 'Pentose Phosphate Pathway',[25,34]}
+%
+% USAGE:
+%
+%    plotControlAndResponseAnalysis(mcaResults, ensemble, categories)
+%
+% INPUTS:
+%    mcaResults (`struct`):   MCA results
+%    ensemble (`struct`):     model ensemble
+%    categories (`cell`):     categories to be included in the plot
+%
+% .. Authors:
+%       - Pedro Saa         2018 original code
+%       - Marta Matos       2018 extended to plot response coefficients
+%       - Marina de Leeuw   2019 added categories
 
 % Check sampler mode to determine the numer of conditions
 if ~strcmpi(ensemble.sampler,'ORACLE')
