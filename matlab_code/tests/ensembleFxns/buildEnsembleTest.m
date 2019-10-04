@@ -26,6 +26,15 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
                 end
             end
         end
+        
+        function removeOutputFolder(testCase)           
+
+            outputFolder = fullfile(testCase.currentPath{1}, 'testFiles', 'testDir1');
+            
+            if exist(outputFolder, 'dir')
+                rmdir(outputFolder, 's');
+            end
+        end
     end
     
     
@@ -150,6 +159,30 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
                    
             testCase.verifyEqual(trueRes, ensemble);
         end
+        function testBuildEnsembleCreateDir(testCase)
+            
+            seed = 1;
+            rng(seed)
+
+            
+            modelID = 'toy_model1_random2';
+            inputFile = fullfile(testCase.currentPath{1}, 'testFiles', modelID);
+            outputFile = fullfile(testCase.currentPath{1}, 'testFiles', 'testDir1', 'testDir2', [modelID, '.mat']);
+            
+            maxNumberOfSamples = 1000;
+            eigThreshold = 10^-5;
+            
+            ensembleTemp = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
+            
+            ensemble = load(outputFile);
+            ensemble = ensemble.ensemble;
+
+            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'testBuildEnsembleCreateDir'));
+            trueRes = trueRes.ensemble;
+                   
+            testCase.verifyEqual(trueRes, ensemble);
+        end
+
 	end
 end
 

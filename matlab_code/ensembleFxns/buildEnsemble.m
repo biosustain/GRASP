@@ -152,6 +152,11 @@ ensemble.eigThreshold = eigThreshold;
 ensemble = initializeEnsemble(ensemble,popIdx,1);
 addKineticFxnsToPath(ensemble);
 
+% Create output folder if it doesn't exist yet
+[filepath,~,~] = fileparts(outputFile);
+if ~exist(filepath)
+    mkdir(filepath);
+end
 
 % Check whether the job is ran in parallel
 disp('Running initial sampler.');
