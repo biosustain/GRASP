@@ -1,31 +1,30 @@
 function buildReaction(state,rateList,metList,numTerm,prodNum,reactionName, promiscuousRxnI)
-% Builds rate reaction file
+% Builds rate reaction file.
 %
 % Based on https://doi.org/10.1186/1471-2105-10-238 
-% 
+%
+%
 % USAGE:
 %
-%    buildReaction(state, rateList, metList, numTerm, prodNum, 
-%                  reactionName, promiscuousRxnI)
+%    buildReaction(state, rateList, metList, numTerm, prodNum, reactionName, promiscuousRxnI)
 %
-% INPUTS:
-%    state (`char cell`):       output from reactionPatterm     
-%    rateList (`char cell`):	list with all the rate constants in the 
-%                               system
-%    metList (`char cell`):     list with all mets concentrations showing 
-%                               up in thepseudo-first-order rate constants
-%    numTerm (`char cell`):     numerator terms
-%    prodNum (`int vector`):	products terms
-%    reactionName (`char`):     reaction name
-%    promiscuousRxnI (`int`):	index of promiscuous reaction
-
+% INPUT:
+%    state (char cell):       output from reactionPatterm     
+%    rateList (char cell):	  list with all the rate constants in the 
+%                             system
+%    metList (char cell):     list with all mets concentrations showing 
+%                             up in thepseudo-first-order rate constants
+%    numTerm (char cell):     numerator terms
+%    prodNum (int vector):	  products terms
+%    reactionName (char):     reaction name
+%    promiscuousRxnI (int):	  index of promiscuous reaction
+%
 % OUTPUT:
 %    written .m file with the reaction mechanism
 %
 % .. Authors:
 %       - Pedro Saa     2016 original code  adapted from Qi et al
 %       - Marta Matos   2018 extended for promiscuous reactions
-
 
 % 1. Write initial parameters
 try

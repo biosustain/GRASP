@@ -3,32 +3,27 @@ function simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC
 % metabolite concentrations and simulates all models in the ensemble.
 %
 % If the simulation of a given model takes longer than the specified 
-% interrupTime, then it is interrupted and no simulation results are saved 
-% for that model.
+% *interrupTime*, then it is interrupted and no simulation results are  
+% saved for that model.
+%
 %
 % USAGE:
 %
-%    simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, 
-%                                     metsIC, interruptTime)
+%    simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC, interruptTime)
 %
-% INPUTS:
-%    ensemble (`struct`):           model ensemble
-%    finalTime (`double`):          simulation time
-%    enzymesIC (`double vector`):	initial conditions for enzyme
-%                                   concentrations
-%    metsIC (`double vector`):      initial conditions for metabolite
-%                                   concentrations
-%    interruptTime (`double`)       maximum time for each simulation, given
-%                                   in seconds
+% INPUT:
+%    ensemble (struct):           model ensemble
+%    finalTime (double):          simulation time
+%    enzymesIC (double vector):	initial conditions for enzyme concentrations
+%    metsIC (double vector):      initial conditions for metabolite concentrations
+%    interruptTime (double)       maximum time for each simulation, given in seconds
 %
 % OUTPUT:
-%    simulationRes (`struct`):  simulation results
+%    simulationRes (struct):  simulation results
 %
-%               * t (`cell`)      : time points in each model simulation
-%               * conc (`cell`)   : concentrations for each time point and
-%                                   model simulation
-%               * flux (`cell`)   : fluxes for each time point and
-%                                   model simulation
+%               * t (*cell*)      : time points in each model simulation
+%               * conc (*cell*)   : concentrations for each time point and model simulation
+%               * flux (*cell*)   : fluxes for each time point and model simulation
 %
 % .. Authors:
 %       - Marta Matos       2019 original code

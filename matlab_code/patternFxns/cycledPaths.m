@@ -1,18 +1,18 @@
 function paths = cycledPaths(subsNodes,prodNodes,forwardFlux)
-% Determines all the possible cycles in the pattern 
+% Determines all the possible cycles in the pattern.
+%
 %
 % USAGE:
 %
 %    paths = cycledPaths(subsNodes, prodNodes, forwardFlux)
 %
-% INPUTS:
-%    subsNodes (`int vector`):      nodes consuming substrates
-%    prodNodes (`int vector`):      nodes producing products
-%    forwardFlux (`int matrix`):    list with the edges of the forward 
-%                                   reactions
+% INPUT:
+%    subsNodes (int vector):      nodes consuming substrates
+%    prodNodes (int vector):      nodes producing products
+%    forwardFlux (int matrix):    list with the edges of the forward reactions
 %
 % OUTPUT:
-%    paths (`int cell`):	all possible paths (even redundants)
+%    paths (int cell):	all possible paths (even redundants)
 %
 % .. Authors:
 %       - Pedro Saa     2016 original code

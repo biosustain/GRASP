@@ -1,19 +1,20 @@
 function A = algebra(B,C)
-% Calculate wang algebra result for two sets of patterns
+% Calculate wang algebra result for two sets of patterns.
 %
 % Based on https://doi.org/10.1186/1471-2105-10-238 
+%
 %
 % USAGE:
 %
 %    A = algebra(B, C)
 %
-% INPUTS:
-%    B (`struct`):	input combination of link-number list string cell
-%    C (`double`):  input of number string cell (only one link)
+% INPUT:
+%    B (struct):	input combination of link-number list string cell
+%    C (double):	input of number string cell (only one link)
 %
 % OUTPUT:
-%    A (`struct`):  Wang Algebra result calculate from input B and C, 
-%                   result is a string cell
+%    A (struct):  Wang Algebra result calculate from input B and C, 
+%                 result is a string cell
 %
 % .. Authors:
 %       - Pedro Saa     2014 original code adapted from Qi et al. 2009

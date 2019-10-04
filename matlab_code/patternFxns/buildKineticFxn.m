@@ -1,21 +1,20 @@
 function [rxnMetLinks,freeVars,metsActive] = buildKineticFxn(ensemble,kineticFxn,strucIdx)
-% Builds kinetic model .m file that is used to actually run the model
+% Builds kinetic model .m file that is used to actually run the model.
+%
 %
 % USAGE:
 %
-%    rxnMetLinks, freeVars, metsActive] = buildKineticFxn(ensemble, 
-%                                                         kineticFxn, 
-%                                                         strucIdx)
+%    rxnMetLinks, freeVars, metsActive] = buildKineticFxn(ensemble, kineticFxn, strucIdx)
 %
-% INPUTS:
-%    ensemble (`struct`):   model ensemble
-%    kineticFxn (`char`):	name of the kinetic function
-%    strucIdx (`int`):      ID of the model structure
+% INPUT:
+%    ensemble (struct):   model ensemble
+%    kineticFxn (char):	name of the kinetic function
+%    strucIdx (int):      ID of the model structure
 %
 % OUTPUT:
-%    rxnMetLinks (`char cell`):   [TODO Pedro]
-%    freeVars (`char cell`):      [TODO Pedro]
-%    metsActive (`int cell`):     [TODO Pedro]
+%    rxnMetLinks (char cell):   [TODO Pedro]
+%    freeVars (char cell):      [TODO Pedro]
+%    metsActive (int cell):     [TODO Pedro]
 %    written .m file with the model
 %
 % .. Authors:

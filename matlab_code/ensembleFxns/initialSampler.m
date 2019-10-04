@@ -3,7 +3,9 @@ function [isModelValid,models,strucIdx,xopt,tolScore,simulatedFlux] = initialSam
 %
 % [TODO: Pedro write a bit more about the ABC part?]
 %
-% Checks if sampled models are valid. A model is considered valid if:
+% Checks if sampled models are valid and only returns valid ones.
+% A model is considered valid if
+%
 %  - for all reactions the fluxes and respective Gibbs energies are 
 %    compatible;
 %  - the real part of the jacobian eigenvalues is lower than the defined 
@@ -11,20 +13,21 @@ function [isModelValid,models,strucIdx,xopt,tolScore,simulatedFlux] = initialSam
 %  - the difference between the predicted flux and the reference flux
 %    is negligible.
 %
+%
 % USAGE:
 %
 %    [isModelValid, models, strucIdx, xopt, tolScore, simulatedFlux] = initialSampler(ensemble)
 %
-% INPUTS:
-%    ensemble (`struct`):  initialized model ensemble
+% INPUT:
+%    ensemble (struct):  initialized model ensemble
 %
 % OUTPUT:
-%    isModelValid (`logical`):   whether or not model is valid.
-%    models (`struct`):          sampled model
-%    strucIdx (`int`):           model structure ID
-%    xopt (`logical`):           [TODO: Pedro]
-%    tolScore (`logical`):       [TODO: Pedro]
-%    simulatedFlux (`logical`):  [TODO: Pedro]
+%    isModelValid (logical):   whether or not model is valid.
+%    models (struct):          sampled model
+%    strucIdx (int):           model structure ID
+%    xopt (logical):           [TODO: Pedro]
+%    tolScore (logical):       [TODO: Pedro]
+%    simulatedFlux (logical):  [TODO: Pedro]
 %
 % .. Authors:
 %       - Pedro Saa         2016 original code

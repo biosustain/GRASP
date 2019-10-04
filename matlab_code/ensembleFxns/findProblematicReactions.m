@@ -11,32 +11,26 @@ function [rowList, dGList] = findProblematicReactions(model,params,DGr_std_min,D
 % [-100, 100] kJ/mol, i.e. the reactions that cause the linear problem
 % solution to be infeasible when their dG bounds are the original. 
 %
+%
 % USAGE:
 %
-%    [rowList, dGList] = findProblematicReactions(model, params, 
-%                                                 DGr_std_min, DGr_std_max,
-%                                                 K, delta ,n, Sflux,
-%                                                 ineqConstraints, sol,
-%                                                 rxnNames)
+%    [rowList, dGList] = findProblematicReactions(model, params, DGr_std_min, DGr_std_max, K, delta, n, Sflux, ineqConstraints, sol, rxnNames)
 %
-% INPUTS:
-%    model (`struct`):              gurobi LP model
-%    params (`struct`):             parameters for gurobi LP model
-%    DGr_std_min (`double vector`): lower bound for standard Gibbs energies
-%    DGr_std_max (`double vector`):	upper bound for standard Gibbs energies
-%    K (`double`):                  arbitrarily large number for LP model
-%    delta (`double`):              tolerance for LP model
-%    n (`double`):                  number of reactions in the model
-%    Sflux (`double`):              stoichiometric matrix used for flux
-%                                   calculations
-%    ineqConstraints (`double`):	inequality constraints
-%    rxnNames (`char vector`):      reaction names
+% INPUT:
+%    model (struct):                gurobi LP model
+%    params (struct):               parameters for gurobi LP model
+%    DGr_std_min (double vector):   lower bound for standard Gibbs energies
+%    DGr_std_max (double vector):	upper bound for standard Gibbs energies
+%    K (double):                    arbitrarily large number for LP model
+%    delta (double):                tolerance for LP model
+%    n (double):                    number of reactions in the model
+%    Sflux (double):                stoichiometric matrix used for flux calculations
+%    ineqConstraints (double):	    inequality constraints
+%    rxnNames (char vector):        reaction names
 %
 % OUTPUT:
-%    rowList (`int vector`):	names of reactions that make the LP 
-%                               infeasible
-%    dGList (`double vector`):  dG values of reactions that make the LP
-%                               infeasible
+%    rowList (int vector):	  names of reactions that make the LP infeasible
+%    dGList (double vector):  dG values of reactions that make the LP infeasible
 %
 % .. Authors:
 %       - Marta Matos	2019 original code

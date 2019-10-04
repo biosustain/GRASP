@@ -3,15 +3,16 @@ function ensemble = loadEnsembleStructure(xlsxFile)
 % 
 % Also calculates reactions fluxes and Gibbs energies if wanted.
 %
+%
 % USAGE:
 %
 %    ensemble = loadEnsembleStructure(xlsxFile)
 %
-% INPUTS:
-%    xlsxFile (`char`):     path to input excel file
+% INPUT:
+%    xlsxFile (char):     path to input excel file
 %
 % OUTPUT:
-%    ensemble (`struct`):   model ensemble data structure
+%    ensemble (struct):   model ensemble data structure
 %
 % .. Authors:
 %       - Pedro Saa         2016 original code

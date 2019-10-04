@@ -1,26 +1,25 @@
 function isModelValid = checkStability(ensemble,models,strucIdx,eigThreshold)
 % Given a model, checks if the largest real part of the jacobian
-% eigenvalues is greater than the given threshold (eigThreshold), if so the
-% model is considered invalid.
+% eigenvalues is greater than the given threshold (*eigThreshold*), if so 
+% the model is considered invalid.
+%
 %
 % USAGE:
 %
 %    isModelValid = checkStability(ensemble, models, strucIdx, eigThreshold)
 %
-% INPUTS:
-%    ensemble (`struct`):       model ensemble
-%    models (`struct`):         model
-%    strucIdx (`int`):          ID of the model structure considered
-%    eigThreshold (`double`):	threshold for positive eigenvalues' real
-%                               part
+% INPUT:
+%    ensemble (struct):       model ensemble
+%    models (struct):         model
+%    strucIdx (int):          ID of the model structure considered
+%    eigThreshold (double):	  threshold for positive eigenvalues' real part
 %
 % OUTPUT:
-%    isModelValid (`logical`):	whether or not the model is valid
+%    isModelValid (logical):	whether or not the model is valid
 %
 % .. Authors:
 %       - Pedro Saa     2018 original code
 %       - Marta Matos	2019 refactored code to be used in initialSampler
-
 
 % Optimization & simulation parameters
 kineticFxn   = str2func(ensemble.kineticFxn{strucIdx});

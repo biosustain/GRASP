@@ -3,28 +3,37 @@ function [vMean,vStd] = computeRobustFluxes(Sflux,xMean,xStd)
 % analysis.
 %
 % If enough fluxes are known, the remaining are determined in a
-% deterministic manner by setting S_known * v_know = S_unknown * v_unknown 
-% and solving for v_unknown. 
-% This follows from the fact that S_known * v_know = 0 and 
-% S_unknown * v_unknow = 0.
+% deterministic manner by setting
+%
+% .. math::
+%
+%       S_{known} * v_{known} = S_{unknown} * v_{unknown}
+%
+% and solving for :math:`v_{unknown}`. 
+% This follows from the fact that 
+%
+% .. math::
+%           
+%       S_{known} * v_{known} = 0  
+%
+%       S_{unknown} * v_{unknown} = 0
 %
 % Otherwise, [TODO : need Pedro's help xD]
+%
 %
 % USAGE:
 %
 %    [vMean, vStd] = computeRobustFluxes(S, xMean, xStd)
 %
-% INPUTS:
-%    Sflux (`int matrix`):      stoichiometric matrix used for flux
-%                               calculations
-%    xMean (`double vector`):   mean value for known reactions fluxes
-%    xStd (`double vector`): 	standard deviations for  known reactions 
-%                               fluxes
+% INPUT:
+%    Sflux (int matrix):      stoichiometric matrix used for flux calculations
+%    xMean (double vector):   mean value for known reactions fluxes
+%    xStd (double vector): 	  standard deviations for  known reactions fluxes
 %
 % OUTPUT:
-%    vMean (`double matrix`):	range of feasible Gibbs energies
-%    vStd (`double matrix`):    range of feasible metabolite concentrations
-%    vrng (`double matrix`):    range of feasible reaction fluxes
+%    vMean (double matrix):   range of feasible Gibbs energies
+%    vStd (double matrix):    range of feasible metabolite concentrations
+%    vrng (double matrix):    range of feasible reaction fluxes
 %
 % .. Authors:
 %       - Pedro Saa     2016 original code

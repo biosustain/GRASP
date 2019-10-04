@@ -1,13 +1,14 @@
 function buildFreeExchange(reactionName,strucIdx)
-% Build free exchange kinetic fxn
+% Build free exchange kinetic function.
+%
 %
 % USAGE:
 %
 %    buildFreeExchange(reactionName, strucIdx)
 %
-% INPUTS:
-%    reactionName (`char`):   reaction name
-%    strucIdx (`int`):        ID of the model structure
+% INPUT:
+%    reactionName (char):   reaction name
+%    strucIdx (int):        ID of the model structure
 %
 % OUTPUT:
 %    written .m file with the reaction mechanism

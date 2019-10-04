@@ -1,23 +1,22 @@
 function [edgeMatrix,edgeList] = getLink(edge)
-% Get the edgeMatrix and edgeList data structures
+% Get the edgeMatrix and edgeList data structures.
 %
 % Based on https://doi.org/10.1186/1471-2105-10-238 
+%
 %
 % USAGE:
 %
 %    [edgeMatrix, edgeList] = getLink(edge)
 %
-% INPUTS:
-%    edge (`int cell`):     edge information structure
+% INPUT:
+%    edge (int cell):     edge information structure
 % 
 % OUTPUT:
-%    edgeMatrix (`int matrix`):  matrix with the edge index as the elements
-%    edgeList (`int matrix`):    edge list
+%    edgeMatrix (int matrix):  matrix with the edge index as the elements
+%    edgeList (int matrix):    edge list
 %
 % .. Authors:
 %       - Pedro Saa     2014 original code, adapted from Qi et al. 2009
-
-
 
 %% 1. Read edge information
 nodeNum = size(edge,1);

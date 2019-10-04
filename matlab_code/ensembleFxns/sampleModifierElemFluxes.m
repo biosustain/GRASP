@@ -1,17 +1,18 @@
 function [models] = sampleModifierElemFluxes(ensemble, models, strucIdx)
-% Function used to sample modifier elementary fluxes for each reaction
+% Function used to sample modifier elementary fluxes for each reaction.
+%
 %
 % USAGE:
 %
 %    models = sampleModifierElemFluxes(ensemble, models, strucIdx)
 %
-% INPUTS:
-%    ensemble (`struct`):	model ensemble
-%    models (`struct`):     model
-%    strucIdx (`int`):      number of the model structure considered
+% INPUT:
+%    ensemble (struct):	  model ensemble
+%    models (struct):     model
+%    strucIdx (int):      number of the model structure considered
 %
 % OUTPUT:
-%    models (`struct`):         model structure with added reversibilities
+%    models (struct):         model structure with added reversibilities
 %
 % .. Authors:
 %       - Pedro Saa         2016 original code

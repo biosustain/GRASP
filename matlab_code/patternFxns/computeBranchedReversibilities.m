@@ -1,24 +1,22 @@
 function branchedRev = computeBranchedReversibilities(revMatrix,lbRev)
-% Compute branched reversibilities using our modified approach
+% Compute branched reversibilities using our modified approach.
 %
 % [TODO more details? Pedro?]
+%
 %
 % USAGE:
 %
 %    branchedRev = computeBranchedReversibilities(revMatrix, lbRev)
 %
-% INPUTS:
-%    revMatrix (`int matrix`):	reversibility matrix with all the cycles in
-%                               the reaction pattern   
-%    lbRev (`double vector`):	lower bound for the reversibility values
+% INPUT:
+%    revMatrix (int matrix):	reversibility matrix with all the cycles in the reaction pattern   
+%    lbRev (double vector):	    lower bound for the reversibility values
 %
 % OUTPUT:
-%    branchedRev (`double vector`):	feasible random reversibilities from  
-%                                   the pattern
+%    branchedRev (double vector):	feasible random reversibilities from the pattern
 %
 % .. Authors:
 %       - Pedro Saa     2016 original code
-
 
 % Cast optimization problem and solve branched Rev
 [m,n]       = size(revMatrix);

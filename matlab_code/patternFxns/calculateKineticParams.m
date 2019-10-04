@@ -1,30 +1,23 @@
 function K = calculateKineticParams(randomRev,forwardFlux,reactionFlux,randomEnzymes,Nelem,branchFactor,modifierElemFlux,rxnIsPromiscuous)
-% Function used to calculate the kinetic parameters of the reaction
+% Function used to calculate the kinetic parameters of the reaction.
+%
 %
 % USAGE:
 %
-%    K = calculateKineticParams(randomRev, forwardFlux, reactionFlux, 
-%                               randomEnzymes, Nelem, branchFactor, 
-%                               modifierElemFlux, rxnIsPromiscuous)
+%    K = calculateKineticParams(randomRev, forwardFlux, reactionFlux, randomEnzymes, Nelem, branchFactor, modifierElemFlux, rxnIsPromiscuous)
 %
-% INPUTS:
-%    randomRev (`double vector`):           feasible random reversibilities 
-%                                           in  the pattern 
-%    forwardFlux (`int matrix`):            list with the edges of the  
-%                                           forward reactions
-%    reactionFlux (`double vector`):        overall reaction flux
-%    randomEnzymes (`double vector`):       random enzyme complexes 
-%                                           abundances
-%    Nelem (`int matrix`):                  null basis Selem
-%    branchFactor (`int vector`):           branching factor ~distributes 
-%                                           Dir(1) 
-%    modifierElemFlux (`double vector`):	elementary flux entries for 
-%                                           mechanisms with modifiers
-%    rxnIsPromiscuous (`logical`):          boolean specifying whether or 
-%                                           not reaction is promiscuous
+% INPUT:
+%    randomRev (double vector):           feasible random reversibilities in  the pattern 
+%    forwardFlux (int matrix):            list with the edges of the forward reactions
+%    reactionFlux (double vector):        overall reaction flux
+%    randomEnzymes (double vector):       random enzyme complexes abundances
+%    Nelem (int matrix):                  null basis Selem
+%    branchFactor (int vector):           branching factor ~distributes  Dir(1) 
+%    modifierElemFlux (double vector):	  elementary flux entries for mechanisms with modifiers
+%    rxnIsPromiscuous (logical):          boolean specifying whether or not reaction is promiscuous
 %
 % OUTPUT:
-%    K  (`double vector`):	kinetic parameters for the reaction pattern
+%    K  (double vector):	kinetic parameters for the reaction pattern
 %
 % .. Authors:
 %       - Pedro Saa    2016 original code

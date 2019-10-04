@@ -1,14 +1,15 @@
 function buildOdeFxn(ensemble, kineticFxn, strucIdx)
 % Builds the ODE function .m file that is used to simulate the model.
 %
+%
 % USAGE:
 %
 %    buildOdeFxn(ensemble, kineticFxn, strucIdx)
 %
-% INPUTS:
-%    ensemble (`struct`):   model ensemble
-%    kineticFxn (`char`):	name of the kinetic function
-%    strucIdx (`int`):      ID of the model structure
+% INPUT:
+%    ensemble (struct):   model ensemble
+%    kineticFxn (char):	  name of the kinetic function
+%    strucIdx (int):      ID of the model structure
 %
 % OUTPUT:
 %    written .m file with the ODEs 

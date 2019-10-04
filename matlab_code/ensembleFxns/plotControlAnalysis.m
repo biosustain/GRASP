@@ -3,26 +3,29 @@ function plotControlAnalysis(mcaResults, ensemble, categories)
 % concentration control coefficients and another for flux control
 % coefficients.
 %
-% To plot only some of the reactions, the categories argument should be
+% To plot only some of the reactions, the *categories* argument should be
 % used to specify which reactions should be included in the plot.
-% The categories cell should look like: 
+% The *categories* cell should look like
+%
 %  {reactionGroupName1, listOfReactions1; reactionGroupName2, listOfReactions2}
-% Example: 
+%
+% Example
+%
 %  {'Glycolysis',[1,20]; 'Pentose Phosphate Pathway',[25,34]}
+%
 %
 % USAGE:
 %
 %    plotControlAnalysis(mcaResults, ensemble, categories)
 %
-% INPUTS:
-%    mcaResults (`struct`):   MCA results
-%    ensemble (`struct`):     model ensemble
-%    categories (`cell`):     categories to be included in the plot
+% INPUT:
+%    mcaResults (struct):   MCA results
+%    ensemble (struct):     model ensemble
+%    categories (cell):     categories to be included in the plot
 %
 % .. Authors:
 %       - Pedro Saa         2018 original code
 %       - Marina de Leeuw   2019 added categories
-
 
 % Check sampler mode to determine the numer of conditions
 if ~strcmpi(ensemble.sampler,'ORACLE')

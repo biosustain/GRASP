@@ -1,17 +1,18 @@
 function [models] = sampleEnzymeAbundances(ensemble,models,strucIdx)
-% Function used to sample enzyme abundances
+% Function used to sample enzyme abundances.
+%
 %
 % USAGE:
 %
 %    models = sampleEnzymeAbundances(ensemble, models, strucIdx)
 %
-% INPUTS:
-%    ensemble (`struct`):	model ensemble
-%    models (`struct`):     model
-%    strucIdx (`int`):      number of the model structure considered
+% INPUT:
+%    ensemble (struct):	  model ensemble
+%    models (struct):     model
+%    strucIdx (int):      number of the model structure considered
 %
 % OUTPUT:
-%    models (`struct`):     model structure with added enzyme abundances
+%    models (struct):     model structure with added enzyme abundances
 %
 % .. Authors:
 %       - Pedro Saa         2016 original code

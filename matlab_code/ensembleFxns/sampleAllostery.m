@@ -2,18 +2,19 @@ function [ensemble, models] = sampleAllostery(ensemble,models,strucIdx)
 % Function used to sample allosteric fluxes and parameters for each 
 % reaction.
 %
+%
 % USAGE:
 %
 %    [ensemble, models] = sampleAllostery(ensemble, models, strucIdx)
 %
-% INPUTS:
-%    ensemble (`struct`):       model ensemble
-%    models (`struct`):         model
-%    strucIdx (`int`):          number of the model structure considered
+% INPUT:
+%    ensemble (struct):       model ensemble
+%    models (struct):         model
+%    strucIdx (int):          number of the model structure considered
 %
 % OUTPUT:
-%    ensemble (`struct`):  initialized model ensemble
-%    models (`struct`):    model structure with added allosteric parameters
+%    ensemble (struct):  initialized model ensemble
+%    models (struct):    model structure with added allosteric parameters
 %
 % .. Authors:
 %       - Pedro Saa         2016 original code

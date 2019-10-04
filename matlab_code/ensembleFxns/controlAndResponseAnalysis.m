@@ -11,13 +11,15 @@ function mcaResults = controlAndResponseAnalysis(ensemble,saveResMatrices,strucI
 % proportional increase in the reaction flux.
 %
 % Response coefficients are calculated as 
+%
 % .. math::
 %           C_E^J = C_v^J\Pi
 %
-%     where C_v^J is the flux control coefficient matrix and \Pi is the
-%     parameter elasticity matrix.
+% where :math:`C_v^J` is the flux control coefficient matrix and 
+% :math:`\Pi` is the parameter elasticity matrix.
 %
-% The implementation is based on:
+% The implementation is based on
+%
 %  - https://doi.org/10.1002/9780470475935.ch3, section on MCA
 %  - https://doi.org/10.1111/j.1432-1033.1990.tb15329.x
 %  - https://doi.org/10.1111/j.1432-1033.1990.tb15330.x
@@ -27,57 +29,36 @@ function mcaResults = controlAndResponseAnalysis(ensemble,saveResMatrices,strucI
 % average enzyme and concentration response coefficients.
 %
 % It can also return the control and response coefficient matrices for
-% each model in the ensemble if saveResMatrices is set to true. But keep 
+% each model in the ensemble if *saveResMatrices* is set to true. But keep 
 % in mind that for large models this can use a lot of RAM and CPU.
+%
 %
 % USAGE:
 %
-%    mcaResults = controlAndResponseAnalysis(ensemble, saveResMatrices, 
-%                                            strucIdx)
+%    mcaResults = controlAndResponseAnalysis(ensemble, saveResMatrices, strucIdx)
 %
-% INPUTS:
-%    ensemble (`struct`):           model ensemble
-%    saveResMatrices (`logical`):   whether or not to save the elasticity
-%                                   and control coefficient matrices for 
-%                                   all models
+% INPUT:
+%    ensemble (struct):           model ensemble
+%    saveResMatrices (logical):   whether or not to save the elasticity and control coefficient matrices for all models
 %
-% OPTIONAL INPUTS:
-%    strucIdx (`int`):          number of the model structure considered
+% OPTIONAL INPUT:
+%    strucIdx (int):    number of the model structure considered
 %
 % OUTPUT:
-%    mcaResults (`struct`):	control and response analysis results
+%    mcaResults (struct):	control and response analysis results
 %
-%               * xControlAvg (`cell`)   : average concentration controls
-%                                          coefficient for each model 
-%                                          ensemble
-%               * vControlAvg (`cell`)   : average flux control coefficients
-%                                          for each model ensemble
-%               * eResponseAvg (`cell`)	 : average enzyme response 
-%                                          coefficient for each model 
-%                                          ensemble
-%               * xResponseAvg (`cell`)	 : average concentration response 
-%                                          coefficients for each model 
-%                                          ensemble
-%               * xcounter (`cell`)      : number of models in the average
-%                                          concentration control coefficient
-%                                          calculation
-%               * vcounter (`cell`)      : number of models in the average 
-%                                          flux control coefficient 
-%                                          calculation
-%               * xRcounter (`cell`)     : number of models in the average 
-%                                          concentration response
-%                                          coefficient calculation
-%               * eRcounter (`cell`)     : number of models in the average 
-%                                          enzyme response coefficient 
-%                                          calculation
-%               * xControl (`cell`)      : concentration control coefficient
-%                                          matrix for each model
-%               * vControl (`cell`)      : flux control coefficient matrix
-%                                          for each model
-%               * xResponse (`cell`)     : concentration response 
-%                                          coefficient matrix for each model
-%               * eResponse (`cell`)     : enzyme response coefficient 
-%                                          matrix for each model
+%               * xControlAvg (*cell*)   : average concentration controls coefficient for each model ensemble
+%               * vControlAvg (*cell*)   : average flux control coefficients for each model ensemble
+%               * eResponseAvg (*cell*)	 : average enzyme response coefficient for each model ensemble
+%               * xResponseAvg (*cell*)	 : average concentration response coefficients for each model ensemble
+%               * xcounter (*cell*)      : number of models in the average concentration control coefficient calculation
+%               * vcounter (*cell*)      : number of models in the average flux control coefficient calculation
+%               * xRcounter (*cell*)     : number of models in the average concentration response coefficient calculation
+%               * eRcounter (*cell*)     : number of models in the average enzyme response coefficient calculation
+%               * xControl (*cell*)      : concentration control coefficient matrix for each model
+%               * vControl (*cell*)      : flux control coefficient matrix for each model
+%               * xResponse (*cell*)     : concentration response coefficient matrix for each model
+%               * eResponse (*cell*)     : enzyme response coefficient matrix for each model
 %
 % .. Authors:
 %       - Pedro Saa     2018 original code

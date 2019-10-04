@@ -7,19 +7,23 @@ function plotControlAndResponseAnalysis(mcaResults, ensemble)
 % To plot only some of the reactions/enzymes, the categories argument
 % should be used to specify which reactions should be included in the 
 % plot.
-% The categories cell should look like: 
+% The categories cell should look like
+%
 %  {reactionGroupName1, listOfReactions1; reactionGroupName2, listOfReactions2}
+% 
 % Example: 
+%
 %  {'Glycolysis',[1,20]; 'Pentose Phosphate Pathway',[25,34]}
+%
 %
 % USAGE:
 %
 %    plotControlAndResponseAnalysis(mcaResults, ensemble, categories)
 %
-% INPUTS:
-%    mcaResults (`struct`):   MCA results
-%    ensemble (`struct`):     model ensemble
-%    categories (`cell`):     categories to be included in the plot
+% INPUT:
+%    mcaResults (struct):   MCA results
+%    ensemble (struct):     model ensemble
+%    categories (cell):     categories to be included in the plot
 %
 % .. Authors:
 %       - Pedro Saa         2018 original code

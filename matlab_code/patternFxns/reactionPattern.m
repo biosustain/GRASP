@@ -1,29 +1,23 @@
 function [revMatrix,forwardFlux,metList] = reactionPattern(patternName,reactionName,flag,strucIdx, promiscuousRxnI)
 % Main function to build the reaction rate equation and to extract the
-% required parameters for the subsequent sampling
+% required parameters for the subsequent sampling.
+%
 %
 % USAGE:
 %
-%    [revMatrix, forwardFlux, metList] = reactionPattern(patternName, 
-%                                                        reactionName, 
-%                                                        flag, strucIdx,
-%                                                        promiscuousRxnI)
+%    [revMatrix, forwardFlux, metList] = reactionPattern(patternName, reactionName, flag, strucIdx, promiscuousRxnI)
 %
-% INPUTS:
-%    patternName (`char vector`):   input file which descrips the enzyme
-%                                   mechanism
-%    reactionName (`char`):         name of the reaction
-%    flag (`int`):                  if 1, write the reaction rate function 
-%                                   (optional) else if 2, write the 
-%                                   corresponding allosteric mechanism
-%    strucIdx (`int`):              ID of the model structure
-%    promiscuousRxnI (`int`):       index of promiscuous reaction
+% INPUT:
+%    patternName (char vector):   input file which descrips the enzyme mechanism
+%    reactionName (char):         name of the reaction
+%    flag (int):                  if 1, write the reaction rate function (optional) else if 2, write the corresponding allosteric mechanism
+%    strucIdx (int):              ID of the model structure
+%    promiscuousRxnI (int):       index of promiscuous reaction
 % 
 % OUTPUT:
-%    revMatrix (`int vector`):    reversibility matrix with all the cycles in the
-%                                 reaction pattern
-%    forwardFlux (`int matrix`):  list with the edges of the forward reactions
-%    metList (`char cell`):       list with the reaction metabolites
+%    revMatrix (int vector):    reversibility matrix with all the cycles in the reaction pattern
+%    forwardFlux (int matrix):  list with the edges of the forward reactions
+%    metList (char cell):       list with the reaction metabolites
 %
 % .. Authors:
 %       - Pedro Saa         2014 original code

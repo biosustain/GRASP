@@ -1,15 +1,16 @@
 function vector = colVector(vector)
-% Transforms a vector into a column-vector
+% Transforms a vector into a column-vector.
+%
 %
 % USAGE:
 %
 %    vector = colVector(vector)
 %
-% INPUTS:
-%    vector (`vector`):      vector or structure array
+% INPUT:
+%    vector (vector):   vector or structure array
 %
 % OUTPUT:
-%    vector (`vector`):	column-vector or structure array
+%    vector (vector):	column-vector or structure array
 %
 % .. Authors:
 %       - Pedro Saa     2014 original code

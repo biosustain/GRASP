@@ -1,26 +1,27 @@
 function stabilityRes = ensembleStabilityTest(ensemble,eigThreshold,strucIdx)
 % Takes in a model ensemble, calculates the jacobian and respective
 % eigenvalues for each model.
-% If any eigenvalue's real part is higher than eighThreshold, the model
+% If any eigenvalue's real part is higher than *eighThreshold*, the model
 % is considered unstable.
+%
 %
 % USAGE:
 %
 %    stabilityRes = ensembleStabilityTest(ensemble, eigThreshold, strucIdx)
 %
-% INPUTS:
-%    ensemble (`struct`):       model ensemble
-%    eigThreshold (`double`):	threshold for positive eigenvalues' real
-%                               part
-% OPTIONAL INPUTS:
-%    strucIdx (`int`):          number of the model structure considered
+% INPUT:
+%    ensemble (struct):       model ensemble
+%    eigThreshold (double):	  threshold for positive eigenvalues' real part
+%
+% OPTIONAL INPUT:
+%    strucIdx (int):          number of the model structure considered
 %
 % OUTPUT:
-%    stabilityRes (`struct`):	stability analysis results
+%    stabilityRes (struct):	stability analysis results
 %
-%               * posEig (`cell`)               : positive eigenvalues for 
-%                                                 unstable models
-%               * unstableModels(`int vector`)  : list of unstable models
+%               * posEig (*cell*)               : positive eigenvalues for unstable models
+%               * unstableModels(*int vector*)  : list of unstable models
+%
 % .. Authors:
 %       - Pedro Saa     2018 original code
 %       - Marta Matos	2019 refactored code

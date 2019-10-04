@@ -1,22 +1,23 @@
 function [nodeList,edge,kineticMatrix,forwardFlux] = readInput(filename)
-% Reads input file of the enzymatic reaction pattern
+% Reads input file of the enzymatic reaction pattern.
 % 
 % Based on https://doi.org/10.1186/1471-2105-10-238 
+%
 %
 % USAGE:
 %
 %    [nodeList, edge, kineticMatrix, forwardFlux] = readInput(filename)
 %
-% INPUTS:
-%    filename (`char`):   pattern name
+% INPUT:
+%    filename (char):   pattern name
 % 
 % OUTPUT:
-%    nodeList (`int vector`):      list with the number of nodes
-%    edge (`int cell`):            edge list
-%    kineticMatrix (`cell`):       stoichmetric matrix of the system, 
-%                                  element are pseudo-first rate constants
-%    forwardFlux (`int matrix`):   list with the edges of the forward 
-%                                  reactions
+%    nodeList (int vector):      list with the number of nodes
+%    edge (int cell):            edge list
+%    kineticMatrix (cell):       stoichmetric matrix of the system, 
+%                                element are pseudo-first rate constants
+%    forwardFlux (int matrix):   list with the edges of the forward 
+%                                reactions
 %
 % .. Authors:
 %       - Pedro Saa     2016 original code, adapted from Qi et al. 2009

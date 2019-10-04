@@ -1,7 +1,8 @@
 function ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold)
 % Samples a kinetic model ensemble which contains only valid models.
 %
-% Valid models are models where:
+% Valid models are models where
+%
 %  - for all reactions the fluxes and respective Gibbs energies are 
 %    compatible;
 %  - the real part of the jacobian eigenvalues is lower than the defined 
@@ -9,31 +10,30 @@ function ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThr
 %  - the difference between the predicted flux and the reference flux
 %    is negligible.
 %
-% It will sample models until there are n valid models, where n is
+% It will sample models until there are *n* valid models, where n is
 % specified in the input excel file as the number of particles.
-% To avoid sampling forever, maxNumberOfSamples is defined and no more
-% than maxNumberOfSamples models will be sampled, regardless of the number
+% To avoid sampling forever, *maxNumberOfSamples* is defined and no more
+% than *maxNumberOfSamples* models will be sampled, regardless of the number
 % of valid models sampled.
 % 
 % Models with a real part of the jacobian eigenvalues greather than 
-% eigThreshold are discarded.
+% *eigThreshold* are discarded.
 %
 % If the output directory doesn't exist it is created.
 %
+%
 % USAGE:
 %
-%    ensemble = buildEnsemble(inputFile, outputFile, maxNumberOfSamples,
-%                             eigThreshold)
+%    ensemble = buildEnsemble(inputFile, outputFile, maxNumberOfSamples, eigThreshold)
 %
-% INPUTS:
-%    inputFile (`char`):            path to input file
-%    outputFile (`char`):           path to output file
-%    maxNumberOfSamples (`int`):	maximum number of models to be sampled
-%    eigThreshold (`double`):       threshold for positive eigenvalues' 
-%                                   real part
+% INPUT:
+%    inputFile (char):            path to input file
+%    outputFile (char):           path to output file
+%    maxNumberOfSamples (int):    maximum number of models to be sampled
+%    eigThreshold (double):       threshold for positive eigenvalues' real part
 %
 % OUTPUT:
-%    ensemble (`struct`):    model ensemble
+%    ensemble (struct):    model ensemble
 %
 % .. Authors:
 %       - Pedro Saa     2016 original code

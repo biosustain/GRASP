@@ -1,5 +1,5 @@
 function [ensemble, models] = sampleGibbsReactionEnergies(ensemble, models, strucIdx)
-% Function used to sample Gibbs energies for each reaction
+% Function used to sample Gibbs energies for each reaction.
 %
 % A = G0 + RT S' ln(x)
 %
@@ -7,19 +7,19 @@ function [ensemble, models] = sampleGibbsReactionEnergies(ensemble, models, stru
 %
 % The method is going to change, so no need to write a good description
 %
+%
 % USAGE:
 %
-%    [ensemble, models] = sampleGeneralReversibilities(ensemble, models, 
-%                                                      strucIdx)
+%    [ensemble, models] = sampleGeneralReversibilities(ensemble, models, strucIdx)
 %
-% INPUTS:
-%    ensemble (`struct`):	model ensemble
-%    models (`struct`):     model
-%    strucIdx (`int`):      number of the model structure considered
+% INPUT:
+%    ensemble (struct):	  model ensemble
+%    models (struct):     model
+%    strucIdx (int):      number of the model structure considered
 %
 % OUTPUT:
-%    ensemble (`struct`):	model ensemble
-%    models (`struct`):     model data structure 
+%    ensemble (struct):	  model ensemble
+%    models (struct):     model data structure 
 %
 % .. Authors:
 %       - Marta Matos       2019 original code

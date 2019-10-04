@@ -1,19 +1,20 @@
 function ensemble = initializeEnsemble(ensemble,popIdx,verbose)
-% Initialize ensemble structure
+% Initialize ensemble structure.
+%
 %
 % USAGE:
 %
 %    ensemble = initializeEnsemble(ensemble, popIdx, verbose)
 %
-% INPUTS:
-%    ensemble (`struct`):  model ensemble
-%    popIdx (`int`):       population ID
+% INPUT:
+%    ensemble (struct):  model ensemble
+%    popIdx (int):       population ID
 %
-% OPTIONAL INPUTS:
-%    verbose (`int`):      verbosity level
+% OPTIONAL INPUT:
+%    verbose (int):      verbosity level
 %                                  
 % OUTPUT:
-%    ensemble (`struct`):  initialized model ensemble
+%    ensemble (struct):  initialized model ensemble
 %
 % .. Authors:
 %       - Pedro Saa         2016 original code

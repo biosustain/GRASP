@@ -1,13 +1,14 @@
 function buildFixedExchange(reactionName,strucIdx)
-% Build exchange kinetic fxn
+% Build exchange kinetic function.
+%
 %
 % USAGE:
 %
 %    buildFixedExchange(reactionName, strucIdx)
 %
-% INPUTS:
-%    reactionName (`char`):   reaction name
-%    strucIdx (`int`):        ID of the model structure
+% INPUT:
+%    reactionName (char):   reaction name
+%    strucIdx (int):        ID of the model structure
 %
 % OUTPUT:
 %    written .m file with the reaction mechanism

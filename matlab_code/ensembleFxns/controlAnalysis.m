@@ -4,48 +4,37 @@ function mcaResults = controlAnalysis(ensemble,saveResMatrices,strucIdx)
 % ensemble.
 %
 % It can also return the control coefficient and elasticity matrices for
-% each model in the ensemble if saveResMatrices is set to true. But keep 
+% each model in the ensemble if *saveResMatrices* is set to true. But keep 
 % in mind that for large models this can use a lot of RAM and CPU.
 %
-% The implementation is based on Computational Models of Metabolism: 
-%  Stability and Regulation in Metabolic Networks, 
-%  section 1.7.2 on Metabolic Control Analysis
-% (https://doi.org/10.1002/9780470475935.ch3).
+% The implementation is based on 
+%
+% - Computational Models of Metabolism  Stability and Regulation in 
+%   Metabolic Networks, section 1.7.2 on Metabolic Control Analysis
+%   (https://doi.org/10.1002/9780470475935.ch3).
+%
 %
 % USAGE:
 %
 %    mcaResults = controlAnalysis(ensemble, saveResMatrices, strucIdx)
 %
-% INPUTS:
-%    ensemble (`struct`):           model ensemble
-%    saveResMatrices (`logical`):   whether or not to save the elasticity
-%                                   and control coefficient matrices for 
-%                                   all models
+% INPUT:
+%    ensemble (struct):           model ensemble
+%    saveResMatrices (logical):   whether or not to save the elasticity and control coefficient matrices for all models
 %
-% OPTIONAL INPUTS:
-%    strucIdx (`int`):          number of the model structure considered
+% OPTIONAL INPUT:
+%    strucIdx (int):	number of the model structure considered
 %
 % OUTPUT:
-%    mcaResults (`struct`):	MCA results
+%    mcaResults (struct):	MCA results
 %
-%               * xControlAvg (`cell`)   : average concentration control
-%                                          coefficient for each model 
-%                                          ensemble
-%               * vControlAvg (`cell`)   : average flux control coefficient
-%                                          for each model ensemble
-%               * xcounter (`cell`)      : number of models in the average
-%                                          concentration control 
-%                                          coefficient calculation
-%               * vcounter (`cell`)      : number of models in the average 
-%                                          flux control coefficient 
-%                                          calculation
-%               * xControl (`cell`)      : concentration control 
-%                                          coefficient matrix for each 
-%                                          model
-%               * vControl (`cell`)      : flux control coefficient matrix
-%                                          for each model
-%               * E_x_nor (`cell`)       : normalized elasticity matrix for
-%                                          each model
+%               * xControlAvg (*cell*)   : average concentration control coefficient for each model ensemble
+%               * vControlAvg (*cell*)   : average flux control coefficient for each model ensemble
+%               * xcounter (*cell*)      : number of models in the average concentration control coefficient calculation
+%               * vcounter (*cell*)      : number of models in the average flux control coefficient calculation
+%               * xControl (*cell*)      : concentration control coefficient matrix for each model
+%               * vControl (*cell*)      : flux control coefficient matrix for each model
+%               * E_x_nor (*cell*)       : normalized elasticity matrix for each model
 %
 % .. Authors:
 %       - Pedro Saa     2018 original code

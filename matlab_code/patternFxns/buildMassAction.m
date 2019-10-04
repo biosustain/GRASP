@@ -1,13 +1,14 @@
 function buildMassAction(reactionName,strucIdx)
-% Build mass action kinetic fxn
+% Build mass action kinetic function.
+%
 %
 % USAGE:
 %
 %    buildMassAction(reactionName, strucIdx)
 %
-% INPUTS:
-%    reactionName (`char`):   reaction name
-%    strucIdx (`int`):        ID of the model structure
+% INPUT:
+%    reactionName (char):   reaction name
+%    strucIdx (int):        ID of the model structure
 %
 % OUTPUT:
 %    written .m file with the reaction mechanism

@@ -1,16 +1,17 @@
 function buildAllosteric(metList,reactionName,negEffectors,posEffectors)
-% Builds allosteric reaction file
+% Builds allosteric reaction file.
+%
 %
 % USAGE:
 %
 %    buildAllosteric(metList, reactionName, negEffectors, posEffectors)
 %
-% INPUTS:
-%    metList (`struct`):      list with all mets concentrations showing up in the
+% INPUT:
+%    metList (struct):      list with all mets concentrations showing up in the
 %                             pseudo-first-order rate constants 
-%    reactionName (`char`):   reaction name
-%    negEffectors (`vector`): list with negative effectors
-%    posEffectors (`vector`): list with positive effectors
+%    reactionName (char):   reaction name
+%    negEffectors (vector): list with negative effectors
+%    posEffectors (vector): list with positive effectors
 %
 % OUTPUT:
 %    written .m file with the reaction mechanism
