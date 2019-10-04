@@ -36,12 +36,12 @@ classdef checkStabilityTest < matlab.unittest.TestCase
             ensemble = ensemble.ensemble;
             
             strucIdx = 1;
-            maxEigenvalue = checkStability(ensemble,models,strucIdx);
+            eigThreshold = 10^-5;
+            isModelStable = checkStability(ensemble,models,strucIdx,eigThreshold);
             
-            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResCheckStability1'));
-            trueRes = trueRes.maxEigenvalue;
+            trueRes = true;
                    
-            testCase.verifyEqual(trueRes, maxEigenvalue)
+            testCase.verifyEqual(trueRes, isModelStable)
         end
     end
 end
