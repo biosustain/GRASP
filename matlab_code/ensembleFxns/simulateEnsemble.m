@@ -1,6 +1,14 @@
-function simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC, interruptTime)
-% Takes in a model ensemble, and initial conditions for enzymes and 
+function simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC, metsAbsOrRel, interruptTime)
+% Takes in a model ensemble and initial conditions for enzyme and 
 % metabolite concentrations and simulates all models in the ensemble.
+%
+% For metabolites, the initial conditions can be given either in terms of
+% relative or absolute concentrations (mol/L) by setting *metsAbsOrRel* to
+% 'rel' or 'abs', respectively.
+%
+% If metabolite concentrations are given as absolute concentrations, the
+% flux values returned will also be absolute values, otherwise they'll be
+% relative values (to the reference flux).
 %
 % If the simulation of a given model takes longer than the specified 
 % *interrupTime*, then it is interrupted and no simulation results are  
@@ -20,6 +28,7 @@ function simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC
 %    finalTime (double):          simulation time
 %    enzymesIC (double vector):	  initial conditions for enzyme concentrations
 %    metsIC (double vector):      initial conditions for metabolite concentrations
+%    metsAbsOrRel (char):         specify whether metabolite initial conditions are relative or absolute concentrations. Accepted values for this variable are 'abs' and 'rel'
 %    interruptTime (double)       maximum time for each simulation, given in seconds
 %
 % OUTPUT:
@@ -31,6 +40,11 @@ function simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC
 %
 % .. Authors:
 %       - Marta Matos       2019 original code
+
+if ~strcmp(metsAbsOrRel, 'rel') && ~strcmp(metsAbsOrRel, 'abs')
+    error('The value of the variable metsAbsOrRel must be either "rel" or "abs".');
+end
+
 
 strucIdx = 1;
 if ensemble.populations(end).strucIdx(1)==0
@@ -70,10 +84,15 @@ simulationRes = cell(1, numModels);
 disp ('Simulating models.');
 
 for jx = 1:numModels
-   
+
     model = ensemble.populations(end).models(particleIdx(jx));
     metConcRef = model.metConcRef(ensemble.metsBalanced);
     
+    if strcmp(metsAbsOrRel, 'abs')
+        perturbInd = find(metsIC ~= 1);
+        metsIC(perturbInd) = metsIC(perturbInd) ./ metConcRef(perturbInd);
+    end
+        
     outputFun= @(t,y,flag)interuptFun(t,y,flag,interruptTime);
     opts = odeset('RelTol',1e-13,'OutputFcn',outputFun);
 
@@ -84,7 +103,10 @@ for jx = 1:numModels
         simulationRes{jx}.t = t;
         simulationRes{jx}.conc = y;   
         simulationRes{jx}.flux = calculateFluxes(t,y,enzymesIC,kineticFxn,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits);   
-        simulationRes{jx}.flux = simulationRes{jx}.flux ./ ensemble.fluxRef';
+        
+        if strcmp(metsAbsOrRel, 'rel')
+            simulationRes{jx}.flux = simulationRes{jx}.flux ./ ensemble.fluxRef';
+        end
         
     catch ME
         if strcmp(ME.identifier,'interuptFun:Interupt')
