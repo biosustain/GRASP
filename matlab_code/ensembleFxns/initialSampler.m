@@ -236,13 +236,15 @@ while true
     if any(abs(testFlux-ensemble.fluxRef)>1e-6) || any(isnan(testFlux))
         isModelValid = false;
         disp(['There are consistency problems during the reaction sampling. Model ID: ',num2str(strucIdx)]);
+        return
     end
     
     % Test if the real part of the jacobian's eigenvalue is greater than
-    %  threshold
+    % threshold
     isModelValid = checkStability(ensemble,models,strucIdx, ensemble.eigThreshold);
     if ~isModelValid
         disp(['There are eigenvalues larger than ', num2str(ensemble.eigThreshold), '. Model ID: ',num2str(strucIdx)]);
+        return
     end
     
 
