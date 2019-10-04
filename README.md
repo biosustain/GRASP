@@ -17,6 +17,7 @@ It also performs Metabolic Control Analysis (MCA) and stability analysis on the 
   * [Building models](#building-models)
   * [Analyzing model ensembles](#analyzing-model-ensembles)
 * [Building the documentation](#building-the-documentation)
+* [Running unit tests](#running-unit-tests)
 * [Known issues and limitations](#known-issues-and-limitations)
 
 
@@ -153,6 +154,11 @@ The documentation is done in sphinx, so first you need to install all the depend
  - `environment.yml` which you can use instead of `requirements.txt` if you are using conda environments.
 
  Once all the dependencies are installed (please make sure the versions are correct, very important!), you can just run `make html`  while on the `matlab_code/doc` folder.
+
+
+## Running unit tests
+
+To run the unit tests, at the moment, go to `matlab_code/tests` and run the script `run_unit_tests.m`.
 
 
 ## Know issues and limitations
