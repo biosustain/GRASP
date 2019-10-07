@@ -38,7 +38,7 @@ function mcaResults = controlAndResponseAnalysis(ensemble,saveResMatrices,strucI
 %    mcaResults = controlAndResponseAnalysis(ensemble, saveResMatrices, strucIdx)
 %
 % INPUT:
-%    ensemble (struct):           model ensemble
+%    ensemble (struct):           model ensemble. See buildEnsemble for fields description
 %    saveResMatrices (logical):   whether or not to save the elasticity and control coefficient matrices for all models
 %
 % OPTIONAL INPUT:

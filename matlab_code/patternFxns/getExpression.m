@@ -11,7 +11,7 @@ function expression = getExpression(node,pattern,kineticMatrix,expression)
 % INPUT:
 %    node (int vector):       initial node index
 %    pattern (int matrix):    specific pattern
-%    kineticMatrix (cell):	stoichmetric matrix of the system, element are pseudo-first rate constants
+%    kineticMatrix (cell):	  stoichmetric matrix of the system, element are pseudo-first rate constants
 %    expression (cell):       equation expression
 % 
 % OUTPUT:

@@ -13,8 +13,7 @@ function A = algebra(B,C)
 %    C (double):	input of number string cell (only one link)
 %
 % OUTPUT:
-%    A (struct):  Wang Algebra result calculate from input B and C, 
-%                 result is a string cell
+%    A (struct):  Wang Algebra result calculate from input B and C, result is a string cell
 %
 % .. Authors:
 %       - Pedro Saa     2014 original code adapted from Qi et al. 2009

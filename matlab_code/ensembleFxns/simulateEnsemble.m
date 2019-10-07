@@ -12,9 +12,9 @@ function simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC
 %    simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC, interruptTime)
 %
 % INPUT:
-%    ensemble (struct):           model ensemble
+%    ensemble (struct):           model ensemble. See buildEnsemble for fields description
 %    finalTime (double):          simulation time
-%    enzymesIC (double vector):	initial conditions for enzyme concentrations
+%    enzymesIC (double vector):	  initial conditions for enzyme concentrations
 %    metsIC (double vector):      initial conditions for metabolite concentrations
 %    interruptTime (double)       maximum time for each simulation, given in seconds
 %

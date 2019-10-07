@@ -10,7 +10,7 @@ function stabilityRes = ensembleStabilityTest(ensemble,eigThreshold,strucIdx)
 %    stabilityRes = ensembleStabilityTest(ensemble, eigThreshold, strucIdx)
 %
 % INPUT:
-%    ensemble (struct):       model ensemble
+%    ensemble (struct):       model ensemble. See buildEnsemble for fields description
 %    eigThreshold (double):	  threshold for positive eigenvalues' real part
 %
 % OPTIONAL INPUT:

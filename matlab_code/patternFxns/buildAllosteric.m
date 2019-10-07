@@ -7,8 +7,7 @@ function buildAllosteric(metList,reactionName,negEffectors,posEffectors)
 %    buildAllosteric(metList, reactionName, negEffectors, posEffectors)
 %
 % INPUT:
-%    metList (struct):      list with all mets concentrations showing up in the
-%                             pseudo-first-order rate constants 
+%    metList (struct):      list with all mets concentrations showing up in the pseudo-first-order rate constants 
 %    reactionName (char):   reaction name
 %    negEffectors (vector): list with negative effectors
 %    posEffectors (vector): list with positive effectors

@@ -13,8 +13,7 @@ function [extremePath] = calculateExtremePathways(Selem)
 %    Selem (int matrix):	Elementary Flux Matrix  
 %
 % OUTPUT:
-%    extremePath (int matrix):	transpose of the flux vector for the 
-%                               extreme pathways
+%    extremePath (int matrix):	transpose of the flux vector for the extreme pathways
 %
 % .. Authors:
 %       - Nicholas Cowie	2019 original code

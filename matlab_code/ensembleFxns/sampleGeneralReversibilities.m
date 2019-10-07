@@ -9,14 +9,14 @@ function [ensemble, models, isModelValid] = sampleGeneralReversibilities(ensembl
 %    [ensemble, models, isModelValid] = sampleGeneralReversibilities(ensemble, models, RT, strucIdx)
 %
 % INPUT:
-%    ensemble (struct):	  model ensemble
-%    models (struct):     model
+%    ensemble (struct):	  model ensemble. See buildEnsemble for fields description
+%    models (struct):     model. See initialSampler for fields description
 %    RT (double):         product of the gas constant and temperature
 %    strucIdx (int):      number of the model structure considered
 %
 % OUTPUT:
-%    ensemble (struct):       model ensemble
-%    models (struct):         model structure with added reversibilities
+%    ensemble (struct):       model ensemble. See buildEnsemble for fields description
+%    models (struct):         model structure with added reversibilities. See initialSampler for fields description
 %    isModelValid (logical):  whether or not the model is valid
 %
 % .. Authors:

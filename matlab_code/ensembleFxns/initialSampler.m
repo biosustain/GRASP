@@ -19,11 +19,21 @@ function [isModelValid,models,strucIdx,xopt,tolScore,simulatedFlux] = initialSam
 %    [isModelValid, models, strucIdx, xopt, tolScore, simulatedFlux] = initialSampler(ensemble)
 %
 % INPUT:
-%    ensemble (struct):  initialized model ensemble
+%    ensemble (struct):  initialized model ensemble. See initializeEnsemble for a list of all fields in the ensemble struct.
 %
 % OUTPUT:
 %    isModelValid (logical):   whether or not model is valid.
 %    models (struct):          sampled model
+%               * poolFactor (*double vector*) : [TODO Pedro]
+%               * refFlux (*double vector*)    : reference reaction fluxes (mean)
+%               * metConcRef (*double vector*) : reference metabolite concentrations (sampled within thermodynamically feasible ranges)
+%               * gibbsTemp (*double vector*)  : Gibbs reactions energies
+%               * rxnParams (*struct*)         : reactions parameters
+%                       * reversibilities (*double vector*)  : sampled elementary reaction reversibilities
+%                       * enzymeAbundances (*double vector*) : sampled enzyme intermediates abundances
+%                       * modifierElemFlux (*double vector*) : [TODO Pedro]
+%                       * branchFactor (*double vector*)     : [TODO Pedro]
+%                       * kineticParams (*double vector*)    : reaction kinetic parameters
 %    strucIdx (int):           model structure ID
 %    xopt (logical):           [TODO: Pedro]
 %    tolScore (logical):       [TODO: Pedro]

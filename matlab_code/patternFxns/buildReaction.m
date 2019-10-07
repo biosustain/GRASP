@@ -10,10 +10,8 @@ function buildReaction(state,rateList,metList,numTerm,prodNum,reactionName, prom
 %
 % INPUT:
 %    state (char cell):       output from reactionPatterm     
-%    rateList (char cell):	  list with all the rate constants in the 
-%                             system
-%    metList (char cell):     list with all mets concentrations showing 
-%                             up in thepseudo-first-order rate constants
+%    rateList (char cell):	  list with all the rate constants in the system
+%    metList (char cell):     list with all mets concentrations showing up in thepseudo-first-order rate constants
 %    numTerm (char cell):     numerator terms
 %    prodNum (int vector):	  products terms
 %    reactionName (char):     reaction name

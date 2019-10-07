@@ -7,12 +7,12 @@ function [models] = sampleEnzymeAbundances(ensemble,models,strucIdx)
 %    models = sampleEnzymeAbundances(ensemble, models, strucIdx)
 %
 % INPUT:
-%    ensemble (struct):	  model ensemble
-%    models (struct):     model
+%    ensemble (struct):	  model ensemble. See buildEnsemble for fields description
+%    models (struct):     model. See initialSampler for fields description
 %    strucIdx (int):      number of the model structure considered
 %
 % OUTPUT:
-%    models (struct):     model structure with added enzyme abundances
+%    models (struct):     model structure with added enzyme abundances. See initialSampler for fields description
 %
 % .. Authors:
 %       - Pedro Saa         2016 original code

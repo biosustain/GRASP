@@ -8,8 +8,7 @@ function W = getWeight(shortPath,forwardFlux)
 %
 % INPUT:
 %    shortPath (int vector):      common path
-%    forwardFlux (int matrix):	  list with the edges of the forward 
-%                                 reactions
+%    forwardFlux (int matrix):	  list with the edges of the forward reactions
 % 
 % OUTPUT:
 %    W (int vector):	weight vector

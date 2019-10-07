@@ -14,10 +14,8 @@ function [nodeList,edge,kineticMatrix,forwardFlux] = readInput(filename)
 % OUTPUT:
 %    nodeList (int vector):      list with the number of nodes
 %    edge (int cell):            edge list
-%    kineticMatrix (cell):       stoichmetric matrix of the system, 
-%                                element are pseudo-first rate constants
-%    forwardFlux (int matrix):   list with the edges of the forward 
-%                                reactions
+%    kineticMatrix (cell):       stoichmetric matrix of the system, element are pseudo-first rate constants
+%    forwardFlux (int matrix):   list with the edges of the forward reactions
 %
 % .. Authors:
 %       - Pedro Saa     2016 original code, adapted from Qi et al. 2009

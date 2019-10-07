@@ -9,8 +9,8 @@ function isModelValid = checkStability(ensemble,models,strucIdx,eigThreshold)
 %    isModelValid = checkStability(ensemble, models, strucIdx, eigThreshold)
 %
 % INPUT:
-%    ensemble (struct):       model ensemble
-%    models (struct):         model
+%    ensemble (struct):       model ensemble. See buildEnsemble for fields description
+%    models (struct):         model. See initialSampler for fields description
 %    strucIdx (int):          ID of the model structure considered
 %    eigThreshold (double):	  threshold for positive eigenvalues' real part
 %

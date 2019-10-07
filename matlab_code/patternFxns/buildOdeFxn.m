@@ -7,7 +7,7 @@ function buildOdeFxn(ensemble, kineticFxn, strucIdx)
 %    buildOdeFxn(ensemble, kineticFxn, strucIdx)
 %
 % INPUT:
-%    ensemble (struct):   model ensemble
+%    ensemble (struct):   model ensemble. See buildEnsemble for fields description
 %    kineticFxn (char):	  name of the kinetic function
 %    strucIdx (int):      ID of the model structure
 %

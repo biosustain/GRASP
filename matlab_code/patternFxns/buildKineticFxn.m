@@ -7,8 +7,8 @@ function [rxnMetLinks,freeVars,metsActive] = buildKineticFxn(ensemble,kineticFxn
 %    rxnMetLinks, freeVars, metsActive] = buildKineticFxn(ensemble, kineticFxn, strucIdx)
 %
 % INPUT:
-%    ensemble (struct):   model ensemble
-%    kineticFxn (char):	name of the kinetic function
+%    ensemble (struct):   model ensemble. See buildEnsemble for fields description
+%    kineticFxn (char):	  name of the kinetic function
 %    strucIdx (int):      ID of the model structure
 %
 % OUTPUT:
