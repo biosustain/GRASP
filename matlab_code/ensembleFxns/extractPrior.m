@@ -7,10 +7,10 @@ function ensemble = extractPrior(ensemble)
 %    ensemble = extractPrior(ensemble)
 %
 % INPUT:
-%    ensemble (struct):    model ensemble. See buildEnsemble for fields description
+%    ensemble (struct):    model ensemble, see buildEnsemble for fields description
 %
 % OUTPUT:
-%    ensemble (struct):    model ensemble. See buildEnsemble for fields description
+%    ensemble (struct):    model ensemble, see buildEnsemble for fields description
 %
 % .. Authors:
 %       - Pedro Saa     2016 original code

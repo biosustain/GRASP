@@ -22,7 +22,7 @@ function plotControlAndResponseAnalysis(mcaResults, ensemble)
 %
 % INPUT:
 %    mcaResults (struct):   MCA results
-%    ensemble (struct):     model ensemble. See buildEnsemble for fields description
+%    ensemble (struct):     model ensemble, see buildEnsemble for fields description
 %    categories (cell):     categories to be included in the plot
 %
 % .. Authors:

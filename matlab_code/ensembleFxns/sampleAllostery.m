@@ -8,13 +8,13 @@ function [ensemble, models] = sampleAllostery(ensemble,models,strucIdx)
 %    [ensemble, models] = sampleAllostery(ensemble, models, strucIdx)
 %
 % INPUT:
-%    ensemble (struct):       model ensemble. See buildEnsemble for fields description
-%    models (struct):         model. See initialSampler for fields description
+%    ensemble (struct):       model ensemble, see buildEnsemble for fields description
+%    models (struct):         model, see initialSampler for fields description
 %    strucIdx (int):          number of the model structure considered
 %
 % OUTPUT:
-%    ensemble (struct):  initialized model ensemble. See buildEnsemble for fields description
-%    models (struct):    model structure with added allosteric parameters. See initialSampler for fields description
+%    ensemble (struct):  initialized model ensemble, see buildEnsemble for fields description
+%    models (struct):    model structure with added allosteric parameters, see initialSampler for fields description
 %
 % .. Authors:
 %       - Pedro Saa         2016 original code

@@ -19,7 +19,7 @@ function [isModelValid,models,strucIdx,xopt,tolScore,simulatedFlux] = initialSam
 %    [isModelValid, models, strucIdx, xopt, tolScore, simulatedFlux] = initialSampler(ensemble)
 %
 % INPUT:
-%    ensemble (struct):  initialized model ensemble. See initializeEnsemble for a list of all fields in the ensemble struct.
+%    ensemble (struct):  initialized model ensemble, see initializeEnsemble for a list of all fields in the ensemble struct.
 %
 % OUTPUT:
 %    isModelValid (logical):   whether or not model is valid.

@@ -13,13 +13,13 @@ function [ensemble, models] = sampleGibbsReactionEnergies(ensemble, models, stru
 %    [ensemble, models] = sampleGeneralReversibilities(ensemble, models, strucIdx)
 %
 % INPUT:
-%    ensemble (struct):	  model ensemble. See buildEnsemble for fields description
-%    models (struct):     model. See initialSampler for fields description
+%    ensemble (struct):	  model ensemble, see buildEnsemble for fields description
+%    models (struct):     model, see initialSampler for fields description
 %    strucIdx (int):      number of the model structure considered
 %
 % OUTPUT:
-%    ensemble (struct):	  model ensemble. See buildEnsemble for fields description
-%    models (struct):     model data structure. See initialSampler for fields description
+%    ensemble (struct):	  model ensemble, see buildEnsemble for fields description
+%    models (struct):     model data structure, see initialSampler for fields description
 %
 % .. Authors:
 %       - Marta Matos       2019 original code
