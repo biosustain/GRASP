@@ -430,6 +430,7 @@ for jx = 1:ensemble.numStruct
         ensemble.metsActive  = metsActive;
     end
     buildKineticFxn(ensemble,ensemble.kineticFxn{jx},jx);
+    buildOdeFxn(ensemble,ensemble.kineticFxn{jx},jx);
     disp(['Kinetic information loaded and kinetic model built: Structure ',num2str(jx),'.']);
 end
 

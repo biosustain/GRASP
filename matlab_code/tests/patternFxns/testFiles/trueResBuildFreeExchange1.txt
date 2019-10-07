@@ -1,0 +1,3 @@
+function v = testFreeExchange1(K,numConditions)
+% Free exchange definition 
+v = K(ones(1,numConditions));

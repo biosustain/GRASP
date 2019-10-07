@@ -6,7 +6,7 @@ function [extremePath] = calculateExtremePathways(Selem)
 % Inputs:       Selem (Elementary Flux Matrix)
 %
 % Outputs:      Transpose of the flux vector for the extreme pathways
-%--------------------- Nicholas Cowie 2016 --------------------------------
+%--------------------- Nicholas Cowie 2019 --------------------------------
 
 
 S = Selem';
