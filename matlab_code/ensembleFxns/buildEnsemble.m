@@ -34,6 +34,7 @@ function ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThr
 %
 % OUTPUT:
 %    ensemble (struct):    model ensemble
+%
 %               * description (*char*)            : model name basically
 %               * sampler (*char*)                : specifies the sampling mode: ORACLE or rejection [TODO Pedro check if this is correct]
 %               * solver (*char*)                 : which solver to use for the rejection sampler
@@ -107,28 +108,33 @@ function ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThr
 %               * eigThreshold (*double*)         : threshold for the real part of the jacobian eigenvalues, if there is any higher than the threshold the model is discarded
 %               * thermoActive (*int vector*)     : [TODO Pedro]
 %               * populations (*struct*)          : [TODO Pedro]
-%                       * probParams (*struct*)
+%
+%                       * probParams (*struct*)      : [TODO Pedro]
+%
 %                               * muGibbsFactor (*double vector*)     : [TODO Pedro]
 %                               * sigmaGibbsFactor (*double vector*)  : [TODO Pedro]
 %                               * rxnParams (*struct*)                : reaction parameters
+%
 %                                       * alphaEnzymeAbundances (*int vector*)  : [TODO Pedro]
 %                                       * alphaReversibilities (*int vector*)   : [TODO Pedro]
 %                                       * betaModifierElemeFlux (*int vector*)  : [TODO Pedro]
 %                                       * betaBranchFactor (*int vector*)       : [TODO Pedro]
-%                        * weights (*double vector*)  : [TODO Pedro]
-%                        * models (*struct*)          : models in the ensemble
+%                       * weights (*double vector*)  : [TODO Pedro]
+%                       * models (*struct*)          : models in the ensemble
+%
 %                                * poolFactor (*double vector*)  : [TODO Pedro]
 %                                * gibbsFactor (*double vector*) : [TODO Pedro]
 %                                * rxnParams (*struct*)          : reaction parameters
+%
 %                                        * reversibilities (*double vector*)   : sampled elementary reaction reversibilities
 %                                        * enzymeAbundances (*double vector*)  : sampled enzyme intermediates abundances
 %                                        * branchFactor (*double vector*)      : [TODO Pedro]
 %                                        * modifierElemeFlux (*double vector*) : [TODO Pedro]
 %                                        * kineticParams (*double vector*)     : reaction kinetic parameters
-%                        * strucIdx (*double vector*)  : model structure ID
-%                        * tolScore (*double vector*)  : [TODO Pedro]
-%                        * xopt (*cell*)               : [TODO Pedro]
-%                        * simFluxes (*cell*)          : [TODO Pedro]
+%                       * strucIdx (*double vector*)  : model structure ID
+%                       * tolScore (*double vector*)  : [TODO Pedro]
+%                       * xopt (*cell*)               : [TODO Pedro]
+%                       * simFluxes (*cell*)          : [TODO Pedro]
 %               * replenished particles (*int*)   : [TODO Pedro]
 %
 % .. Authors:

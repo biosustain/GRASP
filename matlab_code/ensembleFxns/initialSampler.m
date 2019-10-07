@@ -24,11 +24,13 @@ function [isModelValid,models,strucIdx,xopt,tolScore,simulatedFlux] = initialSam
 % OUTPUT:
 %    isModelValid (logical):   whether or not model is valid.
 %    models (struct):          sampled model
+%
 %               * poolFactor (*double vector*) : [TODO Pedro]
 %               * refFlux (*double vector*)    : reference reaction fluxes (mean)
 %               * metConcRef (*double vector*) : reference metabolite concentrations (sampled within thermodynamically feasible ranges)
 %               * gibbsTemp (*double vector*)  : Gibbs reactions energies
 %               * rxnParams (*struct*)         : reactions parameters
+%
 %                       * reversibilities (*double vector*)  : sampled elementary reaction reversibilities
 %                       * enzymeAbundances (*double vector*) : sampled enzyme intermediates abundances
 %                       * modifierElemFlux (*double vector*) : [TODO Pedro]

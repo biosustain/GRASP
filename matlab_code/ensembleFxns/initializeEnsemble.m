@@ -89,19 +89,24 @@ function ensemble = initializeEnsemble(ensemble,popIdx,verbose)
 %               * eigThreshold (*double*)         : threshold for the real part of the jacobian eigenvalues, if there is any higher than the threshold the model is discarded
 %               * thermoActive (*int vector*)     : [TODO Pedro]
 %               * populations (*struct*)          : [TODO Pedro]
+%
 %                       * probParams (*struct*)
+%
 %                               * muGibbsFactor (*double vector*)     : [TODO Pedro]
 %                               * sigmaGibbsFactor (*double vector*)  : [TODO Pedro]
 %                               * rxnParams (*struct*)                : reaction parameters
+%
 %                                       * alphaEnzymeAbundances (*int vector*)  : [TODO Pedro]
 %                                       * alphaReversibilities (*int vector*)   : [TODO Pedro]
 %                                       * betaModifierElemeFlux (*int vector*)  : [TODO Pedro]
 %                                       * betaBranchFactor (*int vector*)       : [TODO Pedro]
-%                        * weights (*double vector*)  : [TODO Pedro]
-%                        * models (*struct*)          : models in the ensemble
+%                       * weights (*double vector*)  : [TODO Pedro]
+%                       * models (*struct*)          : models in the ensemble
+%
 %                                * poolFactor (*double vector*)  : [TODO Pedro]
 %                                * gibbsFactor (*double vector*) : [TODO Pedro]
 %                                * rxnParams (*struct*)          : reaction parameters
+%
 %                                        * reversibilities (*double vector*)   : sampled elementary reaction reversibilities
 %                                        * enzymeAbundances (*double vector*)  : sampled enzyme intermediates abundances
 %                                        * branchFactor (*double vector*)      : [TODO Pedro]
