@@ -1,6 +1,9 @@
 function buildOdeFxn(ensemble, kineticFxn, strucIdx)
 % Builds the ODE function .m file that is used to simulate the model.
 %
+% The function is build by modifying the original kinetic function produced
+% by buildKineticFxn.
+%
 %
 % USAGE:
 %
