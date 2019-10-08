@@ -21,17 +21,18 @@ function [nodeList,edge,kineticMatrix,forwardFlux] = readInput(filename)
 %       - Pedro Saa     2016 original code, adapted from Qi et al. 2009
 
 % 1. Retrieve information from input file
+
 try
-    InputFileFlow = textread([filename,'.txt'],'%s');
+    currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+    filepath = fullfile(currentPath{1}, '..', '..', 'patterns', filename);
+    InputFileFlow = textread([filepath,'.txt'],'%s');
 catch
-	try
-        currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
-        filename = fullfile(currentPath{1}, '..', '..', 'patterns', filename);
-        InputFileFlow = textread([filename,'.txt'],'%s');
-    catch
-        error(strcat('The file for the mechanism named ', filename, ' could not be found. Please make sure the kinetic mechanism name corresponds to a file with the same name in the folder patterns. Also the file extension should be ".txt"'));
-    end
+    error(['The file for the mechanism named ', filename, ' could not be found: ', filepath, ...
+            newline, ...
+           'Please make sure the kinetic mechanism name corresponds to a file ', ...
+           'with the same name in the folder patterns. Also the file extension should be ".txt"']);
 end
+
 FileLength = length(InputFileFlow); nodeList = [];
 for i = 1 : FileLength/3     
     num1 = str2num(InputFileFlow{i*3-2});
