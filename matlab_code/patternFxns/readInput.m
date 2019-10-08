@@ -29,7 +29,7 @@ catch
         filename = fullfile(currentPath{1}, '..', '..', 'patterns', filename);
         InputFileFlow = textread([filename,'.txt'],'%s');
     catch
-        error(strcat('The mechanism named ', filename, ' file you added could not be found. Please make sure the kinetic mechanism name corresponds to a file with the same name in the folder patterns. Also the file extension should be ".txt"'));
+        error(strcat('The file for the mechanism named ', filename, ' could not be found. Please make sure the kinetic mechanism name corresponds to a file with the same name in the folder patterns. Also the file extension should be ".txt"'));
     end
 end
 FileLength = length(InputFileFlow); nodeList = [];
