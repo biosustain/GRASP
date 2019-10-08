@@ -9,7 +9,7 @@ API documentation
    :glob:
    :maxdepth: 2
 
-   modules/ensemble_functions
+   api_doc/ensemble_functions
 
 
 **Pattern functions**
@@ -18,4 +18,4 @@ API documentation
    :glob:
    :maxdepth: 2
 
-   modules/pattern_functions
+   api_doc/pattern_functions
