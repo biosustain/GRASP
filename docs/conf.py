@@ -22,11 +22,11 @@ import sys
 sys.path.append('sphinxext')
 
 
-sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath(os.path.join('..', 'matlab_code')))
 # sys.path.insert(0, os.path.abspath('.'))
 
 # tell Sphinx matlab extension where to find matlab code.
-matlab_src_dir = os.path.abspath('..')
+matlab_src_dir = os.path.abspath(os.path.join('..', 'matlab_code'))
 
 # -- General configuration ------------------------------------------------
 
