@@ -16,15 +16,21 @@ function buildFreeExchange(reactionName,strucIdx)
 % .. Authors:
 %       - Pedro Saa     2016 original code 
 
+% 1. Get output file handler
 reactionName = [reactionName,num2str(strucIdx)];
+currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+filepath = fullfile(currentPath{1}, '..', '..', 'temp', 'reactions', [reactionName,'.m']);
+
 try
-    currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
-    filepath = fullfile(currentPath{1}, '..', '..', 'temp', 'reactions', [reactionName,'.m']);
     fid = fopen(filepath, 'w'); 
 catch
-    fid = fopen([reactionName,'.m'],'w'); 
+    error(['File not found: ', filepath, ...
+            newline, ...
+           'Please make sure the folder ', fullfile(currentPath{1}, '..', '..', 'temp'), ...
+           ' exists.']) ; 
 end
-%% 1. Write exchange mechanism
+
+% 2. Write exchange mechanism
 c = '%';
 fprintf(fid,['function v = ',reactionName,'(K,numConditions)\n']);
 fprintf(fid,'%s Free exchange definition \n',c);

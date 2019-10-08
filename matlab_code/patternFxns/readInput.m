@@ -21,10 +21,10 @@ function [nodeList,edge,kineticMatrix,forwardFlux] = readInput(filename)
 %       - Pedro Saa     2016 original code, adapted from Qi et al. 2009
 
 % 1. Retrieve information from input file
+currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+filepath = fullfile(currentPath{1}, '..', '..', 'patterns', filename);
 
 try
-    currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
-    filepath = fullfile(currentPath{1}, '..', '..', 'patterns', filename);
     InputFileFlow = textread([filepath,'.txt'],'%s');
 catch
     error(['The file for the mechanism named ', filename, ' could not be found: ', filepath, ...

@@ -18,14 +18,20 @@ function buildAllosteric(metList,reactionName,negEffectors,posEffectors)
 % .. Authors:
 %       - Pedro Saa     2016 original code 
 
-% 1. Write initial parameters
+% 1. Get output file handler
+currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+filepath = fullfile(currentPath{1}, '..', '..', 'temp', 'reactions', [reactionName,'.m']);
+
 try
-    currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
-    filepath = fullfile(currentPath{1}, '..', '..', 'temp', 'reactions', [reactionName,'.m']);
     fid = fopen(filepath, 'w'); 
 catch
-    fid = fopen([reactionName,'.m'],'w'); 
+    error(['File not found: ', filepath, ...
+            newline, ...
+           'Please make sure the folder ', fullfile(currentPath{1}, '..', '..', 'temp', 'reactions'), ...
+           ' exists.'])
 end
+
+% 2. Write initial parameters
 c = '%';
 if (isempty(metList))
     fprintf(fid,['function v = ',reactionName,'(X,negEff,posEff,Kr,KposEff,KnegEff,L,n) \n']);
@@ -47,7 +53,7 @@ strform = strcat(reactionName,'Catalytic');
 % Active form reaction rate
 fprintf(fid,['[vR,eR] = ',strform,'(X,Kr); \n']);
 
-% 2. Print reaction terms
+% 3. Print reaction terms
 fprintf(fid,'Q = L*eR.^n; \n');
 if ~isempty(negEffectors)    
     fprintf(fid,'KnegEff = KnegEff(ones(size(negEff,2),1),:); \n');
