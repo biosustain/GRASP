@@ -7,8 +7,8 @@ addpath(fullfile('..', 'matlab_code', 'patternFxns'), ...
 
 % threshold of the jacobian's eigenvalues
 eigThreshold = 10^-5;
-modelID = 'HMP2360_r0_t3_no_promiscuous2';
-outputFolder = 'output_test';
+modelID = 'toy_model';
+outputFolder = fullfile('..', 'io','output');
 
 
 load(fullfile(outputFolder, [modelID, '.mat']));

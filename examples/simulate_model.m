@@ -5,8 +5,8 @@ addpath(fullfile('..', 'matlab_code', 'patternFxns'), ...
         fullfile('..', 'matlab_code', 'ensembleFxns'));
 
 
-modelID = 'HMP2360_r0_t3_new';
-outputFolder = 'output_test';
+modelID = 'toy_model';
+outputFolder = fullfile('..', 'io','output');
 
 % Define how many seconds until ODE solver is interrupted. The idea is to
 % skip models that take ages to simulate.
