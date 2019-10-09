@@ -197,7 +197,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             eigThreshold = 10^-5;
             
             ensembleTemp = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
-            
+           
             ensemble = load(outputFile);
             ensemble = ensemble.ensemble;
 
