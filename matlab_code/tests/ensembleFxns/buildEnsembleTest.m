@@ -183,6 +183,29 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             testCase.verifyEqual(trueRes, ensemble);
         end
 
+        function testBuildEnsembleExample(testCase)
+            
+            seed = 1;
+            rng(seed)
+
+            
+            modelID = 'toy_model';
+            inputFile = fullfile(testCase.currentPath{1}, '..', '..', '..', 'io', 'input', modelID);
+            outputFile = fullfile(testCase.currentPath{1}, 'testFiles', 'testDir1', 'testDir2', [modelID, '.mat']);
+            
+            maxNumberOfSamples = 1000;
+            eigThreshold = 10^-5;
+            
+            ensembleTemp = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
+            
+            ensemble = load(outputFile);
+            ensemble = ensemble.ensemble;
+
+            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'testBuildEnsembleExample'));
+            trueRes = trueRes.ensemble;
+                   
+            testCase.verifyEqual(trueRes, ensemble);
+        end
 	end
 end
 
