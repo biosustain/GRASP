@@ -94,8 +94,11 @@ sol = gurobi(model,params);
 
 if strcmp(sol.status,'INFEASIBLE')
     [row_list, dg_list] = findProblematicReactions(model,params, DGr_std_min, DGr_std_max, K, delta, n, Sflux, ineqConstraints, rxnNames);
-
-    error(strcat('The TMFA problem is infeasible. Verify that the standard Gibbs free energy and metabolite concentration values are valid/correct. Reactions', strjoin(row_list, ', '), ' with standard Gibbs energies ', mat2str(dg_list), ' seem to be the problem. Note that the problem can also be with the reaction fluxes. Bottom line, for each reaction, fluxes and Gibbs energies need to agree.'));
+    if isempty(row_list)
+        error('The TMFA problem is infeasible but it is not due to incompatible fluxes and Gibbs energies. It is likely to be an issue with fluxes though.');
+    else
+        error(strcat('The TMFA problem is infeasible. Verify that the standard Gibbs free energy and metabolite concentration values are valid/correct. Reactions', strjoin(row_list, ', '), ' with standard Gibbs energies ', mat2str(dg_list), ' seem to be the problem. Note that the problem can also be with the reaction fluxes. Bottom line, for each reaction, fluxes and Gibbs energies need to agree.'));
+    end    
 end
 
 % Run improved TMFA
