@@ -56,7 +56,8 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model1_random.mat'));
             
-            testCase.verifyEqual(trueRes.ensemble,ensemble);            
+            testCase.verifyThat(trueRes.ensemble, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
         end
         
         function testLoadEnsembleStructureWithFreeExchange(testCase)
@@ -185,10 +186,11 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             
             xlsxFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model4');
             ensemble = loadEnsembleStructure(xlsxFile);
-            save(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model4.mat'), 'ensemble');
+
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model4.mat'));
             
-            testCase.verifyEqual(trueRes.ensemble,ensemble);        
+            testCase.verifyThat(trueRes.ensemble, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
         end
     end
 end

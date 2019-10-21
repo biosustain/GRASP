@@ -67,7 +67,9 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             ensemble = initializeEnsemble(ensemble,popIdx,verbose);
             
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model3_isoenzymes.mat'));
-            testCase.verifyEqual(trueRes.ensemble,ensemble);   
+
+            testCase.verifyThat(trueRes.ensemble, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
             
         end
          
@@ -81,7 +83,8 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             ensemble = initializeEnsemble(ensemble,popIdx,verbose);
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model4.mat'));
-            testCase.verifyEqual(trueRes.ensemble,ensemble);   
+            testCase.verifyThat(trueRes.ensemble, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))  
             
         end
         
@@ -95,7 +98,8 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             ensemble = initializeEnsemble(ensemble,popIdx,verbose);
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model4_inhibitors.mat'));
-            testCase.verifyEqual(trueRes.ensemble,ensemble);   
+            testCase.verifyThat(trueRes.ensemble, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
             
         end
         
@@ -109,7 +113,8 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             ensemble = initializeEnsemble(ensemble,popIdx,verbose);
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model1_nick.mat'));
-            testCase.verifyEqual(trueRes.ensemble,ensemble);   
+            testCase.verifyThat(trueRes.ensemble, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))  
             
         end
     end
