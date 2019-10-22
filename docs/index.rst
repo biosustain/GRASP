@@ -6,13 +6,29 @@
 Welcome to GRASP's documentation!
 =================================
 
+
+GRASP is a framework used to build kinetic model ensembles based on a single data point, which is characterized by a flux distribution and Gibbs reaction energies.
+
+The resulting model ensemble can then be simulated or subject to Metabolic Control Analysis.
+
+What do you actually need to build the model?
+ - fluxes for all reactions;
+ - standard Gibbs energies for all reactions;
+ - absolute metabolite concentrations;
+ - if available, enzyme regulation information (enzyme inhibitors and activators);
+ - if available, enzyme mechanism information.
+
+ For more information on how the framework works, please see [TODO: refs to papers].
+
+
 .. toctree::
    :maxdepth: 2
 
    installation
+   how_to_build_a_model
+   model_analysis
    tutorials
    how_to_contribute
-   input_file_doc
    api_doc
 
 
