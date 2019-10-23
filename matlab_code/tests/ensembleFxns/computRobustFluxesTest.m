@@ -42,9 +42,11 @@ classdef computRobustFluxesTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResComputeRobustFluxes1'));
             trueResVmean = trueRes.vMean;
             trueResVstd = trueRes.vStd;
-                   
-            testCase.verifyEqual(trueResVmean, vMean);
-            testCase.verifyEqual(trueResVstd, vStd);
+            
+            testCase.verifyThat(trueResVmean, matlab.unittest.constraints.IsEqualTo(vMean, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
+            testCase.verifyThat(trueResVstd, matlab.unittest.constraints.IsEqualTo(vStd, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
        
     end
