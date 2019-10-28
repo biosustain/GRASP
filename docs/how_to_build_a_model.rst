@@ -224,7 +224,7 @@ The convention for metabolite names is:
   - I refers to inhibitors; if there is more than one, try I1, I2, I3 and make sure it worked by looking into the reactions functions;
   - Z refers to the activators; if there is more than one, try Z1, Z2, Z3 and make sure it worked by looking into the reactions functions.
 
-You can also use the package `set_up_grasp_models<https://github.com/biosustain/set_up_grasp_models>`_ to generate the pattern files from a file with the elementary reactions.
+You can also use the package `set_up_grasp_models <https://github.com/biosustain/set_up_grasp_models>`_ to generate the pattern files from a file with the elementary reactions.
 
 
 

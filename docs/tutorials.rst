@@ -47,7 +47,7 @@ To build a model ensemble you need to specify the model first, this is done by s
 In the folder `io/input` you can find an example.
 However, since this is a tedious and error prone process, we've created a python package that automates most of the process and validates the final file, see `here <https://github.com/biosustain/set_up_grasp_models>`_. 
 
-For a more thorough description of the input file, please see input_file_doc_.
+For a more thorough description of the input file, please see how_to_build_a_model_.
 
 
 Setting up the mechanism files
@@ -83,7 +83,7 @@ When specifying pattern files, the convention is:
   - I refers to inhibitors, if there is more than one, try I1, I2, I3 and make sure it worked by looking into the reactions functions;
   -  Z refers to the activators, if there is more than one, try Z1, Z2, Z3 and make sure it worked by looking into the reactions functions.
 
-You can also use the package `set_up_grasp_models<https://github.com/biosustain/set_up_grasp_models>`_ to generate the pattern files from a file with the elementary reactions.
+You can also use the package `set_up_grasp_models <https://github.com/biosustain/set_up_grasp_models>`_ to generate the pattern files from a file with the elementary reactions.
 
 
 Simulating the model ensemble
