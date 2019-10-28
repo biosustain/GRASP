@@ -1,5 +1,6 @@
 function buildMassAction(reactionName,strucIdx)
 % Build mass action kinetic function.
+% Note that this rate law assumes only one substrate and one product.
 %
 %
 % USAGE:

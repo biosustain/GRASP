@@ -1,6 +1,13 @@
 function [models] = sampleModifierElemFluxes(ensemble, models, strucIdx)
 % Function used to sample modifier elementary fluxes for each reaction.
 %
+% A modifier is any non-allosteric inhibitor or activator, and a modifier
+% elementary flux is the flux of an elementary reaction
+% in which a modifier is involved. 
+% For instance, the flux of the elementary reaction in which a 
+% non-allosteric inhibitor binds to the enzyme is a modifier elementary
+% flux.
+%
 %
 % USAGE:
 %

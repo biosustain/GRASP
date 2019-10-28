@@ -2,6 +2,9 @@ function cellWithVariables = fixVariableNames(cellWithVariables, prefix, flag)
 % Takes in a cell where the first column are metabolite or reaction names
 % and adds the specified prefix to each name.
 %
+% For instance, if a metabolite is named nad and the prefix is specified 
+% as 'm', then the metabolite new name will be m_nad" ?
+%
 % If *flag* is defined (independently of its value) the same is done on the 
 % kinetics sheet for the columns order, promiscuous, inhibitors, 
 % activators, negative effector, positive effector, allosteric.

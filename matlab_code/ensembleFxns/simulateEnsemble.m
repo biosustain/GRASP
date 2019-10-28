@@ -6,6 +6,10 @@ function simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC
 % *interrupTime*, then it is interrupted and no simulation results are  
 % saved for that model.
 %
+% Note that for each model a different set of time points and respective
+% concentrations/fluxes will be returned, since the solver's step size is
+% adaptive, i.e., not constant.
+%
 %
 % USAGE:
 %

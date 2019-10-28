@@ -1,5 +1,6 @@
 function expression = getExpression(node,pattern,kineticMatrix,expression)
-% Get the expression given an enzyme form, patterns, and kineticMatrix.
+% Get the rate law expression given an enzyme form, patterns, and 
+% kineticMatrix.
 %
 % Based on https://doi.org/10.1186/1471-2105-10-238 
 %
