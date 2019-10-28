@@ -16,6 +16,7 @@ It also performs Metabolic Control Analysis (MCA) and stability analysis on the 
   * [Specifying the input](#specifying-the-input)
   * [Building models](#building-models)
   * [Analyzing model ensembles](#analyzing-model-ensembles)
+* [Building the documentation](#building-the-documentation)
 * [Running unit tests](#running-unit-tests)
 * [Known issues and limitations](#known-issues-and-limitations)
 
@@ -146,10 +147,18 @@ The `simulateEnsemble` functions expects to find the ODE file in the reactions f
 In `simulate_model.m` the user can define the maximum time the simulation of each model can take by defining `interruptTime` (in seconds). If the simulation of a given model takes longer than the defined time it is interrupted and continues on to the next model.
 
 
+## Building the documentation
+
+The documentation is done in sphinx, so first you need to install all the dependencies listed in the requirements file in `matlab_code/doc`. There are two requirements files there: 
+ - `requirements.txt` which you can always use;
+ - `environment.yml` which you can use instead of `requirements.txt` if you are using conda environments.
+
+ Once all the dependencies are installed (please make sure the versions are correct, very important!), you can just run `make html`  while on the `matlab_code/doc` folder.
+
+
 ## Running unit tests
 
 To run the unit tests, at the moment, go to `matlab_code/tests` and run the script `run_unit_tests.m`.
-
 
 
 ## Know issues and limitations

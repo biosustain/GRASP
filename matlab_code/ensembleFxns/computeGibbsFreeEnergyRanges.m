@@ -1,9 +1,37 @@
 function [DGr_rng,xrng,vrng] = computeGibbsFreeEnergyRanges(Sflux,Sthermo,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,idxNotExch,ineqConstraints, rxnNames)
-% Thermodynamic-based Flux Balance Analysis
-% 
-% ------------------ Pedro Saa, Marta Matos 2018 ---------------------------------------
+% Applies Thermodynamic Flux Balance Analysis (TMFA) to find
+% thermodynamically feasible ranges for reactions fluxes, metabolite
+% concentrations, and reactions Gibbs energies.
 %
-if (nargin<10); ineqConstraints = []; end
+% It is based on https://arxiv.org/pdf/1803.04999.pdf
+%
+%
+% USAGE:
+%
+%    [DGr_rng, xrng, vrng] = computeGibbsFreeEnergyRanges(Sflux, Sthermo, DGr_std_min, DGr_std_max, vmin, vmax, xmin, xmax, idxNotExch, ineqConstraints, rxnNames)
+%
+% INPUT:
+%    Sflux (int matrix):          stoichiometric matrix used for flux calculations
+%    Sthermo (int matrix):        stoichiometric matrix used for  thermodynamic calculations
+%    DGr_std_min (double vector): lower bound for standard Gibbs energies
+%    DGr_std_max (double):		  upper bound for standard Gibbs energies
+%    vmin (double):               lower bound for reactions fluxes
+%    vmax (double):               upper bound for reactions fluxes
+%    xmin (double):               lower bound for metabolite concentrations
+%    xmax (double):               upper bound for metabolite concentrations
+%    idxNotExch (int vector):     IDs for reactions that are not exchange reactions
+%    ineqConstraints (double):	  inequality constraints
+%    rxnNames (char vector):      reaction names
+%
+% OUTPUT:
+%    DGr_rng (double matrix):	range of feasible Gibbs energies
+%    xrng (double matrix):      range of feasible metabolite concentrations
+%    vrng (double matrix):      range of feasible reaction fluxes
+%
+% .. Authors:
+%       - Pedro Saa     2016 original code
+%       - Marta Matos	2018 added error messanges and 
+%                       findProblematicReactions
 
 % Build the adapted TMFA problem
 K       = 1e4;

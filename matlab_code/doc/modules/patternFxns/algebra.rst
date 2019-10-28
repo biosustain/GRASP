@@ -1,0 +1,5 @@
+Algebra
+===============================================
+
+.. autofunction:: patternFxns.algebra
+

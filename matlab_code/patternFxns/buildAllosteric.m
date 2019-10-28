@@ -1,15 +1,23 @@
 function buildAllosteric(metList,reactionName,negEffectors,posEffectors)
-%--------------------------------------------------------------------------
-% Builds allosteric reaction file
-% 
-% Inputs: (metList)  list with all mets concentrations showing up in the
-%                    pseudo-first-order rate constants 
-%    (reactionName)  reaction name
-%    (negEffectors)  list with negative effectors
-%    (posEffectors)  list with positive effectors
+% Builds allosteric reaction file.
 %
-% Outputs:      --   writen .m file with the reaction mechanism
-%--------------------- Pedro Saa 2016 -------------------------------------
+%
+% USAGE:
+%
+%    buildAllosteric(metList, reactionName, negEffectors, posEffectors)
+%
+% INPUT:
+%    metList (struct):      list with all mets concentrations showing up in the pseudo-first-order rate constants 
+%    reactionName (char):   reaction name
+%    negEffectors (vector): list with negative effectors
+%    posEffectors (vector): list with positive effectors
+%
+% OUTPUT:
+%    written .m file with the reaction mechanism
+%
+% .. Authors:
+%       - Pedro Saa     2016 original code 
+
 % 1. Write initial parameters
 try
     currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');

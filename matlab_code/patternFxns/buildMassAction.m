@@ -1,11 +1,22 @@
 function buildMassAction(reactionName,strucIdx)
-%--------------------------------------------------------------------------
-% Build mass action kinetic fxn
+% Build mass action kinetic function.
+% Note that this rate law assumes only one substrate and one product.
 %
-% Inputs: ensemble    (ensemble structure)
 %
-% Outputs:    -       (writen .m file with the reaction mechanism)
-%------------------------Pedro Saa 2016------------------------------------
+% USAGE:
+%
+%    buildMassAction(reactionName, strucIdx)
+%
+% INPUT:
+%    reactionName (char):   reaction name
+%    strucIdx (int):        ID of the model structure
+%
+% OUTPUT:
+%    written .m file with the reaction mechanism
+%
+% .. Authors:
+%       - Pedro Saa     2016 original code 
+
 reactionName = [reactionName,num2str(strucIdx)];
 try
     currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');

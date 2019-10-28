@@ -1,13 +1,23 @@
 function paths = cycledPaths(subsNodes,prodNodes,forwardFlux)
-%--------------------------------------------------------------------------
-% Determines all the possible cycles in the pattern 
+% Determines all the possible cycles in the pattern.
 %
-% Inputs:       (subsNodes)    nodes consuming substrates
-%               (prodNodes)    nodes producing products
-%             (forwardFlux)    list with the edges of the forward reactions
 %
-% Outputs:          (paths)    all possible paths (even redundants)
-%-----------------Pedro Saa 2014, Marta Matos 2018-------------------------
+% USAGE:
+%
+%    paths = cycledPaths(subsNodes, prodNodes, forwardFlux)
+%
+% INPUT:
+%    subsNodes (int vector):      nodes consuming substrates
+%    prodNodes (int vector):      nodes producing products
+%    forwardFlux (int matrix):    list with the edges of the forward reactions
+%
+% OUTPUT:
+%    paths (int cell):	all possible paths (even redundants)
+%
+% .. Authors:
+%       - Pedro Saa     2016 original code
+%       - Marta Matos	2018 extended for promiscuous reactions
+
 %% 1. Form adjacency matrix
 adjMatrix = biograph(sparse(forwardFlux(:,1)',forwardFlux(:,2)',...
     true,max(max(forwardFlux)),max(max(forwardFlux))));

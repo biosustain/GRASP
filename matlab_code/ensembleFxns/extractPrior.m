@@ -1,11 +1,20 @@
 function ensemble = extractPrior(ensemble)
-%--------------------------------------------------------------------------
-% Extract and assign new prior to the current ensemble
+% Extract and assign new prior to the current ensemble .
 %
-% Inputs:       ensemble (structure)
 %
-% Outputs:      ensemble (structure)
-%--------------------- Pedro Saa 2016 -------------------------------------
+% USAGE:
+%
+%    ensemble = extractPrior(ensemble)
+%
+% INPUT:
+%    ensemble (struct):    model ensemble, see buildEnsemble for fields description
+%
+% OUTPUT:
+%    ensemble (struct):    model ensemble, see buildEnsemble for fields description
+%
+% .. Authors:
+%       - Pedro Saa     2016 original code
+
 indexes = find(ensemble.prevPrior);
 for strucIdx = indexes
     

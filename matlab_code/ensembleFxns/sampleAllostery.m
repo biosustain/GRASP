@@ -1,8 +1,26 @@
 function [ensemble, models] = sampleAllostery(ensemble,models,strucIdx)
-%--------------------------------------------------------------------------
-% Function used to sample allosteric fluxes for each reaction
+% Function used to sample allosteric fluxes and parameters for each 
+% reaction.
 %
-%------------------------Pedro Saa 2016, Marta Matos 2018------------------
+%
+% USAGE:
+%
+%    [ensemble, models] = sampleAllostery(ensemble, models, strucIdx)
+%
+% INPUT:
+%    ensemble (struct):       model ensemble, see buildEnsemble for fields description
+%    models (struct):         model, see initialSampler for fields description
+%    strucIdx (int):          number of the model structure considered
+%
+% OUTPUT:
+%    ensemble (struct):  initialized model ensemble, see buildEnsemble for fields description
+%    models (struct):    model structure with added allosteric parameters, see initialSampler for fields description
+%
+% .. Authors:
+%       - Pedro Saa         2016 original code
+%       - Marta Matos       2018 generalized it for promiscuous reactions 
+%                           and random mechanisms
+
 RT       = 8.314*298.15/1e3;                                               % gas constant times the absolute temperature (298.15 K)
 DDG_max  = 0;															   % max. Gibbs free energy difference of conformation (kJ/mol)
 DDG_min  = -25;															   % min. Gibbs free energy difference of conformation (kJ/mol) ~ 1 ATP hydrolysis

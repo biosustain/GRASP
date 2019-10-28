@@ -1,11 +1,27 @@
 function [rxnMetLinks,freeVars,metsActive] = buildKineticFxn(ensemble,kineticFxn,strucIdx)
-%--------------------------------------------------------------------------
-% Builds kinetic reaction file
+% Builds kinetic model .m file that is used to actually run the model.
 %
-% Inputs: ensemble    ensemble (structure), kinetic fxn name, strucIdx
 %
-% Outputs:    -       (writen .m file with the reaction mechanism)
-%-----------------Pedro Saa 2014, Marta Matos 2018-------------------------
+% USAGE:
+%
+%    rxnMetLinks, freeVars, metsActive] = buildKineticFxn(ensemble, kineticFxn, strucIdx)
+%
+% INPUT:
+%    ensemble (struct):   model ensemble, see buildEnsemble for fields description
+%    kineticFxn (char):	  name of the kinetic function
+%    strucIdx (int):      ID of the model structure
+%
+% OUTPUT:
+%    rxnMetLinks (char cell):   [TODO Pedro]
+%    freeVars (char cell):      [TODO Pedro]
+%    metsActive (int cell):     [TODO Pedro]
+%    written .m file with the model
+%
+% .. Authors:
+%       - Pedro Saa         2016 original code 
+%       - Marta Matos       2018 extended for promiscuous reactions
+%       - Nicholas Cowie	2019 extended for isoenzymes [TODO: confirm this Nick please]
+
 % Define active species (mets/enzymes)
 metsActive = ensemble.metsSimulated(~ismember(ensemble.metsSimulated,ensemble.metsFixed));
 enzActive  = ensemble.activeRxns(~ismember(ensemble.activeRxns,ensemble.kinInactRxns));

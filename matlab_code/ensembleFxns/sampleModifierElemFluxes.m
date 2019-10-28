@@ -1,9 +1,30 @@
 function [models] = sampleModifierElemFluxes(ensemble, models, strucIdx)
-%--------------------------------------------------------------------------
-% Function used to sample modifier elementary fluxes for each reaction
+% Function used to sample modifier elementary fluxes for each reaction.
 %
-%------------------------Pedro Saa 2016, Marta Matos 2018------------------
-
+% A modifier is any non-allosteric inhibitor or activator, and a modifier
+% elementary flux is the flux of an elementary reaction
+% in which a modifier is involved. 
+% For instance, the flux of the elementary reaction in which a 
+% non-allosteric inhibitor binds to the enzyme is a modifier elementary
+% flux.
+%
+%
+% USAGE:
+%
+%    models = sampleModifierElemFluxes(ensemble, models, strucIdx)
+%
+% INPUT:
+%    ensemble (struct):	  model ensemble, see buildEnsemble for fields description
+%    models (struct):     model, see initialSampler for fields description
+%    strucIdx (int):      number of the model structure considered
+%
+% OUTPUT:
+%    models (struct):	model structure with added reversibilities, see initialSampler for fields description
+%
+% .. Authors:
+%       - Pedro Saa         2016 original code
+%       - Marta Matos       2018 generalized it for promiscuous reactions
+%                           and reactions with random mechanisms
 
 for activRxnIdx = 1:numel(ensemble.kinActRxns)     
 		

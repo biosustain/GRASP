@@ -1,11 +1,30 @@
 function stabilityRes = ensembleStabilityTest(ensemble,eigThreshold,strucIdx)
-%
 % Takes in a model ensemble, calculates the jacobian and respective
 % eigenvalues for each model.
-% If any eigenvalue's real part is higher than eighThreshold, the model
+% If any eigenvalue's real part is higher than *eighThreshold*, the model
 % is considered unstable.
 %
-%---------------- Pedro Saa UQ 2018, Marta Matos 2019 ---------------------
+%
+% USAGE:
+%
+%    stabilityRes = ensembleStabilityTest(ensemble, eigThreshold, strucIdx)
+%
+% INPUT:
+%    ensemble (struct):       model ensemble, see buildEnsemble for fields description
+%    eigThreshold (double):	  threshold for positive eigenvalues' real part
+%
+% OPTIONAL INPUT:
+%    strucIdx (int):          number of the model structure considered
+%
+% OUTPUT:
+%    stabilityRes (struct):	stability analysis results
+%
+%               * posEig (*cell*)               : positive eigenvalues for unstable models
+%               * unstableModels(*int vector*)  : list of unstable models
+%
+% .. Authors:
+%       - Pedro Saa     2018 original code
+%       - Marta Matos	2019 refactored code
 
 if nargin<3
     strucIdx = 1;
@@ -52,7 +71,7 @@ for ix = 1:nCondition
    
     for jx = 1:numModels
         stabilityRes.posEig{jx} = [];
-        %mcaResults.enzNames = rxnNames;
+
         model = ensemble.populations(end).models(particleIdx(jx));
         if ix == 1
             xopt = ones(freeVars,1);
