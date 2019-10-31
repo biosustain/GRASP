@@ -21,24 +21,3 @@ What do you actually need to build the model?
 
  For more information on how the framework works, please see [TODO: refs to papers].
 
-
-
-.. toctree::
-   :maxdepth: 2
-
-   installation
-   how_to_build_a_model
-   model_analysis
-   visualization
-   tutorials
-   how_to_contribute
-   api_doc
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
