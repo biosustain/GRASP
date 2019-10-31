@@ -1,3 +1,5 @@
+.. _simulation_viz_python:
+
 Simulation visualization
 =========================
 

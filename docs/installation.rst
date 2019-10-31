@@ -30,4 +30,4 @@ If you want to use the jupyter notebooks in the visualization folder to visualiz
  - matplotlib
  - altair
 
-There is also a requirements.txt file in the visualization folder that you can use to install the above packages.
+There is also a ``requirements.txt`` file in the visualization folder that you can use to install the above packages.
