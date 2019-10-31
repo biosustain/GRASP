@@ -63,8 +63,8 @@ def gather_sim_data(mat: dict, met_names: list, rxn_names: list, n_models: int, 
         in `time_points_spline`.
     """
 
-    data_conc = {'model': [], 'met': [], 'time_point': [], 'concentration': [], 'concentration_unscaled': []}
-    data_conc_interp = {'model': [], 'met': [], 'time_point': [], 'concentration': [], 'concentration_unscaled': []}
+    data_conc = {'model': [], 'met': [], 'time_point': [], 'conc': [], 'conc_unscaled': []}
+    data_conc_interp = {'model': [], 'met': [], 'time_point': [], 'conc': [], 'conc_unscaled': []}
     data_flux = {'model': [], 'rxn': [], 'time_point': [], 'flux': []}
     data_flux_interp = {'model': [], 'rxn': [], 'time_point': [], 'flux': []}
 
@@ -88,11 +88,11 @@ def gather_sim_data(mat: dict, met_names: list, rxn_names: list, n_models: int, 
                 data_conc['model'].extend(np.repeat(model_i, len(time_points)))
                 data_conc['time_point'].extend(time_points)
                 data_conc['met'].extend(np.repeat(met, len(time_points)))
-                data_conc['concentration'].extend(met_concs[met_i])
+                data_conc['conc'].extend(met_concs[met_i])
                 if ref_conc_dic is not None:
-                    data_conc['concentration_unscaled'].extend(met_concs[met_i] * ref_conc_dic[met][model_i])
+                    data_conc['conc_unscaled'].extend(met_concs[met_i] * ref_conc_dic[met][model_i])
                 else:
-                    data_conc_interp['concentration_unscaled'].extend(np.repeat(np.nan, len(met_concs[met_i])))
+                    data_conc_interp['conc_unscaled'].extend(np.repeat(np.nan, len(met_concs[met_i])))
 
         for met_i, met in enumerate(met_names):
             data_conc_interp['model'].extend(np.repeat(model_i, len(time_points_spline)))
@@ -100,13 +100,13 @@ def gather_sim_data(mat: dict, met_names: list, rxn_names: list, n_models: int, 
             data_conc_interp['met'].extend(np.repeat(met_names[met_i], len(time_points_spline)))
 
             conc_interp = interpolate.CubicSpline(time_points, met_concs[met_i])
-            data_conc_interp['concentration'].extend(conc_interp(time_points_spline))
+            data_conc_interp['conc'].extend(conc_interp(time_points_spline))
 
             if ref_conc_dic is not None:
-                data_conc_interp['concentration_unscaled'].extend(
+                data_conc_interp['conc_unscaled'].extend(
                     conc_interp(time_points_spline) * ref_conc_dic[met][model_i])
             else:
-                data_conc_interp['concentration_unscaled'].extend(np.repeat(np.nan, len(time_points_spline)))
+                data_conc_interp['conc_unscaled'].extend(np.repeat(np.nan, len(time_points_spline)))
 
         if save_fluxes:
             for rxn_i in range(len(rxn_fluxes)):
@@ -160,29 +160,27 @@ def get_met_rxn_names(raw_data_dir: str, model_name: str) -> tuple:
     return met_names, rxn_names
 
 
-def get_time_series_quantiles(data_df: pd.DataFrame, time_points_spline: list, data_type: str, name_list: list,
-                              scaled: bool = True) -> dict:
+def get_time_series_quantiles(data_df: pd.DataFrame, time_points: list, quant_type: str, name_list: list) -> pd.DataFrame:
     """
     Takes in a dataframe with either fluxes or concentrations and calculates the median and respective first and third
     quartiles for each flux or metabolite at a given time point over the whole model ensemble.
 
     Args:
         data_df: dataframe with concentrations or fluxes for each time point and model.
-        time_points_spline: time points for which there are concentrations or fluxes.
-        data_type: whether the data frame contains concentrations ('mets') or fluxes ('flux').
+        time_points: time points for which there are concentrations or fluxes.
+        quant_type: whether the data frame contains concentrations ('conc'), unscaled concentrations ('conc_unscaled'),
+                   or fluxes ('flux').
         name_list: reaction or metabolite names, depending on what that the dataframe contains.
-        scaled: whether or not the concentrations or fluxes are scaled.
 
     Returns:
-        A dictionary with the concentrations/fluxes median and 1st and 3rd quartiles for each metabolite/reaction.
+        A pandas dataframe with the concentrations/fluxes median and 1st and 3rd quartiles for each metabolite/reaction.
     """
+
+    data_type = 'met' if quant_type.find('conc') != -1 else 'rxn'
+    n_time_points = len(time_points)
 
     quantiles_dic = {'time_point': [], data_type: [], 'q025': np.array([]), 'median': np.array([]),
                      'q075': np.array([])}
-
-    measure = 'concentration' if data_type == 'met' else 'flux'
-    measure = f'{measure}_unscaled' if not scaled else measure
-    n_time_points = len(time_points_spline)
 
     q025 = data_df.groupby([data_type, 'time_point']).quantile(q=0.25)
     q050 = data_df.groupby([data_type, 'time_point']).median()
@@ -190,10 +188,12 @@ def get_time_series_quantiles(data_df: pd.DataFrame, time_points_spline: list, d
 
     for item in name_list:
         quantiles_dic[data_type].extend(np.repeat(item, n_time_points))
-        quantiles_dic['time_point'].extend(time_points_spline)
+        quantiles_dic['time_point'].extend(time_points)
 
-        quantiles_dic['q025'] = np.append(quantiles_dic['q025'], q025.loc[item, :][measure])
-        quantiles_dic['median'] = np.append(quantiles_dic['median'], q050.loc[item, :][measure])
-        quantiles_dic['q075'] = np.append(quantiles_dic['q075'], q075.loc[item, :][measure])
+        quantiles_dic['q025'] = np.append(quantiles_dic['q025'], q025.loc[item, :][quant_type])
+        quantiles_dic['median'] = np.append(quantiles_dic['median'], q050.loc[item, :][quant_type])
+        quantiles_dic['q075'] = np.append(quantiles_dic['q075'], q075.loc[item, :][quant_type])
 
-    return quantiles_dic
+    quantiles_df = pd.DataFrame.from_dict(quantiles_dic)
+
+    return quantiles_df
