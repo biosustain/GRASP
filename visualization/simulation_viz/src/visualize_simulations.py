@@ -69,6 +69,9 @@ def plot_ensemble(data_df: pd.DataFrame, quant_type: str, selected_data: list, x
             if y_scale:
                 ax.set_yscale(y_scale)
 
+            ax.set_xlabel('time')
+            ax.set_ylabel(quant_type)
+
             ax.grid()
             ax.legend()
 
@@ -150,6 +153,9 @@ def plot_model(data_df: pd.DataFrame, data_interp_df: pd.DataFrame, model_i: int
             ax.set_xscale(x_scale)
         if y_scale:
             ax.set_yscale(y_scale)
+
+        ax.set_xlabel('time')
+        ax.set_ylabel(quant_type)
 
         ax.grid()
         ax.legend()
