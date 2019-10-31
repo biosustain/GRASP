@@ -19,7 +19,6 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
                                    fullfile(testCase.currentPath{1}, '..', '..', '..', 'reactions', 'toy_model1_nick_1')};
             
             for i = 1:size(reactionsFolderList, 2)
-                disp( exist(reactionsFolderList{i}, 'dir'));
                 if exist(reactionsFolderList{i}, 'dir')
                     rmdir(reactionsFolderList{i}, 's');
                 end

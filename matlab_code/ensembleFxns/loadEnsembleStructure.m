@@ -108,7 +108,6 @@ xMetsThermo         = xlsread(xlsxFile,'thermoMets');                   % load t
 [protData,idxProt]  = xlsread(xlsxFile,'protData');                     % load expression data
 [metsData,idxMets]  = xlsread(xlsxFile,'metsData');                     % load metabolite data (mets)
 ineqConstraints     = xlsread(xlsxFile,'thermo_ineq_constraints');      % load ineq. thermodynamic constraints
-disp('Testing testing, 1, 2, 3')
 
 % Add m before any metabolite name and r before any reaction name to avoid
 % variables starting with a number

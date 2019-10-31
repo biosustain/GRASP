@@ -97,7 +97,7 @@ classdef findProblematicReactionsTest < matlab.unittest.TestCase
             % Check the feasibility of the problem
             sol = gurobi(model,params);
             
-            [rowList, dGList] = findProblematicReactions(model,params,DGr_std_min,DGr_std_max,K,delta,n,Sflux,ineqConstraints,sol,ensemble.rxns);
+            [rowList, dGList] = findProblematicReactions(model,params,DGr_std_min,DGr_std_max,K,delta,n,Sflux,ineqConstraints,ensemble.rxns);
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResFindProblematicReactionsTest1'));
             trueResRowList = trueRes.rowList;
