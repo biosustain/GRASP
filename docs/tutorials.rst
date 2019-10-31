@@ -24,6 +24,7 @@ To build a model ensemble you can use the script `build_model.m` in the examples
 
 
 To build the model ensemble we use the `buildEnsemble` function, which takes 4 arguments:
+
  - `inputFile`: path to the input file;
  - `outpuFile`: path to the output file;
  - `maxNumberOfSamples`: the maximum number of models that will be sampled no matter how many models are valid. The goal is to get the number of valid models specified in the excel input file, however, if there are no valid models (very unlikely) the program will run forever, `maxNumberOfSamples` will prevent that;
@@ -37,6 +38,7 @@ Setting up the input excel file
 --------------------------------
 
 To build a model ensemble you need to specify the model first, this is done by setting up an input excel file where the following is specified:
+
   - reactions stoichiometry;
   - reaction fluxes (in micromol/gCDW/h);
   - metabolite concentrations (in mol/L) for thermodynamics to calculate the reactions Gibbs energies;

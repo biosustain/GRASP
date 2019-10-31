@@ -2,6 +2,7 @@ Visualizing results
 =============================================
 
 Three jupyter notebooks are provided in the `visualization` folder to visualize:
+
  - the reactions free Gibbs energies and fluxes, to check if these are compatible;
  - the metabolic control analysis (MCA) results;
  - the results from model simulations.
@@ -30,6 +31,7 @@ The jupyter notebook `visualize_mca` uses `altair <https://altair-viz.github.io/
 It uses heatmaps to plot both the median flux and concentration control coefficients along with the respective interquartile ranges.
 
 To run the notebook, you must first specify:
+
  - the path to the folder that contains the MCA results;
  - the model ID (the same you defined when you built the model and ran the MCA in Matlab);
  - the number of models in the ensemble.
@@ -44,6 +46,7 @@ Visualizing model simulations
 The jupyter notebook `visualize_simulations` uses `altair <https://altair-viz.github.io/>`_ and `matplotlib <https://matplotlib.org/>`_ to visualize the results of simulating GRASP models. You can choose whether to use only altair or matplotlib.
 
 To run the notebook you need to specify:
+
  - the path to the folder that contains both the model ensemble .mat file and the simulation results .mat file;
  - the model name;
  - the simulation name;

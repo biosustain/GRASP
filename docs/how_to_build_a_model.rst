@@ -4,6 +4,7 @@ How to build a model
 To build a model you need to fill in an excel file following a specific format. This is the input for GRASP, which will take it and generate a model ensemble.
 
 The input file contains the following information:
+
  - reaction stoichiometry;
  - reaction fluxes (in micromol/gCDW/h);
  - Gibbs standard energies;
@@ -26,7 +27,7 @@ Input excel file description
 The input file that describes the kinetic model is an `.xlsx` file. 
 
 It has the following sheets:
- 
+
  - general_: where general information such as model name, number of models in the ensemble, parallelization, etc. are defined;
  - stoic_: where the model's (transposed) stoichiometric matrix is defined;
  - mets_: where all the metabolites are specified;
@@ -142,6 +143,7 @@ measRates
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This sheet has 3 columns:
+
  - `reaction ID`: the reaction ids;
  - `vref_mean (umol/gCDW/h)`: the average flux for the reactions whose flux is known. It should be specified in micromol/gCDW/h);
  - `vref_std (umol/gCDW/h)`: the standard deviation of the measured flux. It should be specified in micromol/gCDW/h).
@@ -153,6 +155,7 @@ protData
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This sheet has 4 columns:
+
  - `reaction / enzyme ID`: the reaction ID
  - `lower_bound`: the scaled lower bound for the enzyme concentration, typically (mean - `std) / mean;
  - `mean`: the scaled mean value for the enzyme concentration, mean/mean;
@@ -163,6 +166,7 @@ metsData
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This sheet has 4 columns:
+
  - `metabolite ID`: the metabolite ID
  - `lower_bound`: the scaled lower bound for the metabolite concentration, typically (mean - `std) / mean;
  - `mean`: the scaled mean value for the metabolite concentration, mean/mean;
@@ -173,6 +177,7 @@ kinetics1
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This sheet has at least 11 columns (more can be added to add notes regarding references and etc.):
+
  - `reaction ID`: the reaction IDs
  - `kinetic mechanism`: the kinetic/enzyme mechanism for the reaction, e.g. ordered Bi Bi. This should be the name of the pattern file in the `patterns` folder where the mechanism is specified.
  - `substrate order`: the binding order for the substrates. Substrates must be separated by a single space.
@@ -251,6 +256,7 @@ To build a model ensemble you can use the script `build_model.m` in the examples
 
 
 To build the model ensemble we use the `buildEnsemble` function, which takes 4 arguments:
+
  - `inputFile`: path to the input excel file;
  - `outpuFile`: path to the output file (to be created);
  - `maxNumberOfSamples`: the maximum number of models that will be sampled no matter how many models are valid. The goal is to get the number of valid models specified in the excel input file. However, if there are no valid models (very unlikely) the program will run forever. `maxNumberOfSamples` will prevent that;
