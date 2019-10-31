@@ -1,6 +1,8 @@
 API documentation
 =================
 
+Here you can find the API documentation for all functions.
+
 
 **Ensemble functions**
 
