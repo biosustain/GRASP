@@ -1,5 +1,5 @@
 Build free exchange
 ===============================================
 
-.. autofunction:: patternFxns.buildFreeExchange
+.. mat:autofunction:: patternFxns.buildFreeExchange
 

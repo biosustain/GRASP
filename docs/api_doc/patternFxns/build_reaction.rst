@@ -1,5 +1,5 @@
 Build reaction
 ===============================================
 
-.. autofunction:: patternFxns.buildReaction
+.. mat:autofunction:: patternFxns.buildReaction
 

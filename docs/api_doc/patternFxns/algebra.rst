@@ -1,5 +1,5 @@
 Algebra
 ===============================================
 
-.. autofunction:: patternFxns.algebra
+.. mat:autofunction:: patternFxns.algebra
 

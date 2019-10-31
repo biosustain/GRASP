@@ -1,5 +1,5 @@
 Compute branched reversibilities
 ===============================================
 
-.. autofunction:: patternFxns.computeBranchedReversibilities
+.. mat:autofunction:: patternFxns.computeBranchedReversibilities
 

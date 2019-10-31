@@ -1,5 +1,5 @@
 Plot control analysis
 ===============================================
 
-.. autofunction:: ensembleFxns.plotControlAnalysis
+.. mat:autofunction:: ensembleFxns.plotControlAnalysis
 

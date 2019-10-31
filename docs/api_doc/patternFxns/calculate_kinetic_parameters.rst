@@ -1,5 +1,5 @@
 Calculate kinetic parameters
 ===============================================
 
-.. autofunction:: patternFxns.calculateKineticParams
+.. mat:autofunction:: patternFxns.calculateKineticParams
 

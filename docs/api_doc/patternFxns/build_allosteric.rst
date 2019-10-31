@@ -1,5 +1,5 @@
 Build allosteric
 ===============================================
 
-.. autofunction:: patternFxns.buildAllosteric
+.. mat:autofunction:: patternFxns.buildAllosteric
 

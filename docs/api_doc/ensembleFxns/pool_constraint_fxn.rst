@@ -1,5 +1,5 @@
 Pool constraint function
 ===============================================
 
-.. autofunction:: ensembleFxns.poolConstraintFxn
+.. mat:autofunction:: ensembleFxns.poolConstraintFxn
 

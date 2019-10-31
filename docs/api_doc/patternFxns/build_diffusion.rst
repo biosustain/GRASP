@@ -1,5 +1,5 @@
 Build diffusion
 ===============================================
 
-.. autofunction:: patternFxns.buildDiffusion
+.. mat:autofunction:: patternFxns.buildDiffusion
 

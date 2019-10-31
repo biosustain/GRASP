@@ -1,5 +1,5 @@
 Build ensemble
 ===============================================
 
-.. autofunction:: ensembleFxns.buildEnsemble
+.. mat:autofunction:: ensembleFxns.buildEnsemble
 

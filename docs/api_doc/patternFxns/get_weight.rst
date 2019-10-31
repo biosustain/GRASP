@@ -1,5 +1,5 @@
 Get weight
 ===============================================
 
-.. autofunction:: patternFxns.getWeight
+.. mat:autofunction:: patternFxns.getWeight
 

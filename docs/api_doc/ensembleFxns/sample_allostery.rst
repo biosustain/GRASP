@@ -1,5 +1,5 @@
 Sample allostery
 ===============================================
 
-.. autofunction:: ensembleFxns.sampleAllostery
+.. mat:autofunction:: ensembleFxns.sampleAllostery
 

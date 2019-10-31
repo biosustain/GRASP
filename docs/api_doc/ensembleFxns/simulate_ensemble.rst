@@ -1,5 +1,5 @@
 Simulate ensemble
 ===============================================
 
-.. autofunction:: ensembleFxns.simulateEnsemble
+.. mat:autofunction:: ensembleFxns.simulateEnsemble
 

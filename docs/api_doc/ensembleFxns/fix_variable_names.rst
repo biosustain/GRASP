@@ -1,5 +1,5 @@
 Fix variable names
 ===============================================
 
-.. autofunction:: ensembleFxns.fixVariableNames
+.. mat:autofunction:: ensembleFxns.fixVariableNames
 

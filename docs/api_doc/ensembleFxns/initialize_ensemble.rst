@@ -1,5 +1,5 @@
 Initialize ensemble
 ===============================================
 
-.. autofunction:: ensembleFxns.initializeEnsemble
+.. mat:autofunction:: ensembleFxns.initializeEnsemble
 

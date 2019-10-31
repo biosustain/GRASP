@@ -1,5 +1,5 @@
 Load ensemble structure
 ===============================================
 
-.. autofunction:: ensembleFxns.loadEnsembleStructure
+.. mat:autofunction:: ensembleFxns.loadEnsembleStructure
 

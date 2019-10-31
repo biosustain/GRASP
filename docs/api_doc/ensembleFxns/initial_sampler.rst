@@ -1,5 +1,5 @@
 Initial sampler
 ===============================================
 
-.. autofunction:: ensembleFxns.initialSampler
+.. mat:autofunction:: ensembleFxns.initialSampler
 

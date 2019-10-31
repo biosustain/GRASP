@@ -1,5 +1,5 @@
 Column vector
 ===============================================
 
-.. autofunction:: patternFxns.colVector
+.. mat:autofunction:: patternFxns.colVector
 

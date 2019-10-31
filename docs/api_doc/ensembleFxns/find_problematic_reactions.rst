@@ -1,5 +1,5 @@
 Find problematic reactions
 ===============================================
 
-.. autofunction:: ensembleFxns.findProblematicReactions
+.. mat:autofunction:: ensembleFxns.findProblematicReactions
 

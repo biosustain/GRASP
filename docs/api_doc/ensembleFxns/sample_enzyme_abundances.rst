@@ -1,5 +1,5 @@
 Sample enzyme abundances
 ===============================================
 
-.. autofunction:: ensembleFxns.sampleEnzymeAbundances
+.. mat:autofunction:: ensembleFxns.sampleEnzymeAbundances
 

@@ -1,5 +1,5 @@
 Build kinetic function
 ===============================================
 
-.. autofunction:: patternFxns.buildKineticFxn
+.. mat:autofunction:: patternFxns.buildKineticFxn
 

@@ -1,5 +1,5 @@
 Compute robust fluxes
 ===============================================
 
-.. autofunction:: ensembleFxns.computeRobustFluxes
+.. mat:autofunction:: ensembleFxns.computeRobustFluxes
 

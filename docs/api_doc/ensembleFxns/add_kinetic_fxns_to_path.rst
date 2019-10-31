@@ -1,5 +1,5 @@
 Add kinetic functions to path
 ===============================================
 
-.. autofunction:: ensembleFxns.addKineticFxnsToPath
+.. mat:autofunction:: ensembleFxns.addKineticFxnsToPath
 

@@ -1,5 +1,5 @@
 Build ODE function
 ===============================================
 
-.. autofunction:: patternFxns.buildOdeFxn
+.. mat:autofunction:: patternFxns.buildOdeFxn
 

@@ -1,5 +1,5 @@
 Ensemble stability test
 ===============================================
 
-.. autofunction:: ensembleFxns.ensembleStabilityTest
+.. mat:autofunction:: ensembleFxns.ensembleStabilityTest
 

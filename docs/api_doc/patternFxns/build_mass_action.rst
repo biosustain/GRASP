@@ -1,5 +1,5 @@
 Build mass action
 ===============================================
 
-.. autofunction:: patternFxns.buildMassAction
+.. mat:autofunction:: patternFxns.buildMassAction
 

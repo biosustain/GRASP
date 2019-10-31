@@ -1,5 +1,5 @@
 Control and response analysis
 ===============================================
 
-.. autofunction:: ensembleFxns.controlAndResponseAnalysis
+.. mat:autofunction:: ensembleFxns.controlAndResponseAnalysis
 

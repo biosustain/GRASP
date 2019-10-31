@@ -1,5 +1,5 @@
 Build fixed exchange
 ===============================================
 
-.. autofunction:: patternFxns.buildFixedExchange
+.. mat:autofunction:: patternFxns.buildFixedExchange
 

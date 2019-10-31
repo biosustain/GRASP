@@ -1,5 +1,5 @@
 Get link
 ===============================================
 
-.. autofunction:: patternFxns.getLink
+.. mat:autofunction:: patternFxns.getLink
 

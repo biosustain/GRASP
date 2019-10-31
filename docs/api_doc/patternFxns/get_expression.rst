@@ -1,5 +1,5 @@
 Get expression
 ===============================================
 
-.. autofunction:: patternFxns.getExpression
+.. mat:autofunction:: patternFxns.getExpression
 

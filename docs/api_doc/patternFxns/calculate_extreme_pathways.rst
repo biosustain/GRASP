@@ -1,5 +1,5 @@
 Calculate extreme pathways
 ===============================================
 
-.. autofunction:: patternFxns.calculateExtremePathways
+.. mat:autofunction:: patternFxns.calculateExtremePathways
 

@@ -1,5 +1,5 @@
 Check stability
 ===============================================
 
-.. autofunction:: ensembleFxns.checkStability
+.. mat:autofunction:: ensembleFxns.checkStability
 

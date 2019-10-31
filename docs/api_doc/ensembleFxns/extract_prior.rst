@@ -1,5 +1,5 @@
 Extract prior
 ===============================================
 
-.. autofunction:: ensembleFxns.extractPrior
+.. mat:autofunction:: ensembleFxns.extractPrior
 

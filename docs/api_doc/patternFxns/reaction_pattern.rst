@@ -1,5 +1,5 @@
 Reaction pattern
 ===============================================
 
-.. autofunction:: patternFxns.reactionPattern
+.. mat:autofunction:: patternFxns.reactionPattern
 

@@ -1,5 +1,5 @@
 Read input
 ===============================================
 
-.. autofunction:: patternFxns.readInput
+.. mat:autofunction:: patternFxns.readInput
 

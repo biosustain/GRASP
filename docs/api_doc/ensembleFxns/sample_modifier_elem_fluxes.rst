@@ -1,5 +1,5 @@
 Sample modifier elementary fluxes
 ===============================================
 
-.. autofunction:: ensembleFxns.sampleModifierElemFluxes
+.. mat:autofunction:: ensembleFxns.sampleModifierElemFluxes
 

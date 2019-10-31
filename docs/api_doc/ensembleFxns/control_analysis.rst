@@ -1,5 +1,5 @@
 Control analysis
 ===============================================
 
-.. autofunction:: ensembleFxns.controlAnalysis
+.. mat:autofunction:: ensembleFxns.controlAnalysis
 

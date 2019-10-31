@@ -1,5 +1,5 @@
 Cycled paths
 ===============================================
 
-.. autofunction:: patternFxns.cycledPaths
+.. mat:autofunction:: patternFxns.cycledPaths
 

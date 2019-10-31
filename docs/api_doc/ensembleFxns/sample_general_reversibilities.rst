@@ -1,5 +1,5 @@
 Sample general reversibilities
 ===============================================
 
-.. autofunction:: ensembleFxns.sampleGeneralReversibilities
+.. mat:autofunction:: ensembleFxns.sampleGeneralReversibilities
 
