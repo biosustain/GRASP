@@ -23,10 +23,12 @@ sys.path.append('sphinxext')
 
 
 sys.path.insert(0, os.path.abspath(os.path.join('..', 'matlab_code')))
+sys.path.insert(0, os.path.abspath(os.path.join('..', 'visualization', 'simulation_viz')))
 # sys.path.insert(0, os.path.abspath('.'))
 
 # tell Sphinx matlab extension where to find matlab code.
 matlab_src_dir = os.path.abspath(os.path.join('..', 'matlab_code'))
+python_src_dir = os.path.abspath(os.path.join('..', 'visualization', 'simulation_viz'))
 
 # -- General configuration ------------------------------------------------
 
@@ -49,7 +51,7 @@ mathjax_path = 'https://cdn.jsdelivr.net/gh/mathjax/MathJax@2.7.1/MathJax.js?con
 
 
 # autodoc_member_order='groupwise'
-primary_domain = 'mat'
+#primary_domain = 'mat'
 
 # remove path in function names
 add_module_names = False
