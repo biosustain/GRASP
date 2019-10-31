@@ -15,7 +15,7 @@ As well as `Gurobi <https://www.gurobi.com/>`_ for linear program solving.
 Even though Gurobi is a commercial solver it is possible to get a free academic license.
 
  
- Then download GRASP from `here <https://github.com/biosustain/GRASP>`_, and you're ready to go.
+Then download GRASP from `here <https://github.com/biosustain/GRASP>`_, and you're ready to go.
 
 
 
