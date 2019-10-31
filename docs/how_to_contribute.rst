@@ -1,21 +1,4 @@
-API documentation
-=================
+How to contribute
+=======================
 
-
-**Ensemble functions**
-
-
-.. toctree::
-   :glob:
-   :maxdepth: 2
-
-   modules/ensemble_functions
-
-
-**Pattern functions**
-
-.. toctree::
-   :glob:
-   :maxdepth: 2
-
-   modules/pattern_functions
+Under construction.
