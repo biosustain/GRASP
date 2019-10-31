@@ -1,8 +1,8 @@
-Ensemble functions
-=================
+Simulation visualization
+=========================
 
 .. toctree::
    :glob:
    :maxdepth: 2
 
-   ensembleFxns/*
+   simulation_viz/*
