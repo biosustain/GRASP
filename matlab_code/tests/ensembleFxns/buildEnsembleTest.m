@@ -56,7 +56,8 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleRandom'));
             trueRes = trueRes.ensemble;
                    
-            testCase.verifyEqual(trueRes, ensemble);
+            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
        
         function testBuildEnsembleAllosteric(testCase)
@@ -75,7 +76,8 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleAllosteric'));
             trueRes = trueRes.ensemble;
                    
-            testCase.verifyEqual(trueRes, ensemble);
+            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
         
         function testBuildEnsembleAllStable(testCase)
@@ -96,7 +98,8 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleAllStable'));
             trueRes = trueRes.ensemble;
                    
-            testCase.verifyEqual(trueRes, ensemble);
+            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
         
         function testBuildEnsembleNoPromiscuous(testCase)
@@ -117,7 +120,8 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleNoPromiscuous'));
             trueRes = trueRes.ensemble;
                    
-            testCase.verifyEqual(trueRes, ensemble);
+            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
         
         function testBuildEnsembleLargeModel(testCase)
@@ -137,7 +141,8 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleLargeModel'));
             trueRes = trueRes.ensemble;
                    
-            testCase.verifyEqual(trueRes, ensemble);
+            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
         
         function testBuildEnsembleLargeModeldGs(testCase)
@@ -157,8 +162,10 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleLargeModeldGs'));
             trueRes = trueRes.ensemble;
                    
-            testCase.verifyEqual(trueRes, ensemble);
+            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
+        
         function testBuildEnsembleCreateDir(testCase)
             
             seed = 1;
@@ -180,7 +187,8 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'testBuildEnsembleCreateDir'));
             trueRes = trueRes.ensemble;
                    
-            testCase.verifyEqual(trueRes, ensemble);
+            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
 
         function testBuildEnsembleExample(testCase)
@@ -204,7 +212,8 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'testBuildEnsembleExample'));
             trueRes = trueRes.ensemble;
                    
-            testCase.verifyEqual(trueRes, ensemble);
+            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
 	end
 end

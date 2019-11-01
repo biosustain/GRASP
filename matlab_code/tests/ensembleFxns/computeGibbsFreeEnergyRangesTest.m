@@ -44,9 +44,12 @@ classdef computeGibbsFreeEnergyRangesTest < matlab.unittest.TestCase
             trueResMets = trueRes.xrng;
             trueResFluxes = trueRes.vrng;
                    
-            testCase.verifyEqual(trueResDGr, DGr_rng);
-            testCase.verifyEqual(trueResMets, xrng);
-            testCase.verifyEqual(trueResFluxes, vrng);
+            testCase.verifyThat(trueResDGr, matlab.unittest.constraints.IsEqualTo(DGr_rng, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
+            testCase.verifyThat(trueResMets, matlab.unittest.constraints.IsEqualTo(xrng, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-10)))
+            testCase.verifyThat(trueResFluxes, matlab.unittest.constraints.IsEqualTo(vrng, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
         end
        
     end

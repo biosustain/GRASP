@@ -1,5 +1,5 @@
 clearvars
-import matlab.unittest.TestSuite;
+import matlab.unittest.TestSuite
 
 suitePatternFxns = TestSuite.fromFolder('patternFxns');
 suiteEnsembleFxns = TestSuite.fromFolder('ensembleFxns');

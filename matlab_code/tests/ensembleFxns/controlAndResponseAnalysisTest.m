@@ -39,7 +39,8 @@ classdef controlAndResponseAnalysisTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResControlAndResponseAnalysis1'));
             trueRes = trueRes.mcaResults;
                    
-            testCase.verifyEqual(trueRes, mcaResults)
+            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(mcaResults, ...
+                'Within', matlab.unittest.constraints.AbsoluteTolerance(1e-10) & matlab.unittest.constraints.RelativeTolerance(1)));
         end
     end
 end

@@ -1,4 +1,4 @@
-function simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC, metsAbsOrRel, interruptTime)
+function simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC, metsAbsOrRel, interruptTime, numModels)
 % Takes in a model ensemble and initial conditions for enzyme and 
 % metabolite concentrations and simulates all models in the ensemble.
 %
@@ -30,6 +30,7 @@ function simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC
 %    metsIC (double vector):      initial conditions for metabolite concentrations
 %    metsAbsOrRel (char):         specify whether metabolite initial conditions are relative or absolute concentrations. Accepted values for this variable are 'abs' and 'rel'
 %    interruptTime (double)       maximum time for each simulation, given in seconds
+%    numModels (int):             how many models should be simulated. This number should be lower than the number of models in the ensemble.
 %
 % OUTPUT:
 %    simulationRes (struct):  simulation results
@@ -56,7 +57,6 @@ addKineticFxnsToPath(ensemble);
 
 % Find particles of the appropriate structure
 particleIdx = find(ensemble.populations(end).strucIdx==strucIdx);
-numModels = size(ensemble.populations.models, 2);
 if numModels > numel(particleIdx) 
     numModels   = numel(particleIdx);
 end
@@ -68,8 +68,6 @@ Sred         = ensemble.Sred;
 kinInactRxns = ensemble.kinInactRxns;
 subunits     = ensemble.subunits{strucIdx};
 
-ix = 1;
-simulationRes = {};
 
 currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');  
 folderName =  fullfile(currentPath{1}, '..', '..', 'reactions', strcat(ensemble.description, '_', num2str(ix)));
@@ -79,6 +77,7 @@ else
     error(['You need a model function to be used for the model ode simulations. It should be named as ', strcat(func2str(kineticFxn), '_ode')]);
 end
 
+ix = 1;
 simulationRes = cell(1, numModels);
 
 disp ('Simulating models.');

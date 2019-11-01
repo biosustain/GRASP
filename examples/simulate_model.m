@@ -8,6 +8,9 @@ addpath(fullfile('..', 'matlab_code', 'patternFxns'), ...
 modelID = 'toy_model';
 outputFolder = fullfile('..', 'io','output');
 
+% How many models in the ensemble you want to simulate
+numModels = 1000;
+
 % Define how many seconds until ODE solver is interrupted. The idea is to
 % skip models that take ages to simulate.
 interruptTime = 40;
@@ -35,7 +38,7 @@ metsIC(5) = 2;          % Absolute concentrations must be given in mol/L
 % Specifiy the time of simulation (probably in hours)
 finalTime = 1;
 
-simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC, metsAbsOrRel, interruptTime);
+simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC, metsAbsOrRel, interruptTime, numModels);
 
 save(fullfile(outputFolder, ['simulation_', modelID, '.mat']), 'simulationRes')
 write(cell2table(ensemble.mets(ensemble.metsActive)), fullfile(outputFolder, [modelID, '_metsActive.dat']));
