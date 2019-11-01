@@ -28,12 +28,22 @@ enzActive  = ensemble.activeRxns(~ismember(ensemble.activeRxns,ensemble.kinInact
 totalEvals = numel(metsActive) + numel(enzActive) + 1;
 freeVars   = [ensemble.mets(metsActive);ensemble.rxns(enzActive)];                             % return indexes of the free variables
 
-% Write initial parameters
-c = '%';
+
+% Get output file handler
 currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
 filepath = fullfile(currentPath{1}, '..', '..', 'reactions', [ensemble.description, '_', num2str(strucIdx)], [kineticFxn,'.m']);
-fid = fopen(filepath, 'w'); 
 
+try
+    fid = fopen(filepath, 'w'); 
+catch
+    error(['File not found: ', filepath, ...
+           newline, ...
+           'Please make sure the folder ', fullfile(currentPath{1}, '..', '..', 'reactions'), ...
+           ' exists.']) 
+end
+
+% Write initial parameters
+c = '%';
 fprintf(fid,['function [f,grad] = ',kineticFxn,'(x,model,fixedExch,Sred,kinInactRxns,subunits,flag)\n']);
 fprintf(fid,'%s Pre-allocation of memory\n',c);
 fprintf(fid,'h = 1e-8;\n');									% Step length

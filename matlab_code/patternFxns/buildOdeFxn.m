@@ -1,6 +1,9 @@
 function buildOdeFxn(ensemble, kineticFxn, strucIdx)
 % Builds the ODE function .m file that is used to simulate the model.
 %
+% The function is build by modifying the original kinetic function produced
+% by buildKineticFxn.
+%
 %
 % USAGE:
 %
@@ -20,8 +23,23 @@ function buildOdeFxn(ensemble, kineticFxn, strucIdx)
 currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
 filepath = fullfile(currentPath{1}, '..', '..', 'reactions', [ensemble.description, '_', num2str(strucIdx)], [kineticFxn,'.m']);
 
-fIn = fopen(filepath);
-fOut = fopen([filepath(1:(end-2)), '_ode.m'], 'w');
+try
+    fIn = fopen(filepath);
+catch
+    error(['File not found: ', filepath, ...
+           newline, ...
+           'Please make sure the folder ', fullfile(currentPath{1}, '..', '..', 'reactions'), ...
+           ' exists.']) ; 
+end
+
+try
+    fOut = fopen([filepath(1:(end-2)), '_ode.m'], 'w');
+catch
+    error(['File not found: ', [filepath(1:(end-2)), '_ode.m'], ...
+           newline, ...
+           'Please make sure the folder ', fullfile(currentPath{1}, '..', '..', 'reactions'), ...
+           ' exists.']) ; 
+end
 
 elseCount = 0;
 lineIn = fgets(fIn);

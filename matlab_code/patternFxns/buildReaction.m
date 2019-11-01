@@ -24,14 +24,20 @@ function buildReaction(state,rateList,metList,numTerm,prodNum,reactionName, prom
 %       - Pedro Saa     2016 original code  adapted from Qi et al
 %       - Marta Matos   2018 extended for promiscuous reactions
 
-% 1. Write initial parameters
+% 1. Get output file handle
+currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+filepath = fullfile(currentPath{1}, '..', '..', 'temp', 'reactions', [reactionName,'.m']);
+
 try
-    currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
-    filepath = fullfile(currentPath{1}, '..', '..', 'temp', 'reactions', [reactionName,'.m']);
     fid = fopen(filepath, 'w'); 
 catch
-    fid = fopen([reactionName,'.m'],'w'); 
+    error(['File not found: ', filepath, ...
+           newline, ...
+          'Please make sure the folder ', fullfile(currentPath{1}, '..', '..', 'temp'), ...
+          ' exists.']) ; 
 end
+
+% 2. Write initial parameters
 c = '%';
 if (isempty(metList))
     fprintf(fid,['function [v,E1,E2] = ',reactionName,'(K)\n']);
