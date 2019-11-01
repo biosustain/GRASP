@@ -9,8 +9,12 @@ Welcome to GRASP's documentation!
 .. toctree::
    :maxdepth: 2
 
-   modules
-   
+   installation
+   tutorials
+   how_to_contribute
+   input_file_doc
+   api_doc
+
 
 
 Indices and tables
