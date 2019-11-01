@@ -68,6 +68,7 @@ Sred         = ensemble.Sred;
 kinInactRxns = ensemble.kinInactRxns;
 subunits     = ensemble.subunits{strucIdx};
 
+ix = 1;
 
 currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');  
 folderName =  fullfile(currentPath{1}, '..', '..', 'reactions', strcat(ensemble.description, '_', num2str(ix)));
@@ -77,7 +78,6 @@ else
     error(['You need a model function to be used for the model ode simulations. It should be named as ', strcat(func2str(kineticFxn), '_ode')]);
 end
 
-ix = 1;
 simulationRes = cell(1, numModels);
 
 disp ('Simulating models.');
