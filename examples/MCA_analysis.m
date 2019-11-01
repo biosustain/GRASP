@@ -5,8 +5,8 @@ addpath(fullfile('..', 'matlab_code', 'patternFxns'), ...
         fullfile('..', 'matlab_code', 'ensembleFxns'));
 
 saveMCAMatrices = 1;    % whether or not to save the MCA results for all models and not just mean values
-modelID = 'HMP2360_r0_t3_new';
-outputFolder = 'output_test';
+modelID = 'toy_model';
+outputFolder = fullfile('..', 'io','output');
 
 load(fullfile(outputFolder, [modelID, '.mat']))
 

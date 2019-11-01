@@ -15,8 +15,8 @@ maxNumberOfSamples = 10000;
 % threshold of the jacobian's eigenvalues
 eigThreshold = 10^-5;
 
-modelID = 'HMP2360_r0_t3_no_promiscuous2';
-inputFile = fullfile('..', 'io', 'input_test', modelID);
-outputFile = fullfile('..', 'io','output_test', [modelID, '.mat']);
+modelID = 'toy_model';
+inputFile = fullfile('..', 'io', 'input', modelID);
+outputFile = fullfile('..', 'io','output', [modelID, '.mat']);
 
 ensemble = buildEnsemble(inputFile, outputFile, maxNumberOfSamples, eigThreshold);
