@@ -40,6 +40,7 @@ nbconvert==5.6.1
 nbformat==4.4.0
 nltk==3.4.5
 notebook==6.0.1
+numexpr==2.7.0
 numpy==1.17.3
 odfpy==1.4.0
 openpyxl==3.0.0
@@ -74,6 +75,7 @@ six==1.12.0
 SQLAlchemy==1.3.10
 swiglpk==4.65.0
 sympy==1.4
+tables==3.6.1
 tablib==0.14.0
 terminado==0.8.2
 testpath==0.4.2
