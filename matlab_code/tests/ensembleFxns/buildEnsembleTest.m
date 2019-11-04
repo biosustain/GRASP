@@ -184,7 +184,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             ensemble = load(outputFile);
             ensemble = ensemble.ensemble;
 
-            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'testBuildEnsembleCreateDir'));
+            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleCreateDir'));
             trueRes = trueRes.ensemble;
                    
             testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
@@ -209,7 +209,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             ensemble = load(outputFile);
             ensemble = ensemble.ensemble;
 
-            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'testBuildEnsembleExample'));
+            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleExample'));
             trueRes = trueRes.ensemble;
                    
             testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
