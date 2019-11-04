@@ -4,8 +4,8 @@ import scipy.io
 import io
 import unittest.mock
 
-from simulation_viz.src.check_simulations import check_for_negative_concentrations, get_non_converging_models, remove_models
-from simulation_viz.src.import_simulation_data import gather_sim_data, get_met_rxn_names, get_time_series_quantiles, import_ref_conc
+from simulation_viz.check_simulations import check_for_negative_concentrations, get_non_converging_models, remove_models
+from simulation_viz.import_simulation_data import gather_sim_data, get_met_rxn_names, get_time_series_quantiles, import_ref_conc
 
 
 class TestImportSimulationData(unittest.TestCase):

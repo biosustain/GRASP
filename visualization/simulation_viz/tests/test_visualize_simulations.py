@@ -1,9 +1,8 @@
 import os
 import unittest
 import scipy.io
-import matplotlib.pyplot as plt
-from simulation_viz.src.visualize_simulations import plot_ensemble, plot_model
-from simulation_viz.src.import_simulation_data import gather_sim_data, get_met_rxn_names, get_time_series_quantiles, import_ref_conc
+from simulation_viz.visualize_simulations import plot_ensemble, plot_model
+from simulation_viz.import_simulation_data import gather_sim_data, get_met_rxn_names, get_time_series_quantiles, import_ref_conc
 
 
 class TestVisualizeSimulations(unittest.TestCase):

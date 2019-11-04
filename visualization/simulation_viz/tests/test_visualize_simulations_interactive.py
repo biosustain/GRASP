@@ -2,8 +2,8 @@ import os
 import unittest
 import scipy.io
 
-from simulation_viz.src.visualize_simulations_interactive import plot_ensemble_interactive, plot_model_interactive
-from simulation_viz.src.import_simulation_data import gather_sim_data, get_met_rxn_names, get_time_series_quantiles, import_ref_conc
+from simulation_viz.visualize_simulations_interactive import plot_ensemble_interactive, plot_model_interactive
+from simulation_viz.import_simulation_data import gather_sim_data, get_met_rxn_names, get_time_series_quantiles, import_ref_conc
 
 
 class TestVisualizeSimulationsInteractive(unittest.TestCase):
