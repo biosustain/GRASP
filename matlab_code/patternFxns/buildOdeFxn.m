@@ -20,7 +20,7 @@ function buildOdeFxn(ensemble, kineticFxn, strucIdx)
 % .. Authors:
 %       - Marta Matos	2019 original code 
 
-currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+currentPath = regexp(mfilename('fullpath'), '(.*)[/\\\\]', 'match');
 filepath = fullfile(currentPath{1}, '..', '..', 'reactions', [ensemble.description, '_', num2str(strucIdx)], [kineticFxn,'.m']);
 
 try

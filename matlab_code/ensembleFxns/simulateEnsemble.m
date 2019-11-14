@@ -70,7 +70,7 @@ subunits     = ensemble.subunits{strucIdx};
 
 ix = 1;
 
-currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');  
+currentPath = regexp(mfilename('fullpath'), '(.*)[/\\\\]', 'match');  
 folderName =  fullfile(currentPath{1}, '..', '..', 'reactions', strcat(ensemble.description, '_', num2str(ix)));
 if isfile(fullfile(folderName, strcat(func2str(kineticFxn), '_ode.m')))
     odeFunction = str2func(strcat(func2str(kineticFxn), '_ode'));
@@ -91,7 +91,7 @@ for jx = 1:numModels
         perturbInd = find(metsIC ~= 1);
         metsIC(perturbInd) = metsIC(perturbInd) ./ metConcRef(perturbInd);
     end
-        
+
     outputFun= @(t,y,flag)interuptFun(t,y,flag,interruptTime);
     opts = odeset('RelTol',1e-13,'OutputFcn',outputFun);
 

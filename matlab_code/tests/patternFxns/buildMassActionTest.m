@@ -7,7 +7,7 @@ classdef buildMassActionTest < matlab.unittest.TestCase
     
     methods(TestClassSetup)
         function createReactionsTempFolder(testCase)
-            testCase.currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+            testCase.currentPath = regexp(mfilename('fullpath'), '(.*)[/\\\\]', 'match');
             testCase.tempReactionsFolder = fullfile(testCase.currentPath{1}, '..', '..', '..', 'temp', 'reactions');
             mkdir(testCase.tempReactionsFolder);
         end

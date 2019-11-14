@@ -19,7 +19,7 @@ function buildAllosteric(metList,reactionName,negEffectors,posEffectors)
 %       - Pedro Saa     2016 original code 
 
 % 1. Get output file handler
-currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+currentPath = regexp(mfilename('fullpath'), '(.*)[/\\\\]', 'match');
 filepath = fullfile(currentPath{1}, '..', '..', 'temp', 'reactions', [reactionName,'.m']);
 
 try

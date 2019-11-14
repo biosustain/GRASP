@@ -6,7 +6,7 @@ classdef sampleModifierElemFluxesTest < matlab.unittest.TestCase
     
     methods(TestClassSetup)
         function defineCurrentPath(testCase)
-            testCase.currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+            testCase.currentPath = regexp(mfilename('fullpath'), '(.*)[/\\\\]', 'match');
         end
     end
     

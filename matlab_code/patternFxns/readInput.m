@@ -21,7 +21,7 @@ function [nodeList,edge,kineticMatrix,forwardFlux] = readInput(filename)
 %       - Pedro Saa     2016 original code, adapted from Qi et al. 2009
 
 % 1. Retrieve information from input file
-currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+currentPath = regexp(mfilename('fullpath'), '(.*)[/\\\\]', 'match');
 filepath = fullfile(currentPath{1}, '..', '..', 'patterns', filename);
 
 try

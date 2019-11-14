@@ -481,7 +481,7 @@ for jx = 1:ensemble.numStruct
     % Read each mechanism and write the reaction patterns
     ensemble.kineticFxn{jx} = [ensemble.description,'_Kinetics',num2str(jx)];      % string with kinetic function name
     
-    currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+    currentPath = regexp(mfilename('fullpath'), '(.*)[/\\\\]', 'match');
     tempReactionsFolder = fullfile(currentPath{1}, '..', '..', 'temp', 'reactions');
     mkdir(tempReactionsFolder);
     

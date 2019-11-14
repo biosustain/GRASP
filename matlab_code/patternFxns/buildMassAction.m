@@ -19,7 +19,7 @@ function buildMassAction(reactionName,strucIdx)
 
 % 1. Get output file handler
 reactionName = [reactionName,num2str(strucIdx)];
-currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+currentPath = regexp(mfilename('fullpath'), '(.*)[/\\\\]', 'match');
 filepath = fullfile(currentPath{1}, '..', '..', 'temp', 'reactions', [reactionName,'.m']);
 
 try
