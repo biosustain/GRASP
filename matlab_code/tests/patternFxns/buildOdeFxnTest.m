@@ -7,7 +7,7 @@ classdef buildOdeFxnTest < matlab.unittest.TestCase
     
     methods(TestClassSetup)
         function createReactionsFolder(testCase)
-            testCase.currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+            testCase.currentPath = regexp(mfilename('fullpath'), '(.*)[/\\\\]', 'match');
             testCase.reactionsFolder = fullfile(testCase.currentPath{1}, '..', '..', '..', 'reactions', 'toy_model1_random2_1');
             mkdir(testCase.reactionsFolder);
             
@@ -27,8 +27,7 @@ classdef buildOdeFxnTest < matlab.unittest.TestCase
     
     methods (Test)
         function testBuildOdeFxn1(testCase)
-            currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
-            filepath = fullfile(currentPath{1}, 'testFiles', 'ensemble_toy_model1_random2.mat');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'ensemble_toy_model1_random2.mat');
             ensemble = load(filepath);
             ensemble = ensemble.ensemble;
             kineticFxn = 'toy_model1_random2_Kinetics1';
@@ -36,8 +35,8 @@ classdef buildOdeFxnTest < matlab.unittest.TestCase
             
             buildOdeFxn(ensemble,kineticFxn,strucIdx);
 
-            res = fileread(fullfile(currentPath{1}, '..', '..', '..', 'reactions', [ensemble.description, '_', num2str(strucIdx)], [kineticFxn,'_ode.m']));
-            trueRes = fileread(fullfile(currentPath{1}, 'testFiles', 'trueRes_toy_model1_random2_Kinetics1_ode.m'));
+            res = fileread(fullfile(testCase.currentPath{1}, '..', '..', '..', 'reactions', [ensemble.description, '_', num2str(strucIdx)], [kineticFxn,'_ode.m']));
+            trueRes = fileread(fullfile(testCase.currentPath{1}, 'testFiles', 'trueRes_toy_model1_random2_Kinetics1_ode.m'));
             
             testCase.verifyEqual(trueRes,res);                   
         end

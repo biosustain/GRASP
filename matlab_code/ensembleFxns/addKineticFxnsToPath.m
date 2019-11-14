@@ -13,7 +13,7 @@ function addKineticFxnsToPath(ensemble)
 %       - Pedro Saa      2016 original code
 %       - Marta Matos    2018 rootName based on current directory
 
-currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+currentPath = regexp(mfilename('fullpath'), '(.*)[/\\\\]', 'match');
 rootName =  fullfile(currentPath{1}, '..', '..', 'reactions', strcat(ensemble.description, '_'));
 
 for ix = 1:ensemble.numStruct

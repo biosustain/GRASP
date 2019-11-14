@@ -25,7 +25,7 @@ function buildReaction(state,rateList,metList,numTerm,prodNum,reactionName, prom
 %       - Marta Matos   2018 extended for promiscuous reactions
 
 % 1. Get output file handle
-currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+currentPath = regexp(mfilename('fullpath'), '(.*)[/\\\\]', 'match');
 filepath = fullfile(currentPath{1}, '..', '..', 'temp', 'reactions', [reactionName,'.m']);
 
 try

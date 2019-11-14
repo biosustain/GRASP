@@ -7,7 +7,7 @@ classdef buildKineticFxnTest < matlab.unittest.TestCase
     
     methods(TestClassSetup)
         function createReactionsFolder(testCase)
-            testCase.currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');
+            testCase.currentPath = regexp(mfilename('fullpath'), '(.*)[/\\\\]', 'match');
             testCase.reactionsFolder = fullfile(testCase.currentPath{1}, '..', '..', '..', 'reactions', 'toy_model1_1');
             mkdir(testCase.reactionsFolder);
         end

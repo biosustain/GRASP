@@ -58,7 +58,7 @@ classdef getExpressionTest < matlab.unittest.TestCase
             
             Nodes = [1,2,3,4,5,6,7,8,9,10,11];
             PatternNumber = 25;
-            currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');                      
+            currentPath = regexp(mfilename('fullpath'), '(.*)[/\\\\]', 'match');                      
         	pathway = load(fullfile(currentPath{1}, 'testFiles', 'pathwayPromiscuous.mat'));   
             pathway = pathway.pathway;
             KineticMatrix = {0,'k01.*A',0,0,0,'k12.*Q','k13.*C',0,0,0,'k24.*R';...
@@ -89,7 +89,7 @@ classdef getExpressionTest < matlab.unittest.TestCase
             
             Nodes = [1,2,3,4,5,6,7];
             PatternNumber = 48;
-            currentPath = regexp(mfilename('fullpath'), '(.*)/', 'match');                      
+            currentPath = regexp(mfilename('fullpath'), '(.*)[/\\\\]', 'match');                      
         	pathway = load(fullfile(currentPath{1}, 'testFiles', 'pathwayRandomBiBi.mat'));   
             pathway = pathway.pathway;
             KineticMatrix = {0,'k01.*A','k03.*B',0,0,'k16.*Q','k18.*P';'k02',0,0,'k05.*B',0,0,0;...
