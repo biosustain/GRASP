@@ -136,14 +136,10 @@ for i = 1:numel(ensemble.activeRxns)
             end
         end
 
-
-        if strcmp('massAction',ensemble.rxnMechanisms{strucIdx}(i))
-            reactants = [strjoin(reactants, ',') ','];
-        else
-            reactants = strjoin(reactants, ';');
-        end
+        reactants = strjoin(reactants, ';');
+        
     else
-
+        
         reactants  = [];
 
         % Extract and organize substrates
@@ -159,8 +155,8 @@ for i = 1:numel(ensemble.activeRxns)
             substrates  = (ensemble.mets(ensemble.S(:,ensemble.activeRxns(i))<0));
         end
         substrates  = substrates(ismember(substrates,ensemble.mets(ensemble.metsSimulated)));         % Extract only active substrates
+        stoicCoeffsSub = abs(ensemble.S(ismember(ensemble.mets,substrates),ensemble.activeRxns(i)));
         stoicCoeffs = abs(ensemble.S(ismember(ensemble.mets,substrates),ensemble.activeRxns(i)));
-
         % Substrates: Check the stoic coeff (relevant only if greater than 1)
         if any(stoicCoeffs>1)
             for w = 1:numel(substrates)
@@ -172,6 +168,7 @@ for i = 1:numel(ensemble.activeRxns)
             end
         end
 
+       
         % Extract and organize products
         if size(ensemble.promiscuity{strucIdx}{i}) > 0
             productsInd = [];
@@ -184,9 +181,8 @@ for i = 1:numel(ensemble.activeRxns)
             products    = (ensemble.mets(ensemble.S(:,ensemble.activeRxns(i))>0));
         end
         products    = products(ismember(products,ensemble.mets(ensemble.metsSimulated)));               % Extract only active products
+        stoicCoeffsProd = abs(ensemble.S(ismember(ensemble.mets,products),ensemble.activeRxns(i)));
         stoicCoeffs = abs(ensemble.S(ismember(ensemble.mets,products),ensemble.activeRxns(i)));
-
-
         % Products: Check the stoic coeff (relevant only if greater than 1)
         if any(stoicCoeffs>1)
             for w = 1:numel(products)
@@ -208,50 +204,39 @@ for i = 1:numel(ensemble.activeRxns)
             rxnMetLinks{i} = reactants;                                                           % There is a link if rxn is diffusion
 
         elseif strcmp('massAction',ensemble.rxnMechanisms{strucIdx}(i))
-            % In case substrate and product order are specified
-            if (~isempty(ensemble.subOrder{strucIdx}{i}) && ~isempty(ensemble.prodOrder{strucIdx}{i}))
-                substratesMA = ensemble.subOrder{strucIdx}{i};
-                productsMA = ensemble.prodOrder{strucIdx}{i};
-            else
-                substratesMA = substrates(1);
-                productsMA = products(1);
-            end
-            
+                    
             subList = [];
-            for subI=1:numel(substratesMA)
-                subs = substratesMA{subI};
-                if contains(subs, '*')
-                    subs = strsplit(subs, '*');
-                    subs = subs{2};
-                end
-                if ~ismember(subs,ensemble.mets(ensemble.metsFixed))
-                    subList      = [subList,subs,','];
-                    rxnMetLinks{i} = [rxnMetLinks{i},subs];
+            subCoefList = [];
+            for subI=1:numel(substrates)
+                subCoefList = [subCoefList, num2str(stoicCoeffsSub(subI)), ','];
+                
+                if ~ismember(substrates{subI}, ensemble.mets(ensemble.metsFixed))
+                    subList      = [subList, substrates{subI}, ','];
+                    rxnMetLinks{i} = [rxnMetLinks{i}, substrates{subI}];
                 else
                     subList = [subList,'ones(1,size(x,2)),'];
                 end
             end
             
             prodList = [];
-            for prodI=1:numel(productsMA)
-                prod = productsMA{prodI};
-                if contains(prod, '*')
-                    prod = strsplit(prod, '*');
-                    prod = prod{2};
-                end
-                if ~ismember(prod,ensemble.mets(ensemble.metsFixed))
-                    prodList      = [prodList,prod,','];
-                    rxnMetLinks{i} = [rxnMetLinks{i},prod];
+            prodCoefList = [];
+            for prodI=1:numel(products)
+                prodCoefList = [prodCoefList, num2str(stoicCoeffsProd(prodI)), ','];
+                
+                if ~ismember(products{prodI}, ensemble.mets(ensemble.metsFixed))
+                    prodList      = [prodList, products{prodI}, ','];
+                    rxnMetLinks{i} = [rxnMetLinks{i}, products{prodI}];
                 else
                     prodList = [prodList,'ones(1,size(x,2)),'];
                 end
             end
             
-            if (~isempty(ensemble.subOrder{strucIdx}{i}) && ~isempty(ensemble.prodOrder{strucIdx}{i}))
-                reactants = ['[',subList, prodList(1:end-1),'],'];
-            else
-                reactants = [subList, prodList(1:end-1), ','];
-            end
+            
+            reactants = ['[', subCoefList(1:end-1), ...
+                         '],[', subList(1:end-1), '],[',  ...
+                         prodCoefList(1:end-1), ...
+                         '],[',prodList(1:end-1), '],'];
+            
             
         % Enzymatic reactions
         elseif  ~strcmp('fixedExchange',ensemble.rxnMechanisms{strucIdx}(i))

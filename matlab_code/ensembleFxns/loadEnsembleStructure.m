@@ -511,7 +511,7 @@ for jx = 1:ensemble.numStruct
 
         % Non-enzymatic reactions: mass action
         elseif strcmp(ensemble.rxnMechanisms{jx}{ix},'massAction')
-            buildMassAction(ensemble.rxns{ix}, ensemble.subOrder{jx}{ix}, ensemble.prodOrder{jx}{ix}, jx)
+            buildMassAction(ensemble.rxns{ix}, jx)
             ensemble.revMatrix{ix,jx}   = [];
             ensemble.forwardFlux{ix,jx} = [];
             ensemble.Nelem{ix,jx}       = [];
