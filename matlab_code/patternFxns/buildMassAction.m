@@ -1,4 +1,4 @@
-function buildMassAction(reactionName,strucIdx)
+function buildMassAction(reactionName,substrateList,productList,strucIdx)
 % Build mass action kinetic function.
 % Note that this rate law assumes only one substrate and one product.
 %
@@ -35,5 +35,36 @@ end
 c = '%';
 fprintf(fid,['function v = ',reactionName,'(S,P,K)\n']);
 fprintf(fid,'%s Mass action definition \n',c);
-fprintf(fid,'v = K(1)*prod(S,1)-K(2)*prod(P,1);');
+
+if ~isempty(substrateList)
+    rateLaw = 'v = K(1)';
+
+    for subI=1:size(substrateList,2)
+        if contains(substrateList{subI}, '*')
+            coefMet = strsplit(substrateList{subI}, '*');
+            rateLaw = strcat(rateLaw, '*S(', num2str(subI), ',:)^', coefMet{1});
+        else
+            rateLaw = strcat(rateLaw, '*S(', num2str(subI), ',:)');
+        end
+    end
+
+    rateLaw = strcat(rateLaw, '-K(2)');
+
+    for prodI=1:size(productList,2)
+        if contains(productList{prodI}, '*')
+            coefMet = strsplit(productList{prodI}, '*');
+            rateLaw = strcat(rateLaw, '*P(', num2str(prodI), ',:)^', coefMet{1});
+        else
+            rateLaw = strcat(rateLaw, '*P(', num2str(prodI), ',:)');
+        end
+    end
+
+    rateLaw = strcat(rateLaw, ';');
+    
+else
+    rateLaw = 'v = K(1)*prod(S,1)-K(2)*prod(P,1);';
+end
+
+fprintf(fid,rateLaw);
+
 fclose(fid);

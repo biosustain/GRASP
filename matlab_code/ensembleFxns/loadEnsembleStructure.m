@@ -370,7 +370,6 @@ for jx = 1:ensemble.numStruct
     end
     try
         [xKinetic,strKinetic] = xlsread(xlsxFile,['kinetics',num2str(jx)]);                    % read kinetic info from structure jx
-        strKinetic = fixVariableNames(strKinetic, 'r', 'kinetics');
         if size(strKinetic, 1) ~= nRxnsActive+1 || size(strKinetic, 2) < 11
             error(['Check the kinetics sheet, it should have ', num2str(nRxnsActive+1), ' rows and at least 11 columns.', ...
                    newline, ...
@@ -383,6 +382,8 @@ for jx = 1:ensemble.numStruct
         error("The kinetics sheet couln't be read. Make sure it is named as kinetics1.");
         break;
     end
+    
+    strKinetic = fixVariableNames(strKinetic, 'r', 'kinetics');
 
     % Load kinetic information
     strKinetic(1,:) = [];                                                                      % remove useless information
@@ -510,7 +511,7 @@ for jx = 1:ensemble.numStruct
 
         % Non-enzymatic reactions: mass action
         elseif strcmp(ensemble.rxnMechanisms{jx}{ix},'massAction')
-            buildMassAction(ensemble.rxns{ix},jx)
+            buildMassAction(ensemble.rxns{ix}, ensemble.subOrder{jx}{ix}, ensemble.prodOrder{jx}{ix}, jx)
             ensemble.revMatrix{ix,jx}   = [];
             ensemble.forwardFlux{ix,jx} = [];
             ensemble.Nelem{ix,jx}       = [];

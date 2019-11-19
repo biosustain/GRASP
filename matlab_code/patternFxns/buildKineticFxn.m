@@ -84,7 +84,7 @@ for i = 1:numel(ensemble.activeRxns)
 
     % If binding/release order is provided
     % Does not take into account different models
-    if ~isempty(ensemble.subOrder{strucIdx}{i})||~isempty(ensemble.prodOrder{strucIdx}{i})
+    if (~isempty(ensemble.subOrder{strucIdx}{i}) || ~isempty(ensemble.prodOrder{strucIdx}{i})) && sum(~ismember({'massAction', 'fixedExchange', 'freeExchange', 'diffusion'}, ensemble.rxnMechanisms{strucIdx}{i})) == 4 
         reactants = [];
         w = sum(length(ensemble.inhibitors{1,1}{i})+length(ensemble.activators{1,1}{i})+length(ensemble.subOrder{1,1}{i})+length(ensemble.prodOrder{1,1}{i}));
         elemCount = 1;
@@ -208,19 +208,51 @@ for i = 1:numel(ensemble.activeRxns)
             rxnMetLinks{i} = reactants;                                                           % There is a link if rxn is diffusion
 
         elseif strcmp('massAction',ensemble.rxnMechanisms{strucIdx}(i))
-            if ~ismember(substrates{1},ensemble.mets(ensemble.metsFixed))
-                reactants      = [reactants,substrates{1},','];
-                rxnMetLinks{i} = [rxnMetLinks{i},substrates(1)];
+            % In case substrate and product order are specified
+            if (~isempty(ensemble.subOrder{strucIdx}{i}) && ~isempty(ensemble.prodOrder{strucIdx}{i}))
+                substratesMA = ensemble.subOrder{strucIdx}{i};
+                productsMA = ensemble.prodOrder{strucIdx}{i};
             else
-                reactants = [reactants,'ones(1,size(x,2)),'];
+                substratesMA = substrates(1);
+                productsMA = products(1);
             end
-            if ~ismember(products{1},ensemble.mets(ensemble.metsFixed))
-                reactants      = [reactants,products{1},','];
-                rxnMetLinks{i} = [rxnMetLinks{i},products(1)];
+            
+            subList = [];
+            for subI=1:numel(substratesMA)
+                subs = substratesMA{subI};
+                if contains(subs, '*')
+                    subs = strsplit(subs, '*');
+                    subs = subs{2};
+                end
+                if ~ismember(subs,ensemble.mets(ensemble.metsFixed))
+                    subList      = [subList,subs,','];
+                    rxnMetLinks{i} = [rxnMetLinks{i},subs];
+                else
+                    subList = [subList,'ones(1,size(x,2)),'];
+                end
+            end
+            
+            prodList = [];
+            for prodI=1:numel(productsMA)
+                prod = productsMA{prodI};
+                if contains(prod, '*')
+                    prod = strsplit(prod, '*');
+                    prod = prod{2};
+                end
+                if ~ismember(prod,ensemble.mets(ensemble.metsFixed))
+                    prodList      = [prodList,prod,','];
+                    rxnMetLinks{i} = [rxnMetLinks{i},prod];
+                else
+                    prodList = [prodList,'ones(1,size(x,2)),'];
+                end
+            end
+            
+            if (~isempty(ensemble.subOrder{strucIdx}{i}) && ~isempty(ensemble.prodOrder{strucIdx}{i}))
+                reactants = ['[',subList, prodList(1:end-1),'],'];
             else
-                reactants = [reactants,'ones(1,size(x,2)),'];
+                reactants = [subList, prodList(1:end-1), ','];
             end
-
+            
         % Enzymatic reactions
         elseif  ~strcmp('fixedExchange',ensemble.rxnMechanisms{strucIdx}(i))
 
