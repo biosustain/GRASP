@@ -208,26 +208,26 @@ for i = 1:numel(ensemble.activeRxns)
             subList = [];
             subCoefList = [];
             for subI=1:numel(substrates)
-                subCoefList = [subCoefList, num2str(stoicCoeffsSub(subI)), ','];
+                subCoefList = [subCoefList, num2str(stoicCoeffsSub(subI)), '*ones(1,size(x,2));'];
                 
                 if ~ismember(substrates{subI}, ensemble.mets(ensemble.metsFixed))
-                    subList      = [subList, substrates{subI}, ','];
+                    subList      = [subList, substrates{subI}, ';'];
                     rxnMetLinks{i} = [rxnMetLinks{i}, substrates{subI}];
                 else
-                    subList = [subList,'ones(1,size(x,2)),'];
+                    subList = [subList,'ones(1,size(x,2));'];
                 end
             end
             
             prodList = [];
             prodCoefList = [];
             for prodI=1:numel(products)
-                prodCoefList = [prodCoefList, num2str(stoicCoeffsProd(prodI)), ','];
+                prodCoefList = [prodCoefList, num2str(stoicCoeffsProd(prodI)), '*ones(1,size(x,2));'];
                 
                 if ~ismember(products{prodI}, ensemble.mets(ensemble.metsFixed))
-                    prodList      = [prodList, products{prodI}, ','];
+                    prodList      = [prodList, products{prodI}, ';'];
                     rxnMetLinks{i} = [rxnMetLinks{i}, products{prodI}];
                 else
-                    prodList = [prodList,'ones(1,size(x,2)),'];
+                    prodList = [prodList,'ones(1,size(x,2));'];
                 end
             end
             

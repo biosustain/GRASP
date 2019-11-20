@@ -30,12 +30,128 @@ classdef buildMassActionTest < matlab.unittest.TestCase
             buildMassAction(reactionName,strucIdx)
             
             filepath = fullfile(testCase.tempReactionsFolder, [reactionName, '1.m']);
-            res = textread(filepath,'%s');
+            res = fileread(filepath);
             
-            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildMassAction1.txt');
-            trueRes = textread(filepath,'%s');
+            addpath(testCase.tempReactionsFolder);
+            SC = [1];
+            S = [0.1];
+            PC = [1];
+            P = [0.2];
+            K = [1, 2];
+            v = testMassAction1(SC,S,PC,P,K);
             
-            testCase.verifyEqual(trueRes,res);            
+            trueResV = -0.3;           
+            
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildMassAction1.m');
+            trueRes = fileread(filepath);
+            
+            testCase.verifyEqual(trueRes,res); 
+            testCase.verifyThat(trueResV, matlab.unittest.constraints.IsEqualTo(v, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
+        end
+        
+        function testBuildMassActionOrder(testCase)
+            
+            reactionName = 'testMassAction';
+            strucIdx = 1;
+            buildMassAction(reactionName,strucIdx)
+            
+            filepath = fullfile(testCase.tempReactionsFolder, [reactionName, '1.m']);
+            res = fileread(filepath);
+            
+            addpath(testCase.tempReactionsFolder);
+            SC = [1; 2];
+            S = [0.1; 2];
+            PC = [1];
+            P = [0.2];
+            K = [1, 2];
+            v = testMassAction1(SC,S,PC,P,K);
+            
+            trueResV = 0;           
+            
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildMassAction1.m');
+            trueRes = fileread(filepath);
+            
+            testCase.verifyEqual(trueRes,res); 
+            testCase.verifyThat(trueResV, matlab.unittest.constraints.IsEqualTo(v, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
+            
+        end
+        function testBuildMassActionOrderCoef(testCase)
+            
+            reactionName = 'testMassAction';
+            strucIdx = 1;
+            buildMassAction(reactionName,strucIdx)
+            
+            filepath = fullfile(testCase.tempReactionsFolder, [reactionName, '1.m']);
+            res = fileread(filepath);
+            
+            addpath(testCase.tempReactionsFolder);
+            SC = [1; 2];
+            S = [3; 2];
+            PC = [2; 1];
+            P = [0.2; 1.5];
+            K = [1, 2];
+            v = testMassAction1(SC,S,PC,P,K);
+            
+            trueResV = 11.8800;           
+            
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildMassAction1.m');
+            trueRes = fileread(filepath);
+            
+            testCase.verifyEqual(trueRes,res); 
+            testCase.verifyThat(trueResV, matlab.unittest.constraints.IsEqualTo(v, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
+        end
+        
+        function testBuildMassActionControlAnalysis(testCase)
+            
+            reactionName = 'testMassAction';
+            strucIdx = 1;
+            buildMassAction(reactionName,strucIdx)
+            
+            filepath = fullfile(testCase.tempReactionsFolder, [reactionName, '1.m']);
+            res = fileread(filepath);
+            
+            addpath(testCase.tempReactionsFolder);
+            load(fullfile(testCase.currentPath{1}, 'testFiles', 'testBuilMassActionControlAnalysis.mat'));
+            v = testMassAction1(SC,S,PC,P,K);
+
+            trueResV = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResVBuilMassActionControlAnalysis.mat'));
+            trueResV = trueResV.trueResV;
+            
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildMassAction1.m');
+            trueRes = fileread(filepath);
+            
+            testCase.verifyEqual(trueRes,res); 
+            testCase.verifyThat(trueResV, matlab.unittest.constraints.IsEqualTo(v, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
+        end
+        
+        function testBuildMassActionControlAnalysis2(testCase)
+            
+            reactionName = 'testMassAction';
+            strucIdx = 1;
+            buildMassAction(reactionName,strucIdx)
+            
+            filepath = fullfile(testCase.tempReactionsFolder, [reactionName, '1.m']);
+            res = fileread(filepath);
+            
+            addpath(testCase.tempReactionsFolder);
+            load(fullfile(testCase.currentPath{1}, 'testFiles', 'testBuilMassActionControlAnalysis.mat'));
+            P = [P; 2*ones(1,7)];
+            PC = [1*ones(1,7); 2*ones(1,7)];
+            v = testMassAction1(SC,S,PC,P,K);
+            
+            trueResV = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResVBuilMassActionControlAnalysis2.mat'));
+            trueResV = trueResV.trueResV;
+            
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildMassAction1.m');
+            trueRes = fileread(filepath);
+            
+            testCase.verifyEqual(trueRes,res); 
+            testCase.verifyThat(trueResV, matlab.unittest.constraints.IsEqualTo(v, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
     end
 end

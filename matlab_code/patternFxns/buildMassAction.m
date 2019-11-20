@@ -35,9 +35,5 @@ end
 c = '%';
 fprintf(fid,['function v = ',reactionName,'(SC,S,PC,P,K)\n']);
 fprintf(fid,'%s Mass action definition \n',c);
-
-rateLaw = 'v = K(1)*prod(S.^SC)-K(2)*prod(P.^PC);';
-
-fprintf(fid,rateLaw);
-
+fprintf(fid,'v = K(1)*prod(S.^SC, 1)-K(2)*prod(P.^PC, 1);\n');
 fclose(fid);
