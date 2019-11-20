@@ -102,7 +102,6 @@ function ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThr
 %               * revMatrix (*int matrix*)        : [TODO Pedro]
 %               * forwardFlux (*int cell*)        : [TODO Pedro]  
 %               * Nelem (*int cell*)              : [TODO Pedro]
-%               * rxnMetLinks (*char cell*)       : [TODO Pedro]  
 %               * freeVars (*char cell*)          : [TODO Pedro]
 %               * metsActive (*int vector*)       : [TODO Pedro]
 %               * eigThreshold (*double*)         : threshold for the real part of the jacobian eigenvalues, if there is any higher than the threshold the model is discarded

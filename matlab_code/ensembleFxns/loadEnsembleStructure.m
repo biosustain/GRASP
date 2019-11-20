@@ -81,7 +81,6 @@ function ensemble = loadEnsembleStructure(xlsxFile)
 %               * revMatrix (*int matrix*)        : [TODO Pedro]
 %               * forwardFlux (*int cell*)        : [TODO Pedro]  
 %               * Nelem (*int cell*)              : [TODO Pedro]
-%               * rxnMetLinks (*char cell*)       : [TODO Pedro]  
 %               * freeVars (*char cell*)          : [TODO Pedro]
 %               * metsActive (*int vector*)       : [TODO Pedro]
 %
@@ -588,9 +587,8 @@ for jx = 1:ensemble.numStruct
     rmdir(tempReactionsFolder,'s');
 
     % Build kinetic fxn and find active species (do not build hess partern)
-    [rxnMetLinks,freeVars,metsActive] = buildKineticFxn(ensemble,ensemble.kineticFxn{jx},jx);
+    [freeVars,metsActive] = buildKineticFxn(ensemble,ensemble.kineticFxn{jx},jx);
     if (jx==1)                                                 % freeVars and freeMets are the same for all the structure
-        ensemble.rxnMetLinks = rxnMetLinks;
         ensemble.freeVars    = freeVars;
         ensemble.metsActive  = metsActive;
     end

@@ -1,10 +1,10 @@
-function [rxnMetLinks,freeVars,metsActive] = buildKineticFxn(ensemble,kineticFxn,strucIdx)
+function [freeVars,metsActive] = buildKineticFxn(ensemble,kineticFxn,strucIdx)
 % Builds kinetic model .m file that is used to actually run the model.
 %
 %
 % USAGE:
 %
-%    rxnMetLinks, freeVars, metsActive] = buildKineticFxn(ensemble, kineticFxn, strucIdx)
+%    [freeVars, metsActive] = buildKineticFxn(ensemble, kineticFxn, strucIdx)
 %
 % INPUT:
 %    ensemble (struct):   model ensemble, see buildEnsemble for fields description
@@ -12,7 +12,6 @@ function [rxnMetLinks,freeVars,metsActive] = buildKineticFxn(ensemble,kineticFxn
 %    strucIdx (int):      ID of the model structure
 %
 % OUTPUT:
-%    rxnMetLinks (char cell):   [TODO Pedro]
 %    freeVars (char cell):      [TODO Pedro]
 %    metsActive (int cell):     [TODO Pedro]
 %    written .m file with the model
@@ -77,7 +76,6 @@ end
 
 % Define equations and determine connectivity between reactions and
 % metabolites
-rxnMetLinks{length(ensemble.activeRxns)} = [];
 k = 1;
 fprintf(fid,'%s Reaction rates\n',c);
 for i = 1:numel(ensemble.activeRxns)
@@ -156,19 +154,7 @@ for i = 1:numel(ensemble.activeRxns)
         end
         substrates  = substrates(ismember(substrates,ensemble.mets(ensemble.metsSimulated)));         % Extract only active substrates
         stoicCoeffsSub = abs(ensemble.S(ismember(ensemble.mets,substrates),ensemble.activeRxns(i)));
-        stoicCoeffs = abs(ensemble.S(ismember(ensemble.mets,substrates),ensemble.activeRxns(i)));
-        % Substrates: Check the stoic coeff (relevant only if greater than 1)
-        if any(stoicCoeffs>1)
-            for w = 1:numel(substrates)
-                if stoicCoeffs(w)>1
-                    for u = 2:stoicCoeffs(w)
-                        substrates = [substrates;substrates(w)];
-                    end
-                end
-            end
-        end
-
-       
+      
         % Extract and organize products
         if size(ensemble.promiscuity{strucIdx}{i}) > 0
             productsInd = [];
@@ -182,17 +168,6 @@ for i = 1:numel(ensemble.activeRxns)
         end
         products    = products(ismember(products,ensemble.mets(ensemble.metsSimulated)));               % Extract only active products
         stoicCoeffsProd = abs(ensemble.S(ismember(ensemble.mets,products),ensemble.activeRxns(i)));
-        stoicCoeffs = abs(ensemble.S(ismember(ensemble.mets,products),ensemble.activeRxns(i)));
-        % Products: Check the stoic coeff (relevant only if greater than 1)
-        if any(stoicCoeffs>1)
-            for w = 1:numel(products)
-                if stoicCoeffs(w)>1
-                    for u = 2:stoicCoeffs(w)
-                        products = [products;products(w)];
-                    end
-                end
-            end
-        end
 
         % Non-enzymatic reactions (diffusion)
         if strcmp('diffusion',ensemble.rxnMechanisms{strucIdx}(i))
@@ -201,7 +176,6 @@ for i = 1:numel(ensemble.activeRxns)
             else
                 reactants = products{1};
             end
-            rxnMetLinks{i} = reactants;                                                           % There is a link if rxn is diffusion
 
         elseif strcmp('massAction',ensemble.rxnMechanisms{strucIdx}(i))
                     
@@ -212,7 +186,6 @@ for i = 1:numel(ensemble.activeRxns)
                 
                 if ~ismember(substrates{subI}, ensemble.mets(ensemble.metsFixed))
                     subList      = [subList, substrates{subI}, ';'];
-                    rxnMetLinks{i} = [rxnMetLinks{i}, substrates{subI}];
                 else
                     subList = [subList,'ones(1,size(x,2));'];
                 end
@@ -225,7 +198,6 @@ for i = 1:numel(ensemble.activeRxns)
                 
                 if ~ismember(products{prodI}, ensemble.mets(ensemble.metsFixed))
                     prodList      = [prodList, products{prodI}, ';'];
-                    rxnMetLinks{i} = [rxnMetLinks{i}, products{prodI}];
                 else
                     prodList = [prodList,'ones(1,size(x,2));'];
                 end
@@ -251,42 +223,34 @@ for i = 1:numel(ensemble.activeRxns)
                 if ~isempty(strfind(ensemble.metLists{i,1}{react}, 'A'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'B'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'C'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'D'))
                     if elemCount < w
                         reactants = [reactants,substrates{subCount}, ';'];
-                        rxnMetLinks{i} = [rxnMetLinks{i}, substrates{subCount}];
                         subCount = subCount+1;
                         elemCount = elemCount+1;
                     else
                         reactants = [reactants, substrates{subCount}];
-                        rxnMetLinks{i} = [rxnMetLinks{i}, substrates{subCount}];
                     end
                 elseif ~isempty(strfind(ensemble.metLists{i,1}{react}, 'P'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'Q'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'R'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'S'))
                     if elemCount < w
                         reactants = [reactants,products{prodCount},';'];
-                        rxnMetLinks{i} = [rxnMetLinks{i}, products{prodCount}];
                         prodCount = prodCount+1;
                         elemCount = elemCount+1;
                     else
                         reactants = [reactants,products{prodCount}];
-                        rxnMetLinks{i} = [rxnMetLinks{i}, products{prodCount}];
                     end
                 elseif ~isempty(strfind(ensemble.metLists{i,1}{react}, 'I'))
                     if elemCount < w
                         reactants = [reactants, ensemble.inhibitors{1, 1}{i}{inhCount},';'];
-                        rxnMetLinks{i} = [rxnMetLinks{i}, ensemble.inhibitors{1, 1}{i}{inhCount}];
                         inhCount = inhCount+1;
                         elemCount = elemCount+1;
                     else
                         reactants = [reactants, ensemble.inhibitors{1, 1}{i}{inhCount}];
-                        rxnMetLinks{i} = [rxnMetLinks{i}, ensemble.inhibitors{1, 1}{i}{inhCount}];
                     end
                 elseif ~isempty(strfind(ensemble.metLists{i,1}{react}, 'Z'))
                     if elemCount < w
                         reactants = [reactants,ensemble.activators{1, 1}{i}{actCount}, ';'];
-                        rxnMetLinks{i} = [rxnMetLinks{i}, ensemble.activators{1, 1}{i}{actCount}];
                         actCount = actCount+1;
                         elemCount = elemCount+1;
                     else
                         reactants = [reactants,ensemble.activators{1, 1}{i}{actCount}];
-                        rxnMetLinks{i} = [rxnMetLinks{i}, ensemble.activators{1, 1}{i}{actCount}];
                     end
                 end
             end
@@ -361,10 +325,6 @@ for i = 1:numel(ensemble.activeRxns)
         end
     end
 
-    % Add enzyme links to the rxnMet links (only if the reaction is not an exch)
-    if ~isempty(reactants)
-        rxnMetLinks{i} = [rxnMetLinks{i},ensemble.rxns{ensemble.activeRxns(i)}];
-    end
 end
 
 % Definition of final rates
