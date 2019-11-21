@@ -67,8 +67,10 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             ensemble = initializeEnsemble(ensemble,popIdx,verbose);
             
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model3_isoenzymes.mat'));
-
-            testCase.verifyThat(trueRes.ensemble, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+            trueRes = trueRes.ensemble;
+            trueRes = rmfield(trueRes, 'rxnMetLinks');
+            
+            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
             
         end
@@ -81,9 +83,12 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             
             ensemble = loadEnsembleStructure(filepath);   
             ensemble = initializeEnsemble(ensemble,popIdx,verbose);
-
+            
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model4.mat'));
-            testCase.verifyThat(trueRes.ensemble, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+            trueRes = trueRes.ensemble;
+            trueRes = rmfield(trueRes, 'rxnMetLinks');
+            
+            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))  
             
         end
@@ -98,7 +103,10 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             ensemble = initializeEnsemble(ensemble,popIdx,verbose);
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model4_inhibitors.mat'));
-            testCase.verifyThat(trueRes.ensemble, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+            trueRes = trueRes.ensemble;
+            trueRes = rmfield(trueRes, 'rxnMetLinks');
+            
+            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
             
         end
@@ -111,9 +119,12 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             
             ensemble = loadEnsembleStructure(filepath);   
             ensemble = initializeEnsemble(ensemble,popIdx,verbose);
-
+            
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model1_nick.mat'));
-            testCase.verifyThat(trueRes.ensemble, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+            trueRes = trueRes.ensemble;
+            trueRes = rmfield(trueRes, 'rxnMetLinks');
+            
+            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))  
             
         end

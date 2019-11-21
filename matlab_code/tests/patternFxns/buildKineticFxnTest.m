@@ -31,7 +31,7 @@ classdef buildKineticFxnTest < matlab.unittest.TestCase
             kineticFxn = 'toy_model1_Kinetics1';
             strucIdx = 1;
             
-            [rxnMetLinks,freeVars,metsActive] = buildKineticFxn(ensemble,kineticFxn,strucIdx);
+            [freeVars,metsActive] = buildKineticFxn(ensemble,kineticFxn,strucIdx);
             
             kineticFxn = fileread(fullfile(testCase.reactionsFolder, 'toy_model1_Kinetics1.m'));
             
@@ -56,7 +56,7 @@ classdef buildKineticFxnTest < matlab.unittest.TestCase
             kineticFxn = 'toy_model1_Kinetics1';
             strucIdx = 1;
             
-            [rxnMetLinks,freeVars,metsActive] = buildKineticFxn(ensemble,kineticFxn,strucIdx);
+            [freeVars,metsActive] = buildKineticFxn(ensemble,kineticFxn,strucIdx);
             
             kineticFxn = fileread(fullfile(testCase.reactionsFolder, 'toy_model1_Kinetics1.m'));
             
