@@ -44,11 +44,25 @@ if (nargin > 2)
         for row=2:size(cellWithVariables,1)            
             if (cellWithVariables{row,col} ~= "")
                 
-            	char_list = strsplit(cellWithVariables{row,col}, ' ');
-                new_entry = strcat(prefix, '_', char_list{1}); 
+            	charList = strsplit(cellWithVariables{row,col}, ' ');
                 
-                for i=2:size(char_list,2)
-                    new_entry = strcat(new_entry, {' '}, prefix, '_', char_list{i});
+                if contains(charList{1}, '*')
+                    coefMet = strsplit(charList{1}, '*');
+                    new_entry = strcat(coefMet{1}, '*', prefix, '_', coefMet{2}); 
+                else
+                    new_entry = strcat(prefix, '_', charList{1}); 
+                end
+            
+                
+                for i=2:size(charList,2)                    
+                    if contains(charList{i}, '*')
+                        coefMet = strsplit(charList{i}, '*');
+                        new_entry = strcat(new_entry, {' '}, coefMet{1}, '*', prefix, '_', coefMet{2}); 
+                    else
+                        new_entry = strcat(new_entry, {' '}, prefix, '_', charList{i});
+
+                    end
+                
                 end
                 cellWithVariables{row,col} = char(new_entry);
             end

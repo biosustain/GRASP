@@ -38,5 +38,18 @@ classdef fixVariableNamesTest < matlab.unittest.TestCase
             testCase.verifyEqual(trueRes, strKinetic);
         end
         
+        function testFixVariableNamesStoicCoeffs(testCase)
+           
+            xlsxFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_coef');
+            [xKinetic,strKinetic] = xlsread(xlsxFile, 'kinetics1');
+            
+            strKinetic = fixVariableNames(strKinetic, 'r', 'kinetics');
+            
+            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResFixVariableNamesStoicCoeffs'));
+            trueRes = trueRes.strKinetic;
+                   
+            testCase.verifyEqual(trueRes, strKinetic);
+        end
+        
     end
 end

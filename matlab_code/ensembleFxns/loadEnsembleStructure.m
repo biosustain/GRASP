@@ -81,7 +81,6 @@ function ensemble = loadEnsembleStructure(xlsxFile)
 %               * revMatrix (*int matrix*)        : [TODO Pedro]
 %               * forwardFlux (*int cell*)        : [TODO Pedro]  
 %               * Nelem (*int cell*)              : [TODO Pedro]
-%               * rxnMetLinks (*char cell*)       : [TODO Pedro]  
 %               * freeVars (*char cell*)          : [TODO Pedro]
 %               * metsActive (*int vector*)       : [TODO Pedro]
 %
@@ -370,7 +369,6 @@ for jx = 1:ensemble.numStruct
     end
     try
         [xKinetic,strKinetic] = xlsread(xlsxFile,['kinetics',num2str(jx)]);                    % read kinetic info from structure jx
-        strKinetic = fixVariableNames(strKinetic, 'r', 'kinetics');
         if size(strKinetic, 1) ~= nRxnsActive+1 || size(strKinetic, 2) < 11
             error(['Check the kinetics sheet, it should have ', num2str(nRxnsActive+1), ' rows and at least 11 columns.', ...
                    newline, ...
@@ -383,6 +381,8 @@ for jx = 1:ensemble.numStruct
         error("The kinetics sheet couln't be read. Make sure it is named as kinetics1.");
         break;
     end
+    
+    strKinetic = fixVariableNames(strKinetic, 'r', 'kinetics');
 
     % Load kinetic information
     strKinetic(1,:) = [];                                                                      % remove useless information
@@ -510,7 +510,7 @@ for jx = 1:ensemble.numStruct
 
         % Non-enzymatic reactions: mass action
         elseif strcmp(ensemble.rxnMechanisms{jx}{ix},'massAction')
-            buildMassAction(ensemble.rxns{ix},jx)
+            buildMassAction(ensemble.rxns{ix}, jx)
             ensemble.revMatrix{ix,jx}   = [];
             ensemble.forwardFlux{ix,jx} = [];
             ensemble.Nelem{ix,jx}       = [];
@@ -587,9 +587,8 @@ for jx = 1:ensemble.numStruct
     rmdir(tempReactionsFolder,'s');
 
     % Build kinetic fxn and find active species (do not build hess partern)
-    [rxnMetLinks,freeVars,metsActive] = buildKineticFxn(ensemble,ensemble.kineticFxn{jx},jx);
+    [freeVars,metsActive] = buildKineticFxn(ensemble,ensemble.kineticFxn{jx},jx);
     if (jx==1)                                                 % freeVars and freeMets are the same for all the structure
-        ensemble.rxnMetLinks = rxnMetLinks;
         ensemble.freeVars    = freeVars;
         ensemble.metsActive  = metsActive;
     end
