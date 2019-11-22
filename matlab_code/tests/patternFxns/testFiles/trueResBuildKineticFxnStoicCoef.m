@@ -4,9 +4,9 @@ h = 1e-8;
 % Defining metabolite and enzyme species
 if flag==1
 x = x(:);
-v = zeros(13,20);
-E = zeros(13,20);
-x = [x,x(:,ones(1,19)) + diag(h*1i*ones(19,1))];
+v = zeros(13,21);
+E = zeros(13,21);
+x = [x,x(:,ones(1,20)) + diag(h*1i*ones(20,1))];
 else
 v = zeros(13,size(x,2));
 E = zeros(13,size(x,2));
@@ -31,7 +31,7 @@ E(9,:) = x(16,:);
 E(10,:) = x(17,:);
 E(11,:) = x(18,:);
 E(12,:) = x(19,:);
-E(kinInactRxns,:) = fixedExch(:,ones(1,size(x,2)));
+E(13,:) = x(20,:);
 % Reaction rates
 v(1,:) = r_r11([ones(1,size(x,2));m_m6;m_m6;m_m5;ones(1,size(x,2))],model.rxnParams(1).kineticParams);
 v(2,:) = r_r21([m_m5;m_m6;m_m7;m_m10],model.rxnParams(2).kineticParams);
@@ -45,7 +45,7 @@ v(9,:) = r_r91([1.2*ones(1,size(x,2))],[m_m7],[1*ones(1,size(x,2))],[ones(1,size
 v(10,:) = r_r101([1*ones(1,size(x,2));1.8*ones(1,size(x,2))],[m_m5;ones(1,size(x,2))],[1.2*ones(1,size(x,2));1*ones(1,size(x,2))],[m_m10;ones(1,size(x,2))],model.rxnParams(10).kineticParams);
 v(11,:) = r_r111([m_m8],model.rxnParams(11).kineticParams);
 v(12,:) = r_r121([1*ones(1,size(x,2));1.2*ones(1,size(x,2))],[m_m9;m_m10],[1*ones(1,size(x,2));1.8*ones(1,size(x,2))],[ones(1,size(x,2));ones(1,size(x,2))],model.rxnParams(12).kineticParams);
-v(13,:) = r_r131([],[]);
+v(13,:) = r_r131(fixedExch(1), size(x,2));
 if flag==1
 % Final rates
 y = sum((Sred*(E.*v)).^2);

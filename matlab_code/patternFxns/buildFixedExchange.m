@@ -32,7 +32,7 @@ end
 
 % 2. Write exchange mechanism
 c = '%';
-fprintf(fid,['function v = ',reactionName,'(X,K)\n']);
+fprintf(fid,['function v = ',reactionName,'(rxnFlux, vectorSize)\n']);
 fprintf(fid,'%s Constant exchange definition \n',c);
-fprintf(fid,'v = 1;\n');
+fprintf(fid, 'v = rxnFlux*ones(1,vectorSize);\n');
 fclose(fid);

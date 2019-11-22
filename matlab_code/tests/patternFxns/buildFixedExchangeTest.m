@@ -32,7 +32,7 @@ classdef buildFixedExchangeTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.tempReactionsFolder, [reactionName, '1.m']);
             res = textread(filepath,'%s');
             
-            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildFixedExchange1.txt');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildFixedExchange1.m');
             trueRes = textread(filepath,'%s');
             
             testCase.verifyEqual(trueRes,res);            

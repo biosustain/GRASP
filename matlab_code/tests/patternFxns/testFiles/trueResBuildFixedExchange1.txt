@@ -1,3 +1,0 @@
-function v = testFixedExchange1(X,K)
-% Constant exchange definition 
-v = 1;
