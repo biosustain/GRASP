@@ -40,7 +40,7 @@ classdef buildKineticFxnTest < matlab.unittest.TestCase
             trueResFreeVars = {'m_m5'; 'm_m6'; 'm_m7'; 'm_m8'; 'm_m9';
                                'm_m10'; 'm_m11'; 'r_r1'; 'r_r2'; 'r_r3';
                                'r_r4'; 'r_r5'; 'r_r6'; 'r_r7'; 'r_r8';
-                               'r_r9'; 'r_r10'; 'r_r11'; 'r_r12'};
+                               'r_r9'; 'r_r10'; 'r_r11'; 'r_r12'; 'r_r13'};
                            
             trueResMetsActive = [5; 6; 7; 8; 9; 10; 11];
             
@@ -66,7 +66,7 @@ classdef buildKineticFxnTest < matlab.unittest.TestCase
             trueResFreeVars = {'m_m5'; 'm_m6'; 'm_m7'; 'm_m8'; 'm_m9';
                                'm_m10'; 'm_m11'; 'r_r1'; 'r_r2'; 'r_r3';
                                'r_r4'; 'r_r5'; 'r_r6'; 'r_r7'; 'r_r8';
-                               'r_r9'; 'r_r10'; 'r_r11'; 'r_r12'};
+                               'r_r9'; 'r_r10'; 'r_r11'; 'r_r12'; 'r_r13'};
                            
             trueResMetsActive = [5; 6; 7; 8; 9; 10; 11];
             

@@ -33,7 +33,7 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             % To generate the reaction files 
             xlsxFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1');
             ensemble = loadEnsembleStructure(xlsxFile);
-            
+                        
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'initializedEnsemble_toy_model1.mat');
             ensemble = load(filepath);
             ensemble = ensemble.ensemble;
@@ -52,11 +52,12 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             trueResSimFluxes = 0;
            
             testCase.verifyEqual(trueResIsModelValid,isModelValid);
-            testCase.verifyEqual(trueResModel,model);
             testCase.verifyEqual(trueResStructIdx,strucIdx);
             testCase.verifyEqual(trueResXopt,xopt);
             testCase.verifyEqual(trueResTolScore,tolScore);
             testCase.verifyEqual(trueResSimFluxes,simFluxes);
+            testCase.verifyThat(trueResModel, matlab.unittest.constraints.IsEqualTo(model, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-9)));
             
         end
         
@@ -72,6 +73,7 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             ensemble = load(filepath);
             ensemble = ensemble.ensemble;
             ensemble.eigThreshold = 10^-5;
+            ensemble.freeVars{end+1} = 'r_r13';
                         
             [isModelValid,model,strucIdx,xopt,tolScore,simFluxes] = initialSampler(ensemble);
            

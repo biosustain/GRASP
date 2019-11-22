@@ -23,7 +23,7 @@ function [freeVars,metsActive] = buildKineticFxn(ensemble,kineticFxn,strucIdx)
 
 % Define active species (mets/enzymes)
 metsActive = ensemble.metsSimulated(~ismember(ensemble.metsSimulated,ensemble.metsFixed));
-enzActive  = ensemble.activeRxns(~ismember(ensemble.activeRxns,ensemble.kinInactRxns));
+enzActive  = ensemble.activeRxns;
 totalEvals = numel(metsActive) + numel(enzActive) + 1;
 freeVars   = [ensemble.mets(metsActive);ensemble.rxns(enzActive)];                             % return indexes of the free variables
 
@@ -70,9 +70,8 @@ for j = 1:numel(metsActive)+numel(enzActive)
     end
     i = i+1;
 end
-if ~isempty(ensemble.kinInactRxns)
-    fprintf(fid,['E(kinInactRxns,:) = fixedExch(:,ones(1,size(x,2)));\n']);  % Define fixed protein concentrations
-end
+
+fixedExchangeI  = 1;  % To keep track of the fixed exchange index
 
 % Define equations and determine connectivity between reactions and
 % metabolites
@@ -312,7 +311,8 @@ for i = 1:numel(ensemble.activeRxns)
         % Non-allosteric reaction
     else
         if strcmp('fixedExchange',ensemble.rxnMechanisms{strucIdx}(i))
-            fprintf(fid,['v(%i,:) = ',ensemble.rxns{i},num2str(strucIdx),'([],[]);\n'],i);
+            fprintf(fid,['v(%i,:) = ',ensemble.rxns{i},num2str(strucIdx), '(fixedExch(%i), size(x,2));\n'], i, fixedExchangeI);
+            fixedExchangeI = fixedExchangeI + 1;
         elseif strcmp('freeExchange',ensemble.rxnMechanisms{strucIdx}(i))
             fprintf(fid,['v(%i,:) = ',ensemble.rxns{i},num2str(strucIdx),'(model.rxnParams(%i).kineticParams,',num2str(totalEvals),');\n'],i,k);
             k = k+1;
