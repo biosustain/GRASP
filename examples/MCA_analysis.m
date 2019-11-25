@@ -17,7 +17,7 @@ mcaResults = controlAnalysis(ensemble, saveMCAMatrices);
 
 % If you have promiscuous enzymes or isoenzymes you might want to run
 % controlAndResponseAnalysis instead
-%mcaResults = controlAndResponseAnalysis(ensemble, saveMCAMatrices);
+% mcaResults = controlAndResponseAnalysis(ensemble, saveMCAMatrices);
 
 
 % Save MCA results
