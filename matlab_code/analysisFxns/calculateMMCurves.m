@@ -1,25 +1,82 @@
-function calculateMMCurves(outputFolder, ensemble, numModels, strucIdx)
+function calculateMMCurves(outputFolder, ensemble, numModels, structIdx, saturatingConc, substrateRange, rxnList)
+% Calculates Michaelis-Menten curves for enzymatic reactions in the model
+% ensemble (i.e., reactions that are not massAction, diffusion,
+% freeExchange, and fixedExchange).
+%
+% This basically implies setting product concentrations to 0, cosubstrate
+% concentrations to a saturating value (so that they are not limiting), and
+% varying the concentration of the substrate of interest from a very low 
+% concentration value to a saturating one. 
+%
+% The results are written in files that go into outputFolder.
+%
+% The user can also specify the saturating concentration to be considered
+% as well as the range of concentrations for which the flux 
+%
+% The user can further specify, for which reactions will the MM curves be
+% calculated.
+%
+% USAGE:
+%
+%    mcaResults = controlAndResponseAnalysis(ensemble, saveResMatrices, strucIdx)
+%
+% INPUT:
+%    outputFolder (char):         path to folder where output files will be written
+%    ensemble (struct):           model ensemble, see buildEnsemble for fields description
+%    numModels (int):             number of models in the ensemble to consider
+%
+% OPTIONAL INPUT:
+%    structIdx (int):             structure ID, default: 1
+%    saturatingConc (int):        saturation concentration (that would lead to Vmax), default: 10 mol/L
+%    substrateRange (vector):     vector of concentrations for which the flux will be calculated, default: [10^-9, 10] mol/L
+%    rxnList (vector):            reactions for which Vmax will be calculated
+%
+% OUTPUT:
+%    None
+%
+% .. Authors:
+%       - Marta Matos   2019 original code
 
-% in mmol/L
-%substrateRange = logspace(-6, 4);
-%saturatingConc = 10^4;
+if (nargin < 3)
+    error('At least 3 arguments need to be specified: outputFolder, ensemble, and numModels');
+end
 
-saturatingConc = 10^2*10^6;
-substrateRange = logspace(-15,6);
+if (nargin < 4)
+	structIdx = 1;
+end
 
-%for rxnI=1:numel(ensemble.rxns)
-for rxnI=32:32
-    if sum(~ismember({'massAction', 'fixedExchange', 'freeExchange', 'diffusion'}, ensemble.rxnMechanisms{strucIdx}{rxnI})) == 4 
-       
-        rateLawFxn = str2func([ensemble.rxns{rxnI}, num2str(strucIdx)]);
+if (nargin < 6)
+    % in mmol/L
+    saturatingConc = 10^4;
+    substrateRange = logspace(-6, 4);
+end
 
-        stoicSubsInd = find(ensemble.S(:, rxnI) < 0);
-        stoicProdInd = find(ensemble.S(:, rxnI) > 0);
+if (nargin < 7)
+	rxnList = 1:numel(ensemble.rxns);
+end
+
+if numModels > numel(ensemble.populations.models)
+    numModels = numel(ensemble.populations.models);
+end
+
+
+for rxnI = rxnList
+    
+    if sum(~ismember({'massAction', 'fixedExchange', 'freeExchange', 'diffusion'}, ensemble.rxnMechanisms{structIdx}{rxnI})) == 4 
         
+        % if the reaction is allosteric we are only interested on the
+        % catalytic part.
+        if exist([ensemble.rxns{rxnI}, num2str(structIdx), 'Catalytic']) == 2
+            rateLawFxn = str2func([ensemble.rxns{rxnI}, num2str(structIdx), 'Catalytic']);
+        else
+            rateLawFxn = str2func([ensemble.rxns{rxnI}, num2str(structIdx)]);
+        end
+
+        stoicSubsInd = find(ensemble.S(:, rxnI) < 0);        
         nSubs = numel(ensemble.subOrder{1}{rxnI});
 
-        for i=1:numel(stoicSubsInd)
-            subI = stoicSubsInd(i);
+        for j=1:numel(stoicSubsInd)
+            subI = stoicSubsInd(j);
             
             subList = [];
             vList = [];
@@ -33,13 +90,16 @@ for rxnI=32:32
             % met position in ensemble.subOrder
             subOrderPos = find(ismember(ensemble.subOrder{1}{rxnI}, ensemble.mets(subI)));
             
-            % ensemble.Order met position in ensemble.mets
+            % ensemble.subOrder met position in ensemble.mets
             subOrderInd = [];
             for entry=1:numel(ensemble.subOrder{1}{rxnI})
-                subOrderInd = [subOrderInd, find(ismember(ensemble.mets, ensemble.subOrder{1}{rxnI}{entry}))];
+                ind = find(ismember(ensemble.mets, ensemble.subOrder{structIdx}{rxnI}{entry}));
+                if ismember(ind, stoicSubsInd)
+                    subOrderInd = [subOrderInd, ind];
+                end
             end
             
-            for modelI=1:2    
+            for modelI=1:numModels    
 
                 K = ensemble.populations.models(modelI).rxnParams(rxnI).kineticParams;
                 allRefConcs = ensemble.populations.models(1).metConcRef(subOrderInd) * 10^6;
@@ -50,7 +110,7 @@ for rxnI=32:32
             
                 for subConc=substrateRange
                     subsConc(subOrderPos) = subConc ./ subIRefConc; 
-                    X = [subsConc; zeros(numel(stoicProdInd),1)];   
+                    X = [subsConc; zeros(numel(ensemble.prodOrder{structIdx}{rxnI}),1)];   
 
                     [v, ~, ~] = rateLawFxn(X,K);
                     vList = [vList; v];

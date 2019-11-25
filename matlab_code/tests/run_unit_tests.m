@@ -1,19 +1,24 @@
 clearvars
 import matlab.unittest.TestSuite
 
-suitePatternFxns = TestSuite.fromFolder('patternFxns');
+suiteAnalysisFxns = TestSuite.fromFolder('analysisFxns');
 suiteEnsembleFxns = TestSuite.fromFolder('ensembleFxns');
+suitePatternFxns = TestSuite.fromFolder('patternFxns');
 
-addpath(fullfile('..',  'patternFxns'), ...
-        fullfile('..',  'ensembleFxns'));
+addpath(fullfile('..',  'analysisFxns'), ...
+        fullfile('..',  'ensembleFxns'), ...
+        fullfile('..',  'patternFxns'));
 
 
-resultPatternFxns = run(suitePatternFxns);
+resultAnalysisFxns = run(suiteAnalysisFxns);
 resultEnsembleFxns = run(suiteEnsembleFxns);
+resultPatternFxns = run(suitePatternFxns);
 
 
 disp([newline, newline, 'Result summary:', newline, newline])
-disp('Pattern functions')
-table(resultPatternFxns)
+disp('Analysis functions')
+table(resultAnalysisFxns)
 disp('Ensemble functions')
 table(resultEnsembleFxns)
+disp('Pattern functions')
+table(resultPatternFxns)
