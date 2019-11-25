@@ -220,9 +220,9 @@
   <div class="section" id="visualize-simulations-interactively">
 <h1>Visualize simulations, interactively<a class="headerlink" href="#visualize-simulations-interactively" title="Permalink to this headline">¶</a></h1>
 <p>This module implements functions to visualize simulation results interactively using <a class="reference external" href="https://altair-viz.github.io/">altair</a>.</p>
-<span class="target" id="module-src.visualize_simulations_interactive"></span><dl class="function">
-<dt id="src.visualize_simulations_interactive.plot_ensemble_interactive">
-<code class="sig-name descname">plot_ensemble_interactive</code><span class="sig-paren">(</span><em class="sig-param">data_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">quant_type</em>, <em class="sig-param">selected_data: list = None</em>, <em class="sig-param">x_scale: str = 'linear'</em>, <em class="sig-param">y_scale: str = 'linear'</em>, <em class="sig-param">x_lim: tuple = None</em>, <em class="sig-param">y_lim: tuple = None</em><span class="sig-paren">)</span><a class="headerlink" href="#src.visualize_simulations_interactive.plot_ensemble_interactive" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="module-simulation_viz.visualize_simulations_interactive"></span><dl class="function">
+<dt id="simulation_viz.visualize_simulations_interactive.plot_ensemble_interactive">
+<code class="sig-name descname">plot_ensemble_interactive</code><span class="sig-paren">(</span><em class="sig-param">data_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">quant_type</em>, <em class="sig-param">selected_data: list = None</em>, <em class="sig-param">x_scale: str = 'linear'</em>, <em class="sig-param">y_scale: str = 'linear'</em>, <em class="sig-param">x_lim: tuple = None</em>, <em class="sig-param">y_lim: tuple = None</em><span class="sig-paren">)</span><a class="headerlink" href="#simulation_viz.visualize_simulations_interactive.plot_ensemble_interactive" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes in a pandas dataframe with median and 1st and 3rd quartile concentration or flux values calculated
 over all models in the ensemble for each time point, and plots them using altair.
 The median is represented by a line, and uncertainty is given by the 25% quantile and the 75% one.</p>
@@ -254,8 +254,8 @@ the limits for the y-axis.</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="src.visualize_simulations_interactive.plot_model_interactive">
-<code class="sig-name descname">plot_model_interactive</code><span class="sig-paren">(</span><em class="sig-param">data_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">data_interp_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">model_i: int</em>, <em class="sig-param">quant_type: str</em>, <em class="sig-param">selected_data: list</em>, <em class="sig-param">x_scale: str = 'linear'</em>, <em class="sig-param">y_scale: str = 'linear'</em>, <em class="sig-param">x_lim: tuple = None</em>, <em class="sig-param">y_lim: tuple = None</em><span class="sig-paren">)</span><a class="headerlink" href="#src.visualize_simulations_interactive.plot_model_interactive" title="Permalink to this definition">¶</a></dt>
+<dt id="simulation_viz.visualize_simulations_interactive.plot_model_interactive">
+<code class="sig-name descname">plot_model_interactive</code><span class="sig-paren">(</span><em class="sig-param">data_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">data_interp_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">model_i: int</em>, <em class="sig-param">quant_type: str</em>, <em class="sig-param">selected_data: list</em>, <em class="sig-param">x_scale: str = 'linear'</em>, <em class="sig-param">y_scale: str = 'linear'</em>, <em class="sig-param">x_lim: tuple = None</em>, <em class="sig-param">y_lim: tuple = None</em><span class="sig-paren">)</span><a class="headerlink" href="#simulation_viz.visualize_simulations_interactive.plot_model_interactive" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a pandas dataframe with metabolite concentrations or reaction fluxes, it plots the selected ones
 (specified in selected data) for the selected model.
 The plots are made using altair.

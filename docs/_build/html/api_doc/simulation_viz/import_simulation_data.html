@@ -220,9 +220,9 @@
   <div class="section" id="import-simulation-data">
 <h1>Import simulation data<a class="headerlink" href="#import-simulation-data" title="Permalink to this headline">¶</a></h1>
 <p>This module implements functions to import and process simulation data.</p>
-<span class="target" id="module-src.import_simulation_data"></span><dl class="function">
-<dt id="src.import_simulation_data.gather_sim_data">
-<code class="sig-name descname">gather_sim_data</code><span class="sig-paren">(</span><em class="sig-param">mat: dict</em>, <em class="sig-param">met_names: list</em>, <em class="sig-param">rxn_names: list</em>, <em class="sig-param">n_models: int</em>, <em class="sig-param">time_points_spline: list</em>, <em class="sig-param">save_concs: bool = False</em>, <em class="sig-param">save_fluxes: bool = False</em>, <em class="sig-param">ref_conc_dic: dict = None</em><span class="sig-paren">)</span> &#x2192; tuple<a class="headerlink" href="#src.import_simulation_data.gather_sim_data" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="module-simulation_viz.import_simulation_data"></span><dl class="function">
+<dt id="simulation_viz.import_simulation_data.gather_sim_data">
+<code class="sig-name descname">gather_sim_data</code><span class="sig-paren">(</span><em class="sig-param">mat: dict</em>, <em class="sig-param">met_names: list</em>, <em class="sig-param">rxn_names: list</em>, <em class="sig-param">n_models: int</em>, <em class="sig-param">time_points_spline: list</em>, <em class="sig-param">save_concs: bool = False</em>, <em class="sig-param">save_fluxes: bool = False</em>, <em class="sig-param">ref_conc_dic: dict = None</em><span class="sig-paren">)</span> &#x2192; tuple<a class="headerlink" href="#simulation_viz.import_simulation_data.gather_sim_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Imports the data from the matlab simulation results. Since the time points for which there are concentrations
 may not be the same for all models, it interpolates concentrations and fluxes, and stores the values at certain
 time points (defined in <cite>time_points_spline</cite>). Also, for long simulations, this saves a lot of space.</p>
@@ -262,8 +262,8 @@ a dictionary with the metabolites reference concentrations in each model.</p></l
 </dd></dl>
 
 <dl class="function">
-<dt id="src.import_simulation_data.get_met_rxn_names">
-<code class="sig-name descname">get_met_rxn_names</code><span class="sig-paren">(</span><em class="sig-param">raw_data_dir: str</em>, <em class="sig-param">model_name: str</em><span class="sig-paren">)</span> &#x2192; tuple<a class="headerlink" href="#src.import_simulation_data.get_met_rxn_names" title="Permalink to this definition">¶</a></dt>
+<dt id="simulation_viz.import_simulation_data.get_met_rxn_names">
+<code class="sig-name descname">get_met_rxn_names</code><span class="sig-paren">(</span><em class="sig-param">raw_data_dir: str</em>, <em class="sig-param">model_name: str</em><span class="sig-paren">)</span> &#x2192; tuple<a class="headerlink" href="#simulation_viz.import_simulation_data.get_met_rxn_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the names of metabolites and reactions in the model.</p>
 <p><strong>Inputs</strong></p>
 <blockquote>
@@ -283,8 +283,8 @@ named of the model.</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="src.import_simulation_data.get_time_series_quantiles">
-<code class="sig-name descname">get_time_series_quantiles</code><span class="sig-paren">(</span><em class="sig-param">data_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">time_points: list</em>, <em class="sig-param">quant_type: str</em>, <em class="sig-param">name_list: list</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#src.import_simulation_data.get_time_series_quantiles" title="Permalink to this definition">¶</a></dt>
+<dt id="simulation_viz.import_simulation_data.get_time_series_quantiles">
+<code class="sig-name descname">get_time_series_quantiles</code><span class="sig-paren">(</span><em class="sig-param">data_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">time_points: list</em>, <em class="sig-param">quant_type: str</em>, <em class="sig-param">name_list: list</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#simulation_viz.import_simulation_data.get_time_series_quantiles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes in a dataframe with either fluxes or concentrations and calculates the median and respective first and third
 quartiles for each flux or metabolite at a given time point over the whole model ensemble.</p>
 <p><strong>Inputs</strong></p>
@@ -310,8 +310,8 @@ reaction or metabolite names, depending on what that the dataframe contains.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="src.import_simulation_data.import_ref_conc">
-<code class="sig-name descname">import_ref_conc</code><span class="sig-paren">(</span><em class="sig-param">mat: dict</em>, <em class="sig-param">n_models: int</em>, <em class="sig-param">met_names: list</em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#src.import_simulation_data.import_ref_conc" title="Permalink to this definition">¶</a></dt>
+<dt id="simulation_viz.import_simulation_data.import_ref_conc">
+<code class="sig-name descname">import_ref_conc</code><span class="sig-paren">(</span><em class="sig-param">mat: dict</em>, <em class="sig-param">n_models: int</em>, <em class="sig-param">met_names: list</em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#simulation_viz.import_simulation_data.import_ref_conc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a .mat file from matlab into a dictionary with reference concentrations for each model.
 Metabolites are the keys, lists of concentrations are the values, where each entry is the concentration for a model.</p>
 <p><strong>Inputs</strong></p>

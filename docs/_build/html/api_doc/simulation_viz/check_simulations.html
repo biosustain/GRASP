@@ -220,9 +220,9 @@
   <div class="section" id="check-simulations">
 <h1>Check simulations<a class="headerlink" href="#check-simulations" title="Permalink to this headline">¶</a></h1>
 <p>This module implements functions that do some quality check on the model simulation results.</p>
-<span class="target" id="module-src.check_simulations"></span><dl class="function">
-<dt id="src.check_simulations.check_for_negative_concentrations">
-<code class="sig-name descname">check_for_negative_concentrations</code><span class="sig-paren">(</span><em class="sig-param">data_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">scaled: bool</em>, <em class="sig-param">threshold: float = -1e-08</em><span class="sig-paren">)</span><a class="headerlink" href="#src.check_simulations.check_for_negative_concentrations" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="module-simulation_viz.check_simulations"></span><dl class="function">
+<dt id="simulation_viz.check_simulations.check_for_negative_concentrations">
+<code class="sig-name descname">check_for_negative_concentrations</code><span class="sig-paren">(</span><em class="sig-param">data_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">scaled: bool</em>, <em class="sig-param">threshold: float = -1e-08</em><span class="sig-paren">)</span><a class="headerlink" href="#simulation_viz.check_simulations.check_for_negative_concentrations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks if all concentrations are higher than the given threshold. The idea is to make sure that there are no
 negative concentrations.</p>
 <p><strong>Inputs</strong></p>
@@ -245,8 +245,8 @@ value to use to check if the concentrations are higher than that.</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="src.check_simulations.get_non_converging_models">
-<code class="sig-name descname">get_non_converging_models</code><span class="sig-paren">(</span><em class="sig-param">conc_df_interp: pandas.core.frame.DataFrame</em>, <em class="sig-param">n_models: int</em>, <em class="sig-param">met_names: list</em>, <em class="sig-param">rel_tol: float = 0.005</em><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#src.check_simulations.get_non_converging_models" title="Permalink to this definition">¶</a></dt>
+<dt id="simulation_viz.check_simulations.get_non_converging_models">
+<code class="sig-name descname">get_non_converging_models</code><span class="sig-paren">(</span><em class="sig-param">conc_df_interp: pandas.core.frame.DataFrame</em>, <em class="sig-param">n_models: int</em>, <em class="sig-param">met_names: list</em>, <em class="sig-param">rel_tol: float = 0.005</em><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#simulation_viz.check_simulations.get_non_converging_models" title="Permalink to this definition">¶</a></dt>
 <dd><p>Goes through every model and every metabolite time course, gets the last three time points in the simulation and
 checks if the difference between each pair of concentration values is greater than last_concentration_value*rel_tol,
 where the relative tolerance is defined by the user. If this is false, the model is considered to not converge.</p>
@@ -272,8 +272,8 @@ relative tolerance to use when checking if the model is converging.</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="src.check_simulations.remove_models">
-<code class="sig-name descname">remove_models</code><span class="sig-paren">(</span><em class="sig-param">conc_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">flux_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">model_list: list</em><span class="sig-paren">)</span> &#x2192; tuple<a class="headerlink" href="#src.check_simulations.remove_models" title="Permalink to this definition">¶</a></dt>
+<dt id="simulation_viz.check_simulations.remove_models">
+<code class="sig-name descname">remove_models</code><span class="sig-paren">(</span><em class="sig-param">conc_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">flux_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">model_list: list</em><span class="sig-paren">)</span> &#x2192; tuple<a class="headerlink" href="#simulation_viz.check_simulations.remove_models" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes all models in model_list from concentration and flux dataframes.</p>
 <p><strong>Inputs</strong></p>
 <blockquote>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Read input &mdash; GRASP 2.0.0 documentation</title>
+  <title>CalculateMMCurves &mdash; GRASP 2.0.0 documentation</title>
   
 
   
@@ -51,9 +51,9 @@
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
     <link rel="top" title="GRASP 2.0.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Pattern functions" href="../pattern_functions.html"/>
-        <link rel="next" title="Simulation visualization" href="../simulation_viz.html"/>
-        <link rel="prev" title="Reaction pattern" href="reaction_pattern.html"/> 
+        <link rel="up" title="Analysis functions" href="../analysis_functions.html"/>
+        <link rel="next" title="Ensemble functions" href="../ensemble_functions.html"/>
+        <link rel="prev" title="Analysis functions" href="../analysis_functions.html"/> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
@@ -139,30 +139,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualizing results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../api_doc.html">API documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../analysis_functions.html">Analysis functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../ensemble_functions.html">Ensemble functions</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../pattern_functions.html">Pattern functions</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="algebra.html">Algebra</a></li>
-<li class="toctree-l3"><a class="reference internal" href="build_allosteric.html">Build allosteric</a></li>
-<li class="toctree-l3"><a class="reference internal" href="build_diffusion.html">Build diffusion</a></li>
-<li class="toctree-l3"><a class="reference internal" href="build_fixed_exchange.html">Build fixed exchange</a></li>
-<li class="toctree-l3"><a class="reference internal" href="build_free_exchange.html">Build free exchange</a></li>
-<li class="toctree-l3"><a class="reference internal" href="build_kinetic_function.html">Build kinetic function</a></li>
-<li class="toctree-l3"><a class="reference internal" href="build_mass_action.html">Build mass action</a></li>
-<li class="toctree-l3"><a class="reference internal" href="build_ode_fxn.html">Build ODE function</a></li>
-<li class="toctree-l3"><a class="reference internal" href="build_reaction.html">Build reaction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="calculate_extreme_pathways.html">Calculate extreme pathways</a></li>
-<li class="toctree-l3"><a class="reference internal" href="calculate_kinetic_parameters.html">Calculate kinetic parameters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="col_vector.html">Column vector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="compute_branched_reversibilities.html">Compute branched reversibilities</a></li>
-<li class="toctree-l3"><a class="reference internal" href="cycled_paths.html">Cycled paths</a></li>
-<li class="toctree-l3"><a class="reference internal" href="get_expression.html">Get expression</a></li>
-<li class="toctree-l3"><a class="reference internal" href="get_link.html">Get link</a></li>
-<li class="toctree-l3"><a class="reference internal" href="get_weight.html">Get weight</a></li>
-<li class="toctree-l3"><a class="reference internal" href="reaction_pattern.html">Reaction pattern</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Read input</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../analysis_functions.html">Analysis functions</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">CalculateMMCurves</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../ensemble_functions.html">Ensemble functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pattern_functions.html">Pattern functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../simulation_viz.html">Simulation visualization</a></li>
 </ul>
 </li>
@@ -212,15 +194,15 @@
         
           <li><a href="../../api_doc.html">API documentation</a> &raquo;</li>
         
-          <li><a href="../pattern_functions.html">Pattern functions</a> &raquo;</li>
+          <li><a href="../analysis_functions.html">Analysis functions</a> &raquo;</li>
         
-      <li>Read input</li>
+      <li>CalculateMMCurves</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../_sources/api_doc/patternFxns/read_input.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/api_doc/analysisFxns/calculateMMCurves.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -233,35 +215,55 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="https://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="read-input">
-<h1>Read input<a class="headerlink" href="#read-input" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="calculatemmcurves">
+<h1>CalculateMMCurves<a class="headerlink" href="#calculatemmcurves" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
-<dt id="patternFxns.readInput">
-<code class="sig-name descname">readInput</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="headerlink" href="#patternFxns.readInput" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reads input file of the enzymatic reaction pattern.</p>
-<p>Based on <a class="reference external" href="https://doi.org/10.1186/1471-2105-10-238">https://doi.org/10.1186/1471-2105-10-238</a></p>
+<dt id="analysisFxns.calculateMMCurves">
+<code class="sig-name descname">calculateMMCurves</code><span class="sig-paren">(</span><em class="sig-param">outputFolder</em>, <em class="sig-param">ensemble</em>, <em class="sig-param">numModels</em>, <em class="sig-param">structIdx</em>, <em class="sig-param">saturatingConc</em>, <em class="sig-param">substrateRange</em>, <em class="sig-param">rxnList</em><span class="sig-paren">)</span><a class="headerlink" href="#analysisFxns.calculateMMCurves" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates Michaelis-Menten curves for enzymatic reactions in the model
+ensemble (i.e., reactions that are not massAction, diffusion,
+freeExchange, and fixedExchange).</p>
+<p>This basically implies setting product concentrations to 0, cosubstrate
+concentrations to a saturating value (so that they are not limiting), and
+varying the concentration of the substrate of interest from a very low
+concentration value to a saturating one.</p>
+<p>The results are written in files that go into outputFolder.</p>
+<p>The user can also specify the saturating concentration to be considered
+as well as the range of concentrations for which the flux</p>
+<p>The user can further specify, for which reactions will the MM curves be
+calculated.</p>
 <p><strong>Usage</strong></p>
 <blockquote>
-<div><p>[nodeList, edge, kineticMatrix, forwardFlux] = readInput(filename)</p>
+<div><p>mcaResults = controlAndResponseAnalysis(ensemble, saveResMatrices, strucIdx)</p>
 </div></blockquote>
-<p><strong>Input</strong></p>
+<p><strong>Inputs</strong></p>
 <blockquote>
 <div><ul class="simple">
-<li><p><strong>filename</strong> (<em>char</em>) –
-pattern name</p></li>
+<li><p><strong>outputFolder</strong> (<em>char</em>) –
+path to folder where output files will be written</p></li>
+<li><p><strong>ensemble</strong> (<em>struct</em>) –
+model ensemble, see buildEnsemble for fields description</p></li>
+<li><p><strong>numModels</strong> (<em>int</em>) –
+number of models in the ensemble to consider</p></li>
 </ul>
 </div></blockquote>
-<p><strong>Outputs</strong></p>
+<p><strong>Optional inputs</strong></p>
 <blockquote>
 <div><ul class="simple">
-<li><p><strong>nodeList</strong> (<em>int vector</em>) –
-list with the number of nodes</p></li>
-<li><p><strong>edge</strong> (<em>int cell</em>) –
-edge list</p></li>
-<li><p><strong>kineticMatrix</strong> (<em>cell</em>) –
-stoichmetric matrix of the system, element are pseudo-first rate constants</p></li>
-<li><p><strong>forwardFlux</strong> (<em>int matrix</em>) –
-list with the edges of the forward reactions</p></li>
+<li><p><strong>structIdx</strong> (<em>int</em>) –
+structure ID, default: 1</p></li>
+<li><p><strong>saturatingConc</strong> (<em>int</em>) –
+saturation concentration (that would lead to Vmax), default: 10 mol/L</p></li>
+<li><p><strong>substrateRange</strong> (<em>vector</em>) –
+vector of concentrations for which the flux will be calculated, default: [10^-9, 10] mol/L</p></li>
+<li><p><strong>rxnList</strong> (<em>vector</em>) –
+reactions for which Vmax will be calculated</p></li>
+</ul>
+</div></blockquote>
+<p><strong>Output</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>None</strong></p></li>
 </ul>
 </div></blockquote>
 </dd></dl>
@@ -278,10 +280,10 @@ list with the edges of the forward reactions</p></li>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../simulation_viz.html" class="btn btn-default float-right" title="Simulation visualization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../ensemble_functions.html" class="btn btn-default float-right" title="Ensemble functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="reaction_pattern.html" class="btn btn-default" title="Reaction pattern" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../analysis_functions.html" class="btn btn-default" title="Analysis functions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

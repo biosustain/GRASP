@@ -4,6 +4,17 @@ API documentation
 Here you can find the API documentation for all functions.
 
 
+
+**Analysis functions**
+
+
+.. toctree::
+   :glob:
+   :maxdepth: 2
+
+   api_doc/analysis_functions
+
+
 **Ensemble functions**
 
 
