@@ -52,13 +52,13 @@ rxnNames     = ensemble.rxns;
 
 % Checks whether any categories were defined
 if isempty(categories)
-    categories = {'MCA',[1 ':']};
+    categories = {'MCA',[1, length(rxnNames)]}
 end
 
 for ix = 1:nCondition
     
     % Plot final results
-    for j = 1:size(categories,1)
+    for j = 1:size(categories,1)   
         figure ('Name', [categories{j,1} ' , condition: ' num2str(ix)])
         subplot(2,1,1)
         imagesc(mcaResults.xControlAvg{ix}(:,categories{j,2}(1):categories{j,2}(2)))
