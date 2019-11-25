@@ -81,7 +81,7 @@ while ischar(lineIn)
     lineIn = fgets(fIn);
 end
 
-fprintf(fOut, '\ny = (1./(metsRefConc.*10^6)) .* (Sred*(E.*v));');
+fprintf(fOut, '\ny = (1./(metsRefConc.*10^3)) .* (Sred*(E.*v));');
 
 fclose(fIn);
 fclose(fOut);
