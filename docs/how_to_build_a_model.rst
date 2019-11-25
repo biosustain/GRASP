@@ -6,7 +6,7 @@ To build a model you need to fill in an excel file following a specific format. 
 The input file contains the following information:
 
  - reaction stoichiometry;
- - reaction fluxes (in micromol/gCDW/h);
+ - reaction fluxes (in mmol/L/h);
  - Gibbs standard energies (in kJ/mol);
  - metabolite concentrations (in mol/L), used to calculate the reactions free Gibbs energies;
  - enzyme mechanisms;
@@ -38,7 +38,7 @@ It has the following sheets:
  - thermo_ineq_constraints_: [TODO Pedro];
  - thermoRxns_: where the standard Gibbs energies are specified for each reaction in the model (in kJ/mol);
  - thermoMets_: where the metabolite concentrations used to calculate reaction Gibbs energies are specified (in mol/L);
- - measRates_: where known reactions fluxes are specified (in micromol/gCDW/h);
+ - measRates_: where known reactions fluxes are specified (in mmol/L/h);
  - protData_: where scaled proteomics data is specified - this is only relevant if you have more than one data point;
  - metsData_: where scaled metabolomics data is specified - this is only relevant if you have more than one data point;
  - kinetics1_: where enzyme mechanisms and regulation is specified.
@@ -146,8 +146,8 @@ measRates
 This sheet has 3 columns:
 
  - ``reaction ID``: the reaction ids;
- - ``vref_mean (umol/gCDW/h)``: the average flux for the reactions whose flux is known. It should be specified in micromol/gCDW/h);
- - ``vref_std (umol/gCDW/h)``: the standard deviation of the measured flux. It should be specified in micromol/gCDW/h).
+ - ``vref_mean (mmol/L/h)``: the average flux for the reactions whose flux is known. It should be specified in mmol/L/h);
+ - ``vref_std (mmol/L/h)``: the standard deviation of the measured flux. It should be specified in mmol/L/h).
 
 Note that here you should only specify fluxes whose values you know and are non-zero. Reactions with zero flux should not be included in the model, as these cannot be parameterized.
 
