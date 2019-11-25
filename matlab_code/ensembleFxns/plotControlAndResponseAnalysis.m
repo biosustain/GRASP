@@ -106,7 +106,7 @@ for ix = 1:nCondition
         caxis([-3 3])
         ax=subplot(2,1,1);
         colormap(ax,cmap)
-        mcaResults.enzNames
+        
         subplot(2,1,2)
         imagesc(mcaResults.xResponseAvg{ix}(enzymeCategories{j,2}(1):enzymeCategories{j,2}(2)))
         set(gca,'xticklabel',[],'yticklabel',[],'xtick',1:size(mcaResults.xResponseAvg{ix},2),'ytick',1:numFluxes)
