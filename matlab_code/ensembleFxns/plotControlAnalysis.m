@@ -52,7 +52,7 @@ rxnNames     = ensemble.rxns;
 
 % Checks whether any categories were defined
 if isempty(categories)
-    categories = {'MCA',[1, length(rxnNames)]}
+    categories = {'MCA',[1, length(rxnNames)]};
 end
 
 for ix = 1:nCondition
