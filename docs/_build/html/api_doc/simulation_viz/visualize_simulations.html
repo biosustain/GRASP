@@ -220,9 +220,9 @@
   <div class="section" id="visualize-simulations">
 <h1>Visualize simulations<a class="headerlink" href="#visualize-simulations" title="Permalink to this headline">¶</a></h1>
 <p>This module implements functions to visualize simulation results using <a class="reference external" href="https://matplotlib.org/">matplotlib</a>.</p>
-<span class="target" id="module-src.visualize_simulations"></span><dl class="function">
-<dt id="src.visualize_simulations.plot_ensemble">
-<code class="sig-name descname">plot_ensemble</code><span class="sig-paren">(</span><em class="sig-param">data_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">quant_type: str</em>, <em class="sig-param">selected_data: list</em>, <em class="sig-param">x_scale: str = 'linear'</em>, <em class="sig-param">y_scale: str = 'linear'</em>, <em class="sig-param">x_lim: tuple = None</em>, <em class="sig-param">y_lim: tuple = None</em>, <em class="sig-param">fig_size: tuple = None</em>, <em class="sig-param">save_plot: bool = False</em>, <em class="sig-param">output_file: str = ''</em><span class="sig-paren">)</span><a class="headerlink" href="#src.visualize_simulations.plot_ensemble" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="module-simulation_viz.visualize_simulations"></span><dl class="function">
+<dt id="simulation_viz.visualize_simulations.plot_ensemble">
+<code class="sig-name descname">plot_ensemble</code><span class="sig-paren">(</span><em class="sig-param">data_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">quant_type: str</em>, <em class="sig-param">selected_data: list</em>, <em class="sig-param">x_scale: str = 'linear'</em>, <em class="sig-param">y_scale: str = 'linear'</em>, <em class="sig-param">x_lim: tuple = None</em>, <em class="sig-param">y_lim: tuple = None</em>, <em class="sig-param">fig_size: tuple = None</em>, <em class="sig-param">save_plot: bool = False</em>, <em class="sig-param">output_file: str = ''</em><span class="sig-paren">)</span><a class="headerlink" href="#simulation_viz.visualize_simulations.plot_ensemble" title="Permalink to this definition">¶</a></dt>
 <dd><p>Does the same as plot_ensemble_interactive but using matplotlib instead of altair.
 Takes in a pandas dataframe with median and 1st and 3rd quartile concentration or flux values calculated
 over all models in the ensemble for each time point, and plots them using matplotlib.
@@ -261,8 +261,8 @@ path to plot file to be saved, if save_plot == True.</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="src.visualize_simulations.plot_model">
-<code class="sig-name descname">plot_model</code><span class="sig-paren">(</span><em class="sig-param">data_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">data_interp_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">model_i: int</em>, <em class="sig-param">quant_type: str</em>, <em class="sig-param">selected_data: list</em>, <em class="sig-param">x_scale: str = 'linear'</em>, <em class="sig-param">y_scale: str = 'linear'</em>, <em class="sig-param">x_lim: tuple = None</em>, <em class="sig-param">y_lim: tuple = None</em>, <em class="sig-param">fig_size: tuple = None</em>, <em class="sig-param">save_plot: bool = False</em>, <em class="sig-param">output_file: str = ''</em><span class="sig-paren">)</span><a class="headerlink" href="#src.visualize_simulations.plot_model" title="Permalink to this definition">¶</a></dt>
+<dt id="simulation_viz.visualize_simulations.plot_model">
+<code class="sig-name descname">plot_model</code><span class="sig-paren">(</span><em class="sig-param">data_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">data_interp_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">model_i: int</em>, <em class="sig-param">quant_type: str</em>, <em class="sig-param">selected_data: list</em>, <em class="sig-param">x_scale: str = 'linear'</em>, <em class="sig-param">y_scale: str = 'linear'</em>, <em class="sig-param">x_lim: tuple = None</em>, <em class="sig-param">y_lim: tuple = None</em>, <em class="sig-param">fig_size: tuple = None</em>, <em class="sig-param">save_plot: bool = False</em>, <em class="sig-param">output_file: str = ''</em><span class="sig-paren">)</span><a class="headerlink" href="#simulation_viz.visualize_simulations.plot_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a pandas dataframe with metabolite concentrations or reaction fluxes, it plots the selected ones
 (specified in selected data) for the selected model.
 The plots are made using altair.

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Pattern functions &mdash; GRASP 2.0.0 documentation</title>
+  <title>Analysis functions &mdash; GRASP 2.0.0 documentation</title>
   
 
   
@@ -52,8 +52,8 @@
         <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="GRASP 2.0.0 documentation" href="../index.html"/>
         <link rel="up" title="API documentation" href="../api_doc.html"/>
-        <link rel="next" title="Algebra" href="patternFxns/algebra.html"/>
-        <link rel="prev" title="Simulate ensemble" href="ensembleFxns/simulate_ensemble.html"/> 
+        <link rel="next" title="CalculateMMCurves" href="analysisFxns/calculateMMCurves.html"/>
+        <link rel="prev" title="API documentation" href="../api_doc.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -139,30 +139,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../visualization.html">Visualizing results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api_doc.html">API documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="analysis_functions.html">Analysis functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensemble_functions.html">Ensemble functions</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Pattern functions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="patternFxns/algebra.html">Algebra</a></li>
-<li class="toctree-l3"><a class="reference internal" href="patternFxns/build_allosteric.html">Build allosteric</a></li>
-<li class="toctree-l3"><a class="reference internal" href="patternFxns/build_diffusion.html">Build diffusion</a></li>
-<li class="toctree-l3"><a class="reference internal" href="patternFxns/build_fixed_exchange.html">Build fixed exchange</a></li>
-<li class="toctree-l3"><a class="reference internal" href="patternFxns/build_free_exchange.html">Build free exchange</a></li>
-<li class="toctree-l3"><a class="reference internal" href="patternFxns/build_kinetic_function.html">Build kinetic function</a></li>
-<li class="toctree-l3"><a class="reference internal" href="patternFxns/build_mass_action.html">Build mass action</a></li>
-<li class="toctree-l3"><a class="reference internal" href="patternFxns/build_ode_fxn.html">Build ODE function</a></li>
-<li class="toctree-l3"><a class="reference internal" href="patternFxns/build_reaction.html">Build reaction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="patternFxns/calculate_extreme_pathways.html">Calculate extreme pathways</a></li>
-<li class="toctree-l3"><a class="reference internal" href="patternFxns/calculate_kinetic_parameters.html">Calculate kinetic parameters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="patternFxns/col_vector.html">Column vector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="patternFxns/compute_branched_reversibilities.html">Compute branched reversibilities</a></li>
-<li class="toctree-l3"><a class="reference internal" href="patternFxns/cycled_paths.html">Cycled paths</a></li>
-<li class="toctree-l3"><a class="reference internal" href="patternFxns/get_expression.html">Get expression</a></li>
-<li class="toctree-l3"><a class="reference internal" href="patternFxns/get_link.html">Get link</a></li>
-<li class="toctree-l3"><a class="reference internal" href="patternFxns/get_weight.html">Get weight</a></li>
-<li class="toctree-l3"><a class="reference internal" href="patternFxns/reaction_pattern.html">Reaction pattern</a></li>
-<li class="toctree-l3"><a class="reference internal" href="patternFxns/read_input.html">Read input</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Analysis functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="analysisFxns/calculateMMCurves.html">CalculateMMCurves</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="ensemble_functions.html">Ensemble functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pattern_functions.html">Pattern functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simulation_viz.html">Simulation visualization</a></li>
 </ul>
 </li>
@@ -212,13 +194,13 @@
         
           <li><a href="../api_doc.html">API documentation</a> &raquo;</li>
         
-      <li>Pattern functions</li>
+      <li>Analysis functions</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/api_doc/pattern_functions.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/api_doc/analysis_functions.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -231,29 +213,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="https://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="pattern-functions">
-<h1>Pattern functions<a class="headerlink" href="#pattern-functions" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="analysis-functions">
+<h1>Analysis functions<a class="headerlink" href="#analysis-functions" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="patternFxns/algebra.html">Algebra</a></li>
-<li class="toctree-l1"><a class="reference internal" href="patternFxns/build_allosteric.html">Build allosteric</a></li>
-<li class="toctree-l1"><a class="reference internal" href="patternFxns/build_diffusion.html">Build diffusion</a></li>
-<li class="toctree-l1"><a class="reference internal" href="patternFxns/build_fixed_exchange.html">Build fixed exchange</a></li>
-<li class="toctree-l1"><a class="reference internal" href="patternFxns/build_free_exchange.html">Build free exchange</a></li>
-<li class="toctree-l1"><a class="reference internal" href="patternFxns/build_kinetic_function.html">Build kinetic function</a></li>
-<li class="toctree-l1"><a class="reference internal" href="patternFxns/build_mass_action.html">Build mass action</a></li>
-<li class="toctree-l1"><a class="reference internal" href="patternFxns/build_ode_fxn.html">Build ODE function</a></li>
-<li class="toctree-l1"><a class="reference internal" href="patternFxns/build_reaction.html">Build reaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="patternFxns/calculate_extreme_pathways.html">Calculate extreme pathways</a></li>
-<li class="toctree-l1"><a class="reference internal" href="patternFxns/calculate_kinetic_parameters.html">Calculate kinetic parameters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="patternFxns/col_vector.html">Column vector</a></li>
-<li class="toctree-l1"><a class="reference internal" href="patternFxns/compute_branched_reversibilities.html">Compute branched reversibilities</a></li>
-<li class="toctree-l1"><a class="reference internal" href="patternFxns/cycled_paths.html">Cycled paths</a></li>
-<li class="toctree-l1"><a class="reference internal" href="patternFxns/get_expression.html">Get expression</a></li>
-<li class="toctree-l1"><a class="reference internal" href="patternFxns/get_link.html">Get link</a></li>
-<li class="toctree-l1"><a class="reference internal" href="patternFxns/get_weight.html">Get weight</a></li>
-<li class="toctree-l1"><a class="reference internal" href="patternFxns/reaction_pattern.html">Reaction pattern</a></li>
-<li class="toctree-l1"><a class="reference internal" href="patternFxns/read_input.html">Read input</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysisFxns/calculateMMCurves.html">CalculateMMCurves</a></li>
 </ul>
 </div>
 </div>
@@ -268,10 +232,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="patternFxns/algebra.html" class="btn btn-default float-right" title="Algebra" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="analysisFxns/calculateMMCurves.html" class="btn btn-default float-right" title="CalculateMMCurves" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="ensembleFxns/simulate_ensemble.html" class="btn btn-default" title="Simulate ensemble" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../api_doc.html" class="btn btn-default" title="API documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

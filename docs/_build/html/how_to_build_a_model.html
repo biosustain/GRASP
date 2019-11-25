@@ -228,7 +228,7 @@
 <blockquote>
 <div><ul class="simple">
 <li><p>reaction stoichiometry;</p></li>
-<li><p>reaction fluxes (in micromol/gCDW/h);</p></li>
+<li><p>reaction fluxes (in mmol/L/h);</p></li>
 <li><p>Gibbs standard energies (in kJ/mol);</p></li>
 <li><p>metabolite concentrations (in mol/L), used to calculate the reactions free Gibbs energies;</p></li>
 <li><p>enzyme mechanisms;</p></li>
@@ -255,7 +255,7 @@ An example input file can also be found in the folder <code class="docutils lite
 <li><p><a class="reference internal" href="#thermo-ineq-constraints">thermo_ineq_constraints</a>: [TODO Pedro];</p></li>
 <li><p><a class="reference internal" href="#thermorxns">thermoRxns</a>: where the standard Gibbs energies are specified for each reaction in the model (in kJ/mol);</p></li>
 <li><p><a class="reference internal" href="#thermomets">thermoMets</a>: where the metabolite concentrations used to calculate reaction Gibbs energies are specified (in mol/L);</p></li>
-<li><p><a class="reference internal" href="#measrates">measRates</a>: where known reactions fluxes are specified (in micromol/gCDW/h);</p></li>
+<li><p><a class="reference internal" href="#measrates">measRates</a>: where known reactions fluxes are specified (in mmol/L/h);</p></li>
 <li><p><a class="reference internal" href="#protdata">protData</a>: where scaled proteomics data is specified - this is only relevant if you have more than one data point;</p></li>
 <li><p><a class="reference internal" href="#metsdata">metsData</a>: where scaled metabolomics data is specified - this is only relevant if you have more than one data point;</p></li>
 <li><p><a class="reference internal" href="#kinetics1">kinetics1</a>: where enzyme mechanisms and regulation is specified.</p></li>
@@ -356,8 +356,8 @@ An example input file can also be found in the folder <code class="docutils lite
 <blockquote>
 <div><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">reaction</span> <span class="pre">ID</span></code>: the reaction ids;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">vref_mean</span> <span class="pre">(umol/gCDW/h)</span></code>: the average flux for the reactions whose flux is known. It should be specified in micromol/gCDW/h);</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">vref_std</span> <span class="pre">(umol/gCDW/h)</span></code>: the standard deviation of the measured flux. It should be specified in micromol/gCDW/h).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vref_mean</span> <span class="pre">(mmol/L/h)</span></code>: the average flux for the reactions whose flux is known. It should be specified in mmol/L/h);</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vref_std</span> <span class="pre">(mmol/L/h)</span></code>: the standard deviation of the measured flux. It should be specified in mmol/L/h).</p></li>
 </ul>
 </div></blockquote>
 <p>Note that here you should only specify fluxes whose values you know and are non-zero. Reactions with zero flux should not be included in the model, as these cannot be parameterized.</p>
