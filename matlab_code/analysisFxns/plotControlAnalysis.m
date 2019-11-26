@@ -51,7 +51,7 @@ metNames     = ensemble.mets(ensemble.metsActive);
 rxnNames     = ensemble.rxns;
 
 % Checks whether any categories were defined
-if isempty(categories)
+if (nargin < 3) || isempty(categories)
     categories = {'MCA',[1, length(rxnNames)]};
 end
 
