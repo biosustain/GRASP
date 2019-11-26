@@ -35,4 +35,4 @@ v(11,:) = r_r111([m_m8],model.rxnParams(11).kineticParams);
 v(12,:) = r_r121(m_m9,ones(1,size(y,2)),model.rxnParams(12).kineticParams);
 v(13,:) = r_r131([],[]);
 
-y = (1./(metsRefConc.*10^6)) .* (Sred*(E.*v));
+y = (1./(metsRefConc.*10^3)) .* (Sred*(E.*v));
