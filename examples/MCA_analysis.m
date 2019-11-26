@@ -1,9 +1,10 @@
 % Run MCA analysis on your model ensemble
 
 clear      				   
-addpath(fullfile('..', 'matlab_code', 'patternFxns'), ...
-        fullfile('..', 'matlab_code', 'ensembleFxns'));
-
+addpath(fullfile('..', 'matlab_code', 'analysisFxns'), ...
+        fullfile('..', 'matlab_code', 'ensembleFxns'), ...
+        fullfile('..', 'matlab_code', 'patternFxns'));
+    
 saveMCAMatrices = 1;    % whether or not to save the MCA results for all models and not just mean values
 modelID = 'toy_model';
 outputFolder = fullfile('..', 'io','output');

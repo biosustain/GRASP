@@ -74,6 +74,9 @@ for rxnI = rxnList
 
         stoicSubsInd = find(ensemble.S(:, rxnI) < 0);        
         nSubs = numel(ensemble.subOrder{1}{rxnI});
+        nProds = numel(ensemble.prodOrder{structIdx}{rxnI});
+        nInhib = numel(ensemble.inhibitors{structIdx}{rxnI});
+        nActiv = numel(ensemble.activators{structIdx}{rxnI});
 
         for j=1:numel(stoicSubsInd)
             subI = stoicSubsInd(j);
@@ -110,7 +113,7 @@ for rxnI = rxnList
             
                 for subConc=substrateRange
                     subsConc(subOrderPos) = subConc ./ subIRefConc; 
-                    X = [subsConc; zeros(numel(ensemble.prodOrder{structIdx}{rxnI}),1)];   
+                    X = [subsConc; zeros(nInhib+nActiv+nProds,1)];   
 
                     [v, ~, ~] = rateLawFxn(X,K);
                     vList = [vList; v];

@@ -116,6 +116,43 @@ classdef calculateMMCurvesTest < matlab.unittest.TestCase
             testCase.verifyEqual(trueResNadp, resNadp);
             
         end
+        
+        function testCalculateMMCurvesInhibitors(testCase)
+            
+            ensembleLocal = load(fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model.mat'));
+            ensembleLocal = ensembleLocal.ensemble;
+            
+            outputFolder = fullfile(testCase.currentPath{1}, 'testFiles');
+            numModels = 5;
+            structIdx = 1;
+
+            calculateMMCurves(outputFolder, ensembleLocal, numModels, structIdx);
+            
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_r1_m_m3.csv');
+            resR1M3 = fileread(filepath);
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_r1_m_m6.csv');
+            resR1M6 = fileread(filepath);
+            
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_r3_m_m1.csv');
+            resR3M1 = fileread(filepath);
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_r3_m_m7.csv');
+            resR3M7 = fileread(filepath);
+            
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueRes_r_r1_m_m3.csv');
+            trueResR1M3 = fileread(filepath);
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueRes_r_r1_m_m6.csv');
+            trueResR1M6 = fileread(filepath);
+            
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueRes_r_r3_m_m1.csv');
+            trueResR3M1 = fileread(filepath);
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueRes_r_r3_m_m7.csv');
+            trueResR3M7 = fileread(filepath);
+            
+            testCase.verifyEqual(trueResR1M3, resR1M3);
+            testCase.verifyEqual(trueResR1M6, resR1M6);
+            testCase.verifyEqual(trueResR3M1, resR3M1);
+            testCase.verifyEqual(trueResR3M7, resR3M7);
+        end
        
     end
 end
