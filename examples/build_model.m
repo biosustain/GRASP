@@ -3,8 +3,9 @@
 clearvars
 rng('shuffle');																											% for reproducibility
 delete(gcp('nocreate'));       				            																% check first that no other process is running
-addpath(fullfile('..', 'matlab_code', 'patternFxns'), ...
-        fullfile('..', 'matlab_code', 'ensembleFxns'));
+addpath(fullfile('..', 'matlab_code', 'analysisFxns'), ...
+        fullfile('..', 'matlab_code', 'ensembleFxns'), ...
+        fullfile('..', 'matlab_code', 'patternFxns'));
 
 % only valid/stable models are kept, and it will keep sampling until the
 %  "Number of particles" defined in the excel is reached, however, it is a

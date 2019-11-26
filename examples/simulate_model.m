@@ -1,9 +1,9 @@
 % Simulate a model ensemble
 
 clear
-addpath(fullfile('..', 'matlab_code', 'patternFxns'), ...
-        fullfile('..', 'matlab_code', 'ensembleFxns'));
-
+addpath(fullfile('..', 'matlab_code', 'analysisFxns'), ...
+        fullfile('..', 'matlab_code', 'ensembleFxns'), ...
+        fullfile('..', 'matlab_code', 'patternFxns'));
 
 modelID = 'toy_model';
 outputFolder = fullfile('..', 'io','output');
