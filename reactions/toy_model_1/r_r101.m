@@ -1,3 +1,3 @@
-function v = r_r101(S,P,K)
+function v = r_r101(SC,S,PC,P,K)
 % Mass action definition 
-v = K(1)*prod(S,1)-K(2)*prod(P,1);
+v = K(1)*prod(S.^SC, 1)-K(2)*prod(P.^PC, 1);

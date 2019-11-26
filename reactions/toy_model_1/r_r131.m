@@ -1,3 +1,3 @@
-function v = r_r131(X,K)
+function v = r_r131(rxnFlux, vectorSize)
 % Constant exchange definition 
-v = 1;
+v = rxnFlux*ones(1,vectorSize);
