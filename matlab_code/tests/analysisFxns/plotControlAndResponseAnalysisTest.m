@@ -20,7 +20,7 @@ classdef plotControlAndResponseAnalysisTest < matlab.unittest.TestCase
             mcaResults = load(fullfile(testCase.currentPath{1}, 'testFiles', 'MCA_response_toy_model1_random2.mat'));
             mcaResults = mcaResults.mcaResults;            
             
-            categories = {}; % currently not working when empty
+            categories = {};
 
             plotControlAndResponseAnalysis(mcaResults, ensemble);
 
@@ -35,8 +35,9 @@ classdef plotControlAndResponseAnalysisTest < matlab.unittest.TestCase
             mcaResults = mcaResults.mcaResults;
                         
             categories = {'all', [1, 5]};
+            enzymeCategories = {'all', [1, 4]};
 
-            plotControlAndResponseAnalysis(mcaResults, ensemble);
+            plotControlAndResponseAnalysis(mcaResults, ensemble, categories, enzymeCategories);
 
         end
     end

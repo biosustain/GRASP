@@ -54,11 +54,11 @@ metNames     = ensemble.mets(ensemble.metsActive);
 rxnNames     = ensemble.rxns;
 
 % Checks whether any categories were defined
-if isempty(categories)
+if (nargin < 3) || isempty(categories)
     categories = {'ControlAndResponse_reactions',[1, length(rxnNames)]};
 end
 
-if isempty(enzymeCategories)
+if (nargin < 4) ||isempty(enzymeCategories)
     enzymeCategories = {'ControlAndResponse_enzymes',[1, length(mcaResults.enzNames)]};
 end
 
@@ -80,7 +80,7 @@ for ix = 1:nCondition
         colormap(ax,cmap)
 
         subplot(2,1,2)
-        imagesc(mcaResults.xControlAvg{ix}(categories{j,2}(1):categories{j,2}(2)))
+        imagesc(mcaResults.xControlAvg{ix}(:,categories{j,2}(1):categories{j,2}(2)))
         set(gca,'xticklabel',[],'yticklabel',[],'ytick',1:numel(ix_mets),'xtick',1:numFluxes)
         set(gca,'yticklabel',metNames,'xticklabel',rxnNames(categories{j,2}(1):categories{j,2}(2)))
         xlabel('Reactions')
@@ -96,7 +96,7 @@ for ix = 1:nCondition
     for l = 1:size(enzymeCategories,1)
         figure ('Name', [enzymeCategories{l,1} ' , condition: ' num2str(ix)])
         subplot(2,1,1)
-        imagesc(mcaResults.eResponseAvg{ix}(enzymeCategories{j,2}(1):enzymeCategories{j,2}(2)))
+        imagesc(mcaResults.eResponseAvg{ix}(:,enzymeCategories{j,2}(1):enzymeCategories{j,2}(2)))
         set(gca,'xticklabel',[],'yticklabel',[],'xtick',1:size(mcaResults.eResponseAvg{ix},2),'ytick',1:numFluxes)
         set(gca,'xticklabel',mcaResults.enzNames(enzymeCategories{j,2}(1):enzymeCategories{j,2}(2)),'yticklabel',rxnNames)
         xlabel('Enzymes')
@@ -108,7 +108,7 @@ for ix = 1:nCondition
         colormap(ax,cmap)
         
         subplot(2,1,2)
-        imagesc(mcaResults.xResponseAvg{ix}(enzymeCategories{j,2}(1):enzymeCategories{j,2}(2)))
+        imagesc(mcaResults.xResponseAvg{ix}(:,enzymeCategories{j,2}(1):enzymeCategories{j,2}(2)))
         set(gca,'xticklabel',[],'yticklabel',[],'xtick',1:size(mcaResults.xResponseAvg{ix},2),'ytick',1:numFluxes)
         set(gca,'xticklabel',mcaResults.enzNames(enzymeCategories{j,2}(1):enzymeCategories{j,2}(2)),'yticklabel',metNames)
         xlabel('Enzymes')

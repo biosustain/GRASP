@@ -20,8 +20,8 @@ classdef plotControlAnalysisTest < matlab.unittest.TestCase
             mcaResults = load(fullfile(testCase.currentPath{1}, 'testFiles', 'MCA_toy_model1_random2.mat'));
             mcaResults = mcaResults.mcaResults;            
             
-            categories = {}; % currently not working when empty
-
+            categories = {};
+            
             plotControlAnalysis(mcaResults, ensemble, categories);
 
         end
