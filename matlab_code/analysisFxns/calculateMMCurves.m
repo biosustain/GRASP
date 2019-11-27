@@ -61,6 +61,7 @@ end
 
 
 for rxnI = rxnList
+    disp(['Current reaction: ', num2str(rxnI)]);
     
     if sum(~ismember({'massAction', 'fixedExchange', 'freeExchange', 'diffusion'}, ensemble.rxnMechanisms{structIdx}{rxnI})) == 4 
         
