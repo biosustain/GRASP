@@ -48,7 +48,7 @@ end
 if (nargin < 6)
     % in mmol/L
     saturatingConc = 10^4;
-    substrateRange = logspace(-6, 4);
+    substrateRange = logspace(-9, 4);
 end
 
 if isempty(saturatingConc)
