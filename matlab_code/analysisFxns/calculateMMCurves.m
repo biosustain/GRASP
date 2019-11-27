@@ -82,7 +82,7 @@ for rxnI = rxnList
         end
 
         stoicSubsInd = find(ensemble.S(:, rxnI) < 0);        
-        nSubs = numel(ensemble.subOrder{1}{rxnI});
+        nSubs = numel(ensemble.subOrder{structIdx}{rxnI});
         nProds = numel(ensemble.prodOrder{structIdx}{rxnI});
         nInhib = numel(ensemble.inhibitors{structIdx}{rxnI});
         nActiv = numel(ensemble.activators{structIdx}{rxnI});
@@ -97,14 +97,14 @@ for rxnI = rxnList
             % catch: concentrations of substrates for promiscuous
             % reactions must be zero instead of saturating.
             subsConc = zeros(nSubs, 1);
-            coSubsInd = find(ismember(ensemble.subOrder{1}{rxnI}, ensemble.mets(stoicSubsInd)));
+            coSubsInd = find(ismember(ensemble.subOrder{structIdx}{rxnI}, ensemble.mets(stoicSubsInd)));
             
             % met position in ensemble.subOrder
-            subOrderPos = find(ismember(ensemble.subOrder{1}{rxnI}, ensemble.mets(subI)));
+            subOrderPos = find(ismember(ensemble.subOrder{structIdx}{rxnI}, ensemble.mets(subI)));
             
             % ensemble.subOrder met position in ensemble.mets
             subOrderInd = [];
-            for entry=1:numel(ensemble.subOrder{1}{rxnI})
+            for entry=1:numel(ensemble.subOrder{structIdx}{rxnI})
                 ind = find(ismember(ensemble.mets, ensemble.subOrder{structIdx}{rxnI}{entry}));
                 if ismember(ind, stoicSubsInd)
                     subOrderInd = [subOrderInd, ind];
