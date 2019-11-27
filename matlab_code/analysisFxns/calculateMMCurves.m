@@ -101,7 +101,13 @@ for rxnI = rxnList
             
             % met position in ensemble.subOrder
             subOrderPos = find(ismember(ensemble.subOrder{structIdx}{rxnI}, ensemble.mets(subI)));
-            
+
+            % in case a metabolite is part of the reaction but not included
+            % in the mechanism
+            if isempty(subOrderPos)
+                continue
+            end
+
             % ensemble.subOrder met position in ensemble.mets
             subOrderInd = [];
             for entry=1:numel(ensemble.subOrder{structIdx}{rxnI})

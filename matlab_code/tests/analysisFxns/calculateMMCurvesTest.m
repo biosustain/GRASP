@@ -205,6 +205,8 @@ classdef calculateMMCurvesTest < matlab.unittest.TestCase
             testCase.verifyEqual(trueResR3M7, resR3M7);
             testCase.verifyEqual(trueResR6M1, resR6M1);
             testCase.verifyEqual(trueResR6M10, resR6M10);
+            testCase.verifyTrue(~exist(fullfile(testCase.currentPath{1}, 'testFiles', 'r_r1_m_m0.csv'), 'file'));
+            testCase.verifyTrue(~exist(fullfile(testCase.currentPath{1}, 'testFiles', 'r_r3_m_m0.csv'), 'file'));
         end
        
     end
