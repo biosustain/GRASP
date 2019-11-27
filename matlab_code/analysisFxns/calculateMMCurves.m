@@ -51,6 +51,14 @@ if (nargin < 6)
     substrateRange = logspace(-6, 4);
 end
 
+if isempty(saturatingConc)
+    saturatingConc = 10^4;  % in mmol/L
+end
+
+if isempty(substrateRange)
+    substrateRange = logspace(-6, 4);  % in mmol/L
+end
+
 if (nargin < 7)
 	rxnList = 1:numel(ensemble.rxns);
 end
@@ -61,6 +69,7 @@ end
 
 
 for rxnI = rxnList
+    disp(['Current reaction: ', num2str(rxnI)]);
     
     if sum(~ismember({'massAction', 'fixedExchange', 'freeExchange', 'diffusion'}, ensemble.rxnMechanisms{structIdx}{rxnI})) == 4 
         
@@ -73,7 +82,7 @@ for rxnI = rxnList
         end
 
         stoicSubsInd = find(ensemble.S(:, rxnI) < 0);        
-        nSubs = numel(ensemble.subOrder{1}{rxnI});
+        nSubs = numel(ensemble.subOrder{structIdx}{rxnI});
         nProds = numel(ensemble.prodOrder{structIdx}{rxnI});
         nInhib = numel(ensemble.inhibitors{structIdx}{rxnI});
         nActiv = numel(ensemble.activators{structIdx}{rxnI});
@@ -88,14 +97,20 @@ for rxnI = rxnList
             % catch: concentrations of substrates for promiscuous
             % reactions must be zero instead of saturating.
             subsConc = zeros(nSubs, 1);
-            coSubsInd = find(ismember(ensemble.subOrder{1}{rxnI}, ensemble.mets(stoicSubsInd)));
+            coSubsInd = find(ismember(ensemble.subOrder{structIdx}{rxnI}, ensemble.mets(stoicSubsInd)));
             
             % met position in ensemble.subOrder
-            subOrderPos = find(ismember(ensemble.subOrder{1}{rxnI}, ensemble.mets(subI)));
-            
+            subOrderPos = find(ismember(ensemble.subOrder{structIdx}{rxnI}, ensemble.mets(subI)));
+
+            % in case a metabolite is part of the reaction but not included
+            % in the mechanism
+            if isempty(subOrderPos)
+                continue
+            end
+
             % ensemble.subOrder met position in ensemble.mets
             subOrderInd = [];
-            for entry=1:numel(ensemble.subOrder{1}{rxnI})
+            for entry=1:numel(ensemble.subOrder{structIdx}{rxnI})
                 ind = find(ismember(ensemble.mets, ensemble.subOrder{structIdx}{rxnI}{entry}));
                 if ismember(ind, stoicSubsInd)
                     subOrderInd = [subOrderInd, ind];
@@ -105,11 +120,11 @@ for rxnI = rxnList
             for modelI=1:numModels    
 
                 K = ensemble.populations.models(modelI).rxnParams(rxnI).kineticParams;
-                allRefConcs = ensemble.populations.models(1).metConcRef(subOrderInd) * 10^6;
+                allRefConcs = ensemble.populations.models(modelI).metConcRef(subOrderInd) * 10^6;
                                 
                 subsConc(coSubsInd) = saturatingConc ./ allRefConcs;
                 
-                subIRefConc = ensemble.populations.models(1).metConcRef(subI) * 10^6;
+                subIRefConc = ensemble.populations.models(modelI).metConcRef(subI) * 10^6;
             
                 for subConc=substrateRange
                     subsConc(subOrderPos) = subConc ./ subIRefConc; 
