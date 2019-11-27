@@ -51,6 +51,14 @@ if (nargin < 6)
     substrateRange = logspace(-6, 4);
 end
 
+if isempty(saturatingConc)
+    saturatingConc = 10^4;  % in mmol/L
+end
+
+if isempty(substrateRange)
+    substrateRange = logspace(-6, 4);  % in mmol/L
+end
+
 if (nargin < 7)
 	rxnList = 1:numel(ensemble.rxns);
 end
