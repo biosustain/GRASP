@@ -114,11 +114,11 @@ for rxnI = rxnList
             for modelI=1:numModels    
 
                 K = ensemble.populations.models(modelI).rxnParams(rxnI).kineticParams;
-                allRefConcs = ensemble.populations.models(1).metConcRef(subOrderInd) * 10^6;
+                allRefConcs = ensemble.populations.models(modelI).metConcRef(subOrderInd) * 10^6;
                                 
                 subsConc(coSubsInd) = saturatingConc ./ allRefConcs;
                 
-                subIRefConc = ensemble.populations.models(1).metConcRef(subI) * 10^6;
+                subIRefConc = ensemble.populations.models(modelI).metConcRef(subI) * 10^6;
             
                 for subConc=substrateRange
                     subsConc(subOrderPos) = subConc ./ subIRefConc; 

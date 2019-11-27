@@ -125,7 +125,7 @@ classdef calculateMMCurvesTest < matlab.unittest.TestCase
             outputFolder = fullfile(testCase.currentPath{1}, 'testFiles');
             numModels = 5;
             structIdx = 1;
-
+                        
             calculateMMCurves(outputFolder, ensembleLocal, numModels, structIdx);
             
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_r1_m_m3.csv');
@@ -152,6 +152,59 @@ classdef calculateMMCurvesTest < matlab.unittest.TestCase
             testCase.verifyEqual(trueResR1M6, resR1M6);
             testCase.verifyEqual(trueResR3M1, resR3M1);
             testCase.verifyEqual(trueResR3M7, resR3M7);
+        end
+        
+        function testCalculateMMCurvesWater(testCase)
+            
+            ensembleLocal = load(fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_random2_water.mat'));
+            ensembleLocal = ensembleLocal.ensemble;
+            
+            outputFolder = fullfile(testCase.currentPath{1}, 'testFiles');
+            numModels = 5;
+            structIdx = 1;
+            
+            saturatingConc = 10^2*10^6;
+            substrateRange = logspace(-15,6);
+            rxnList = [1, 3, 6];
+
+            calculateMMCurves(outputFolder, ensembleLocal, numModels, structIdx, {}, {}, rxnList);
+            
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_r1_m_m3.csv');
+            resR1M3 = fileread(filepath);
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_r1_m_m6.csv');
+            resR1M6 = fileread(filepath);
+            
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_r3_m_m1.csv');
+            resR3M1 = fileread(filepath);
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_r3_m_m7.csv');
+            resR3M7 = fileread(filepath);
+            
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_r6_m_m1.csv');
+            resR6M1 = fileread(filepath);
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_r6_m_m10.csv');
+            resR6M10 = fileread(filepath);
+            
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueRes_r_r1_m_m3_water.csv');
+            trueResR1M3 = fileread(filepath);
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueRes_r_r1_m_m6_water.csv');
+            trueResR1M6 = fileread(filepath);
+            
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueRes_r_r3_m_m1_water.csv');
+            trueResR3M1 = fileread(filepath);
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueRes_r_r3_m_m7_water.csv');
+            trueResR3M7 = fileread(filepath);
+            
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueRes_r_r6_m_m1_water.csv');
+            trueResR6M1 = fileread(filepath);
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueRes_r_r6_m_m10_water.csv');
+            trueResR6M10 = fileread(filepath);
+            
+            testCase.verifyEqual(trueResR1M3, resR1M3);
+            testCase.verifyEqual(trueResR1M6, resR1M6);
+            testCase.verifyEqual(trueResR3M1, resR3M1);
+            testCase.verifyEqual(trueResR3M7, resR3M7);
+            testCase.verifyEqual(trueResR6M1, resR6M1);
+            testCase.verifyEqual(trueResR6M10, resR6M10);
         end
        
     end
