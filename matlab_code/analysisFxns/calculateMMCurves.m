@@ -45,18 +45,12 @@ if (nargin < 4)
 	structIdx = 1;
 end
 
-if (nargin < 6)
-    % in mmol/L
-    saturatingConc = 10^4;
-    substrateRange = logspace(-9, 4);
+if (nargin < 5) || isempty(saturatingConc)
+    saturatingConc = 10^4; % in mmol/L
 end
 
-if isempty(saturatingConc)
-    saturatingConc = 10^4;  % in mmol/L
-end
-
-if isempty(substrateRange)
-    substrateRange = logspace(-6, 4);  % in mmol/L
+if (nargin < 6) || isempty(substrateRange)
+    substrateRange = logspace(-9, 4);  % in mmol/L
 end
 
 if (nargin < 7)
