@@ -107,13 +107,25 @@ classdef calculateMMCurvesTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_R_G6PDH2_NADP_m_m_nadp_c.csv');
             resNadp = fileread(filepath);
             
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_R_G6PDH2_NADP_m_m_6pgl_c.csv');
+            res6PGL = fileread(filepath);
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_R_G6PDH2_NADP_m_m_nadph_c.csv');
+            resNadph = fileread(filepath);
+            
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'OP2_G6PDH2_NADP_g6p.csv');
             trueResG6p = fileread(filepath);
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'OP2_G6PDH2_NADP_nadp.csv');
             trueResNadp = fileread(filepath);
             
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'OP2_G6PDH2_NADP_6pgl.csv');
+            trueRes6PGL = fileread(filepath);
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'OP2_G6PDH2_NADP_nadph.csv');
+            trueResNadph = fileread(filepath);
+            
             testCase.verifyEqual(trueResG6p, resG6p);
             testCase.verifyEqual(trueResNadp, resNadp);
+            testCase.verifyEqual(trueRes6PGL, res6PGL);
+            testCase.verifyEqual(trueResNadph, resNadph);
             
         end
         
@@ -125,8 +137,10 @@ classdef calculateMMCurvesTest < matlab.unittest.TestCase
             outputFolder = fullfile(testCase.currentPath{1}, 'testFiles');
             numModels = 5;
             structIdx = 1;
+            saturatingConc = 10^4;
+            substrateRange = logspace(-6, 4);
                         
-            calculateMMCurves(outputFolder, ensembleLocal, numModels, structIdx);
+            calculateMMCurves(outputFolder, ensembleLocal, numModels, structIdx, saturatingConc, substrateRange);
             
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_r1_m_m3.csv');
             resR1M3 = fileread(filepath);
@@ -163,11 +177,11 @@ classdef calculateMMCurvesTest < matlab.unittest.TestCase
             numModels = 5;
             structIdx = 1;
             
-            saturatingConc = 10^2*10^6;
-            substrateRange = logspace(-15,6);
+            saturatingConc = 10^4;
+            substrateRange = logspace(-6, 4);
             rxnList = [1, 3, 6];
 
-            calculateMMCurves(outputFolder, ensembleLocal, numModels, structIdx, {}, {}, rxnList);
+            calculateMMCurves(outputFolder, ensembleLocal, numModels, structIdx, saturatingConc, substrateRange, rxnList);
             
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_r1_m_m3.csv');
             resR1M3 = fileread(filepath);
