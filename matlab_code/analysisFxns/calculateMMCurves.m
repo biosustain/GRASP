@@ -124,7 +124,11 @@ function calculateFlux(ensemble, rateLawFxn, subI, rxnI, numModels, ...
 
         % catch: concentrations of substrates for promiscuous
         % reactions must be zero instead of saturating.
-        subsConc = zeros(nSubs, 1);
+        if strcmp(subsOrProd, 'subs')
+            subsConc = zeros(nSubs, 1);  
+        elseif strcmp(subsOrProd, 'prod')
+            subsConc = zeros(nProds, 1);
+        end     
         coSubsInd = find(ismember(subOrder, ensemble.mets(stoicSubsInd)));
 
         % met position in ensemble.subOrder
