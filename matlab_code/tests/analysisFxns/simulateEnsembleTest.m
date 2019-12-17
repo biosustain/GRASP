@@ -51,8 +51,9 @@ classdef simulateEnsembleTest < matlab.unittest.TestCase
             % Specifiy the time of simulation (probably in hours)
             finalTime = 1;
             numModels = 5;
+            numCores = 2;
             
-            simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC, metsAbsOrRel, interruptTime,numModels);
+            simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC, metsAbsOrRel, interruptTime,numModels, numCores);
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSimulateEnsemble1'));
             trueRes = trueRes.simulationRes;
@@ -92,8 +93,9 @@ classdef simulateEnsembleTest < matlab.unittest.TestCase
             % Specifiy the time of simulation (probably in hours)
             finalTime = 1;
             numModels = 5;
+            numCores = 2;
             
-            simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC, metsAbsOrRel, interruptTime, numModels);
+            simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC, metsAbsOrRel, interruptTime, numModels, numCores);
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSimulateEnsembleAbs'));
             trueRes = trueRes.simulationRes;

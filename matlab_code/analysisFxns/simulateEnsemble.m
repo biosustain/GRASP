@@ -1,4 +1,4 @@
-function simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC, metsAbsOrRel, interruptTime, numModels)
+function simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC, metsAbsOrRel, interruptTime, numModels, numCores)
 % Takes in a model ensemble and initial conditions for enzyme and 
 % metabolite concentrations and simulates all models in the ensemble.
 %
@@ -32,6 +32,9 @@ function simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC
 %    interruptTime (double)       maximum time for each simulation, given in seconds
 %    numModels (int):             how many models should be simulated. This number should be lower than the number of models in the ensemble.
 %
+% OPTIONAL INPUT:
+%    numCores (int):              number of cores to be used to run the code, default is 1.
+%
 % OUTPUT:
 %    simulationRes (struct):  simulation results
 %
@@ -46,6 +49,9 @@ if ~strcmp(metsAbsOrRel, 'rel') && ~strcmp(metsAbsOrRel, 'abs')
     error('The value of the variable metsAbsOrRel must be either "rel" or "abs".');
 end
 
+if nargin < 8
+    numCores = 1;
+end
 
 strucIdx = 1;
 if ensemble.populations(end).strucIdx(1)==0
@@ -78,22 +84,24 @@ else
     error(['You need a model function to be used for the model ode simulations. It should be named as ', strcat(func2str(kineticFxn), '_ode')]);
 end
 
-if strcmp(metsAbsOrRel, 'abs')
-    metsICabs = metsIC;
-end
-
+metsICabs = metsIC;  % dirty trick to make parfor work -.-
 simulationRes = cell(1, numModels);
 
 disp ('Simulating models.');
 
-for jx = 1:numModels
+parpool(numCores);																								% Initiate parallel pool and run parallel foor loop
+parfor jx = 1:numModels
 
     model = ensemble.populations(end).models(particleIdx(jx));
     metConcRef = model.metConcRef(ensemble.metsBalanced);
     
     if strcmp(metsAbsOrRel, 'abs')
         perturbInd = find(metsICabs ~= 1);
-        metsIC(perturbInd) = metsICabs(perturbInd) ./ metConcRef(perturbInd);
+        metsICtemp = ones(size(metsICabs));
+        metsICtemp(perturbInd) = metsICabs(perturbInd) ./ metConcRef(perturbInd); 
+    
+    elseif strcmp(metsAbsOrRel, 'rel')
+        metsICtemp = metsIC;        
     end
     
     outputFun= @(t,y,flag)interuptFun(t,y,flag,interruptTime);
@@ -101,7 +109,7 @@ for jx = 1:numModels
 
     try
         % Simulate metabolite concentrations
-        [t, y] = ode15s(@(t,y) odeFunction(y,enzymesIC,metConcRef,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits), [0,finalTime], metsIC, opts);
+        [t, y] = ode15s(@(t,y) odeFunction(y,enzymesIC,metConcRef,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits), [0,finalTime], metsICtemp, opts);
 
         simulationRes{jx}.t = t;
         simulationRes{jx}.conc = y;   
@@ -120,6 +128,7 @@ for jx = 1:numModels
     end
 
 end
+delete(gcp);
 
 end
 
