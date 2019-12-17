@@ -78,6 +78,10 @@ else
     error(['You need a model function to be used for the model ode simulations. It should be named as ', strcat(func2str(kineticFxn), '_ode')]);
 end
 
+if strcmp(metsAbsOrRel, 'abs')
+    metsICabs = metsIC;
+end
+
 simulationRes = cell(1, numModels);
 
 disp ('Simulating models.');
@@ -88,10 +92,10 @@ for jx = 1:numModels
     metConcRef = model.metConcRef(ensemble.metsBalanced);
     
     if strcmp(metsAbsOrRel, 'abs')
-        perturbInd = find(metsIC ~= 1);
-        metsIC(perturbInd) = metsIC(perturbInd) ./ metConcRef(perturbInd);
+        perturbInd = find(metsICabs ~= 1);
+        metsIC(perturbInd) = metsICabs(perturbInd) ./ metConcRef(perturbInd);
     end
-
+    
     outputFun= @(t,y,flag)interuptFun(t,y,flag,interruptTime);
     opts = odeset('RelTol',1e-13,'OutputFcn',outputFun);
 
