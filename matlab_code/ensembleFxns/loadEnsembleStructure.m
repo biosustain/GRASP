@@ -301,9 +301,7 @@ disp('Flux data computed and loaded.');
 
 % Make sure that S.v = 0
 assert(all(abs(ensemble.Sred * ensemble.fluxRef) <10^-8), ...
-       ["Your model doesn\'t seem to be at steady-state. Sred * fluxRef != 0.", ...
-       newline, ...
-       "If you specified all fluxes manually, make sure you've compute robust fluxes to 0."]);
+       "Your model doesn't seem to be at steady-state. Sred * fluxRef != 0. Make sure that: 1) if you specified all fluxes manually, compute robust fluxes is set to 0; 2) all the metabolites in the mets sheet are specified correctly.");
 
 
 %% 3. Perform thermodynamic calculations
