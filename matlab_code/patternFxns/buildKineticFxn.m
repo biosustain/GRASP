@@ -90,7 +90,7 @@ for i = 1:numel(ensemble.activeRxns)
         inhCount = 1;
         actCount = 1;
         for react = 1:length(ensemble.metLists{i,1})
-            if ~isempty(strfind(ensemble.metLists{i,1}{react}, 'A'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'B'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'C'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'D'))
+            if ~isempty(strfind(ensemble.metLists{i,1}{react}, 'A'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'B'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'C'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'D'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'E'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'F'))
                 if elemCount < w
                     reactants = [reactants, ensemble.subOrder{1, 1}{i}{subCount}, ';'];
                     subCount = subCount+1;
@@ -219,7 +219,7 @@ for i = 1:numel(ensemble.activeRxns)
             inhCount = 1;
             actCount = 1;
             for react = 1:length(ensemble.metLists{i,1})
-                if ~isempty(strfind(ensemble.metLists{i,1}{react}, 'A'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'B'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'C'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'D'))
+                if ~isempty(strfind(ensemble.metLists{i,1}{react}, 'A'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'B'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'C'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'D'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'E'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'F'))
                     if elemCount < w
                         reactants = [reactants,substrates{subCount}, ';'];
                         subCount = subCount+1;
