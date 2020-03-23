@@ -45,18 +45,12 @@ if (nargin < 4)
 	structIdx = 1;
 end
 
-if (nargin < 6)
-    % in mmol/L
-    saturatingConc = 10^4;
-    substrateRange = logspace(-6, 4);
+if (nargin < 5) || isempty(saturatingConc)
+    saturatingConc = 10^4; % in mmol/L
 end
 
-if isempty(saturatingConc)
-    saturatingConc = 10^4;  % in mmol/L
-end
-
-if isempty(substrateRange)
-    substrateRange = logspace(-6, 4);  % in mmol/L
+if (nargin < 6) || isempty(substrateRange)
+    substrateRange = logspace(-9, 4);  % in mmol/L
 end
 
 if (nargin < 7)
@@ -82,64 +76,106 @@ for rxnI = rxnList
         end
 
         stoicSubsInd = find(ensemble.S(:, rxnI) < 0);        
+        stoicProdsInd = find(ensemble.S(:, rxnI) > 0);        
         nSubs = numel(ensemble.subOrder{structIdx}{rxnI});
         nProds = numel(ensemble.prodOrder{structIdx}{rxnI});
         nInhib = numel(ensemble.inhibitors{structIdx}{rxnI});
         nActiv = numel(ensemble.activators{structIdx}{rxnI});
-
+        
+        
+        subsOrProd = 'subs';
+        subOrder = ensemble.subOrder{structIdx}{rxnI};
+        
         for j=1:numel(stoicSubsInd)
             subI = stoicSubsInd(j);
             
-            subList = [];
-            vList = [];
-            modelList = [];
-            
-            % catch: concentrations of substrates for promiscuous
-            % reactions must be zero instead of saturating.
-            subsConc = zeros(nSubs, 1);
-            coSubsInd = find(ismember(ensemble.subOrder{structIdx}{rxnI}, ensemble.mets(stoicSubsInd)));
-            
-            % met position in ensemble.subOrder
-            subOrderPos = find(ismember(ensemble.subOrder{structIdx}{rxnI}, ensemble.mets(subI)));
-
-            % in case a metabolite is part of the reaction but not included
-            % in the mechanism
-            if isempty(subOrderPos)
-                continue
-            end
-
-            % ensemble.subOrder met position in ensemble.mets
-            subOrderInd = [];
-            for entry=1:numel(ensemble.subOrder{structIdx}{rxnI})
-                ind = find(ismember(ensemble.mets, ensemble.subOrder{structIdx}{rxnI}{entry}));
-                if ismember(ind, stoicSubsInd)
-                    subOrderInd = [subOrderInd, ind];
-                end
-            end
-            
-            for modelI=1:numModels    
-
-                K = ensemble.populations.models(modelI).rxnParams(rxnI).kineticParams;
-                allRefConcs = ensemble.populations.models(modelI).metConcRef(subOrderInd) * 10^3;
-                                
-                subsConc(coSubsInd) = saturatingConc ./ allRefConcs;
-                
-                subIRefConc = ensemble.populations.models(modelI).metConcRef(subI) * 10^3;
-            
-                for subConc=substrateRange
-                    subsConc(subOrderPos) = subConc ./ subIRefConc; 
-                    X = [subsConc; zeros(nInhib+nActiv+nProds,1)];   
-
-                    [v, ~, ~] = rateLawFxn(X,K);
-                    vList = [vList; v];
-                end
-
-                subList = [subList; substrateRange'];
-                modelList = [modelList; ones(50,1) * modelI];
-
-            end
-            write(table(modelList, subList, vList), fullfile(outputFolder, [ensemble.rxns{rxnI},'_', ensemble.mets{subI},'.csv']));
+            calculateFlux(ensemble, rateLawFxn, subI, rxnI, numModels, subsOrProd, ...
+                           nSubs, nProds, nInhib, nActiv, stoicSubsInd, ...
+                           subOrder, substrateRange, saturatingConc, ....
+                           outputFolder)
         end
+        
+        
+        subsOrProd = 'prod';
+        subOrder = ensemble.prodOrder{structIdx}{rxnI};
+        
+        for j=1:numel(stoicProdsInd)
+            subI = stoicProdsInd(j);
+            
+            calculateFlux(ensemble, rateLawFxn, subI,  rxnI, numModels, subsOrProd, ...
+                           nSubs, nProds, nInhib, nActiv, stoicProdsInd, ...
+                           subOrder, substrateRange, saturatingConc, ....
+                           outputFolder)
+        end
+        
+                
+    end
+end
+
+
+function calculateFlux(ensemble, rateLawFxn, subI, rxnI, numModels, ...
+                       subsOrProd, nSubs, nProds, nInhib, nActiv, ...
+                       stoicSubsInd, subOrder, substrateRange, ....
+                       saturatingConc, outputFolder)
+    
+        subList = [];
+        vList = [];
+        modelList = [];
+
+        % catch: concentrations of substrates for promiscuous
+        % reactions must be zero instead of saturating.
+        if strcmp(subsOrProd, 'subs')
+            subsConc = zeros(nSubs, 1);  
+        elseif strcmp(subsOrProd, 'prod')
+            subsConc = zeros(nProds, 1);
+        end     
+        coSubsInd = find(ismember(subOrder, ensemble.mets(stoicSubsInd)));
+
+        % met position in ensemble.subOrder
+        subOrderPos = find(ismember(subOrder, ensemble.mets(subI)));
+
+        % in case a metabolite is part of the reaction but not included
+        % in the mechanism
+        if isempty(subOrderPos)
+            return
+        end
+
+        % ensemble.subOrder met position in ensemble.mets
+        subOrderInd = [];
+        for entry=1:numel(subOrder)
+            ind = find(ismember(ensemble.mets, subOrder{entry}));
+            if ismember(ind, stoicSubsInd)
+                subOrderInd = [subOrderInd, ind];
+            end
+        end
+
+        for modelI=1:numModels    
+
+            K = ensemble.populations.models(modelI).rxnParams(rxnI).kineticParams;
+            allRefConcs = ensemble.populations.models(modelI).metConcRef(subOrderInd) * 10^3;
+
+            subsConc(coSubsInd) = saturatingConc ./ allRefConcs;
+
+            subIRefConc = ensemble.populations.models(modelI).metConcRef(subI) * 10^3;
+
+            for subConc=substrateRange
+                subsConc(subOrderPos) = subConc ./ subIRefConc; 
+                
+                if strcmp(subsOrProd, 'subs')
+                    X = [subsConc; zeros(nInhib+nActiv+nProds,1)];   
+                elseif strcmp(subsOrProd, 'prod')
+                    X = [zeros(nSubs+nInhib+nActiv,1); subsConc]; 
+                end
+
+                [v, ~, ~] = rateLawFxn(X,K);
+                vList = [vList; v];
+            end
+
+            subList = [subList; substrateRange'];
+            modelList = [modelList; ones(50,1) * modelI];
+
+        end
+        write(table(modelList, subList, vList), fullfile(outputFolder, [ensemble.description, '_', ensemble.rxns{rxnI},'_', ensemble.mets{subI},'.csv']));
     end
 end
 

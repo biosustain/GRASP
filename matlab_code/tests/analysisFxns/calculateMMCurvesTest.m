@@ -31,9 +31,9 @@ classdef calculateMMCurvesTest < matlab.unittest.TestCase
             rxnList = [33];
             calculateMMCurves(outputFolder, testCase.ensemble, numModels, structIdx, saturatingConc, substrateRange, rxnList);
             
-            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_R_GTHOr_m_m_gthox_c.csv');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'putida_OP2_r_R_GTHOr_m_m_gthox_c.csv');
             resGthox = fileread(filepath);
-            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_R_GTHOr_m_m_nadph_c.csv');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'putida_OP2_r_R_GTHOr_m_m_nadph_c.csv');
             resNadph = fileread(filepath);
             
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'OP2_GTHOr_gthox.csv');
@@ -54,9 +54,9 @@ classdef calculateMMCurvesTest < matlab.unittest.TestCase
             rxnList = [32];
             calculateMMCurves(outputFolder, testCase.ensemble, numModels, structIdx, saturatingConc, substrateRange, rxnList);
             
-            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_R_GTHPi_m_m_gthrd_c.csv');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'putida_OP2_r_R_GTHPi_m_m_gthrd_c.csv');
             resGthrd = fileread(filepath);
-            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_R_GTHPi_m_m_h2o2_c.csv');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'putida_OP2_r_R_GTHPi_m_m_h2o2_c.csv');
             resH2o2 = fileread(filepath);
             
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'OP2_GTHPi_gthrd.csv');
@@ -78,9 +78,9 @@ classdef calculateMMCurvesTest < matlab.unittest.TestCase
             calculateMMCurves(outputFolder, testCase.ensemble, numModels, structIdx, saturatingConc, substrateRange, rxnList);
             
             
-            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_R_G6PDH2_NAD_m_m_g6p_c.csv');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'putida_OP2_r_R_G6PDH2_NAD_m_m_g6p_c.csv');
             resG6p = fileread(filepath);
-            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_R_G6PDH2_NAD_m_m_nad_c.csv');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'putida_OP2_r_R_G6PDH2_NAD_m_m_nad_c.csv');
             resNad = fileread(filepath);
             
             
@@ -102,18 +102,30 @@ classdef calculateMMCurvesTest < matlab.unittest.TestCase
             rxnList = [12];
             calculateMMCurves(outputFolder, testCase.ensemble, numModels, structIdx, saturatingConc, substrateRange, rxnList);
             
-            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_R_G6PDH2_NADP_m_m_g6p_c.csv');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'putida_OP2_r_R_G6PDH2_NADP_m_m_g6p_c.csv');
             resG6p = fileread(filepath);
-            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_R_G6PDH2_NADP_m_m_nadp_c.csv');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'putida_OP2_r_R_G6PDH2_NADP_m_m_nadp_c.csv');
             resNadp = fileread(filepath);
+            
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'putida_OP2_r_R_G6PDH2_NADP_m_m_6pgl_c.csv');
+            res6PGL = fileread(filepath);
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'putida_OP2_r_R_G6PDH2_NADP_m_m_nadph_c.csv');
+            resNadph = fileread(filepath);
             
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'OP2_G6PDH2_NADP_g6p.csv');
             trueResG6p = fileread(filepath);
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'OP2_G6PDH2_NADP_nadp.csv');
             trueResNadp = fileread(filepath);
             
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'OP2_G6PDH2_NADP_6pgl.csv');
+            trueRes6PGL = fileread(filepath);
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'OP2_G6PDH2_NADP_nadph.csv');
+            trueResNadph = fileread(filepath);
+            
             testCase.verifyEqual(trueResG6p, resG6p);
             testCase.verifyEqual(trueResNadp, resNadp);
+            testCase.verifyEqual(trueRes6PGL, res6PGL);
+            testCase.verifyEqual(trueResNadph, resNadph);
             
         end
         
@@ -125,17 +137,19 @@ classdef calculateMMCurvesTest < matlab.unittest.TestCase
             outputFolder = fullfile(testCase.currentPath{1}, 'testFiles');
             numModels = 5;
             structIdx = 1;
+            saturatingConc = 10^4;
+            substrateRange = logspace(-6, 4);
                         
-            calculateMMCurves(outputFolder, ensembleLocal, numModels, structIdx);
+            calculateMMCurves(outputFolder, ensembleLocal, numModels, structIdx, saturatingConc, substrateRange);
             
-            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_r1_m_m3.csv');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model_r_r1_m_m3.csv');
             resR1M3 = fileread(filepath);
-            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_r1_m_m6.csv');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model_r_r1_m_m6.csv');
             resR1M6 = fileread(filepath);
             
-            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_r3_m_m1.csv');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model_r_r3_m_m1.csv');
             resR3M1 = fileread(filepath);
-            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_r3_m_m7.csv');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model_r_r3_m_m7.csv');
             resR3M7 = fileread(filepath);
             
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueRes_r_r1_m_m3.csv');
@@ -163,25 +177,25 @@ classdef calculateMMCurvesTest < matlab.unittest.TestCase
             numModels = 5;
             structIdx = 1;
             
-            saturatingConc = 10^2*10^6;
-            substrateRange = logspace(-15,6);
+            saturatingConc = 10^4;
+            substrateRange = logspace(-6, 4);
             rxnList = [1, 3, 6];
 
-            calculateMMCurves(outputFolder, ensembleLocal, numModels, structIdx, {}, {}, rxnList);
+            calculateMMCurves(outputFolder, ensembleLocal, numModels, structIdx, saturatingConc, substrateRange, rxnList);
             
-            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_r1_m_m3.csv');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_random2_r_r1_m_m3.csv');
             resR1M3 = fileread(filepath);
-            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_r1_m_m6.csv');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_random2_r_r1_m_m6.csv');
             resR1M6 = fileread(filepath);
             
-            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_r3_m_m1.csv');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_random2_r_r3_m_m1.csv');
             resR3M1 = fileread(filepath);
-            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_r3_m_m7.csv');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_random2_r_r3_m_m7.csv');
             resR3M7 = fileread(filepath);
             
-            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_r6_m_m1.csv');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_random2_r_r6_m_m1.csv');
             resR6M1 = fileread(filepath);
-            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'r_r6_m_m10.csv');
+            filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_random2_r_r6_m_m10.csv');
             resR6M10 = fileread(filepath);
             
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueRes_r_r1_m_m3_water.csv');
