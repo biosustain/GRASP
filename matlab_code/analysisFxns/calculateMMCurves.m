@@ -172,7 +172,7 @@ function calculateFlux(ensemble, rateLawFxn, subI, rxnI, numModels, ...
             end
 
             subList = [subList; substrateRange'];
-            modelList = [modelList; ones(50,1) * modelI];
+            modelList = [modelList; ones(numel(substrateRange),1) * modelI];
 
         end
         write(table(modelList, subList, vList), fullfile(outputFolder, [ensemble.description, '_', ensemble.rxns{rxnI},'_', ensemble.mets{subI},'.csv']));
