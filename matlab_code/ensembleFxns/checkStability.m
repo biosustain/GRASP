@@ -52,6 +52,9 @@ E_x_abs  = -(imag(simFlux')./hstep_x(:,ones(1,numFluxes)))'; % equivalent to ima
 
 % Compute Jacobian eigenvalues
 jacobian   = Sred*E_x_abs;
+if size(jacobian, 1) ~= size(jacobian, 2)
+    error('The jacobian matrix is not square. Hint: check if the correct metabolites are set as constants.');
+end
 eigenvalues = eig(jacobian);
 
 % Look for positive real eigenvalues
