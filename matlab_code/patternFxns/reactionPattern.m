@@ -113,6 +113,7 @@ for i = 1:PatternNumber
     try
         pattern = Pattern(i,:)';
     catch error
+        disp(reactionName);
         error('There is  a good chance your mechanism has an error in the enzyme states numbering.');
     end
     

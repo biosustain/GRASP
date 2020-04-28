@@ -43,15 +43,17 @@ end
 
 % Write initial parameters
 c = '%';
-fprintf(fid,['function [f,grad] = ',kineticFxn,'(x,model,fixedExch,Sred,kinInactRxns,subunits,flag)\n']);
+fprintf(fid,['function [f,grad] = ',kineticFxn,'(x,xconst,model,fixedExch,Sred,kinInactRxns,subunits,flag)\n']);
 fprintf(fid,'%s Pre-allocation of memory\n',c);
 fprintf(fid,'h = 1e-8;\n');									% Step length
 fprintf(fid,'%s Defining metabolite and enzyme species\n',c);
 fprintf(fid,'if flag==1\n');
 fprintf(fid,'x = x(:);\n');									% Column vector
+fprintf(fid,'xconst = xconst(:);\n');									% Column vector
 fprintf(fid,['v = zeros(',num2str(size(ensemble.Sred,2)),',',num2str(totalEvals),');\n']);      % Preallocation of memory (rxns)
 fprintf(fid,['E = zeros(',num2str(size(ensemble.Sred,2)),',',num2str(totalEvals),');\n']);      % Preallocation of memory (enz)
 fprintf(fid,['x = [x,x(:,ones(1,',num2str(totalEvals-1),')) + diag(h*1i*ones(',num2str(totalEvals-1),',1))];\n']);      % Preallocation of memory (free vars)
+fprintf(fid,['xconst = [xconst,xconst(:,ones(1,',num2str(numel(ensemble.metsFixed)),')) + diag(h*1i*ones(',num2str(numel(ensemble.metsFixed)),',1))];\n']);      % Preallocation of memory (constant metabolites)
 fprintf(fid,'else\n');
 fprintf(fid,['v = zeros(',num2str(size(ensemble.Sred,2)),',size(x,2));\n']);      % Preallocation of memory (rxns)
 fprintf(fid,['E = zeros(',num2str(size(ensemble.Sred,2)),',size(x,2));\n']);      % Preallocation of memory (enz)
@@ -70,6 +72,11 @@ for j = 1:numel(metsActive)+numel(enzActive)
     end
     i = i+1;
 end
+
+for i = 1:numel(ensemble.metsFixed)
+    fprintf(fid,[ensemble.mets{ensemble.metsFixed(i)},' = xconst(%i,:);\n'],i);                     % Only simulated metabolites in the kinetic fxn
+end
+
 
 fixedExchangeI  = 1;  % To keep track of the fixed exchange index
 
@@ -126,13 +133,6 @@ for i = 1:numel(ensemble.activeRxns)
         end
         
         reactants = strsplit(reactants, ';');
-
-        for reactantI = 1:size(reactants, 2)
-            if ismember(reactants{reactantI},ensemble.mets(ensemble.metsFixed))
-                reactants{reactantI} = strcat('ones(1,size(x,2))');
-            end
-        end
-
         reactants = strjoin(reactants, ';');
         
     else
@@ -182,24 +182,14 @@ for i = 1:numel(ensemble.activeRxns)
             subCoefList = [];
             for subI=1:numel(substrates)
                 subCoefList = [subCoefList, num2str(stoicCoeffsSub(subI)), '*ones(1,size(x,2));'];
-                
-                if ~ismember(substrates{subI}, ensemble.mets(ensemble.metsFixed))
-                    subList      = [subList, substrates{subI}, ';'];
-                else
-                    subList = [subList,'ones(1,size(x,2));'];
-                end
+                subList      = [subList, substrates{subI}, ';'];
             end
             
             prodList = [];
             prodCoefList = [];
             for prodI=1:numel(products)
                 prodCoefList = [prodCoefList, num2str(stoicCoeffsProd(prodI)), '*ones(1,size(x,2));'];
-                
-                if ~ismember(products{prodI}, ensemble.mets(ensemble.metsFixed))
-                    prodList      = [prodList, products{prodI}, ';'];
-                else
-                    prodList = [prodList,'ones(1,size(x,2));'];
-                end
+                prodList      = [prodList, products{prodI}, ';'];
             end
             
             
@@ -255,13 +245,6 @@ for i = 1:numel(ensemble.activeRxns)
             end
 
         reactants = strsplit(reactants, ';');
-
-        for reactantI = 1:size(reactants, 2)
-            if ismember(reactants{reactantI},ensemble.mets(ensemble.metsFixed))
-                reactants{reactantI} = strcat('ones(1,size(x,2))');
-            end
-        end
-
         reactants = strjoin(reactants, ';');
         end
     end

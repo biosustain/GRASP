@@ -178,7 +178,6 @@ while true
             end
 
             promiscRxnsList = ensemble.promiscuity{strucIdx}{ensemble.kinActRxns(activRxnIdx)};
-            revMatrix = ensemble.revMatrix{ensemble.kinActRxns(activRxnIdx),strucIdx};
             reverTemp = ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)};
             reactionFlux = ensemble.reactionFluxAllosteric(ensemble.kinActRxns(activRxnIdx));
             randomEnzymesR = models(1).rxnParams(activRxnIdx).enzymeAbundances';
@@ -229,8 +228,9 @@ while true
     end
     
     % Test model consistency
+    xconst = ones(size(ensemble.metsFixed,1), 1);
     kineticFxn = str2func(ensemble.kineticFxn{strucIdx});
-    testFlux   = feval(kineticFxn,ones(size(ensemble.freeVars,1),1),models,ensemble.fixedExch(:,1),ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},0);
+    testFlux   = feval(kineticFxn,ones(size(ensemble.freeVars,1),1),xconst,models,ensemble.fixedExch(:,1),ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},0);
 
     % If the model is consistent continue
     if any(abs(testFlux-ensemble.fluxRef)>1e-6) || any(isnan(testFlux))
@@ -268,7 +268,7 @@ while true
 
                 % Define anonymous function with objective and bound
                 % constraints
-                opt.min_objective = @(x) kineticFxn(x,models,ensemble.fixedExch(:,ix+1),ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},1);
+                opt.min_objective = @(x) kineticFxn(x,xconst,models,ensemble.fixedExch(:,ix+1),ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},1);
                 opt.lower_bounds  = lb(:,ix);
                 opt.upper_bounds  = ub(:,ix);
 
@@ -284,7 +284,7 @@ while true
 
                 % FMINCON call
             else
-                [xopt(:,ix),fmin] = fmincon(kineticFxn,x0(:,ix),[],[],[],[],lb(:,ix),ub(:,ix),[],options,models,ensemble.fixedExch,ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},1);
+                [xopt(:,ix),fmin] = fmincon(kineticFxn,x0(:,ix),[],[],[],[],lb(:,ix),ub(:,ix),[],options,xconst,models,ensemble.fixedExch,ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},1);
 
                 % Pool constraints not implemented yet for this solver
             end
@@ -293,7 +293,7 @@ while true
             if (fmin<massTol)
 
                 % Simulate fluxes if the system is mass-balanced
-                simulatedFlux(:,ix) = feval(kineticFxn,xopt(:,ix),models,ensemble.fixedExch(:,ix+1),ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},0);
+                simulatedFlux(:,ix) = feval(kineticFxn,xopt(:,ix),xconst,models,ensemble.fixedExch(:,ix+1),ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},0);
 
                 % Calculate discrepancy score
                 tolScore = [tolScore,max(sqrt(mean(((simulatedFlux(ensemble.freeFluxes,ix)-ensemble.simWeights(:,ix))./ensemble.simWeights(:,ix)).^2)))];
