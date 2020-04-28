@@ -112,9 +112,12 @@ pathway = [];
 for i = 1:PatternNumber
     try
         pattern = Pattern(i,:)';
-    catch error
-        disp(strcat(['Reaction name: ', reactionName]));
-        error('There is  a good chance your mechanism has an error in the enzyme states numbering. See reaction name above');
+    catch ME
+        if strcmp(ME.identifier, 'MATLAB:badsubscript')
+            error(strcat(['There is  a good chance your mechanism has an error in the enzyme states numbering. Check the mechanism for ', reactionName]));
+        else
+            rethrow(ME)
+        end               
     end
     
     pathway_tempPath = [];
