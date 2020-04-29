@@ -22,9 +22,8 @@ reactionName = [reactionName,num2str(strucIdx)];
 currentPath = regexp(mfilename('fullpath'), '(.*)[/\\\\]', 'match');
 filepath = fullfile(currentPath{1}, '..', '..', 'temp', 'reactions', [reactionName,'.m']);
 
-try
-    fid = fopen(filepath, 'w'); 
-catch
+fid = fopen(filepath, 'w'); 
+if fid == -1
     error(['File not found: ', filepath, ...
             newline, ...
            'Please make sure the folder ', fullfile(currentPath{1}, '..', '..', 'temp'), ...

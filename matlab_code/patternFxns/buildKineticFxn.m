@@ -32,9 +32,8 @@ freeVars   = [ensemble.mets(metsActive);ensemble.rxns(enzActive)];              
 currentPath = regexp(mfilename('fullpath'), '(.*)[/\\\\]', 'match');
 filepath = fullfile(currentPath{1}, '..', '..', 'reactions', [ensemble.description, '_', num2str(strucIdx)], [kineticFxn,'.m']);
 
-try
-    fid = fopen(filepath, 'w'); 
-catch
+fid = fopen(filepath, 'w'); 
+if fid == -1
     error(['File not found: ', filepath, ...
            newline, ...
            'Please make sure the folder ', fullfile(currentPath{1}, '..', '..', 'reactions'), ...
