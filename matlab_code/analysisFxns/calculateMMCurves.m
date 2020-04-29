@@ -152,14 +152,10 @@ function calculateFlux(ensemble, rateLawFxn, subI, rxnI, numModels, ...
         for modelI=1:numModels    
 
             K = ensemble.populations.models(modelI).rxnParams(rxnI).kineticParams;
-            allRefConcs = ensemble.populations.models(modelI).metConcRef(subOrderInd) * 10^3;
-
-            subsConc(coSubsInd) = saturatingConc ./ allRefConcs;
-
-            subIRefConc = ensemble.populations.models(modelI).metConcRef(subI) * 10^3;
+            subsConc(coSubsInd) = saturatingConc;
 
             for subConc=substrateRange
-                subsConc(subOrderPos) = subConc ./ subIRefConc; 
+                subsConc(subOrderPos) = subConc;
                 
                 if strcmp(subsOrProd, 'subs')
                     X = [subsConc; zeros(nInhib+nActiv+nProds,1)];   
@@ -175,7 +171,7 @@ function calculateFlux(ensemble, rateLawFxn, subI, rxnI, numModels, ...
             modelList = [modelList; ones(numel(substrateRange),1) * modelI];
 
         end
-        write(table(modelList, subList, vList), fullfile(outputFolder, [ensemble.description, '_', ensemble.rxns{rxnI},'_', ensemble.mets{subI},'.csv']));
+        write(table(modelList, subList, vList), fullfile(outputFolder, [ensemble.description, '_', ensemble.rxns{rxnI},'_', ensemble.mets{subI}, '.csv']));
     end
 end
 
