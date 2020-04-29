@@ -181,16 +181,73 @@ if ~strcmpi(ensemble.sampler,'ORACLE')
     progress = zeros(5,1);
     save progress.txt -ascii progress;
     if ensemble.parallel
-        parpool(ensemble.numCores);																								% Initiate parallel pool and run parallel foor loop
-        parfor ix = 1:ensemble.numParticles
-            [isModelValid,models(ix),strucIdx(ix),xopt{ix},tolScore(ix),simFluxes{ix}] = initialSampler(ensemble);
+        
+        sampleCount = 0;
+        nValidModels = 0;
+        
+        while nValidModels < ensemble.numParticles
+            
+            if sampleCount == 0                                             % if no models have been sampled yet, sample ensemble.numParticles models
+                nSamples = ensemble.numParticles * 1.3;
+            else                                                            % else check how many more should be sampled based on the percentage of valid models
+                nSamples = 1 / (nValidModels / sampleCount)*(sampleCount - nValidModels);
+                nSamples = round(nSamples);
+                
+                if nSamples > maxNumberOfSamples - sampleCount
+                    nSamples = maxNumberOfSamples - sampleCount;
+                end
+            end
+            
+            parpool(ensemble.numCores);
+            parfor ix = (sampleCount+1):(sampleCount+nSamples)
+                [validModelList(ix),models(ix),strucIdx(ix),xopt{ix},tolScore(ix),simFluxes{ix}] = initialSampler(ensemble);
+            end
+            delete(gcp);
+            
+            sampleCount = sampleCount + nSamples;           
+            nValidModels = size(models(validModelList), 2);
+            
+            if nValidModels == 0
+                break
+            end
+        
         end
-        delete(gcp);
+        
+        if nValidModels > 0
+            models = models(validModelList);
+            strucIdx = strucIdx(validModelList);
+            xopt = xopt{validModelList};
+            tolScore = tolScore(validModelList);
+            simFluxes = simFluxes{validModelList};
+        end
+        
     else
-        for ix = 1:ensemble.numParticles
-            [isModelValid,models(ix),strucIdx(ix),xopt{ix},tolScore(ix),simFluxes{ix}] = initialSampler(ensemble);
+        sampleCount = 1;
+        ix = 1;
+        
+        while ix <= ensemble.numParticles && sampleCount <= maxNumberOfSamples
+            
+            [isModelValid,model,strucIdxTemp,xoptTemp,tolScoreTemp,simFluxesTemp] = initialSampler(ensemble);
+            
+            if isModelValid
+                models(ix) = model;
+                strucIdx(ix) = strucIdxTemp;
+                xopt{ix} = xoptTemp;
+                tolScore(ix) = tolScoreTemp;
+                simFluxes{ix} = simFluxesTemp;
+                
+                ix = ix + 1;
+            end
+            
+            sampleCount = sampleCount + 1;
         end
+        
+        nValidModels = ix - 1;
+        sampleCount = sampleCount -1;
+      
     end
+    
+    disp([newline, newline, '*** Out of ',num2str(sampleCount), ' models, ', num2str(nValidModels), ' were valid ***', newline, newline]);
     
 % In the ORACLE mode we are only interested in the models
 else
@@ -257,6 +314,8 @@ if nValidModels > 1
     ensemble.populations(1).models    = models;                                                                             % model particles
     clearvars -except ensemble popIdx modelID outputFile
     save(outputFile);
+else
+    disp('No valid models were sampled.');
 end
 
 end
