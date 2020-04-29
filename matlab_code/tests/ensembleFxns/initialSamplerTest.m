@@ -95,5 +95,37 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             testCase.verifyEqual(trueResSimFluxes,simFluxes);
             
         end
+        
+        function testInitialSamplerWithConstEffector(testCase)
+            seed = 1;
+            rng(seed)
+            
+            % To generate the reaction files 
+            xlsxFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_const_effector');
+            ensemble = loadEnsembleStructure(xlsxFile);
+            ensemble = initializeEnsemble(ensemble,1,1);
+            ensemble.eigThreshold = 10^-5;
+                        
+            [isModelValid,model,strucIdx,xopt,tolScore,simFluxes] = initialSampler(ensemble);
+                        
+            trueResModel = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResModel_toy_model1_const_effector.mat'));
+            trueResModel = trueResModel.model;
+            
+            trueResIsModelValid = true;
+            trueResModel.poolFactor = [];
+            trueResStructIdx = 1;
+            trueResXopt = 0;
+            trueResTolScore = 0;
+            trueResSimFluxes = 0;
+           
+            testCase.verifyEqual(trueResIsModelValid,isModelValid);
+            testCase.verifyEqual(trueResStructIdx,strucIdx);
+            testCase.verifyEqual(trueResXopt,xopt);
+            testCase.verifyEqual(trueResTolScore,tolScore);
+            testCase.verifyEqual(trueResSimFluxes,simFluxes);
+            testCase.verifyThat(trueResModel, matlab.unittest.constraints.IsEqualTo(model, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-9)));
+            
+        end
     end
 end
