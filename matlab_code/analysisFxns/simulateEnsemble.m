@@ -73,6 +73,7 @@ kineticFxn   = str2func(ensemble.kineticFxn{strucIdx});
 Sred         = ensemble.Sred;
 kinInactRxns = ensemble.kinInactRxns;
 subunits     = ensemble.subunits{strucIdx};
+xconst       = ones(numel(ensemble.metsFixed), 1);
 
 ix = 1;
 
@@ -109,11 +110,11 @@ parfor jx = 1:numModels
 
     try
         % Simulate metabolite concentrations
-        [t, y] = ode15s(@(t,y) odeFunction(y,enzymesIC,metConcRef,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits), [0,finalTime], metsICtemp, opts);
+        [t, y] = ode15s(@(t,y) odeFunction(y,enzymesIC,metConcRef,xconst,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits), [0,finalTime], metsICtemp, opts);
 
         simulationRes{jx}.t = t;
         simulationRes{jx}.conc = y;   
-        simulationRes{jx}.flux = calculateFluxes(t,y,enzymesIC,kineticFxn,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits);   
+        simulationRes{jx}.flux = calculateFluxes(t,y,enzymesIC,kineticFxn,xconst,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits);   
         
         if strcmp(metsAbsOrRel, 'rel')
             simulationRes{jx}.flux = simulationRes{jx}.flux ./ ensemble.fluxRef';
@@ -157,12 +158,12 @@ switch(flag)
 end
 end
 
-function flux = calculateFluxes(timePoints,metConcs,enzymesIC,kineticFxn,model,fixedExchs,Sred,kinInactRxns,subunits)
+function flux = calculateFluxes(timePoints,metConcs,enzymesIC,kineticFxn,xconst,model,fixedExchs,Sred,kinInactRxns,subunits)
     
 flux = zeros(numel(timePoints), size(Sred,2));
 
 for t=1:numel(timePoints)
     x = [metConcs(t,:)'; enzymesIC];
-    flux(t,:) = feval(kineticFxn,x,model,fixedExchs,Sred,kinInactRxns,subunits,0);
+    flux(t,:) = feval(kineticFxn,x,xconst,model,fixedExchs,Sred,kinInactRxns,subunits,0);
 end
 end

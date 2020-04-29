@@ -93,7 +93,8 @@ for ix = 1:nCondition
         model = ensemble.populations(end).models(particleIdx(jx));
         if ix == 1
             xopt = ones(freeVars,1);
-            vref = feval(kineticFxn,xopt,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits,0);
+            xconst = ones(numel(ensemble.metsFixed), 1);
+            vref = feval(kineticFxn,xopt,xconst,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits,0);
         else
             xopt = ensemble.populations(end).xopt{particleIdx(jx)}(:,ix-1);
             vref = ensemble.populations(end).simFluxes{particleIdx(jx)}(:,ix-1);
@@ -108,9 +109,10 @@ for ix = 1:nCondition
         xmets   = repmat(xref,1,numel(xref)) + 1i*diag(hstep_x);
         xenz    = repmat(Eref,1,numel(xref));
         xstep   = [xmets;xenz];
+        xconst  = ones(numel(ensemble.metsFixed), numel(ix_mets));
         
         % Simulate flux for metabolite perturbation
-        simFlux = feval(kineticFxn,xstep,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits,0);
+        simFlux = feval(kineticFxn,xstep,xconst,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits,0);
         
         % Compute elasticiy matrices
         E_x_abs  = -(imag(simFlux')./hstep_x(:,ones(1,numFluxes)))'; % equivalent to imag(simFlux)./1.0e-10 ? 
