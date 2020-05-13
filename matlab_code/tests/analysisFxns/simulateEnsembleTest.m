@@ -34,19 +34,11 @@ classdef simulateEnsembleTest < matlab.unittest.TestCase
             ensemble.freeVars{end+1} = 'r_r13';
             interruptTime = 40;
 
-            % Get default initial conditions, all ones
-            freeVars = numel(ensemble.freeVars);
-            xopt = ones(freeVars,1);
-            ix_mets = 1:numel(ensemble.metsActive);
-            ix_enz = ix_mets(end)+1:freeVars;
-            metsIC = xopt(ix_mets);
-            enzymesIC = xopt(ix_enz);
-
             metsAbsOrRel = 'rel';
             
             % Change initial conditions here if you want
-            enzymesIC(2) = 1.5;
-            metsIC(5) = 2;
+            enzymesIC = {{'r2', 1.5}};       % Always relative concentrations for enzymes
+            metsIC = {{'m9', 2}};        % Absolute concentrations must be given in mmol/L
 
             % Specifiy the time of simulation (probably in hours)
             finalTime = 1;
@@ -75,20 +67,11 @@ classdef simulateEnsembleTest < matlab.unittest.TestCase
             
             interruptTime = 40;
 
-            % Get default initial conditions, all ones
-            freeVars = numel(ensemble.freeVars);
-            xopt = ones(freeVars,1);
-            ix_mets = 1:numel(ensemble.metsActive);
-            ix_enz = ix_mets(end)+1:freeVars;
-            metsIC = xopt(ix_mets);
-            enzymesIC = xopt(ix_enz);
-
             metsAbsOrRel = 'abs';
             
             % Change initial conditions here if you want
-            enzymesIC(2) = 1.5;
-            metsIC(5) = 10^-3;
-            metsIC(7) = 2 * 10^-1;
+            enzymesIC = {{'r2', 10}};                           % Always relative concentrations for enzymes
+            metsIC = {{'m9', 2* 10^-3 }, {'m11', 2 * 10^-1}};        % Absolute concentrations must be given in mmol/L
 
             % Specifiy the time of simulation (probably in hours)
             finalTime = 1;
@@ -96,7 +79,7 @@ classdef simulateEnsembleTest < matlab.unittest.TestCase
             numCores = 2;
             
             simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC, metsAbsOrRel, interruptTime, numModels, numCores);
-
+                       
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSimulateEnsembleAbs'));
             trueRes = trueRes.simulationRes;
                    

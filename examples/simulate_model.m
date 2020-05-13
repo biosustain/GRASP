@@ -17,23 +17,14 @@ interruptTime = 40;
 
 load(fullfile(outputFolder, [modelID, '.mat']))
 
-
-% Get default initial conditions, all ones
-freeVars = numel(ensemble.freeVars);
-xopt = ones(freeVars,1);
-ix_mets = 1:numel(ensemble.metsActive);
-ix_enz = ix_mets(end)+1:freeVars;
-metsIC = xopt(ix_mets);
-enzymesIC = xopt(ix_enz);
-
 % Define whether the initial condition for metabolites is a relative or an
 % absolute concentration by setting metsAbsOrRel to either 'rel' or 'abs',
 % respectively
 metsAbsOrRel = 'rel';
 
-% Change initial conditions here if you want
-enzymesIC(2) = 1.5;
-metsIC(5) = 2;          % Absolute concentrations must be given in mol/L
+% Change initial conditions here if you want, format: {rxn/met ID, initial value}
+enzymesIC = {{'r1', 0.2}, {'r10', 2}};       % Always relative concentrations for enzymes
+metsIC = {{'m5', 0.6}, {'m14', 1.5}};        % Absolute concentrations must be given in mol/L
 
 % Specifiy the time of simulation (probably in hours)
 finalTime = 1;
