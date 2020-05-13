@@ -73,7 +73,19 @@ kineticFxn   = str2func(ensemble.kineticFxn{strucIdx});
 Sred         = ensemble.Sred;
 kinInactRxns = ensemble.kinInactRxns;
 subunits     = ensemble.subunits{strucIdx};
-xconst       = ones(numel(ensemble.metsFixed), 1);
+xconstIC     = ones(numel(ensemble.metsFixed), 1);
+xvarIC       = ones(numel(ensemble.metsActive), 1);
+
+nfreeVars = numel(ensemble.freeVars);
+enzIC = ones(nfreeVars-numel(ensemble.metsActive) ,1);
+
+if numel(metsIC) > 0
+    [xvarIC, xconstIC] = initializeMetIC(ensemble, xvarIC, xconstIC, metsIC);
+end
+
+if numel(enzymesIC) > 0
+    enzIC = initializeEnzIC(ensemble, enzIC, enzymesIC);
+end
 
 ix = 1;
 
@@ -85,24 +97,31 @@ else
     error(['You need a model function to be used for the model ode simulations. It should be named as ', strcat(func2str(kineticFxn), '_ode')]);
 end
 
-metsICabs = metsIC;  % dirty trick to make parfor work -.-
+xvarICabs = xvarIC;  % dirty trick to make parfor work -.-
+xconstICabs = xconstIC;  % dirty trick to make parfor work -.-
 simulationRes = cell(1, numModels);
 
 disp ('Simulating models.');
 
-parpool(numCores);																								% Initiate parallel pool and run parallel foor loop
-parfor jx = 1:numModels
+%parpool(numCores);																								% Initiate parallel pool and run parallel foor loop
+for jx = 1:numModels
 
     model = ensemble.populations(end).models(particleIdx(jx));
-    metConcRef = model.metConcRef(ensemble.metsBalanced);
+    metActiveConcRef = model.metConcRef(ensemble.metsActive);
+    metFixedConcRef = model.metConcRef(ensemble.metsFixed);
     
     if strcmp(metsAbsOrRel, 'abs')
-        perturbInd = find(metsICabs ~= 1);
-        metsICtemp = ones(size(metsICabs));
-        metsICtemp(perturbInd) = metsICabs(perturbInd) ./ metConcRef(perturbInd); 
+        perturbInd = find(xvarICabs ~= 1);
+        xvarICtemp = ones(size(xvarICabs));
+        xvarICtemp(perturbInd) = xvarICabs(perturbInd) ./ metActiveConcRef(perturbInd); 
     
+        perturbInd = find(xconstICabs ~= 1);
+        xconstICtemp = ones(size(xconstICabs));
+        xconstICtemp(perturbInd) = xconstICabs(perturbInd) ./ metFixedConcRef(perturbInd);
+        
     elseif strcmp(metsAbsOrRel, 'rel')
-        metsICtemp = metsIC;        
+        xvarICtemp = xvarIC;   
+        xconstICtemp = xconstIC;
     end
     
     outputFun= @(t,y,flag)interuptFun(t,y,flag,interruptTime);
@@ -110,11 +129,11 @@ parfor jx = 1:numModels
 
     try
         % Simulate metabolite concentrations
-        [t, y] = ode15s(@(t,y) odeFunction(y,enzymesIC,metConcRef,xconst,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits), [0,finalTime], metsICtemp, opts);
+        [t, y] = ode15s(@(t,y) odeFunction(y,enzIC,metActiveConcRef,xconstICtemp,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits), [0,finalTime], xvarICtemp, opts);
 
         simulationRes{jx}.t = t;
         simulationRes{jx}.conc = y;   
-        simulationRes{jx}.flux = calculateFluxes(t,y,enzymesIC,kineticFxn,xconst,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits);   
+        simulationRes{jx}.flux = calculateFluxes(t,y,enzIC,kineticFxn,xconstICtemp,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits);   
         
         if strcmp(metsAbsOrRel, 'rel')
             simulationRes{jx}.flux = simulationRes{jx}.flux ./ ensemble.fluxRef';
@@ -129,7 +148,7 @@ parfor jx = 1:numModels
     end
 
 end
-delete(gcp);
+%delete(gcp);
 
 end
 
@@ -166,4 +185,50 @@ for t=1:numel(timePoints)
     x = [metConcs(t,:)'; enzymesIC];
     flux(t,:) = feval(kineticFxn,x,xconst,model,fixedExchs,Sred,kinInactRxns,subunits,0);
 end
+
+end
+
+
+
+function [xvar, xconst] = initializeMetIC(ensemble, xvar, xconst, metsIC)
+%
+% Initializes xvar and xconst with the metabolite concentration values 
+% given by the user.
+%
+   
+for metI=1:numel(metsIC)
+    metInd = find(ismember(ensemble.mets, ['m_', metsIC{metI}{1}]) == 1);
+    
+    if numel(metInd) == 0
+        error(strcat("The metabolite ", metsIC{metI}{1}, " doesn't exist in the model"));
+    end
+    
+    activeMetInd = find(ensemble.metsActive == metInd);
+    
+    if numel(activeMetInd) == 0
+        fixedMetInd = find(ensemble.metsFixed == metInd);
+        xconst(fixedMetInd) = metsIC{metI}{2};
+    else
+        xvar(activeMetInd) = metsIC{metI}{2};
+    end
+end
+
+end
+
+
+function enzIC = initializeEnzIC(ensemble, enzIC, enzymesIC)
+%
+% Initializes enzIC with the enzyme concentrations given by the user.
+%
+    
+for enzI=1:numel(enzymesIC)
+    enzInd = find(ismember(ensemble.rxns, ['r_', enzymesIC{enzI}{1}]) == 1);
+    
+    if numel(enzInd) == 0
+        error(strcat("The reaction ", enzymesIC{enzI}{1}, " doesn't exist in the model"));
+    end
+    
+    enzIC(enzInd) = enzymesIC{enzI}{2};
+end
+
 end
