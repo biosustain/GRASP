@@ -103,8 +103,8 @@ simulationRes = cell(1, numModels);
 
 disp ('Simulating models.');
 
-%parpool(numCores);																								% Initiate parallel pool and run parallel foor loop
-for jx = 1:numModels
+parpool(numCores);																								% Initiate parallel pool and run parallel foor loop
+parfor jx = 1:numModels
 
     model = ensemble.populations(end).models(particleIdx(jx));
     metActiveConcRef = model.metConcRef(ensemble.metsActive);
@@ -148,7 +148,7 @@ for jx = 1:numModels
     end
 
 end
-%delete(gcp);
+delete(gcp);
 
 end
 
@@ -176,6 +176,7 @@ switch(flag)
 
 end
 end
+
 
 function flux = calculateFluxes(timePoints,metConcs,enzymesIC,kineticFxn,xconst,model,fixedExchs,Sred,kinInactRxns,subunits)
     
