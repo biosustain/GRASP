@@ -67,14 +67,14 @@ end
 
 % 2. Print rate terms
 fprintf(fid,'%s Denominator terms\n',c);
-fprintf(fid,'D = E1');
+fprintf(fid,'Denominator = E1');
 for i = 2:len-1
     fprintf(fid,'+E%i',i);
 end
 fprintf(fid,'+E%s;\n',num2str(len));
 fprintf(fid,'%s Enzyme abundances terms\n',c);
 for i = 1:len
-    fprintf(fid,'E%i = E%i./D;\n',i,i);
+    fprintf(fid,'E%i = E%i./Denominator;\n',i,i);
 end
 fprintf(fid,'%s Reaction rate \n', c);
 fprintf(fid,'v = ');
