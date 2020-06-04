@@ -1,10 +1,13 @@
 % Simulate a model ensemble
 
+% Clear all variables and add functions to path
 clear
 addpath(fullfile('..', 'matlab_code', 'analysisFxns'), ...
         fullfile('..', 'matlab_code', 'ensembleFxns'), ...
         fullfile('..', 'matlab_code', 'patternFxns'));
 
+% Define the model ID, which should basically be the filename of the model
+%  ensemble
 modelID = 'toy_model';
 outputFolder = fullfile('..', 'io','output');
 
