@@ -48,7 +48,6 @@ for rxnI=1:numel(ensemble.rxns)
     fullFxn = fullfile(reactionsFolder, [rxnName, '1.m']);   
 
     if isfile(catalyticFxn)
-
         if strcmp(ensemble.rxnMechanisms{1}{rxnI}, 'massAction')
             fluxEq = generateMassActionFunction(ensemble, rxnI);  
             freeEnz = 1;
@@ -59,10 +58,16 @@ for rxnI=1:numel(ensemble.rxns)
         [fluxEq, Kpos, Kneg] = generateAllostericFunction(ensemble, rxnI, fluxEq, freeEnz);   
 
     else
-
-        if strcmp(ensemble.rxnMechanisms{1}{rxnI}, 'massAction')                
-            fluxEq = generateMassActionFunction(ensemble, rxnI);
-        else
+        if strcmp(ensemble.rxnMechanisms{1}{rxnI}, 'massAction')
+            fluxEq = generateMassActionFunction(ensemble, rxnI);  
+            freeEnz = 1;
+        elseif strcmp(ensemble.rxnMechanisms{1}{rxnI}, 'diffusion')
+            fluxEq = generateDiffusionFunction(ensemble, rxnI);  
+            freeEnz = 1;
+        elseif strcmp(ensemble.rxnMechanisms{1}{rxnI}, 'fixedExchange')
+            fluxEq = generateFixedExchangeFunction(ensemble, rxnI);  
+            freeEnz = 1;
+         else
             [fluxEq, freeEnz] = parseCatalyticFunction(fullFxn, ensemble, rxnI); 
         end
 
@@ -104,6 +109,23 @@ for prodI=1:numel(products)
 end
 
 fluxEq = k01 * str2sym(forRate(4:end)) - k02 * str2sym(revRate(4:end));
+
+end
+
+
+function fluxEq = generateDiffusionFunction(ensemble, rxnI)
+
+syms k01
+
+substrates = ensemble.mets(find(ensemble.S(:, rxnI) < 0));
+fluxEq = k01 * str2sym(substrates{1}) ;
+
+end
+
+
+function fluxEq = generateFixedExchangeFunction(ensemble, rxnI)
+
+fluxEq = num2str(ensemble.fluxRef(rxnI));
 
 end
 
@@ -437,15 +459,17 @@ function SBmodel = addRateConsts(SBmodel, ensemble, modelI, rxnI)
 % Adds rate constants and respective values to the model.
 %
 
-rateConstNames = getRateConstNames(ensemble, rxnI, '');
-rateConstNames = strsplit(rateConstNames(2:end), ' ');
+if rxnI <= numel(ensemble.populations.models(modelI).rxnParams)
+    rateConstNames = getRateConstNames(ensemble, rxnI, '');
+    rateConstNames = strsplit(rateConstNames(2:end), ' ');
 
-for rateI=1:numel(rateConstNames)
-    rateName = [rateConstNames{rateI}, '_', ensemble.rxns{rxnI}];
-    rateVal = ensemble.populations.models(modelI).rxnParams(rxnI).kineticParams(rateI);
-    addparameter(SBmodel, rateName, 'Value', rateVal);
+    for rateI=1:numel(rateConstNames)
+        rateName = [rateConstNames{rateI}, '_', ensemble.rxns{rxnI}];
+        rateVal = ensemble.populations.models(modelI).rxnParams(rxnI).kineticParams(rateI);
+        addparameter(SBmodel, rateName, 'Value', rateVal);
+    end
 end
-    
+
 end
 
 
@@ -488,6 +512,22 @@ end
 end
 
 
+function SBmodel = setConstSpecies(SBmodel, ensemble)
+%
+% Set metabolites that are not balanced as constants and boundary
+% metabolites.
+%
+
+constMets = setdiff(1:numel(ensemble.mets), ensemble.metsBalanced);
+
+for metI=1:numel(constMets)
+    met = sbioselect(SBmodel, 'Name', ensemble.mets{constMets(metI)});
+    set(met, 'Constant', true, 'BoundaryCondition', true);
+end
+
+end
+
+
 function SBmodel = addODEsToSBModel(SBmodel, ensemble,fluxVector)
 
 for metI=1:numel(ensemble.metsBalanced)
@@ -512,22 +552,6 @@ for metI=1:numel(ensemble.metsBalanced)
     set(rule, 'RuleType', 'rate');
 end
 
-end
-
-
-function SBmodel = setConstSpecies(SBmodel, ensemble)
-%
-% Set metabolites that are not balanced as constants and boundary
-% metabolites.
-%
-
-constMets = setdiff(1:numel(ensemble.mets), ensemble.metsBalanced);
-
-for metI=1:numel(constMets)
-    met = sbioselect(SBmodel, 'Name', ensemble.mets{constMets(metI)});
-    set(met, 'Constant', true, 'BoundaryCondition', true);
-end
-    
 end
 
 
