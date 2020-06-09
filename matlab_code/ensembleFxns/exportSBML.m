@@ -69,7 +69,7 @@ for rxnI=1:numel(ensemble.rxns)
     end
 
     [SBmodel, fluxEqSub] = addReactionToSBModel(SBmodel, ensemble, fluxEq, modelI, rxnI, Kpos, Kneg, catalyticFxn);        
-    fluxVector{rxnI} = str2sym(fluxEqSub);
+    fluxVector{rxnI} = fluxEqSub;
 
 end
 
@@ -492,7 +492,7 @@ function SBmodel = addODEsToSBModel(SBmodel, ensemble,fluxVector)
 
 for metI=1:numel(ensemble.metsBalanced)
 
-    ode = 0;
+    ode = '(';
     metBalI = ensemble.metsBalanced(metI);
     metName = ensemble.mets{metBalI};
 
@@ -500,16 +500,15 @@ for metI=1:numel(ensemble.metsBalanced)
     produced = find(ensemble.S(metBalI,:) == 1);
 
     for consI=1:numel(consumed)
-        ode = ode - fluxVector{consumed(consI)};
+        ode = [ode, ' - (', fluxVector{consumed(consI)}, ')'];
     end
 
     for prodI=1:numel(produced)
-        ode = ode + fluxVector{produced(prodI)};
+        ode = [ode, ' + (', fluxVector{produced(prodI)}, ')'];
     end
 
-    ode = ode * str2sym(['1 / ', metName, '_ref']);
-
-    rule = addrule(SBmodel, [metName, '= ', char(ode)]);
+    ode = [ode, ') * ', '(1.0 / ', metName, '_ref)'];
+    rule = addrule(SBmodel, [metName, ' = ', ode]);
     set(rule, 'RuleType', 'rate');
 end
 
