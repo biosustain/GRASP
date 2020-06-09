@@ -26,13 +26,13 @@ E4 = k05.*B*k08*k01.*A*k04*k11+k05.*B*k01.*A*k04*k11*k09+k08*k10.*P*k12.*Q*k02*k
 E5 = k07*k05.*B*k01.*A*k04*k11+k10.*P*k12.*Q*k02*k04*k06+k07*k10.*P*k12.*Q*k02*k04+k07*k10.*P*k05.*B*k01.*A*k04+k07*k10.*P*k05.*B*k12.*Q*k04;
 E6 = k12.*Q*k02*k04*k06*k08+k12.*Q*k09*k02*k04*k06+k12.*Q*k09*k02*k04*k07+k09*k07*k05.*B*k01.*A*k04+k12.*Q*k09*k04*k07*k05.*B;
 % Denominator terms
-D = E1+E2+E3+E4+E5+E6;
+Denominator = E1+E2+E3+E4+E5+E6;
 % Enzyme abundances terms
-E1 = E1./D;
-E2 = E2./D;
-E3 = E3./D;
-E4 = E4./D;
-E5 = E5./D;
-E6 = E6./D;
+E1 = E1./Denominator;
+E2 = E2./Denominator;
+E3 = E3./Denominator;
+E4 = E4./Denominator;
+E5 = E5./Denominator;
+E6 = E6./Denominator;
 % Reaction rate 
 v = +k09.*E5-k10.*P.*E6;
