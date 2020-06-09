@@ -116,6 +116,7 @@ function [fluxEq, freeEnz] = parseCatalyticFunction(fullFxn, ensemble, rxnI)
 % file to obtain the simplified flux equation.
 %
 
+prodI = 1;
 varList = '';
 functionContents = '';
 
@@ -126,10 +127,10 @@ if isfile(fullFxn)
     line = fgets(fileIn);
 
     while line ~= -1
-        [functionContents, varList] = parseLine(line, ensemble, rxnI, functionContents, varList); 
+        [functionContents, varList, prodI] = parseLine(line, ensemble, rxnI, functionContents, varList, prodI); 
         line = fgets(fileIn);
     end
-
+       
     functionContents = [functionContents, '\nv = simplify(v);\n'];
     functionContents = [functionContents, 'E1 = simplify(E1);\n'];
 
@@ -166,7 +167,7 @@ end
 end
 
 
-function [functionContents, varList] = parseLine(line, ensemble, rxnI, functionContents, varList)
+function [functionContents, varList, prodI] = parseLine(line, ensemble, rxnI, functionContents, varList, prodI)
 %
 % Parses each line in the catalytic function .m file of the given reaction.
 %
@@ -199,21 +200,40 @@ elseif strfind(line, 'F = ') == 1
     [functionContents, varList] = parseMets(functionContents, varList, ...
                                             'F', ensemble.subOrder{1,1}{rxnI}{6});
 
-elseif strfind(line, 'P =') == 1    
+elseif strfind(line, 'P =') == 1
     [functionContents, varList] = parseMets(functionContents, varList, ...
                                             'P', ensemble.prodOrder{1,1}{rxnI}{1});
+    prodI = prodI + 1;
 
+elseif strfind(line, 'P1 =') == 1 
+    [functionContents, varList] = parseMets(functionContents, varList, ...
+                                            'P1', ensemble.prodOrder{1,1}{rxnI}{1});
+    prodI = prodI + 1;
+                                        
+elseif strfind(line, 'P2 =') == 1 
+    [functionContents, varList] = parseMets(functionContents, varList, ...
+                                            'P2', ensemble.prodOrder{1,1}{rxnI}{2});
+    prodI = prodI + 1;
+
+elseif strfind(line, 'P3 =') == 1 
+    [functionContents, varList] = parseMets(functionContents, varList, ...
+                                            'P3', ensemble.prodOrder{1,1}{rxnI}{3});
+    prodI = prodI + 1;
+
+                                        
 elseif strfind(line, 'Q =') == 1
     [functionContents, varList] = parseMets(functionContents, varList, ...
-                                            'Q', ensemble.prodOrder{1,1}{rxnI}{2});
+                                            'Q', ensemble.prodOrder{1,1}{rxnI}{prodI});
+    prodI = prodI + 1;
 
 elseif strfind(line, 'R =') == 1
     [functionContents, varList] = parseMets(functionContents, varList, ...
-                                            'R', ensemble.prodOrder{1,1}{rxnI}{3});
+                                            'R', ensemble.prodOrder{1,1}{rxnI}{prodI});
+    prodI = prodI + 1;
 
 elseif strfind(line, 'S =') == 1
     [functionContents, varList] = parseMets(functionContents, varList, ...
-                                            'S', ensemble.prodOrder{1,1}{rxnI}{4});
+                                            'S', ensemble.prodOrder{1,1}{rxnI}{prodI});
 
 elseif strfind(line, 'I') == 1
     if strcmp(line(2), ' ') == 1
@@ -567,8 +587,9 @@ nInhibitors = numel(ensemble.inhibitors{1}{rxnInd});
 nActivators = numel(ensemble.activators{1}{rxnInd});
 nPosEff = numel(ensemble.posEffectors{1}{rxnInd});
 nNegEff = numel(ensemble.negEffectors{1}{rxnInd});
+promiscuous = numel(ensemble.promiscuity{1}{rxnInd}) > 0;
 
-if (nInhibitors > 0) || (nActivators > 0) || (nPosEff > 0) || (nNegEff > 0) 
+if (nInhibitors > 0) || (nActivators > 0) || (nPosEff > 0) || (nNegEff > 0) || promiscuous == true
     SBMLcontents = [SBMLcontents, ['        <listOfModifiers>', newline]];
 else
     return
@@ -595,6 +616,20 @@ end
 if nNegEff > 0
     for negEffI=1:nNegEff
         SBMLcontents = [SBMLcontents, ['          <modifierSpeciesReference species="', ensemble.negEffectors{1}{rxnInd}{negEffI}, '"/>', newline]];
+    end
+end
+
+if promiscuous == true
+    
+    otherRxns = setdiff(ensemble.promiscuity{1}{rxnInd}, rxnInd);
+    
+    for rxnI=1:numel(otherRxns)
+        otherRxnMetInds = find(ensemble.S(:, otherRxns(rxnI)) ~= 0);
+        
+        for metI=1:numel(otherRxnMetInds)
+            SBMLcontents = [SBMLcontents, ['          <modifierSpeciesReference species="', ensemble.mets{otherRxnMetInds(metI)}, '"/>', newline]];
+        end
+        
     end
 end
 
