@@ -30,6 +30,7 @@ For now the documentation can be accessed by opening the file `index.html` in `G
 * Matlab's Parallel Computing Toolbox
 * Matlab's Optimization Toobox
 * Matlab's Bioinformatics Toolbox
+* Matlab's SimBiology Toolbox (to export models to SBML)
 * Gurobi
 
 ### Python requirements (only for the jupyter notebooks in `visualization`, which are not really part of GRASP)
