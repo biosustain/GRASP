@@ -3,6 +3,7 @@ import time
 
 import numpy as np
 import pandas as pd
+import scipy.io
 from scipy import interpolate
 
 
@@ -197,3 +198,51 @@ def get_time_series_quantiles(data_df: pd.DataFrame, time_points: list, quant_ty
     quantiles_df = pd.DataFrame.from_dict(quantiles_dic)
 
     return quantiles_df
+
+
+def load_simulation(raw_data_dir: str, model_name: str, simulation_name: str, n_models: int,
+                    time_points: list, save_concs: bool=False, save_fluxes: bool=False) -> tuple:
+    """
+    Takes in the path to the folder with the model ensemble and simulation data, loads it and returns dataframes for
+    concentrations and fluxes. It always returns dataframes for the concentrations and fluxes at the selected time
+    points (conc/flux_interp), and if save_concs/fluxes is set to True it also returns dataframes for the
+    concentrations/fluxes for all time points.
+
+
+    Args:
+        raw_data_dir: path to folder with simulation and model data.
+        model_name: name of the model
+        simulation_name: name of the simulation
+        n_models: number of models in the simulation to plot
+        time_points: time points to be plotted
+        save_concs: whether or not to save concentrations for all time points
+        save_fluxes: whether or not to save fluxes for all time points
+
+    Returns:
+        Dataframes for concentrations, interpolated concentrations, fluxes, interpolated fluxes, and lists of
+          metabolite and reaction names.
+    """
+
+    met_names, rxn_names = get_met_rxn_names(raw_data_dir, model_name)
+
+    # import model ensemble
+    file_in = os.path.join(raw_data_dir, f'{model_name}.mat')
+    mat = scipy.io.loadmat(file_in, squeeze_me=False)
+
+    # get ALL metabolite names, also the constant ones
+    n_mets = len(mat['ensemble']['mets'][0][0])
+    all_met_names = [mat['ensemble']['mets'][0][0][met_i][0][0].replace('m_m_', '') for met_i in range(n_mets)]
+
+    # import reference concentrations
+    ref_conc_dic = import_ref_conc(mat, n_models, all_met_names)
+
+    # load simulation data file
+    file_in = os.path.join(raw_data_dir, f'simulation_{simulation_name}.mat')
+    mat = scipy.io.loadmat(file_in, squeeze_me=False)
+
+    # import simulation data
+    conc, conc_interp, flux, flux_interp = gather_sim_data(mat, met_names, rxn_names, n_models, time_points,
+                                                           save_concs=save_concs, save_fluxes=save_fluxes,
+                                                           ref_conc_dic=ref_conc_dic)
+
+    return conc, conc_interp, flux, flux_interp, met_names, rxn_names
