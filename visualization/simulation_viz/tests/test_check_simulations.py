@@ -1,11 +1,12 @@
-import os
-import unittest
-import scipy.io
 import io
+import os
 import unittest.mock
 
-from simulation_viz.check_simulations import check_for_negative_concentrations, get_non_converging_models, remove_models
-from simulation_viz.import_simulation_data import gather_sim_data, get_met_rxn_names, get_time_series_quantiles, import_ref_conc
+import scipy.io
+
+from simulation_viz.simulation_viz.check_simulations import check_for_negative_concentrations, \
+    get_non_converging_models, remove_models
+from simulation_viz.simulation_viz.import_simulation_data import gather_sim_data, get_met_rxn_names, import_ref_conc
 
 
 class TestImportSimulationData(unittest.TestCase):
@@ -45,7 +46,8 @@ class TestImportSimulationData(unittest.TestCase):
 
     def test_get_non_converging_models(self):
         n_models = 5
-        non_converging_models = get_non_converging_models(self.conc_interp, n_models, self.met_names, rel_tol=5 * 10 ** -3)
+        non_converging_models = get_non_converging_models(self.conc_interp, n_models, self.met_names,
+                                                          rel_tol=5 * 10 ** -3)
 
         self.assertEqual(non_converging_models, [])
 
@@ -62,6 +64,6 @@ class TestImportSimulationData(unittest.TestCase):
     def test_check_for_negative_concentrations(self, mock_stdout):
         true_res = ('All concentrations are above the treshold -1e-08 :)\n')
 
-        check_for_negative_concentrations(self.conc_interp, scaled=False, threshold=-10**-8)
+        check_for_negative_concentrations(self.conc_interp, scaled=False, threshold=-10 ** -8)
 
         self.assertEqual(true_res, mock_stdout.getvalue())

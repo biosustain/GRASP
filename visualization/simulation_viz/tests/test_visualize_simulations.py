@@ -1,8 +1,11 @@
 import os
 import unittest
+
 import scipy.io
-from simulation_viz.visualize_simulations import plot_ensemble, plot_model
-from simulation_viz.import_simulation_data import gather_sim_data, get_met_rxn_names, get_time_series_quantiles, import_ref_conc
+
+from simulation_viz.simulation_viz.import_simulation_data import gather_sim_data, get_met_rxn_names, \
+    get_time_series_quantiles, import_ref_conc
+from simulation_viz.simulation_viz.visualize_simulations import plot_ensemble, plot_model
 
 
 class TestVisualizeSimulations(unittest.TestCase):
@@ -33,8 +36,10 @@ class TestVisualizeSimulations(unittest.TestCase):
         file_in = os.path.join(raw_data_dir, f'simulation_{simulation_name}.mat')
         mat = scipy.io.loadmat(file_in, squeeze_me=False)
 
-        self.conc, self.conc_interp, self.flux, self.flux_interp = gather_sim_data(mat, self.met_names, self.rxn_names, n_models,
-                                                                                   time_points, save_concs=True, save_fluxes=True,
+        self.conc, self.conc_interp, self.flux, self.flux_interp = gather_sim_data(mat, self.met_names, self.rxn_names,
+                                                                                   n_models,
+                                                                                   time_points, save_concs=True,
+                                                                                   save_fluxes=True,
                                                                                    ref_conc_dic=ref_conc_dic)
 
         data_type = 'conc'

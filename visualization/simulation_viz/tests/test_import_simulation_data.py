@@ -1,9 +1,12 @@
 import os
-import unittest
-import scipy.io
 import pickle
+import unittest
+
 import pandas as pd
-from simulation_viz.import_simulation_data import gather_sim_data, get_met_rxn_names, get_time_series_quantiles, import_ref_conc
+import scipy.io
+
+from simulation_viz.simulation_viz.import_simulation_data import gather_sim_data, get_met_rxn_names, \
+    get_time_series_quantiles, import_ref_conc
 
 
 class TestImportSimulationData(unittest.TestCase):
@@ -39,9 +42,10 @@ class TestImportSimulationData(unittest.TestCase):
         self.assertDictEqual(true_res, ref_conc_dic)
 
     def test_gather_sim_data(self):
-
-        true_res_conc_interp = pd.read_hdf(os.path.join(self.this_dir, 'test_files', 'true_res_gather_sim_data_conc_interp.h5',), 'df')
-        true_res_flux_interp = pd.read_hdf(os.path.join(self.this_dir, 'test_files', 'true_res_gather_sim_data_flux_interp.h5',), 'df')
+        true_res_conc_interp = pd.read_hdf(
+            os.path.join(self.this_dir, 'test_files', 'true_res_gather_sim_data_conc_interp.h5', ), 'df')
+        true_res_flux_interp = pd.read_hdf(
+            os.path.join(self.this_dir, 'test_files', 'true_res_gather_sim_data_flux_interp.h5', ), 'df')
 
         n_models = 5
 
@@ -72,10 +76,14 @@ class TestImportSimulationData(unittest.TestCase):
         self.assertTrue(pd.DataFrame.equals(true_res_flux_interp, flux_interp))
 
     def test_gather_sim_data_save_all(self):
-        true_res_conc = pd.read_hdf(os.path.join(self.this_dir, 'test_files', 'true_res_gather_sim_data_save_all_conc.h5'), 'df')
-        true_res_conc_interp = pd.read_hdf(os.path.join(self.this_dir, 'test_files', 'true_res_gather_sim_data_save_all_conc_interp.h5'), 'df')
-        true_res_flux = pd.read_hdf(os.path.join(self.this_dir, 'test_files', 'true_res_gather_sim_data_save_all_flux.h5'), 'df')
-        true_res_flux_interp = pd.read_hdf(os.path.join(self.this_dir, 'test_files', 'true_res_gather_sim_data_save_all_flux_interp.h5'), 'df')
+        true_res_conc = pd.read_hdf(
+            os.path.join(self.this_dir, 'test_files', 'true_res_gather_sim_data_save_all_conc.h5'), 'df')
+        true_res_conc_interp = pd.read_hdf(
+            os.path.join(self.this_dir, 'test_files', 'true_res_gather_sim_data_save_all_conc_interp.h5'), 'df')
+        true_res_flux = pd.read_hdf(
+            os.path.join(self.this_dir, 'test_files', 'true_res_gather_sim_data_save_all_flux.h5'), 'df')
+        true_res_flux_interp = pd.read_hdf(
+            os.path.join(self.this_dir, 'test_files', 'true_res_gather_sim_data_save_all_flux_interp.h5'), 'df')
 
         n_models = 5
 
@@ -108,8 +116,10 @@ class TestImportSimulationData(unittest.TestCase):
         self.assertTrue(pd.DataFrame.equals(true_res_flux_interp, flux_interp))
 
     def test_get_time_series_quantiles(self):
-        true_res_conc = pd.read_hdf(os.path.join(self.this_dir, 'test_files', 'true_res_get_time_series_quantiles_conc.h5'), 'df')
-        true_res_flux = pd.read_hdf(os.path.join(self.this_dir, 'test_files', 'true_res_get_time_series_quantiles_flux.h5'), 'df')
+        true_res_conc = pd.read_hdf(
+            os.path.join(self.this_dir, 'test_files', 'true_res_get_time_series_quantiles_conc.h5'), 'df')
+        true_res_flux = pd.read_hdf(
+            os.path.join(self.this_dir, 'test_files', 'true_res_get_time_series_quantiles_flux.h5'), 'df')
 
         n_models = 5
 
