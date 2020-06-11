@@ -31,7 +31,7 @@ def plot_ensemble(data_df: pd.DataFrame, quant_type: str, selected_data: list, x
         A matplotlib plot with the median, 1st quartile, and 3rd quartile metabolite concentrations or reaction fluxes.
     """
 
-    if quant_type in ['conc', 'conc_unscaled', 'flux']:
+    if quant_type in {'conc_rel', 'conc_abs', 'flux_rel', 'flux_abs'}:
 
         data_type = 'met' if quant_type.find('conc') != -1 else 'rxn'
 
@@ -85,7 +85,7 @@ def plot_ensemble(data_df: pd.DataFrame, quant_type: str, selected_data: list, x
             return plt.show()
 
     else:
-        print('The data_type variable should be either conc, conc_unscaled, or flux.')
+        print('The data_type variable should be either conc_rel, conc_abs, flux_rel, or flux_abs.')
         return
 
 
@@ -118,7 +118,7 @@ def plot_model(data_df: pd.DataFrame, data_interp_df: pd.DataFrame, model_i: int
         An altair plot with the selected metabolite concentrations or reaction fluxes plotted for a given model.
     """
 
-    if quant_type in ['conc', 'conc_unscaled', 'flux']:
+    if quant_type in {'conc_rel', 'conc_abs', 'flux_rel', 'flux_abs'}:
 
         data_type = 'met' if quant_type.find('conc') != -1 else 'rxn'
 
@@ -170,5 +170,5 @@ def plot_model(data_df: pd.DataFrame, data_interp_df: pd.DataFrame, model_i: int
             return plt.show()
 
     else:
-        print('The data_type variable should be either conc, conc_unscaled, or flux.')
+        print('The data_type variable should be either conc_rel, conc_abs, flux_rel, or flux_abs.')
         return

@@ -24,7 +24,7 @@ def get_non_converging_models(conc_df_interp: pd.DataFrame, n_models: int, met_n
     for model_i in range(n_models):
 
         for met in met_names:
-            last_conc_values = conc_df_interp[(conc_df_interp['model'] == model_i) & (conc_df_interp['met'] == met)].iloc[-3:, :]['conc'].values
+            last_conc_values = conc_df_interp[(conc_df_interp['model'] == model_i) & (conc_df_interp['met'] == met)].iloc[-3:, :]['conc_rel'].values
 
             assert len(last_conc_values) == 3
             diff1 = np.abs(last_conc_values[0] - last_conc_values[1])
@@ -70,7 +70,7 @@ def check_for_negative_concentrations(data_df: pd.DataFrame, scaled: bool, thres
         None
     """
 
-    all_pos = np.all(data_df['conc' if scaled else 'conc_unscaled'].values > threshold)
+    all_pos = np.all(data_df['conc_rel' if scaled else 'conc_abs'].values > threshold)
 
     if all_pos:
         print(f'All concentrations are above the treshold {threshold} :)')

@@ -32,7 +32,7 @@ class TestImportSimulationData(unittest.TestCase):
         n_mets = len(mat['ensemble']['mets'][0][0])
         all_met_names = [mat['ensemble']['mets'][0][0][met_i][0][0].replace('m_m_', '') for met_i in range(n_mets)]
 
-        ref_conc_dic = import_ref_conc(mat, n_models, all_met_names)
+        ref_conc_dic = import_ref_conc(mat, n_models)
 
         simulation_name = f'{model_name}'
         file_in = os.path.join(raw_data_dir, f'simulation_{simulation_name}.mat')

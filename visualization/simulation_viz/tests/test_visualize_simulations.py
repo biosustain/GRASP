@@ -27,10 +27,7 @@ class TestVisualizeSimulations(unittest.TestCase):
         file_in = os.path.join(raw_data_dir, f'{model_name}.mat')
         mat = scipy.io.loadmat(file_in, squeeze_me=False)
 
-        n_mets = len(mat['ensemble']['mets'][0][0])
-        all_met_names = [mat['ensemble']['mets'][0][0][met_i][0][0].replace('m_m_', '') for met_i in range(n_mets)]
-
-        ref_conc_dic = import_ref_conc(mat, n_models, all_met_names)
+        ref_conc_dic = import_ref_conc(mat, n_models)
 
         simulation_name = f'{model_name}'
         file_in = os.path.join(raw_data_dir, f'simulation_{simulation_name}.mat')
@@ -42,15 +39,15 @@ class TestVisualizeSimulations(unittest.TestCase):
                                                                                    save_fluxes=True,
                                                                                    ref_conc_dic=ref_conc_dic)
 
-        data_type = 'conc'
+        data_type = 'conc_rel'
         self.conc_interp_quantiles = get_time_series_quantiles(self.conc_interp, time_points, data_type, self.met_names)
 
-        data_type = 'flux'
+        data_type = 'flux_abs'
         self.flux_interp_quantiles = get_time_series_quantiles(self.flux_interp, time_points, data_type, self.rxn_names)
 
     def test_plot_ensemble_conc_1row(self):
         output_file = os.path.join(self.this_dir, 'test_files', 'plot_ensemble_conc_viz.png')
-        plot_ensemble(self.conc_interp_quantiles, quant_type='conc', selected_data=[self.met_names],
+        plot_ensemble(self.conc_interp_quantiles, quant_type='conc_rel', selected_data=[self.met_names],
                       x_scale='linear', y_scale='log', x_lim=None, y_lim=None, fig_size=None, save_plot=True,
                       output_file=output_file)
 
@@ -62,7 +59,7 @@ class TestVisualizeSimulations(unittest.TestCase):
         met_list1 = ['m_m5', 'm_m6']
         met_list2 = ['m_m10', 'm_m11']
 
-        plot_ensemble(self.conc_interp_quantiles, quant_type='conc', selected_data=[met_list1, met_list2],
+        plot_ensemble(self.conc_interp_quantiles, quant_type='conc_rel', selected_data=[met_list1, met_list2],
                       x_scale='linear', y_scale='log', x_lim=None, y_lim=None, fig_size=None, save_plot=True,
                       output_file=output_file)
 
@@ -71,7 +68,7 @@ class TestVisualizeSimulations(unittest.TestCase):
 
     def test_plot_ensemble_flux_1row(self):
         output_file = os.path.join(self.this_dir, 'test_files', 'plot_ensemble_flux_viz.png')
-        plot_ensemble(self.flux_interp_quantiles, quant_type='flux', selected_data=[self.rxn_names],
+        plot_ensemble(self.flux_interp_quantiles, quant_type='flux_abs', selected_data=[self.rxn_names],
                       x_scale='linear', y_scale='log', x_lim=None, y_lim=None, fig_size=None, save_plot=True,
                       output_file=output_file)
 
@@ -83,7 +80,7 @@ class TestVisualizeSimulations(unittest.TestCase):
         rxn_list1 = ['r1', 'r2']
         rxn_list2 = ['r8', 'r9']
 
-        plot_ensemble(self.flux_interp_quantiles, quant_type='flux', selected_data=[rxn_list1, rxn_list2],
+        plot_ensemble(self.flux_interp_quantiles, quant_type='flux_abs', selected_data=[rxn_list1, rxn_list2],
                       x_scale='linear', y_scale='log', x_lim=None, y_lim=None, fig_size=None, save_plot=True,
                       output_file=output_file)
 
@@ -93,7 +90,7 @@ class TestVisualizeSimulations(unittest.TestCase):
     def test_plot_model_conc(self):
         output_file = os.path.join(self.this_dir, 'test_files', 'plot_model_conc_viz.png')
 
-        plot_model(self.conc, self.conc_interp, model_i=1, quant_type='conc', selected_data=self.met_names,
+        plot_model(self.conc, self.conc_interp, model_i=1, quant_type='conc_rel', selected_data=self.met_names,
                    x_scale='linear', y_scale='linear', x_lim=None, y_lim=None, fig_size=None,
                    save_plot=True, output_file=output_file)
         self.assertTrue(os.path.isfile(output_file))
@@ -102,7 +99,7 @@ class TestVisualizeSimulations(unittest.TestCase):
     def test_plot_model_flux(self):
         output_file = os.path.join(self.this_dir, 'test_files', 'plot_model_flux_viz.png')
 
-        plot_model(self.flux, self.flux_interp, model_i=1, quant_type='flux', selected_data=self.rxn_names,
+        plot_model(self.flux, self.flux_interp, model_i=1, quant_type='flux_abs', selected_data=self.rxn_names,
                    x_scale='linear', y_scale='linear', x_lim=None, y_lim=None, fig_size=None,
                    save_plot=True, output_file=output_file)
 
