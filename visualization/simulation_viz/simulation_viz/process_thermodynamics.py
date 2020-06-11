@@ -3,11 +3,9 @@ import pandas as pd
 
 
 def _get_dG_list(rxn_names: list, stoic_matrix: np.ndarray, sub_conc: np.ndarray, prod_conc: np.ndarray,
-                 dG_std: np.ndarray, gas_constant: float, temperature: float) -> tuple:
+                 dG_std: np.ndarray, gas_constant: float, temperature: float) -> list:
 
     dG_list = []
-    dG_Q_list = []
-    ma_ratio_list = []
 
     for rxn_i in range(len(rxn_names)):
 
@@ -27,18 +25,15 @@ def _get_dG_list(rxn_names: list, stoic_matrix: np.ndarray, sub_conc: np.ndarray
         dG_Q = gas_constant * temperature * np.log(ma_ratio)
         dG = dG_std[rxn_i] + dG_Q
 
-        ma_ratio_list.append(ma_ratio)
         dG_list.append(dG)
-        dG_Q_list.append(dG_Q)
 
-    return dG_list, dG_Q_list, ma_ratio_list
+    return dG_list
 
 
-def calculate_dG(data_dict: dict, gas_constant: float, temperature: float, rxn_order: list = None) -> tuple:
+def calculate_dG(data_dict: dict, gas_constant: float, temperature: float, rxn_order: list = None) -> pd.DataFrame:
     """
     Given a dictionary representing a GRASP input file, calculates the minimum and maximum reaction dGs based on the
     standard dGs in thermoRxns and metabolite concentrations in thermoMets.
-    It also calculates the mass-action ratio and the part of the dG based on the mass-action ratio.
 
     Args:
         data_dict: a dictionary that represents the excel file with the GRASP model.
@@ -47,12 +42,10 @@ def calculate_dG(data_dict: dict, gas_constant: float, temperature: float, rxn_o
         rxn_order: a list with the reactions order (optional).
 
     Returns:
-        Mass action ratio dataframe, dG_Q dataframe, Gibbs energies dataframe.
+        Gibbs energies dataframe.
     """
 
-    dG_Q_df = pd.DataFrame()
     dG_df = pd.DataFrame()
-    ma_df = pd.DataFrame()
 
     stoic_df = data_dict['stoic']
 
@@ -69,40 +62,26 @@ def calculate_dG(data_dict: dict, gas_constant: float, temperature: float, rxn_o
     min_met_conc = mets_conc_df['min (M)'].values
     max_met_conc = mets_conc_df['max (M)'].values
 
-    dG_list_mean, dG_Q_list_mean, ma_ratio_list_mean = _get_dG_list(rxn_names, stoic_matrix,
-                                                                    mets_conc_df['mean (M)'].values,
-                                                                    mets_conc_df['mean (M)'].values,
-                                                                    dG_std_df['∆Gr_mean'].values,
-                                                                    gas_constant, temperature)
-    dG_list_min, dG_Q_list_min, ma_ratio_list_min = _get_dG_list(rxn_names, stoic_matrix, max_met_conc, min_met_conc,
-                                                                 dG_std_df['∆Gr\'_min (kJ/mol)'].values,
-                                                                 gas_constant, temperature)
-    dG_list_max, dG_Q_list_max, ma_ratio_list_max = _get_dG_list(rxn_names, stoic_matrix, min_met_conc, max_met_conc,
-                                                                 dG_std_df['∆Gr\'_max (kJ/mol)'].values,
-                                                                 gas_constant, temperature)
+    dG_list_mean = _get_dG_list(rxn_names, stoic_matrix, mets_conc_df['mean (M)'].values,
+                                mets_conc_df['mean (M)'].values, dG_std_df['∆Gr_mean'].values, gas_constant,
+                                temperature)
 
-    ma_df['ma_min'] = ma_ratio_list_min
-    ma_df['ma_mean'] = ma_ratio_list_mean
-    ma_df['ma_max'] = ma_ratio_list_max
+    dG_list_min = _get_dG_list(rxn_names, stoic_matrix, max_met_conc, min_met_conc,
+                               dG_std_df['∆Gr\'_min (kJ/mol)'].values, gas_constant, temperature)
 
-    dG_Q_df['∆G_Q_min'] = dG_Q_list_min
-    dG_Q_df['∆G_Q_mean'] = dG_Q_list_mean
-    dG_Q_df['∆G_Q_max'] = dG_Q_list_max
+    dG_list_max = _get_dG_list(rxn_names, stoic_matrix, min_met_conc, max_met_conc,
+                               dG_std_df['∆Gr\'_max (kJ/mol)'].values, gas_constant, temperature)
 
     dG_df['∆G_min'] = dG_list_min
     dG_df['∆G_mean'] = dG_list_mean
     dG_df['∆G_max'] = dG_list_max
 
-    ma_df.index = rxn_names
-    dG_Q_df.index = rxn_names
     dG_df.index = rxn_names
 
     if rxn_order:
-        ma_df = ma_df.reindex(rxn_order)
-        dG_Q_df = dG_Q_df.reindex(rxn_order)
         dG_df = dG_df.reindex(rxn_order)
 
-    return ma_df, dG_Q_df, dG_df
+    return dG_df
 
 
 def _compute_robust_fluxes(stoic_matrix: np.ndarray, meas_rates: np.ndarray, meas_rates_std: np.ndarray,
@@ -206,7 +185,6 @@ def get_robust_fluxes(data_dict: dict, rxn_order: list = None) -> pd.DataFrame:
 
     fluxes_df = pd.DataFrame()
     stoic_balanced, rxn_list = _get_balanced_s_matrix(data_dict)
-    # n_reactions = len(rxn_order)
 
     meas_rates_mean, meas_rates_std = _get_meas_rates(data_dict, rxn_list)
     inactive_rxns_ind = _get_inactive_reactions(data_dict)
@@ -227,45 +205,32 @@ def get_robust_fluxes(data_dict: dict, rxn_order: list = None) -> pd.DataFrame:
     return fluxes_df
 
 
-def check_thermodynamic_feasibility(data_dict: dict) -> tuple:
+def get_fluxes_and_dGs(data_dict: dict) -> tuple:
     """
-    Given a dictionary representing a GRASP input file, it checks if the reaction's dG are compatible with the
-    respective fluxes. It works both when all fluxes are specified in measRates and when robust fluxes are calculated
-    for a fully determined system. If the fluxes are not fully specified not the system is fully determined, it
+    Given a dictionary representing a GRASP input file, it calculates the reaction dG and possibly the reaction fluxes.
+    It works both when all fluxes are specified in measRates and when robust fluxes are calculated
+    for a fully determined system. If the fluxes are not fully specified or the system is not fully determined, it
     doesn't work.
 
     Args:
         data_dict: a dictionary representing a GRASP input file.
 
     Returns:
-        Whether or not the model is thermodynamically feasible plus fluxes and Gibbs energies dataframes.
+        The fluxes and Gibbs energies dataframes.
 
     """
 
     print('\nChecking if fluxes and Gibbs energies are compatible.\n')
 
-    flag = False
     temperature = 298  # in K
     gas_constant = 8.314 * 10**-3  # in kJ K^-1 mol^-1
 
     stoic_df = data_dict['stoic']
     flux_df = data_dict['measRates']
 
-    ma_df, dG_Q_df, dG_df = calculate_dG(data_dict, gas_constant, temperature)
+    dG_df = calculate_dG(data_dict, gas_constant, temperature)
 
     if len(stoic_df.index) != len(flux_df.index):
         flux_df = get_robust_fluxes(data_dict)
 
-    for rxn in flux_df.index:
-        if flux_df.loc[rxn, 'vref_mean (mmol/L/h)'] > 0 and dG_df.loc[rxn, '∆G_min'] > 0:
-            print(f'The flux and ∆G range seem to be incompatible for reaction {rxn}')
-            flag = True
-
-        if flux_df.loc[rxn, 'vref_mean (mmol/L/h)'] < 0 and dG_df.loc[rxn, '∆G_max'] < 0:
-            print(f'The flux and ∆G range seem to be incompatible for reaction {rxn}')
-            flag = True
-
-    if flag is False:
-        print('Everything seems to be OK.')
-
-    return flag, flux_df, dG_df
+    return flux_df, dG_df
