@@ -29,9 +29,6 @@ class TestImportSimulationData(unittest.TestCase):
         file_in = os.path.join(raw_data_dir, f'{model_name}.mat')
         mat = scipy.io.loadmat(file_in, squeeze_me=False)
 
-        n_mets = len(mat['ensemble']['mets'][0][0])
-        all_met_names = [mat['ensemble']['mets'][0][0][met_i][0][0].replace('m_m_', '') for met_i in range(n_mets)]
-
         ref_conc_dic = import_ref_conc(mat, n_models)
 
         simulation_name = f'{model_name}'

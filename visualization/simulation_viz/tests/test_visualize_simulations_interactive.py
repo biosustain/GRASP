@@ -49,30 +49,58 @@ class TestVisualizeSimulationsInteractive(unittest.TestCase):
         self.flux_interp_quantiles = get_time_series_quantiles(self.flux_interp, self.time_points, quant_type,
                                                                self.rxn_names)
 
-    def test_plot_ensemble_interactive_conc(self):
+    def test_plot_ensemble_interactive_conc_rel(self):
         plot_ensemble_interactive(self.conc_interp_quantiles, quant_type='conc_rel', selected_data=self.met_names,
                                   x_scale='linear', y_scale='linear', x_lim=None, y_lim=None)
 
-    def test_plot_ensemble_interactive_flux(self):
+    def test_plot_ensemble_interactive_conc_abs(self):
+        plot_ensemble_interactive(self.conc_interp_quantiles, quant_type='conc_abs', selected_data=self.met_names,
+                                  x_scale='linear', y_scale='linear', x_lim=None, y_lim=None)
+
+    def test_plot_ensemble_interactive_flux_rel(self):
+        plot_ensemble_interactive(self.flux_interp_quantiles, quant_type='flux_rel', selected_data=self.rxn_names,
+                                  x_scale='linear', y_scale='linear', x_lim=None, y_lim=None)
+
+    def test_plot_ensemble_interactive_flux_abs(self):
         plot_ensemble_interactive(self.flux_interp_quantiles, quant_type='flux_abs', selected_data=self.rxn_names,
                                   x_scale='linear', y_scale='linear', x_lim=None, y_lim=None)
 
-    def test_plot_model_interactive_conc(self):
+    def test_plot_model_interactive_conc_rel(self):
         plot_model_interactive(self.conc, self.conc_interp, model_i=2, quant_type='conc_rel',
                                selected_data=self.met_names, x_scale='linear',
                                y_scale='linear', x_lim=None, y_lim=None)
 
-    def test_plot_model_interactive_flux(self):
+    def test_plot_model_interactive_conc_abs(self):
+        plot_model_interactive(self.conc, self.conc_interp, model_i=2, quant_type='conc_abs',
+                               selected_data=self.met_names, x_scale='linear',
+                               y_scale='linear', x_lim=None, y_lim=None)
+
+    def test_plot_model_interactive_flux_rel(self):
+        plot_model_interactive(self.flux, self.flux_interp, model_i=2, quant_type='flux_rel',
+                               selected_data=self.rxn_names, x_scale='linear',
+                               y_scale='linear', x_lim=None, y_lim=None)
+
+    def test_plot_model_interactive_flux_abs(self):
         plot_model_interactive(self.flux, self.flux_interp, model_i=2, quant_type='flux_abs',
                                selected_data=self.rxn_names, x_scale='linear',
                                y_scale='linear', x_lim=None, y_lim=None)
 
-    def test_plot_model_interactive_conc_interp_only(self):
+    def test_plot_model_interactive_conc_interp_only_rel(self):
         plot_model_interactive(None, self.conc_interp, model_i=2, quant_type='conc_rel',
                                selected_data=self.met_names, x_scale='linear',
                                y_scale='linear', x_lim=None, y_lim=None)
 
-    def test_plot_model_interactive_flux_interp_only(self):
+    def test_plot_model_interactive_conc_interp_only_abs(self):
+        plot_model_interactive(None, self.conc_interp, model_i=2, quant_type='conc_abs',
+                               selected_data=self.met_names, x_scale='linear',
+                               y_scale='linear', x_lim=None, y_lim=None)
+
+    def test_plot_model_interactive_flux_interp_only_rel(self):
+        plot_model_interactive(None, self.flux_interp, model_i=2, quant_type='fluxrel',
+                               selected_data=self.rxn_names, x_scale='linear',
+                               y_scale='linear', x_lim=None, y_lim=None)
+
+    def test_plot_model_interactive_flux_interp_only_abs(self):
         plot_model_interactive(None, self.flux_interp, model_i=2, quant_type='flux_abs',
                                selected_data=self.rxn_names, x_scale='linear',
                                y_scale='linear', x_lim=None, y_lim=None)
