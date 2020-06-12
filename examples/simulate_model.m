@@ -12,12 +12,16 @@ modelID = 'toy_model';
 outputFolder = fullfile('..', 'io','output');
 
 % How many models in the ensemble you want to simulate
-numModels = 1000;
+numModels = 5;
+
+% How many cores you want to use to run the simulation
+numCores = 2;
 
 % Define how many seconds until ODE solver is interrupted. The idea is to
-% skip models that take ages to simulate.
+% skip models that take too long to simulate.
 interruptTime = 40;
 
+% Load model ensemble
 load(fullfile(outputFolder, [modelID, '.mat']))
 
 % Define whether the initial condition for metabolites is a relative or an
@@ -26,14 +30,20 @@ load(fullfile(outputFolder, [modelID, '.mat']))
 metsAbsOrRel = 'rel';
 
 % Change initial conditions here if you want, format: {rxn/met ID, initial value}
-enzymesIC = {{'r1', 0.2}, {'r10', 2}};       % Always relative concentrations for enzymes
-metsIC = {{'m5', 0.6}, {'m14', 1.5}};        % Absolute concentrations must be given in mol/L
+enzymesIC = {{'r1', 1}, {'r10', 1}};       % Always relative concentrations for enzymes
+metsIC = {{'m5', 0.6}, {'m11', 1.2}};      % When setting metsAbsOrRel = 'abs', absolute concentrations must be given in mol/L
 
-% Specifiy the time of simulation (probably in hours)
+% Specifiy the time of simulation according to the flux units you've 
+%  provided in the input excel file (probably in hours)
 finalTime = 1;
 
-simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC, metsAbsOrRel, interruptTime, numModels);
 
+% Fluxes will be in absolute units, while metabolite concentrations will be
+%  scaled.
+simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC, metsAbsOrRel, interruptTime, numModels, numCores);
+
+% Save the results in a .mat file that can be imported in python for 
+%  further analysis. This might not work for very large files.
 save(fullfile(outputFolder, ['simulation_', modelID, '.mat']), 'simulationRes')
 write(cell2table(ensemble.mets(ensemble.metsActive)), fullfile(outputFolder, [modelID, '_metsActive.dat']));
 write(cell2table(ensemble.rxns(ensemble.activeRxns)), fullfile(outputFolder, [modelID, '_rxnsActive.dat']));
