@@ -96,6 +96,8 @@ else
     error(['You need a model function to be used for the model ode simulations. It should be named as ', strcat(func2str(kineticFxn), '_ode')]);
 end
 
+timePoints = logspace(-10, log10(finalTime), 100);
+
 xvarICabs = xvarIC;  % dirty trick to make parfor work -.-
 xconstICabs = xconstIC;  % dirty trick to make parfor work -.-
 simulationRes = cell(1, numModels);
@@ -128,7 +130,7 @@ parfor jx = 1:numModels
 
     try
         % Simulate metabolite concentrations
-        [t, y] = ode15s(@(t,y) odeFunction(y,enzIC,metActiveConcRef,xconstICtemp,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits), [0,finalTime], xvarICtemp, opts);
+        [t, y] = ode15s(@(t,y) odeFunction(y,enzIC,metActiveConcRef,xconstICtemp,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits), timePoints, xvarICtemp, opts);
 
         simulationRes{jx}.t = t;
         simulationRes{jx}.conc = y;   

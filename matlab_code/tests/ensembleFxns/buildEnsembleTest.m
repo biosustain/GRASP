@@ -226,10 +226,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             ensemble = ensemble.ensemble;
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleExample'));
-            trueRes = trueRes.ensemble;
-            trueRes = rmfield(trueRes, 'rxnMetLinks');
-            trueRes = rmfield(trueRes,'freeVars');
-            ensemble = rmfield(ensemble,'freeVars');       
+            trueRes = trueRes.ensemble;      
             testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end

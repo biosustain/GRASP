@@ -89,20 +89,16 @@ def plot_ensemble(data_df: pd.DataFrame, quant_type: str, selected_data: list, x
         return
 
 
-def plot_model(data_df: pd.DataFrame, data_interp_df: pd.DataFrame, model_i: int, quant_type: str,
-               selected_data: list,  x_scale: str = 'linear', y_scale: str = 'linear', x_lim: tuple = None,
-               y_lim: tuple = None, fig_size: tuple = None, save_plot: bool = False, output_file: str = ''):
+def plot_model(data_df: pd.DataFrame, model_i: int, quant_type: str, selected_data: list,  x_scale: str = 'linear',
+               y_scale: str = 'linear', x_lim: tuple = None, y_lim: tuple = None, fig_size: tuple = None,
+               save_plot: bool = False, output_file: str = ''):
     """
     Given a pandas dataframe with metabolite concentrations or reaction fluxes, it plots the selected ones
     (specified in selected data) for the selected model.
-    The plots are made using altair.
-    The data plotted depends on which dataframes are given, data_df contains the pure simulation results, while the
-    data_interp_df contains the interpolated simulations. The latter is mandatory and is always plotted, while the
-    former is optional.
+    The plots are made using matplotlib.
 
     Args:
         data_df: dataframe with metabolite concentrations or reaction fluxes.
-        data_interp_df: dataframe with interpolated metabolite concentrations or reactions fluxes.
         model_i: number of the model to plot.
         quant_type: the column name for the concentrations or fluxes to be plotted.
         selected_data: a list of metabolite or reaction names whose concentrations or fluxes will be plotted.
@@ -127,22 +123,20 @@ def plot_model(data_df: pd.DataFrame, data_interp_df: pd.DataFrame, model_i: int
         if selected_data is None:
             selected_data = data_df[data_type].unique()
 
-        data_interp_df = data_interp_df[
-            (data_interp_df['model'] == model_i) & (data_interp_df[data_type].isin(selected_data))]
+        data_interp_df = data_df[
+            (data_df['model'] == model_i) & (data_df[data_type].isin(selected_data))]
 
         for i, name in enumerate(selected_data):
             data_temp = data_interp_df[data_interp_df[data_type] == name]
             ax.plot(data_temp['time_point'].values, data_temp[quant_type].values, color=COLOR_LIST[i % 12],
                     label=name, marker='o')
 
-        if data_df is not None:
+        data_df = data_df[(data_df['model'] == model_i) & (data_df[data_type].isin(selected_data))]
 
-            data_df = data_df[(data_df['model'] == model_i) & (data_df[data_type].isin(selected_data))]
-
-            for i, name in enumerate(selected_data):
-                data_temp = data_df[data_df[data_type] == name]
-                ax.plot(data_temp['time_point'].values, data_temp[quant_type].values,
-                        color=COLOR_LIST[i % 12], label=name)
+        for i, name in enumerate(selected_data):
+            data_temp = data_df[data_df[data_type] == name]
+            ax.plot(data_temp['time_point'].values, data_temp[quant_type].values,
+                    color=COLOR_LIST[i % 12], label=name)
 
         if x_lim:
             ax.set_xlim(x_lim)

@@ -35,21 +35,17 @@ class TestImportSimulationData(unittest.TestCase):
         file_in = os.path.join(raw_data_dir, f'simulation_{simulation_name}.mat')
         mat = scipy.io.loadmat(file_in, squeeze_me=False)
 
-        self.conc, self.conc_interp, self.flux, self.flux_interp = gather_sim_data(mat, self.met_names, self.rxn_names,
-                                                                                   n_models,
-                                                                                   self.time_points, save_concs=True,
-                                                                                   save_fluxes=True,
-                                                                                   ref_conc_dic=ref_conc_dic)
+        self.conc, self.flux = gather_sim_data(mat, self.met_names, self.rxn_names, n_models, ref_conc_dic=ref_conc_dic)
 
     def test_get_non_converging_models(self):
         n_models = 5
-        non_converging_models = get_non_converging_models(self.conc_interp, n_models, self.met_names,
+        non_converging_models = get_non_converging_models(self.conc, n_models, self.met_names,
                                                           rel_tol=5 * 10 ** -3)
 
-        self.assertEqual(non_converging_models, [])
+        self.assertEqual(non_converging_models, [2])
 
     def test_remove_models(self):
-        conc_interp, flux_interp = remove_models(self.conc_interp, self.flux, [2, 3])
+        conc_interp, flux_interp = remove_models(self.conc, self.flux, [2, 3])
 
         models_left_conc = list(conc_interp['model'].unique())
         models_left_flux = list(flux_interp['model'].unique())
@@ -61,6 +57,6 @@ class TestImportSimulationData(unittest.TestCase):
     def test_check_for_negative_concentrations(self, mock_stdout):
         true_res = ('All concentrations are above the treshold -1e-08 :)\n')
 
-        check_for_negative_concentrations(self.conc_interp, scaled=False, threshold=-10 ** -8)
+        check_for_negative_concentrations(self.conc, scaled=False, threshold=-10 ** -8)
 
         self.assertEqual(true_res, mock_stdout.getvalue())

@@ -79,7 +79,7 @@ classdef simulateEnsembleTest < matlab.unittest.TestCase
             numCores = 2;
             
             simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC, metsAbsOrRel, interruptTime, numModels, numCores);
-                       
+
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSimulateEnsembleAbs'));
             trueRes = trueRes.simulationRes;
                    

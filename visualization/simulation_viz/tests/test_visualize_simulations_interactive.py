@@ -35,19 +35,14 @@ class TestVisualizeSimulationsInteractive(unittest.TestCase):
         file_in = os.path.join(raw_data_dir, f'simulation_{simulation_name}.mat')
         mat = scipy.io.loadmat(file_in, squeeze_me=False)
 
-        self.conc, self.conc_interp, self.flux, self.flux_interp = gather_sim_data(mat, self.met_names, self.rxn_names,
-                                                                                   n_models,
-                                                                                   self.time_points, save_concs=True,
-                                                                                   save_fluxes=True,
-                                                                                   ref_conc_dic=ref_conc_dic)
+        self.conc, self.flux = gather_sim_data(mat, self.met_names, self.rxn_names, n_models,
+                                               ref_conc_dic=ref_conc_dic)
 
         quant_type = 'conc_rel'
-        self.conc_interp_quantiles = get_time_series_quantiles(self.conc_interp, self.time_points, quant_type,
-                                                               self.met_names)
+        self.conc_interp_quantiles = get_time_series_quantiles(self.conc, quant_type, self.met_names)
 
         quant_type = 'flux_abs'
-        self.flux_interp_quantiles = get_time_series_quantiles(self.flux_interp, self.time_points, quant_type,
-                                                               self.rxn_names)
+        self.flux_interp_quantiles = get_time_series_quantiles(self.flux, quant_type,  self.rxn_names)
 
     def test_plot_ensemble_interactive_conc_rel(self):
         plot_ensemble_interactive(self.conc_interp_quantiles, quant_type='conc_rel', selected_data=self.met_names,
@@ -66,41 +61,22 @@ class TestVisualizeSimulationsInteractive(unittest.TestCase):
                                   x_scale='linear', y_scale='linear', x_lim=None, y_lim=None)
 
     def test_plot_model_interactive_conc_rel(self):
-        plot_model_interactive(self.conc, self.conc_interp, model_i=2, quant_type='conc_rel',
+        plot_model_interactive(self.conc, model_i=2, quant_type='conc_rel',
                                selected_data=self.met_names, x_scale='linear',
                                y_scale='linear', x_lim=None, y_lim=None)
 
     def test_plot_model_interactive_conc_abs(self):
-        plot_model_interactive(self.conc, self.conc_interp, model_i=2, quant_type='conc_abs',
+        plot_model_interactive(self.conc, model_i=2, quant_type='conc_abs',
                                selected_data=self.met_names, x_scale='linear',
                                y_scale='linear', x_lim=None, y_lim=None)
 
     def test_plot_model_interactive_flux_rel(self):
-        plot_model_interactive(self.flux, self.flux_interp, model_i=2, quant_type='flux_rel',
+        plot_model_interactive(self.flux, model_i=2, quant_type='flux_rel',
                                selected_data=self.rxn_names, x_scale='linear',
                                y_scale='linear', x_lim=None, y_lim=None)
 
     def test_plot_model_interactive_flux_abs(self):
-        plot_model_interactive(self.flux, self.flux_interp, model_i=2, quant_type='flux_abs',
+        plot_model_interactive(self.flux, model_i=2, quant_type='flux_abs',
                                selected_data=self.rxn_names, x_scale='linear',
                                y_scale='linear', x_lim=None, y_lim=None)
 
-    def test_plot_model_interactive_conc_interp_only_rel(self):
-        plot_model_interactive(None, self.conc_interp, model_i=2, quant_type='conc_rel',
-                               selected_data=self.met_names, x_scale='linear',
-                               y_scale='linear', x_lim=None, y_lim=None)
-
-    def test_plot_model_interactive_conc_interp_only_abs(self):
-        plot_model_interactive(None, self.conc_interp, model_i=2, quant_type='conc_abs',
-                               selected_data=self.met_names, x_scale='linear',
-                               y_scale='linear', x_lim=None, y_lim=None)
-
-    def test_plot_model_interactive_flux_interp_only_rel(self):
-        plot_model_interactive(None, self.flux_interp, model_i=2, quant_type='fluxrel',
-                               selected_data=self.rxn_names, x_scale='linear',
-                               y_scale='linear', x_lim=None, y_lim=None)
-
-    def test_plot_model_interactive_flux_interp_only_abs(self):
-        plot_model_interactive(None, self.flux_interp, model_i=2, quant_type='flux_abs',
-                               selected_data=self.rxn_names, x_scale='linear',
-                               y_scale='linear', x_lim=None, y_lim=None)
