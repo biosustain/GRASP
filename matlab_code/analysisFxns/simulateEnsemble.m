@@ -6,9 +6,8 @@ function simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC
 % relative or absolute concentrations (mol/L) by setting *metsAbsOrRel* to
 % 'rel' or 'abs', respectively.
 %
-% If metabolite concentrations are given as absolute concentrations, the
-% flux values returned will also be absolute values, otherwise they'll be
-% relative values (to the reference flux).
+% Metabolite concentrations are always returned as relative values while
+% reaction fluxes are always returned as absolute values.
 %
 % If the simulation of a given model takes longer than the specified 
 % *interrupTime*, then it is interrupted and no simulation results are  
@@ -39,8 +38,8 @@ function simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC
 %    simulationRes (struct):  simulation results
 %
 %               * t (*cell*)      : time points in each model simulation
-%               * conc (*cell*)   : concentrations for each time point and model simulation
-%               * flux (*cell*)   : fluxes for each time point and model simulation
+%               * conc (*cell*)   : relative concentrations for each time point and model simulation
+%               * flux (*cell*)   : absolute fluxes for each time point and model simulation
 %
 % .. Authors:
 %       - Marta Matos       2019 original code
@@ -97,6 +96,8 @@ else
     error(['You need a model function to be used for the model ode simulations. It should be named as ', strcat(func2str(kineticFxn), '_ode')]);
 end
 
+timePoints = logspace(-10, log10(finalTime), 100);
+
 xvarICabs = xvarIC;  % dirty trick to make parfor work -.-
 xconstICabs = xconstIC;  % dirty trick to make parfor work -.-
 simulationRes = cell(1, numModels);
@@ -129,15 +130,11 @@ parfor jx = 1:numModels
 
     try
         % Simulate metabolite concentrations
-        [t, y] = ode15s(@(t,y) odeFunction(y,enzIC,metActiveConcRef,xconstICtemp,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits), [0,finalTime], xvarICtemp, opts);
+        [t, y] = ode15s(@(t,y) odeFunction(y,enzIC,metActiveConcRef,xconstICtemp,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits), timePoints, xvarICtemp, opts);
 
         simulationRes{jx}.t = t;
         simulationRes{jx}.conc = y;   
         simulationRes{jx}.flux = calculateFluxes(t,y,enzIC,kineticFxn,xconstICtemp,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits);   
-        
-        if strcmp(metsAbsOrRel, 'rel')
-            simulationRes{jx}.flux = simulationRes{jx}.flux ./ ensemble.fluxRef';
-        end
         
     catch ME
         if strcmp(ME.identifier,'interuptFun:Interupt')
