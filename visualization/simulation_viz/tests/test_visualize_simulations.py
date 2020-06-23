@@ -3,8 +3,8 @@ import unittest
 
 import scipy.io
 
-from simulation_viz.simulation_viz.import_simulation_data import gather_sim_data, get_met_rxn_names, \
-    get_time_series_quantiles, import_ref_conc
+from simulation_viz.simulation_viz.import_simulation_data import gather_conc_data, gather_flux_data,\
+    get_met_rxn_names, aggregate_time_series, import_ref_conc, import_ref_flux
 from simulation_viz.simulation_viz.visualize_simulations import plot_ensemble, plot_model
 
 
@@ -28,19 +28,22 @@ class TestVisualizeSimulations(unittest.TestCase):
         mat = scipy.io.loadmat(file_in, squeeze_me=False)
 
         ref_conc_dic = import_ref_conc(mat, n_models)
+        ref_flux_dic = import_ref_flux(mat)
 
         simulation_name = f'{model_name}'
         file_in = os.path.join(raw_data_dir, f'simulation_{simulation_name}.mat')
         mat = scipy.io.loadmat(file_in, squeeze_me=False)
 
-        self.conc, self.flux = gather_sim_data(mat, self.met_names, self.rxn_names, n_models,
-                                               ref_conc_dic=ref_conc_dic)
+        self.conc_abs = gather_conc_data(mat, self.met_names, n_models, 'conc_abs', ref_conc_dic=ref_conc_dic)
+        self.conc_rel = gather_conc_data(mat, self.met_names, n_models, 'conc_rel', ref_conc_dic=ref_conc_dic)
+        self.flux_abs = gather_flux_data(mat, self.rxn_names, n_models, 'flux_abs', ref_flux_dic=ref_flux_dic)
+        self.flux_rel = gather_flux_data(mat, self.rxn_names, n_models, 'flux_rel', ref_flux_dic=ref_flux_dic)
 
         data_type = 'conc_rel'
-        self.conc_interp_quantiles = get_time_series_quantiles(self.conc, data_type, self.met_names)
+        self.conc_interp_quantiles = aggregate_time_series(self.conc_rel, data_type, self.met_names)
 
         data_type = 'flux_abs'
-        self.flux_interp_quantiles = get_time_series_quantiles(self.flux, data_type, self.rxn_names)
+        self.flux_interp_quantiles = aggregate_time_series(self.flux_abs, data_type, self.rxn_names)
 
     def test_plot_ensemble_conc_1row_rel(self):
         output_file = os.path.join(self.this_dir, 'test_files', 'plot_ensemble_conc_viz_rel.png')
@@ -129,7 +132,7 @@ class TestVisualizeSimulations(unittest.TestCase):
     def test_plot_model_conc_rel(self):
         output_file = os.path.join(self.this_dir, 'test_files', 'plot_model_conc_viz_rel.png')
 
-        plot_model(self.conc, model_i=1, quant_type='conc_rel', selected_data=self.met_names,
+        plot_model(self.conc_rel, model_i=1, quant_type='conc_rel', selected_data=self.met_names,
                    x_scale='linear', y_scale='linear', x_lim=None, y_lim=None, fig_size=None,
                    save_plot=True, output_file=output_file)
         self.assertTrue(os.path.isfile(output_file))
@@ -138,7 +141,7 @@ class TestVisualizeSimulations(unittest.TestCase):
     def test_plot_model_conc_abs(self):
         output_file = os.path.join(self.this_dir, 'test_files', 'plot_model_conc_viz_abs.png')
 
-        plot_model(self.conc, model_i=1, quant_type='conc_abs', selected_data=self.met_names,
+        plot_model(self.conc_abs, model_i=1, quant_type='conc_abs', selected_data=self.met_names,
                    x_scale='linear', y_scale='linear', x_lim=None, y_lim=None, fig_size=None,
                    save_plot=True, output_file=output_file)
         self.assertTrue(os.path.isfile(output_file))
@@ -147,7 +150,7 @@ class TestVisualizeSimulations(unittest.TestCase):
     def test_plot_model_flux_rel(self):
         output_file = os.path.join(self.this_dir, 'test_files', 'plot_model_flux_viz_rel.png')
 
-        plot_model(self.flux, model_i=1, quant_type='flux_rel', selected_data=self.rxn_names,
+        plot_model(self.flux_rel, model_i=1, quant_type='flux_rel', selected_data=self.rxn_names,
                    x_scale='linear', y_scale='linear', x_lim=None, y_lim=None, fig_size=None,
                    save_plot=True, output_file=output_file)
 
@@ -157,7 +160,7 @@ class TestVisualizeSimulations(unittest.TestCase):
     def test_plot_model_flux_abs(self):
         output_file = os.path.join(self.this_dir, 'test_files', 'plot_model_flux_viz_abs.png')
 
-        plot_model(self.flux, model_i=1, quant_type='flux_abs', selected_data=self.rxn_names,
+        plot_model(self.flux_abs, model_i=1, quant_type='flux_abs', selected_data=self.rxn_names,
                    x_scale='linear', y_scale='linear', x_lim=None, y_lim=None, fig_size=None,
                    save_plot=True, output_file=output_file)
 
