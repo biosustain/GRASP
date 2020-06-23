@@ -40,8 +40,6 @@ For now the documentation can be accessed by opening the file `index.html` in `G
 * scipy
 * altair (only for the jupyter notebook)
 * vega (dependency of altair)
-* [set_up_grasp_models](https://github.com/biosustain/set_up_grasp_models)
-
 
 ## Usage
 
