@@ -117,8 +117,8 @@ idxProt = fixVariableNames(idxProt, 'r');
 idxMets = fixVariableNames(idxMets, 'm');
 
 % Validate input dimensions
-if ~all(size(xData) == [10, 1]) || ~all(size(strData) == [14, 2])
-    error('Check the general sheet, it should have 14 rows and 2 columns.');
+if ~all(size(xData) == [10, 1]) || ~all(size(strData) == [15, 2])
+    error('Check the general sheet, it should have 15 rows and 2 columns.');
 end
 
 nMets = size(Sfull, 2);
@@ -191,6 +191,7 @@ end
 ensemble.description   = strData{2,2};
 ensemble.sampler       = strData{3,2};
 ensemble.solver        = strData{4,2};
+ensemble.LPSolver      = strData{5,2};
 ensemble.numConditions = xData(1);
 ensemble.numStruct     = xData(2);
 ensemble.numParticles  = xData(3);
@@ -221,6 +222,11 @@ ensemble.measuredMets  = find(xMets(:,4));
 ensemble.Sred          = ensemble.S(ensemble.metsBalanced,ensemble.activeRxns);   % Reduced stoichiometry for kinetic model simulation
 ensemble.Sred(sum(abs(ensemble.Sred),2)==0,:) = [];                               % Remove zero rows
 ensemble.Sred(sum(ensemble.Sred~=0,2)==1,:)   = [];                               % Remove unbalanced mets
+
+if ~strcmp(ensemble.LPSolver, 'gurobi') && ~strcmp(ensemble.LPSolver, 'linprog')
+    error('The linear programming solver must be specified and the value should be either "gurobi" or "linprog".');
+end
+
 disp('General information loaded.');
 
 % Define exchanges and corresponding std
@@ -320,7 +326,7 @@ if computeThermo
     xmax        = xMetsThermo(:,2);
     DGr_std_min = DGr_std(:,1);
     DGr_std_max = DGr_std(:,2);
-    [gibbsRanges, metRanges, fluxRanges] = computeGibbsFreeEnergyRanges(Sflux,ensemble.Sthermo,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,idxNotExch,ineqConstraints', ensemble.rxns);
+    [gibbsRanges, metRanges, fluxRanges] = computeGibbsFreeEnergyRanges(Sflux,ensemble.Sthermo,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,idxNotExch,ineqConstraints', ensemble.rxns, ensemble.LPSolver);
     ensemble.gibbsRanges               = -1e2*ones(size(Sfull,1),2);                            % Allocate memory for DGr calculations
     ensemble.gibbsRanges(idxNotExch,:) = gibbsRanges;                                           % Remove thermodynamic info from exchang rxns
     ensemble.metRanges = metRanges;

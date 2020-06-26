@@ -35,6 +35,7 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model1.mat'));
             trueRes = trueRes.ensemble;
+            trueRes.LPSolver = 'gurobi';
             
             testCase.verifyEqual(trueRes,ensemble);            
         end
@@ -46,6 +47,7 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model1_allosteric.mat'));
             trueRes = trueRes.ensemble;
+            trueRes.LPSolver = 'gurobi';
                         
             testCase.verifyEqual(trueRes,ensemble);            
         end
@@ -57,6 +59,7 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model1_random.mat'));
             trueRes = trueRes.ensemble;
+            trueRes.LPSolver = 'gurobi';
                         
             testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
@@ -68,8 +71,10 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             ensemble = loadEnsembleStructure(xlsxFile);
             
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model1_freeExchange.mat'));
+            trueRes = trueRes.ensemble;
+            trueRes.LPSolver = 'gurobi';
             
-            testCase.verifyEqual(trueRes.ensemble,ensemble);            
+            testCase.verifyEqual(trueRes,ensemble);            
         end
        
         function testLoadEnsembleStructureInputValidationGeneral(testCase)
@@ -191,6 +196,7 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model4.mat'));
             trueRes = trueRes.ensemble;
+            trueRes.LPSolver = 'gurobi';
                         
             testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
