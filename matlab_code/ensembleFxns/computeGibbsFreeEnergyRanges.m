@@ -1,4 +1,4 @@
-function [DGr_rng,xrng,vrng] = computeGibbsFreeEnergyRanges(Sflux,Sthermo,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,idxNotExch,ineqConstraints, rxnNames)
+function [DGr_rng,xrng,vrng] = computeGibbsFreeEnergyRanges(Sflux,Sthermo,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,idxNotExch,ineqConstraints, rxnNames, solver)
 % Applies Thermodynamic Flux Balance Analysis (TMFA) to find
 % thermodynamically feasible ranges for reactions fluxes, metabolite
 % concentrations, and reactions Gibbs energies.
@@ -22,6 +22,7 @@ function [DGr_rng,xrng,vrng] = computeGibbsFreeEnergyRanges(Sflux,Sthermo,DGr_st
 %    idxNotExch (int vector):     IDs for reactions that are not exchange reactions
 %    ineqConstraints (double):	  inequality constraints
 %    rxnNames (char vector):      reaction names
+%    solver (char vector):        specifies which solver to use to solve the MILP: 'gurobi' or 'linprog'
 %
 % OUTPUT:
 %    DGr_rng (double matrix):	range of feasible Gibbs energies
@@ -47,53 +48,82 @@ Vblock    = eye(nflux);
 Vblock    = Vblock(idxNotExch,:);
 
 % Define problem matrix
-model.A  = sparse([Sflux,zeros(size(Sflux,1),2*n+m);...           % Sflux*v = 0
-    zeros(n,nflux),eye(n),-RT*Sthermo',zeros(n);...               % DGr - RT*Sthermo*ln(x) <= DGr_std_max
-    zeros(n,nflux),-eye(n),RT*Sthermo',zeros(n);...               % -DGr + RT*Sthermo*ln(x) <= -DGr_std_min
-    -Vblock,zeros(n,n+m),K*eye(n);...                             % -v + K*e <= K
-    Vblock,zeros(n,n+m),-K*eye(n);...                             % v - K*e <= 0
-    zeros(n,nflux),eye(n),zeros(n,m),K*eye(n);...                 % DGr + K*e <= K - delta
-    zeros(n,nflux),-eye(n),zeros(n,m),-K*eye(n)]);                % -DGr - K*e <= -delta
+model.Aeq = sparse([Sflux,zeros(size(Sflux,1),2*n+m)]);                   % Sflux*v = 0
+
+model.A  = sparse([zeros(n,nflux),eye(n),-RT*Sthermo',zeros(n);...        % DGr - RT*Sthermo*ln(x) <= DGr_std_max
+                   zeros(n,nflux),-eye(n),RT*Sthermo',zeros(n);...        % -DGr + RT*Sthermo*ln(x) <= -DGr_std_min
+                   -Vblock,zeros(n,n+m),K*eye(n);...                      % -v + K*e <= K
+                   Vblock,zeros(n,n+m),-K*eye(n);...                      % v - K*e <= 0
+                   zeros(n,nflux),eye(n),zeros(n,m),K*eye(n);...          % DGr + K*e <= K - delta
+                   zeros(n,nflux),-eye(n),zeros(n,m),-K*eye(n)]);         % -DGr - K*e <= -delta
+         
 if ~isempty(ineqConstraints)
     p = size(ineqConstraints,1);
     model.A = sparse([model.A;zeros(p,nflux+n),ineqConstraints(:,1:end-1),zeros(p,n)]);
 end
 
 % Objective function
-model.obj = zeros(size(model.A,2),1);
+model.f = zeros(size(model.A,2),1);
 
 % Constraints sense and rhs
-model.rhs = [zeros(size(Sflux,1),1);DGr_std_max;-DGr_std_min;K*ones(n,1);zeros(n,1);(K-delta)*ones(n,1);-delta*ones(n,1)];
+model.beq = zeros(size(Sflux,1),1);
+model.b = [DGr_std_max;-DGr_std_min;K*ones(n,1);zeros(n,1);(K-delta)*ones(n,1);-delta*ones(n,1)];
+
 if ~isempty(ineqConstraints)
-    model.rhs = [model.rhs;ineqConstraints(:,end)];
+    model.b = [model.b;ineqConstraints(:,end)];
 end
-model.sense = blanks(numel(model.rhs));
-for ix = 1:numel(model.rhs)
-    if (ix<=size(Sflux,1))
-        model.sense(ix) = '=';
-    else
-        model.sense(ix) = '<';
+
+if strcmp(solver, 'gurobi')
+    
+    gurobiModel.A = [model.Aeq; model.A];
+    gurobiModel.rhs = [model.beq; model.b];
+    gurobiModel.lb = model.lb;
+    gurobiModel.ub = model.ub;
+    gurobiModel.obj = model.f;
+    
+    gurobiModel.sense = blanks(numel(gurobiModel.rhs));
+    for ix = 1:numel(gurobiModel.rhs)
+        if (ix<=size(Sflux,1))
+            gurobiModel.sense(ix) = '=';
+        else
+            gurobiModel.sense(ix) = '<';
+        end
     end
-end
 
-% Variable type definition
-model.vtype = blanks(numel(model.obj));
-for ix = 1:numel(model.obj)
-    if (ix<=nflux+n+m)
-        model.vtype(ix) = 'C';
-    else
-        model.vtype(ix) = 'B';
+    % Variable type definition
+    gurobiModel.vtype = blanks(numel(gurobiModel.obj));
+    for ix = 1:numel(gurobiModel.obj)
+        if (ix<=nflux+n+m)
+            gurobiModel.vtype(ix) = 'C';
+        else
+            gurobiModel.vtype(ix) = 'B';
+        end
     end
+    
+    % Define optimization parameters
+    params.outputflag = 0;
+    params.OptimalityTol = 1e-6;
+    params.FeasibilityTol = 1e-6;
+    params.IntFeasTol = 1e-5;
+
+
+    % Check the feasibility of the problem
+    sol = gurobi(gurobiModel,params);
+
+elseif strcmp(solver, 'linprog')
+    options =  optimoptions(@intlinprog, 'LPOptimalityTolerance', 1e-6, 'ConstraintTolerance', 1e-6, ...
+                            'IntegerTolerance', 1e-6, 'Display', 'off');
+                        
+    model.intcon = [(nflux+n+m+1):numel(model.f)];
+    
+    [x,fval] = intlinprog(model.f, model.intcon, model.A, model.b, model.Aeq, model.beq, model.lb, model.ub, options);
 end
 
-% Define optimization parameters
-params.outputflag = 0;
 
-% Check the feasibility of the problem
-sol = gurobi(model,params);
-
-if strcmp(sol.status,'INFEASIBLE')
-    [row_list, dg_list] = findProblematicReactions(model,params, DGr_std_min, DGr_std_max, K, delta, n, Sflux, ineqConstraints, rxnNames);
+if (strcmp(solver, 'gurobi')&& strcmp(sol.status,'INFEASIBLE')) || ...
+        (strcmp(solver, 'linprog') && isempty(fval))
+    
+    [row_list, dg_list] = findProblematicReactions(gurobiModel, params, model, options, DGr_std_min, DGr_std_max, K, delta, n, Sflux, ineqConstraints, rxnNames, solver);
    
     if isempty(row_list)
         error('The TMFA problem is infeasible but it is not due to incompatible fluxes and Gibbs energies. It is likely to be an issue with fluxes. Make sure v - K <= 0, where K = 1e5.');
@@ -107,22 +137,45 @@ vrng    = zeros(nflux,2);
 DGr_rng = zeros(n,2);
 xrng    = zeros(m,2);
 for ix = 1:nflux+n+m
-    model.obj(ix)    = 1;
-    model.modelsense = 'min';
-    solmin           = gurobi(model,params);
-    if ~strcmp(solmin.status,'OPTIMAL')
-          error(strcat('Check your metabolite concentration ranges in thermoMets. In particular for minimum values set to 0 change them to a low number like 10^15.'));
+    
+    if strcmp(solver, 'gurobi')
+
+        gurobiModel.obj(ix)    = 1;
+        gurobiModel.modelsense = 'min';
+        solmin           = gurobi(gurobiModel,params);
+        if ~strcmp(solmin.status,'OPTIMAL')
+              error(strcat('Check your metabolite concentration ranges in thermoMets. In particular for minimum values set to 0 change them to a low number like 10^15.'));
+        end
+        
+        gurobiModel.modelsense = 'max';
+        solmax           = gurobi(gurobiModel,params);
+        
+        gurobiModel.obj(ix) = 0;
+        solmax           = solmax.objval;
+        solmin           = solmin.objval;
+    
+    elseif strcmp(solver, 'linprog')
+        
+        model.f(ix)            = 1;
+        [x, solmin]      = intlinprog(model.f, model.intcon, model.A, model.b, model.Aeq, model.beq, model.lb, model.ub, options);
+        if  isempty(solmin)
+              error(strcat('Check your metabolite concentration ranges in thermoMets. In particular for minimum values set to 0 change them to a low number like 10^15.'));
+        end
+        
+        model.f(ix)           = -1;
+        [x, solmax]     = intlinprog(model.f, model.intcon, model.A, model.b, model.Aeq, model.beq, model.lb, model.ub, options);
+        solmax          = -solmax;
+        model.f(ix)           = 0;
+        
     end
-    model.modelsense = 'max';
-    solmax           = gurobi(model,params);
     if (ix<=nflux)
-        vrng(ix,:)   = [solmin.objval,solmax.objval];             % [umol or mmol /gdcw/h]
+        vrng(ix,:)          = [solmin,solmax];      % [flux units as give in measRates sheet]
     elseif (ix<=nflux+n)
-        DGr_rng(ix-nflux,:) = [solmin.objval,solmax.objval];      % [kJ/mol]
+        DGr_rng(ix-nflux,:) = [solmin,solmax];      % [kJ/mol]
     else
-        xrng(ix-nflux-n,:)  = [solmin.objval,solmax.objval];      % exp([M])
+        xrng(ix-nflux-n,:)  = [solmin,solmax];      % exp([M])
     end
-    model.obj(ix) = 0;
+    
 end
 xmax = max(xrng(:));  % robust calculation of exp(log(x))
 xrng = xrng - xmax;

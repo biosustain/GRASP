@@ -1,11 +1,50 @@
 function [ensemble, models] = sampleGibbsReactionEnergies(ensemble, models, strucIdx)
 % Function used to sample Gibbs energies for each reaction.
 %
-% A = G0 + RT S' ln(x)
+% The Gibbs energies for each reaction are calculated as a function of
+% the standard Gibbs energies and metabolite concentrations.
+% 
+% Standard Gibbs energies and metabolite concentrations are found by 
+% sampling their values in a thermodynamically consistent way.
+% Initial boundaries for each variable and for the reaction Gibbs energy 
+% are previously calculated by using TMFA.
 %
-% variables: G0, X=ln(x)
+% However, since the values of standard Gibbs energies and metabolites 
+% are not independent of each other, we sample one variable at a time
+% within the  boundaries previously calculated. However, after sampling 
+% each variable, the boundaries for the remaining variables change, so  
+% before sampling a variable its boundaries are updated by solving a linear 
+% program to find the minimum and maximum possible values of that variable.
+%   
+% The constraints for the linear program are the following:
 %
-% The method is going to change, so no need to write a good description
+% .. math::
+%
+%       \Delta G_{min} \leq \Delta G <= \Delta G_{max}
+%                      
+% which is equivalent to:
+%
+% .. math::
+%
+%       \Delta G_{min} <= \Delta G^0 + RT S' ln(x) <= \Delta G_{max}
+% 
+% where S is the stoichiometric matrix, R is the gas constant, T is 
+% temperature, x are metabolite concentrations, and G^0 are standard Gibbs
+% energies. The metabolite concentrations and standard Gibbs energies are
+% the variables to be sampled and are bounded:
+%
+% .. math::
+%
+%       \Delta G^0_{min} <= \Delta G^0 <= \Delta G^0_{max} 
+%
+%       x_{min} <= x <= x_{max}
+%
+% After calculating the the new bounds for a given variable, its lower and
+% upper bounds are set to the sampled value and the linear program is
+% updated. This procedure is repeated for each variable.
+%
+%
+% Both Gurobi and linprog can be used to solv ethe linear programs.
 %
 %
 % USAGE:
@@ -38,42 +77,60 @@ if isfield(ensemble,'G0Ranges') == 1
     % Sample standard Gibbs energies
     G0Factor = mvnrnd(zeros(nRxns, 1),eye(nRxns))';
     G0Factor = exp(G0Factor)./(1 + exp(G0Factor));
+    
+    A = sparse([-eye(nRxns), -RT*ensemble.Sthermo';...
+                eye(nRxns), RT*ensemble.Sthermo']);
 
+    b = [-ensemble.gibbsRanges((ensemble.thermoActive),1);... 
+         ensemble.gibbsRanges((ensemble.thermoActive),2)];
 
-    % Set up gurobi model
-    gurobiModel.A = sparse([eye(nRxns), RT*ensemble.Sthermo';...
-                            eye(nRxns), RT*ensemble.Sthermo']);
-
-    sense = zeros(1,nRxns*2);
-    sense(1:nRxns) = '>';
-    sense((nRxns + 1):nRxns*2) = '<';
-    gurobiModel.sense = char(sense);
-
-
-    gurobiModel.rhs = [ensemble.gibbsRanges((ensemble.thermoActive),1);... 
-                       ensemble.gibbsRanges((ensemble.thermoActive),2)];
-
-
+    f = zeros(nRxns+nMets,1);
+    
     lb = [ensemble.G0Ranges(ensemble.thermoActive,1); log(ensemble.metRanges(:,1))];
     ub = [ensemble.G0Ranges(ensemble.thermoActive,2); log(ensemble.metRanges(:,2))];
-    gurobiModel.lb = lb;
-    gurobiModel.ub = ub;
+       
+    
+    % Set up LP model for gurobi if this is the chosen solver.
+    if strcmp(ensemble.LPSolver, 'gurobi')        
+        gurobiModel.A = A;
 
-    gurobiModel.vtype = 'C';
-    gurobiModel.obj = zeros(nRxns+nMets,1);
+        sense = zeros(1,nRxns*2);
+        sense(1:nRxns) = '<';
+        sense((nRxns + 1):nRxns*2) = '<';
+        gurobiModel.sense = char(sense);
+
+        gurobiModel.rhs = b;
+                       
+        gurobiModel.lb = lb;
+        gurobiModel.ub = ub;
+
+        gurobiModel.vtype = 'C';
+        gurobiModel.obj = f; 
+    end
 
     varList = 1:nMets+nRxns;
 
     % Sample standard Gibbs energies
     offset = 0;
     rxnList = randperm(nRxns);
-    [lb, ub, varList] = sampleVariables(gurobiModel, lb, ub, varList, rxnList, G0Factor, offset);
+    
+    if strcmp(ensemble.LPSolver, 'gurobi')
+        [lb, ub, varList] = sampleVariablesGurobi(gurobiModel, lb, ub, varList, rxnList, G0Factor, offset);
+    elseif strcmp(ensemble.LPSolver, 'linprog')
+        [lb, ub, varList] = sampleVariablesLinprog(f, A, b, lb, ub, varList, rxnList, G0Factor, offset);
+    end    
 
     % Sample measured metabolites
     if numel(ensemble.measuredMets) > 0
         offset = nRxns;
         metList = ensemble.measuredMets(randperm(numel(ensemble.measuredMets)));   
-        [lb, ub, varList] = sampleVariables(gurobiModel, lb, ub, varList, metList, metsFactor, offset);
+
+        if strcmp(ensemble.LPSolver, 'gurobi')
+            [lb, ub, varList] = sampleVariablesGurobi(gurobiModel, lb, ub, varList, metList, metsFactor, offset);
+        elseif strcmp(ensemble.LPSolver, 'linprog')
+            [lb, ub, varList] = sampleVariablesLinprog(f, A, b, lb, ub, varList, metList, metsFactor, offset);
+        end
+
     end
 
     % Sample not measured metabolites
@@ -82,7 +139,13 @@ if isfield(ensemble,'G0Ranges') == 1
         allMets = 1:nMets;
         notMeasMets = allMets(~ismember(allMets, ensemble.measuredMets));
         metList = notMeasMets(randperm(numel(notMeasMets)));    
-        [lb, ub, varList] = sampleVariables(gurobiModel, lb, ub, varList, metList, metsFactor, offset);
+
+        if strcmp(ensemble.LPSolver, 'gurobi')
+            [lb, ub, varList] = sampleVariablesGurobi(gurobiModel, lb, ub, varList, metList, metsFactor, offset);
+        elseif strcmp(ensemble.LPSolver, 'linprog')
+            [lb, ub, varList] = sampleVariablesLinprog(f, A, b, lb, ub, varList, metList, metsFactor, offset);
+        end
+
     end
 
     assert(max(abs(ub-lb)) < 10^-5, 'dG values are not fully determined');
@@ -124,7 +187,7 @@ end
 end
 
 
-function [lb, ub, varList] = sampleVariables(gurobiModel, lb, ub, varList, varSubList, varFactor, offset)
+function [lb, ub, varList] = sampleVariablesGurobi(gurobiModel, lb, ub, varList, varSubList, varFactor, offset)
 %
 % Get new bounds for each variable to be sampled, by minimizing and
 % maximizing its value and then sample a value within those bounds.
@@ -134,6 +197,8 @@ function [lb, ub, varList] = sampleVariables(gurobiModel, lb, ub, varList, varSu
 gurobiModel.lb = lb;
 gurobiModel.ub = ub;
 params.outputflag = 0;
+params.OptimalityTol = 1e-6;
+params.FeasibilityTol = 1e-6;
 
 nVars = numel(varSubList);
 counter = 1;
@@ -148,7 +213,11 @@ while max(abs(ub - lb)) > 10^-5 && counter <= nVars
     solmin           = gurobi(gurobiModel,params);
     gurobiModel.modelsense = 'max';
     solmax           = gurobi(gurobiModel,params);
-
+    
+    if strcmp(solmin.status, 'INFEASIBLE') || strcmp(solmax.status, 'INFEASIBLE')
+        error('The linear program is infeasible. Something went wrong with sampling Gibbs energies.');
+    end
+    
     % Sample value within the new bounds
     varValue = varFactor(varI).*solmax.objval + (1-varFactor(varI)).*solmin.objval;
 
@@ -168,4 +237,50 @@ while max(abs(ub - lb)) > 10^-5 && counter <= nVars
 
 end
 
+end
+
+
+function [lb, ub, varList] = sampleVariablesLinprog(f, A, b, lb, ub, varList, varSubList, varFactor, offset)
+%
+% Get new bounds for each variable to be sampled, by minimizing and
+% maximizing its value and then sample a value within those bounds.
+% At the end update the LP's lower and upper bounds.%
+%
+
+nVars = numel(varSubList);
+counter = 1;
+
+options =  optimoptions(@linprog, 'OptimalityTolerance', 1e-6, 'ConstraintTolerance', 1e-6, 'Display', 'off');
+
+while max(abs(ub - lb)) > 10^-5 && counter <= nVars
+    
+    varI = varSubList(counter);
+    
+    % Find new bounds for the variable
+    f(offset+varI)    = 1;
+    [x, minfval]      = linprog(f, A, b, [], [], lb, ub, options);
+    f(offset+varI)    = -1;
+    [x, maxfval]      = linprog(f, A, b, [], [], lb, ub, options);
+    maxfval = -maxfval; 
+    
+    if isempty(minfval) || isempty(maxfval)
+        error('The linear program is infeasible. Something went wrong with sampling Gibbs energies.');
+    end    
+    
+    % Sample value within the new bounds
+    varValue = varFactor(varI).*maxfval + (1-varFactor(varI)).*minfval;
+
+    % Update variable bounds
+    lb(offset+varI) = varValue;
+    ub(offset+varI) = varValue;
+
+    % Re-set objective function
+    f(offset+varI)= 0;            
+
+    % Remove variable from list of variables to be sampled.
+    varList(find(varList==(offset+varI))) = [];
+    
+    counter = counter + 1;
+
+end
 end

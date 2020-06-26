@@ -38,6 +38,7 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             ensemble = load(filepath);
             ensemble = ensemble.ensemble;
             ensemble.eigThreshold = 10^-5;
+            ensemble.LPSolver = 'gurobi';
                         
             [isModelValid,model,strucIdx,xopt,tolScore,simFluxes] = initialSampler(ensemble);
             
@@ -74,6 +75,7 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             ensemble = ensemble.ensemble;
             ensemble.eigThreshold = 10^-5;
             ensemble.freeVars{end+1} = 'r_r13';
+            ensemble.LPSolver = 'gurobi';
                         
             [isModelValid,model,strucIdx,xopt,tolScore,simFluxes] = initialSampler(ensemble);
            
@@ -105,6 +107,7 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             ensemble = loadEnsembleStructure(xlsxFile);
             ensemble = initializeEnsemble(ensemble,1,1);
             ensemble.eigThreshold = 10^-5;
+            ensemble.LPSolver = 'gurobi';
                         
             [isModelValid,model,strucIdx,xopt,tolScore,simFluxes] = initialSampler(ensemble);
                         
