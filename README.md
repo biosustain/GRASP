@@ -31,7 +31,8 @@ For now the documentation can be accessed by opening the file `index.html` in `G
 * Matlab's Optimization Toobox
 * Matlab's Bioinformatics Toolbox
 * Matlab's SimBiology Toolbox (to export models to SBML)
-* Gurobi
+
+If you don't want to use the Matlab solver to solve the linear programming problems, you can install Gurobi and just specify in the input file (`general` sheet) that you want to use gurobi instead of linprog.
 
 ### Python requirements (only for the jupyter notebooks in `visualization`, which are not really part of GRASP)
 
