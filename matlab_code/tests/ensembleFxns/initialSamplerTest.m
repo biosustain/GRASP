@@ -58,7 +58,7 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             testCase.verifyEqual(trueResTolScore,tolScore);
             testCase.verifyEqual(trueResSimFluxes,simFluxes);
             testCase.verifyThat(trueResModel, matlab.unittest.constraints.IsEqualTo(model, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-9)));
+                'Within', matlab.unittest.constraints.AbsoluteTolerance(1e-2) & matlab.unittest.constraints.RelativeTolerance(1e-9)));
             
         end
         
@@ -90,11 +90,12 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             trueResSimFluxes = 0;
            
             testCase.verifyEqual(trueResIsModelValid,isModelValid);
-            testCase.verifyEqual(trueResModel,model);
             testCase.verifyEqual(trueResStructIdx,strucIdx);
             testCase.verifyEqual(trueResXopt,xopt);
             testCase.verifyEqual(trueResTolScore,tolScore);
             testCase.verifyEqual(trueResSimFluxes,simFluxes);
+            testCase.verifyThat(trueResModel, matlab.unittest.constraints.IsEqualTo(model, ...
+                'Within', matlab.unittest.constraints.AbsoluteTolerance(1e-6) & matlab.unittest.constraints.RelativeTolerance(1e-12)));
             
         end
         

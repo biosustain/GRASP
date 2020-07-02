@@ -17,3 +17,5 @@ examples/*RBC*
 examples/*HMP*
 
 matlab_code/otherFxns
+
+pathdef.m

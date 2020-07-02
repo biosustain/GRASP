@@ -40,7 +40,7 @@ classdef controlAndResponseAnalysisTest < matlab.unittest.TestCase
             trueRes = trueRes.mcaResults;
                    
             testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(mcaResults, ...
-                'Within', matlab.unittest.constraints.AbsoluteTolerance(1e-10) & matlab.unittest.constraints.RelativeTolerance(1)));
+                'Within', matlab.unittest.constraints.AbsoluteTolerance(1e-10)));
         end
     end
 end
