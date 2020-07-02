@@ -36,8 +36,9 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model1.mat'));
             trueRes = trueRes.ensemble;
             trueRes.LPSolver = 'gurobi';
-            
-            testCase.verifyEqual(trueRes,ensemble);            
+             
+            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+                'Within', matlab.unittest.constraints.AbsoluteTolerance(1e-10) & matlab.unittest.constraints.RelativeTolerance(1)));
         end
         
         function testLoadEnsembleStructure1WithAllostery(testCase)
@@ -49,7 +50,8 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             trueRes = trueRes.ensemble;
             trueRes.LPSolver = 'gurobi';
                         
-            testCase.verifyEqual(trueRes,ensemble);            
+            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+                'Within', matlab.unittest.constraints.AbsoluteTolerance(1e-10) & matlab.unittest.constraints.RelativeTolerance(1)));
         end
         
         function testLoadEnsembleStructure1WithRandom(testCase)

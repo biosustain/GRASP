@@ -41,7 +41,6 @@ for rxnI=1:numel(ensemble.rxns)
     Kpos = {};
     Kneg = {};
     clearvars fluxEq freeEnz
-    disp(rxnI);
 
     rxnName = ensemble.rxns{rxnI};
     catalyticFxn = fullfile(reactionsFolder, [rxnName, '1Catalytic.m']);

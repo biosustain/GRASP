@@ -2,7 +2,7 @@
 <sbml xmlns="http://www.sbml.org/sbml/level2/version4" level="2" version="4">
   <annotation>
     <SimBiology xmlns="http://www.mathworks.com">
-      <Version Major="5" Minor="9" Point="0"/>
+      <Version Major="5" Minor="10" Point="0"/>
     </SimBiology>
   </annotation>
   <model id="toy_model1_no_promiscuous2" name="toy_model1_no_promiscuous2">
@@ -55,69 +55,69 @@
       <parameter id="k01_r_r1" name="k01_r_r1" value="34.4305337670409" constant="true"/>
       <parameter id="k02_r_r1" name="k02_r_r1" value="31.2897395673733" constant="true"/>
       <parameter id="k03_r_r1" name="k03_r_r1" value="18.0886180131719" constant="true"/>
-      <parameter id="k04_r_r1" name="k04_r_r1" value="96.7987340790249" constant="true"/>
+      <parameter id="k04_r_r1" name="k04_r_r1" value="96.798734079025" constant="true"/>
       <parameter id="k05_r_r1" name="k05_r_r1" value="104.335651797175" constant="true"/>
-      <parameter id="k06_r_r1" name="k06_r_r1" value="0.278700303537335" constant="true"/>
+      <parameter id="k06_r_r1" name="k06_r_r1" value="0.278700303537336" constant="true"/>
       <parameter id="k07_r_r1" name="k07_r_r1" value="24.913589406067" constant="true"/>
       <parameter id="k08_r_r1" name="k08_r_r1" value="1.26371310547137" constant="true"/>
       <parameter id="k09_r_r1" name="k09_r_r1" value="225.156904923405" constant="true"/>
       <parameter id="k10_r_r1" name="k10_r_r1" value="11.2351903913336" constant="true"/>
       <parameter id="k11_r_r1" name="k11_r_r1" value="26.5044648603061" constant="true"/>
-      <parameter id="k12_r_r1" name="k12_r_r1" value="4.290233994681e-05" constant="true"/>
-      <parameter id="k01_r_r2" name="k01_r_r2" value="37.1687450501705" constant="true"/>
-      <parameter id="k02_r_r2" name="k02_r_r2" value="97.8963892235058" constant="true"/>
-      <parameter id="k03_r_r2" name="k03_r_r2" value="555.233609011867" constant="true"/>
-      <parameter id="k04_r_r2" name="k04_r_r2" value="0.556768338867269" constant="true"/>
-      <parameter id="k05_r_r2" name="k05_r_r2" value="10.2552171531165" constant="true"/>
-      <parameter id="k06_r_r2" name="k06_r_r2" value="2.86227861565851" constant="true"/>
-      <parameter id="k01_r_r3" name="k01_r_r3" value="245.416850527054" constant="true"/>
-      <parameter id="k02_r_r3" name="k02_r_r3" value="28.7774446261296" constant="true"/>
+      <parameter id="k12_r_r1" name="k12_r_r1" value="4.29023399468101e-05" constant="true"/>
+      <parameter id="k01_r_r2" name="k01_r_r2" value="37.1687450501707" constant="true"/>
+      <parameter id="k02_r_r2" name="k02_r_r2" value="97.8963892235062" constant="true"/>
+      <parameter id="k03_r_r2" name="k03_r_r2" value="555.233609011869" constant="true"/>
+      <parameter id="k04_r_r2" name="k04_r_r2" value="0.556768338867271" constant="true"/>
+      <parameter id="k05_r_r2" name="k05_r_r2" value="10.2552171531166" constant="true"/>
+      <parameter id="k06_r_r2" name="k06_r_r2" value="2.86227861565852" constant="true"/>
+      <parameter id="k01_r_r3" name="k01_r_r3" value="245.416850527053" constant="true"/>
+      <parameter id="k02_r_r3" name="k02_r_r3" value="28.7774446261295" constant="true"/>
       <parameter id="k03_r_r3" name="k03_r_r3" value="16.8628642236262" constant="true"/>
       <parameter id="k04_r_r3" name="k04_r_r3" value="20.9086827153866" constant="true"/>
       <parameter id="k05_r_r3" name="k05_r_r3" value="246.364409046665" constant="true"/>
       <parameter id="k06_r_r3" name="k06_r_r3" value="35.800521177114" constant="true"/>
       <parameter id="k07_r_r3" name="k07_r_r3" value="500.04452383512" constant="true"/>
-      <parameter id="k08_r_r3" name="k08_r_r3" value="0.85343958971625" constant="true"/>
+      <parameter id="k08_r_r3" name="k08_r_r3" value="0.853439589716249" constant="true"/>
       <parameter id="k09_r_r3" name="k09_r_r3" value="24.1844760764074" constant="true"/>
       <parameter id="k10_r_r3" name="k10_r_r3" value="6.40624589236965" constant="true"/>
       <parameter id="k11_r_r3" name="k11_r_r3" value="108.523666374062" constant="true"/>
       <parameter id="k12_r_r3" name="k12_r_r3" value="26.7815737160698" constant="true"/>
       <parameter id="k01_r_r4" name="k01_r_r4" value="245.354516885064" constant="true"/>
       <parameter id="k02_r_r4" name="k02_r_r4" value="235.532121237437" constant="true"/>
-      <parameter id="k03_r_r4" name="k03_r_r4" value="93.3796699334959" constant="true"/>
+      <parameter id="k03_r_r4" name="k03_r_r4" value="93.379669933496" constant="true"/>
       <parameter id="k04_r_r4" name="k04_r_r4" value="46.4794025296731" constant="true"/>
-      <parameter id="k05_r_r4" name="k05_r_r4" value="66.6803922620713" constant="true"/>
+      <parameter id="k05_r_r4" name="k05_r_r4" value="66.6803922620714" constant="true"/>
       <parameter id="k06_r_r4" name="k06_r_r4" value="2706.1325924796" constant="true"/>
       <parameter id="k07_r_r4" name="k07_r_r4" value="135.511648759402" constant="true"/>
       <parameter id="k08_r_r4" name="k08_r_r4" value="10606.5816329228" constant="true"/>
       <parameter id="k09_r_r4" name="k09_r_r4" value="204021.166525827" constant="true"/>
-      <parameter id="k10_r_r4" name="k10_r_r4" value="3182.6992185603" constant="true"/>
-      <parameter id="k11_r_r4" name="k11_r_r4" value="80.2390055063452" constant="true"/>
+      <parameter id="k10_r_r4" name="k10_r_r4" value="3182.69921856031" constant="true"/>
+      <parameter id="k11_r_r4" name="k11_r_r4" value="80.2390055063453" constant="true"/>
       <parameter id="k12_r_r4" name="k12_r_r4" value="53.4612995629241" constant="true"/>
       <parameter id="k13_r_r4" name="k13_r_r4" value="332.443762121" constant="true"/>
       <parameter id="k14_r_r4" name="k14_r_r4" value="591.099759216988" constant="true"/>
-      <parameter id="k15_r_r4" name="k15_r_r4" value="20.095643812664" constant="true"/>
+      <parameter id="k15_r_r4" name="k15_r_r4" value="20.0956438126641" constant="true"/>
       <parameter id="k16_r_r4" name="k16_r_r4" value="20.9381771617506" constant="true"/>
       <parameter id="k17_r_r4" name="k17_r_r4" value="269.756708529204" constant="true"/>
       <parameter id="k18_r_r4" name="k18_r_r4" value="105.322359472233" constant="true"/>
-      <parameter id="k01_r_r5" name="k01_r_r5" value="0.044155733627837" constant="true"/>
-      <parameter id="k02_r_r5" name="k02_r_r5" value="0.135711774144449" constant="true"/>
-      <parameter id="k03_r_r5" name="k03_r_r5" value="0.200628055924977" constant="true"/>
-      <parameter id="k04_r_r5" name="k04_r_r5" value="0.0441082893570752" constant="true"/>
-      <parameter id="k05_r_r5" name="k05_r_r5" value="0.195968916760434" constant="true"/>
-      <parameter id="k06_r_r5" name="k06_r_r5" value="0.386704196510876" constant="true"/>
-      <parameter id="k01_r_r6" name="k01_r_r6" value="3.97829930798542" constant="true"/>
-      <parameter id="k02_r_r6" name="k02_r_r6" value="5.24647213223525" constant="true"/>
-      <parameter id="k03_r_r6" name="k03_r_r6" value="6.01311837852291" constant="true"/>
-      <parameter id="k04_r_r6" name="k04_r_r6" value="7.44498146096287" constant="true"/>
-      <parameter id="k05_r_r6" name="k05_r_r6" value="0.0182496078497331" constant="true"/>
-      <parameter id="k06_r_r6" name="k06_r_r6" value="0.0353327764657068" constant="true"/>
-      <parameter id="k07_r_r6" name="k07_r_r6" value="4.1906422291567" constant="true"/>
-      <parameter id="k08_r_r6" name="k08_r_r6" value="5.18421126127374" constant="true"/>
-      <parameter id="k09_r_r6" name="k09_r_r6" value="3.72244316559575" constant="true"/>
-      <parameter id="k10_r_r6" name="k10_r_r6" value="0.775436425937862" constant="true"/>
-      <parameter id="k11_r_r6" name="k11_r_r6" value="0.5516096276122" constant="true"/>
-      <parameter id="k12_r_r6" name="k12_r_r6" value="1.34963752883259" constant="true"/>
+      <parameter id="k01_r_r5" name="k01_r_r5" value="0.0441557336277875" constant="true"/>
+      <parameter id="k02_r_r5" name="k02_r_r5" value="0.135711774144297" constant="true"/>
+      <parameter id="k03_r_r5" name="k03_r_r5" value="0.200628055924752" constant="true"/>
+      <parameter id="k04_r_r5" name="k04_r_r5" value="0.0441082893570257" constant="true"/>
+      <parameter id="k05_r_r5" name="k05_r_r5" value="0.195968916760214" constant="true"/>
+      <parameter id="k06_r_r5" name="k06_r_r5" value="0.386704196510443" constant="true"/>
+      <parameter id="k01_r_r6" name="k01_r_r6" value="3.97829930797015" constant="true"/>
+      <parameter id="k02_r_r6" name="k02_r_r6" value="5.24647213221511" constant="true"/>
+      <parameter id="k03_r_r6" name="k03_r_r6" value="6.01311837849989" constant="true"/>
+      <parameter id="k04_r_r6" name="k04_r_r6" value="7.44498146093436" constant="true"/>
+      <parameter id="k05_r_r6" name="k05_r_r6" value="0.0182496078496619" constant="true"/>
+      <parameter id="k06_r_r6" name="k06_r_r6" value="0.0353327764655689" constant="true"/>
+      <parameter id="k07_r_r6" name="k07_r_r6" value="4.19064222914052" constant="true"/>
+      <parameter id="k08_r_r6" name="k08_r_r6" value="5.18421126125373" constant="true"/>
+      <parameter id="k09_r_r6" name="k09_r_r6" value="3.72244316558133" constant="true"/>
+      <parameter id="k10_r_r6" name="k10_r_r6" value="0.775436425934858" constant="true"/>
+      <parameter id="k11_r_r6" name="k11_r_r6" value="0.551609627610071" constant="true"/>
+      <parameter id="k12_r_r6" name="k12_r_r6" value="1.34963752882738" constant="true"/>
       <parameter id="k01_r_r7" name="k01_r_r7" value="0.0016667782685433" constant="true"/>
       <parameter id="k02_r_r7" name="k02_r_r7" value="14.8315745500385" constant="true"/>
       <parameter id="k01_r_r8" name="k01_r_r8" value="2.11367742873673" constant="true"/>
@@ -125,8 +125,8 @@
       <parameter id="k01_r_r9" name="k01_r_r9" value="0.2923169497935" constant="true"/>
       <parameter id="k02_r_r9" name="k02_r_r9" value="0.00694781195608088" constant="true"/>
       <parameter id="k01_r_r10" name="k01_r_r10" value="0.0746872668962455" constant="true"/>
-      <parameter id="k02_r_r10" name="k02_r_r10" value="0.0168675030011576" constant="true"/>
-      <parameter id="k01_r_r11" name="k01_r_r11" value="0.00867428341145156" constant="true"/>
+      <parameter id="k02_r_r10" name="k02_r_r10" value="0.0168675030011575" constant="true"/>
+      <parameter id="k01_r_r11" name="k01_r_r11" value="0.00867428341145152" constant="true"/>
       <parameter id="k02_r_r11" name="k02_r_r11" value="0.0130683671780597" constant="true"/>
       <parameter id="k01_r_r12" name="k01_r_r12" value="7.9620900139568" constant="true"/>
       <parameter id="k02_r_r12" name="k02_r_r12" value="1.11343368139293" constant="true"/>

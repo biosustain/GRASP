@@ -17,7 +17,7 @@ classdef exportSBMLTest < matlab.unittest.TestCase
             seed = 1;
             rng(seed)
             
-            loadEnsembleStructure(fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_no_promiscuous2'))
+            loadEnsembleStructure(fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_no_promiscuous2'));
             ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_no_promiscuous2.mat'));
             ensemble = ensemble.ensemble;
             
@@ -30,8 +30,10 @@ classdef exportSBMLTest < matlab.unittest.TestCase
             
             filepath = (fullfile(testCase.currentPath{1}, 'testFiles', 'trueRes_toy_model1_no_promiscuous2_1.xml'));
             trueRes = fileread(filepath);
-                   
-            testCase.verifyEqual(trueRes, SBMLres);
+            
+            % Need to skip Simbiology version in the xml file, otherwise
+            % the test will fail for different versions.
+            testCase.verifyEqual(trueRes(250:end), SBMLres(250:end));
         end
        
         
@@ -40,7 +42,7 @@ classdef exportSBMLTest < matlab.unittest.TestCase
             seed = 1;
             rng(seed)
             
-            loadEnsembleStructure(fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_allosteric2'))
+            loadEnsembleStructure(fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_allosteric2'));
             ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_allosteric2.mat'));
             ensemble = ensemble.ensemble;
             
@@ -53,8 +55,10 @@ classdef exportSBMLTest < matlab.unittest.TestCase
             
             filepath = (fullfile(testCase.currentPath{1}, 'testFiles', 'trueRes_toy_model1_allosteric2_1.xml'));
             trueRes = fileread(filepath);
-                   
-            testCase.verifyEqual(trueRes, SBMLres);
+            
+            % Need to skip Simbiology version in the xml file, otherwise
+            % the test will fail for different versions.       
+            testCase.verifyEqual(trueRes(250:end), SBMLres(250:end));
         end
         
     end
