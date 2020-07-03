@@ -33,7 +33,9 @@ classdef exportSBMLTest < matlab.unittest.TestCase
             
             % Need to skip Simbiology version in the xml file, otherwise
             % the test will fail for different versions.
-            testCase.verifyEqual(trueRes(250:end), SBMLres(250:end));
+            indTrueRes = strfind(trueRes, '<model id=');
+            indRes = strfind(SBMLres, '<model id=');
+            testCase.verifyEqual(trueRes(indTrueRes:end), SBMLres(indRes:end));
         end
        
         
@@ -58,7 +60,9 @@ classdef exportSBMLTest < matlab.unittest.TestCase
             
             % Need to skip Simbiology version in the xml file, otherwise
             % the test will fail for different versions.       
-            testCase.verifyEqual(trueRes(250:end), SBMLres(250:end));
+            indTrueRes = strfind(trueRes, '<model id=');
+            indRes = strfind(SBMLres, '<model id=');
+            testCase.verifyEqual(trueRes(indTrueRes:end), SBMLres(indRes:end));
         end
         
     end
