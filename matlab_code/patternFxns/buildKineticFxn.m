@@ -1,4 +1,4 @@
-function [freeVars,metsActive] = buildKineticFxn(ensemble,kineticFxn,strucIdx)
+function freeVars = buildKineticFxn(ensemble,kineticFxn,strucIdx)
 % Builds kinetic model .m file that is used to actually run the model.
 %
 %
@@ -22,7 +22,7 @@ function [freeVars,metsActive] = buildKineticFxn(ensemble,kineticFxn,strucIdx)
 %       - Nicholas Cowie	2019 extended for isoenzymes [TODO: confirm this Nick please]
 
 % Define active species (mets/enzymes)
-metsActive = ensemble.metsSimulated(~ismember(ensemble.metsSimulated,ensemble.metsFixed));
+metsActive = ensemble.metsActive;
 enzActive  = ensemble.activeRxns;
 totalEvals = numel(metsActive) + numel(enzActive) + 1;
 freeVars   = [ensemble.mets(metsActive);ensemble.rxns(enzActive)];                             % return indexes of the free variables
@@ -150,7 +150,7 @@ for i = 1:numel(ensemble.activeRxns)
         else
             substrates  = (ensemble.mets(ensemble.S(:,ensemble.activeRxns(i))<0));
         end
-        substrates  = substrates(ismember(substrates,ensemble.mets(ensemble.metsSimulated)));         % Extract only active substrates
+        
         stoicCoeffsSub = abs(ensemble.S(ismember(ensemble.mets,substrates),ensemble.activeRxns(i)));
       
         % Extract and organize products
@@ -164,7 +164,7 @@ for i = 1:numel(ensemble.activeRxns)
         else
             products    = (ensemble.mets(ensemble.S(:,ensemble.activeRxns(i))>0));
         end
-        products    = products(ismember(products,ensemble.mets(ensemble.metsSimulated)));               % Extract only active products
+        
         stoicCoeffsProd = abs(ensemble.S(ismember(ensemble.mets,products),ensemble.activeRxns(i)));
 
         % Non-enzymatic reactions (diffusion)
@@ -181,14 +181,14 @@ for i = 1:numel(ensemble.activeRxns)
             subCoefList = [];
             for subI=1:numel(substrates)
                 subCoefList = [subCoefList, num2str(stoicCoeffsSub(subI)), '*ones(1,size(x,2));'];
-                subList      = [subList, substrates{subI}, ';'];
+                subList     = [subList, substrates{subI}, ';'];
             end
             
             prodList = [];
             prodCoefList = [];
             for prodI=1:numel(products)
                 prodCoefList = [prodCoefList, num2str(stoicCoeffsProd(prodI)), '*ones(1,size(x,2));'];
-                prodList      = [prodList, products{prodI}, ';'];
+                prodList     = [prodList, products{prodI}, ';'];
             end
             
             

@@ -216,12 +216,26 @@ ensemble.mets          = metsList(2:end,1);
 ensemble.metNames      = metsList(2:end,2);
 ensemble.rxnMets       = cell(length(ensemble.rxnNames),1);
 ensemble.metsBalanced  = find(xMets(:,1));
-ensemble.metsSimulated = find(xMets(:,2));
-ensemble.metsFixed     = find(xMets(:,3));
 ensemble.measuredMets  = find(xMets(:,4));
 ensemble.Sred          = ensemble.S(ensemble.metsBalanced,ensemble.activeRxns);   % Reduced stoichiometry for kinetic model simulation
 ensemble.Sred(sum(abs(ensemble.Sred),2)==0,:) = [];                               % Remove zero rows
 ensemble.Sred(sum(ensemble.Sred~=0,2)==1,:)   = [];                               % Remove unbalanced mets
+    
+
+metsAll = 1:numel(ensemble.mets);
+
+if ensemble.numConditions < 2
+    ensemble.metsFixed = find(~ismember(metsAll, ensemble.metsBalanced))';
+    ensemble.metsActive = ensemble.metsBalanced;
+else
+    metsDataMean = zeros(size(metsData,1), ensemble.numConditions);
+    for ix = 1:ensemble.numConditions
+        metsDataMean(:,ix) = metsData(:,3*ix-1);
+    end
+    ensemble.metsFixed = find(all(metsDataMean(:,1)'==1));
+    ensemble.metsActive = find(~ismember(metsAll, ensemble.metsFixed));
+end
+
 
 if ~strcmp(ensemble.LPSolver, 'gurobi') && ~strcmp(ensemble.LPSolver, 'linprog')
     error('The linear programming solver must be specified and the value should be either "gurobi" or "linprog".');
@@ -341,18 +355,20 @@ disp('Thermodynamic data computed and loaded.');
 %% 4. Load metabolomic data
 % Determine the kinetically active rxns
 idxMets = idxMets(2:end,1);               % Extract only the meaningful information
-ensemble.metsDataMin  = zeros(length(ensemble.metsSimulated),ensemble.numConditions);
+ensemble.metsDataMin  = zeros(length(ensemble.metsActive),ensemble.numConditions);
 ensemble.metsDataMax  = ensemble.metsDataMin;
 ensemble.metsDataMean = ensemble.metsDataMin;
+
 for ix = 1:ensemble.numConditions
     for jx = 1:size(idxMets,1)            % Extract information in the right order
-        index = strcmp(ensemble.mets(ensemble.metsSimulated),idxMets(jx));
+        index = strcmp(ensemble.mets(ensemble.metsActive),idxMets(jx));
         ensemble.metsDataMin(index,ix)  = metsData(jx,3*ix-2);
         ensemble.metsDataMean(index,ix) = metsData(jx,3*ix-1);
         ensemble.metsDataMax(index,ix)  = metsData(jx,3*ix);
     end
 end
-invalidMets                          = (ismember(ensemble.metsSimulated,ensemble.metsFixed));          % Keep only the information related to simulated mets not fixed
+
+invalidMets                          = (ismember(ensemble.metsActive,ensemble.metsFixed));          % Keep only the information related to simulated mets not fixed
 ensemble.metsDataMin(invalidMets,:)  = [];
 ensemble.metsDataMean(invalidMets,:) = [];
 ensemble.metsDataMax(invalidMets,:)  = [];
@@ -596,10 +612,9 @@ for jx = 1:ensemble.numStruct
     rmdir(tempReactionsFolder,'s');
 
     % Build kinetic fxn and find active species (do not build hess partern)
-    [freeVars,metsActive] = buildKineticFxn(ensemble,ensemble.kineticFxn{jx},jx);
+    freeVars = buildKineticFxn(ensemble,ensemble.kineticFxn{jx},jx);
     if (jx==1)                                                 % freeVars and freeMets are the same for all the structure
-        ensemble.freeVars    = freeVars;
-        ensemble.metsActive  = metsActive;
+        ensemble.freeVars = freeVars;
     end
     buildKineticFxn(ensemble,ensemble.kineticFxn{jx},jx);
     buildOdeFxn(ensemble,ensemble.kineticFxn{jx},jx);
