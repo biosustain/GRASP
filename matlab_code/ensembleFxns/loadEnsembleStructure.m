@@ -228,11 +228,12 @@ if ensemble.numConditions < 2
     ensemble.metsFixed = find(~ismember(metsAll, ensemble.metsBalanced))';
     ensemble.metsActive = ensemble.metsBalanced;
 else
-    metsDataMean = zeros(size(metsData,1), ensemble.numConditions);
+    metsDataMax = zeros(size(metsData,1), ensemble.numConditions);
     for ix = 1:ensemble.numConditions
-        metsDataMean(:,ix) = metsData(:,3*ix-1);
+        metsDataMax(:,ix) = metsData(:,3*ix);
     end
-    ensemble.metsFixed = find(all(metsDataMean(:,1)'==1));
+    [row, col] = find(metsDataMax == 1);
+    ensemble.metsFixed = unique(row);
     ensemble.metsActive = find(~ismember(metsAll, ensemble.metsFixed));
 end
 
