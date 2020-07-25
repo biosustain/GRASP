@@ -341,7 +341,7 @@ if computeThermo
     xmax        = xMetsThermo(:,2);
     DGr_std_min = DGr_std(:,1);
     DGr_std_max = DGr_std(:,2);
-    [gibbsRanges, metRanges, fluxRanges] = computeGibbsFreeEnergyRanges(Sflux,ensemble.Sthermo,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,idxNotExch,ineqConstraints', ensemble.rxns, ensemble.LPSolver);
+    [gibbsRanges, metRanges, fluxRanges] = computeGibbsFreeEnergyRanges(ensemble,Sflux,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,idxNotExch,ineqConstraints');
     ensemble.gibbsRanges               = -1e2*ones(size(Sfull,1),2);                            % Allocate memory for DGr calculations
     ensemble.gibbsRanges(idxNotExch,:) = gibbsRanges;                                           % Remove thermodynamic info from exchang rxns
     ensemble.metRanges = metRanges;
