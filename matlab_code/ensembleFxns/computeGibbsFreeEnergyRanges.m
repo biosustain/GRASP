@@ -1,4 +1,4 @@
-function [DGr_rng,xrng,vrng] = computeGibbsFreeEnergyRanges(ensemble,Sflux,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,idxNotExch,ineqConstraints)
+function [v_range,DGr_range,DGf_std_range,lnx_range,x0] = computeGibbsFreeEnergyRanges(ensemble,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,ineqConstraints)
 % Applies Thermodynamic Flux Balance Analysis (TMFA) to find
 % thermodynamically feasible ranges for reactions fluxes, metabolite
 % concentrations, and reactions Gibbs energies.
@@ -35,6 +35,8 @@ function [DGr_rng,xrng,vrng] = computeGibbsFreeEnergyRanges(ensemble,Sflux,DGr_s
 %                       findProblematicReactions
 
 Sthermo   = ensemble.Sthermo;
+Sflux     = ensemble.Sflux;
+
 DGf_std_max = pinv(Sthermo*Sthermo')*Sthermo*DGr_std_max;
 DGf_std_min = pinv(Sthermo*Sthermo')*Sthermo*DGr_std_min;
 for ix = 1:numel(DGf_std_max)
@@ -59,7 +61,7 @@ tol     = 1e-10;
 model.lb  = [vmin;-M*ones(n,1);DGf_std_min;log(xmin);zeros(n,1)];
 model.ub  = [vmax;M*ones(n,1);DGf_std_max;log(xmax);ones(n,1)];
 Vblock    = eye(nflux);
-Vblock    = Vblock(idxNotExch,:);
+Vblock    = Vblock(ensemble.idxNotExch,:);
 
 % Define problem matrix
 model.A  = sparse([Sflux,zeros(size(Sflux,1),2*n+2*m);...         % Sflux*v = 0
@@ -88,7 +90,6 @@ model.sense = blanks(numel(model.rhs));
 model.sense(1:size(Sflux,1)) = '=';
 model.sense(size(Sflux,1)+1:end) = '<';
 
-
 % Variable type definition
 model.vtype = blanks(numel(model.obj));
 model.vtype(1:nflux+n+2*m) = 'C';
@@ -102,15 +103,12 @@ params.MIPGapAbs     = 1e-12;
 params.OptimalityTol = 1e-9;
 
 % Check the feasibility of the problem
-gurobi_write(model, '/home/dx/Projects/GRASP/model_double_tol.lp');
 sol = gurobi(model,params);
 
 if strcmp(sol.status,'INFEASIBLE')
-    disp('Problem infeasible')
-    [metsList,metsBoundaryList,rxnsList,rxnsBoundaryList] = findProblematicRxnsMets(ensemble,Sflux,DGf_std_min,DGf_std_max,vmin,vmax,xmin,xmax,idxNotExch,ineqConstraints,K,RT,delta,M,tol);
-    error(strcat('The TMFA problem is infeasible. This can be a problem with the metabolite bounds ', strjoin(metsBoundaryList, ', ') ,' for metabolites ', strjoin(metsList, ', '), ' in thermoMets, or a problem with the reaction bounds ', strjoin(rxnsBoundaryList, ', '), ' for reactions ', strjoin(rxnsList, ', '), ' in thermoRxns.Verify that the standard Gibbs free energy and metabolite concentration values are valid/correct. Note that the problem can also be with the reaction fluxes. Bottom line, for each reaction, fluxes and Gibbs energies need to agree.'));
+    disp('TMFA problem is infeasible.')
+    findIssuesWithTMFA(ensemble,model,DGf_std_min,DGf_std_max,vmin,vmax,xmin,xmax,ineqConstraints,K,RT,delta,M,tol);
 end
-
 
 
 % Run improved TMFA
@@ -118,19 +116,24 @@ v_range   = zeros(nflux,2);
 DGr_range = zeros(n,2);
 lnx_range = zeros(m,2);
 DGf_std_range = zeros(m,2);
+
 xprev_min = zeros(nflux+n+2*m,1);
 xprev_max = zeros(nflux+n+2*m,1);
+
 for ix = 1:nflux+n+2*m
     model.obj(ix)    = 1;
+    
     model.modelsense = 'min';
     solmin = gurobi(model,params);
     if ~strcmp(solmin.status,'OPTIMAL')
         error(strcat('Check your metabolite concentration ranges in thermoMets. In particular for minimum values set to 0 change them to a low number like 10^15.'));
     end
     xprev_min(:,ix) = solmin.x(1:nflux+n+2*m);                            % save previous min solution for later
+    
     model.modelsense = 'max';
     solmax = gurobi(model,params);
     xprev_max(:,ix) = solmax.x(1:nflux+n+2*m);                            % save previous max solution for later
+    
     if (ix<=nflux)
         v_range(ix,:) = [solmin.objval,solmax.objval];                    % [umol or mmol/gdcw/h]
     elseif (ix<=nflux+n)
@@ -143,22 +146,36 @@ for ix = 1:nflux+n+2*m
     model.obj(ix) = 0;
 end
 
+
 % Return initial point
 x0 = mean([xprev_min,xprev_max],2);
 
+Nint = null(Sthermo,'r');
+loopCondition = Nint' * x0(nflux+1:nflux+n);
+
 % Check that the initial point is feasible
-Acheck = full(model.A(1:(size(Sflux,1)+n),1:(nflux+n+2*m)));              % Generate checking matrix
+Acheck = full(model.A(1:(size(Sflux,1)+2*n),1:(nflux+n+2*m)));              % Generate checking matrix
 if all(abs(Acheck*x0)<1e-6)
-    disp('The initial point is feasible and valid for starting the sampler.');
-    if all(sign(xprev_min(1:nflux))&sign(xprev_max(1:nflux)))
+    if ~isempty(Nint)
+        if max(abs(loopCondition)) <= 1e-6
+            disp('The initial point obtained from TMFA is feasible and valid for starting the sampler.');
+        else
+            error('The initial point obtained from TMFA is not thermodynamically feasible.')
+        end
+    else
+        disp('The initial point obtained from TMFA is feasible and valid for starting the sampler.');
+    end            
+
+    if all(sign(xprev_min(1:nflux))&sign(xprev_max(1:nflux)))    
         disp('Flux directions are consistent.');
-        flagOK = true;
     else 
-        flagOK = false;
+        error('The flux directions are not consistent. Please make sure that both the lower and upper bound of the flux ranges (fluxMean - 2*fluxStd and fluxMean + 2*fluxStd, respectively) are either positive or negative.');
     end
+    
 else
-    flagOK = false;
-    return;
+    error('The initial point obtained from TMFA is not thermodynamically feasible.')
+end
+
 end
 
 %-----------------------------------------------------------
