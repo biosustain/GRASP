@@ -27,7 +27,7 @@ DDG_min  = -25;															   % min. Gibbs free energy difference of conforma
 bind_max = 50;															   % max. fraction of Keff/Eff
 bind_min = .1;															   % min. fraction of Keff/Eff
 
-ensemble.reactionFluxAllosteric =  ensemble.fluxRef;
+ensemble.reactionFluxAllosteric =  models(1).refFlux;
 
 for activRxnIdx = 1:numel(ensemble.kinActRxns)
     if ~strcmp(ensemble.rxnMechanisms{strucIdx}{activRxnIdx},'diffusion')&&...
@@ -35,7 +35,7 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
 		~strcmp(ensemble.rxnMechanisms{strucIdx}{activRxnIdx},'fixedExchange')&&...
         ~strcmp(ensemble.rxnMechanisms{strucIdx}{activRxnIdx},'massAction')
     
-        reactionFlux = ensemble.fluxRef(ensemble.kinActRxns(activRxnIdx));
+        reactionFlux =  models(1).refFlux(ensemble.kinActRxns(activRxnIdx));
         if ensemble.allosteric{strucIdx}(ensemble.kinActRxns(activRxnIdx))
 
             randomEnzymesR = models(1).rxnParams(activRxnIdx).enzymeAbundances';

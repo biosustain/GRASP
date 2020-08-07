@@ -51,7 +51,7 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
         promiscRxnsList = ensemble.promiscuity{strucIdx}{ensemble.kinActRxns(activRxnIdx)};
         revMatrix = ensemble.revMatrix{ensemble.kinActRxns(activRxnIdx),strucIdx};
         alphaReversibility = ensemble.populations(1).probParams(strucIdx).rxnParams(activRxnIdx).alphaReversibilities;
-        fluxSign = sign(ensemble.fluxRef(ensemble.kinActRxns(activRxnIdx)));
+        fluxSign = sign(models(1).refFlux(ensemble.kinActRxns(activRxnIdx)));
 
         % If the reaction is promiscuous
         if size(promiscRxnsList) > 0 
@@ -105,11 +105,11 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
                     models(1).rxnParams(activRxnIdx).reversibilities = randomRev';                                           % Save transpose
 
                     % Calculate reversibilities
-                    gibbsTemp = ensemble.gibbsTemp(promiscRxnsList)';
+                    gibbsTemp = models(1).gibbsTemp(promiscRxnsList)';
                     reverTemp = zeros(size(revMatrix'));
                     
                     for rxnI = 1:size(revMatrix, 1)
-                        fluxSign = sign(ensemble.fluxRef(ensemble.kinActRxns(promiscRxnsList(rxnI))));
+                        fluxSign = sign(models(1).refFlux(ensemble.kinActRxns(promiscRxnsList(rxnI))));
                         isModelValid = checkModelConsistency(gibbsTemp(rxnI), fluxSign, ensemble.rxns{ensemble.kinActRxns(activRxnIdx),strucIdx});
                         if ~isModelValid
                             return
@@ -141,7 +141,7 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
             randomRev(randomRev==1) = 0;
             
             % Calculate reversibilities
-            gibbsTemp = ensemble.gibbsTemp(ensemble.kinActRxns(activRxnIdx));
+            gibbsTemp = models(1).gibbsTemp(ensemble.kinActRxns(activRxnIdx));
             isModelValid = checkModelConsistency(gibbsTemp, fluxSign, ensemble.rxns{ensemble.kinActRxns(activRxnIdx),strucIdx});
             if ~isModelValid
                 return
@@ -168,7 +168,7 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
             models(1).rxnParams(activRxnIdx).reversibilities = randomRev';                                           % Save transpose
             
             % Calculate reversibilities
-            gibbsTemp = ensemble.gibbsTemp(ensemble.kinActRxns(activRxnIdx));
+            gibbsTemp = models(1).gibbsTemp(ensemble.kinActRxns(activRxnIdx));
             isModelValid = checkModelConsistency(gibbsTemp, fluxSign, ensemble.rxns{ensemble.kinActRxns(activRxnIdx),strucIdx});
             if ~isModelValid
                 return

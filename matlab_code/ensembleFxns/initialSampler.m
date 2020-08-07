@@ -1,4 +1,4 @@
-function [isModelValid,models,strucIdx,xopt,tolScore,simulatedFlux] = initialSampler(ensemble)
+function [isModelValid,models,strucIdx,xopt,tolScore,simulatedFlux] = initialSampler(ensemble, modelI)
 % Samples initial ensemble of kinetic models.
 %
 % [TODO: Pedro write a bit more about the ABC part?]
@@ -127,20 +127,22 @@ while true
         for xi = 1:size(ensemble.uniqueIso,1)
             group = find(strcmp(ensemble.isoenzymes,ensemble.uniqueIso{xi}));
             splitFactor = zeros(size(group,1),1);
-            totalFlux = sum(ensemble.fluxRef(group));
+            totalFlux = sum(ensemble.fluxPoints(group, modelI));
             for yi = 1:size(splitFactor,1)
                 splitFactor(yi) = randg();
             end
             splitFactor = splitFactor./sum(splitFactor);
-            ensemble.fluxRef(group) = splitFactor.*totalFlux;
+            ensemble.fluxPoints(group, modelI) = splitFactor.*totalFlux;
         end
     end
   
-    models.refFlux =  ensemble.fluxRef; 
-    assert(all(abs(ensemble.Sred * ensemble.fluxRef) <10^-8), "Your model doesn\'t seem to be at steady-state. Sred * fluxRef != 0");
+    models(1).refFlux =  ensemble.fluxPoints(:, modelI); 
+    assert(all(abs(ensemble.Sred * models.refFlux) <10^-8), "Your model doesn\'t seem to be at steady-state. Sred * fluxRef != 0");
 
     % Determine gibbs free energy of reaction
-    [ensemble, models] = sampleGibbsReactionEnergies(ensemble, models, strucIdx);
+    %[ensemble, models] = sampleGibbsReactionEnergies(ensemble, models, strucIdx);
+    models(1).gibbsTemp = ensemble.gibbsEnergies(:, modelI);
+    models(1).metConcRef = ensemble.metConcRef(:, modelI); 
 
     % Sample Reversibilities
     [ensemble, models, isModelValid] = sampleGeneralReversibilities(ensemble, models, RT, strucIdx);
@@ -164,15 +166,15 @@ while true
         % Case 1: Diffusion and Exchanges
         if strcmp(ensemble.rxnMechanisms{strucIdx}{activRxnIdx},'diffusion')||...
                 strcmp(ensemble.rxnMechanisms{strucIdx}{activRxnIdx},'freeExchange')
-            models(1).rxnParams(ensemble.kinActRxns(activRxnIdx)).kineticParams = ensemble.fluxRef(ensemble.kinActRxns(activRxnIdx));
+            models(1).rxnParams(ensemble.kinActRxns(activRxnIdx)).kineticParams =  models(1).refFlux(ensemble.kinActRxns(activRxnIdx));
 
-            % Case 2: Enzymatic reactions
+        % Case 2: Enzymatic reactions
         else
 
             % Check whether the reaction is mass action
             if strcmp(ensemble.rxnMechanisms{strucIdx}{activRxnIdx},'massAction')
-                reactionFlux = ensemble.fluxRef(ensemble.kinActRxns(activRxnIdx));
-                gibbsTemp =  ensemble.gibbsTemp(ensemble.kinActRxns(activRxnIdx));
+                reactionFlux = models(1).refFlux(ensemble.kinActRxns(activRxnIdx));
+                gibbsTemp = models(1).gibbsTemp(ensemble.kinActRxns(activRxnIdx));
                 models(1).rxnParams(activRxnIdx).kineticParams = [1,exp(gibbsTemp/RT)]*reactionFlux/(1-exp(gibbsTemp/RT));
                 continue;
             end
@@ -233,7 +235,7 @@ while true
     testFlux   = feval(kineticFxn,ones(size(ensemble.freeVars,1),1),xconst,models,ensemble.fixedExch(:,1),ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},0);
 
     % If the model is consistent continue
-    if any(abs(testFlux-ensemble.fluxRef)>1e-6) || any(isnan(testFlux))
+    if any(abs(testFlux-models(1).refFlux)>1e-6) || any(isnan(testFlux))
         isModelValid = false;
         disp(['There are consistency problems during the reaction sampling. Model ID: ',num2str(strucIdx)]);
         return

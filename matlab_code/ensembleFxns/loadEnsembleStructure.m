@@ -275,12 +275,12 @@ if ~isempty(ineqConstraints)
 end
 
 %% 2. Define matrix for flux calculation and compute fluxes based on measured Rates
-Sflux                 = ensemble.S(ensemble.metsBalanced,:);
+ensemble.Sflux                 = ensemble.S(ensemble.metsBalanced,:);
 ensemble.expFluxes    = zeros(length(ensemble.activeRxns),ensemble.numConditions);
 ensemble.expFluxesStd = ensemble.expFluxes;
 idxMeas               = idxMeas(2:end,1);                  % Extract only the meaningful information
 for ix = 1:ensemble.numConditions+1
-    xMean = zeros(size(Sflux,2),1);
+    xMean = zeros(size(ensemble.Sflux,2),1);
     xStd  = xMean;
     for jx = 1:size(idxMeas)                               % Extract information in the right order
         index        = strcmp(ensemble.rxns,idxMeas(jx));
@@ -291,9 +291,9 @@ for ix = 1:ensemble.numConditions+1
     % Compute fluxes robustly (add split ratios if any)
     if robustFluxes
         if (~isempty(ensemble.splitRatios) && any(ensemble.splitRatios(ix,:)))
-            [vMean,vStd] = computeRobustFluxes([Sflux;ensemble.splitRatios(ix,:)],xMean,xStd);
+            [vMean,vStd] = computeRobustFluxes([ensemble.Sflux;ensemble.splitRatios(ix,:)],xMean,xStd);
         else
-            [vMean,vStd] = computeRobustFluxes(Sflux,xMean,xStd);
+            [vMean,vStd] = computeRobustFluxes(ensemble.Sflux,xMean,xStd);
         end
     else
         vMean = xMean;
@@ -331,26 +331,25 @@ assert(all(abs(ensemble.Sred * ensemble.fluxRef) <10^-8), ...
 
 
 %% 3. Perform thermodynamic calculations
-if computeThermo
-    idxNotExch  = find(~ismember(1:numel(ensemble.rxns),ensemble.exchRxns));
-    ensemble.Sthermo     = ensemble.S(:,idxNotExch);
-    DGr_std     = xDG_std(idxNotExch,:);                                                        % Use only reactions with known thermodynamics
-    vmin        = ensemble.fluxRef; % - 2*ensemble.fluxRefStd;
-    vmax        = ensemble.fluxRef; % + 2*ensemble.fluxRefStd;
-    xmin        = xMetsThermo(:,1);
-    xmax        = xMetsThermo(:,2);
-    DGr_std_min = DGr_std(:,1);
-    DGr_std_max = DGr_std(:,2);
-    [gibbsRanges, metRanges, fluxRanges] = computeGibbsFreeEnergyRanges(ensemble,Sflux,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,idxNotExch,ineqConstraints');
-    ensemble.gibbsRanges               = -1e2*ones(size(Sfull,1),2);                            % Allocate memory for DGr calculations
-    ensemble.gibbsRanges(idxNotExch,:) = gibbsRanges;                                           % Remove thermodynamic info from exchang rxns
-    ensemble.metRanges = metRanges;
-    ensemble.G0Ranges = -1e2*ones(size(Sfull,1),2);      
-    ensemble.G0Ranges(idxNotExch,:) = DGr_std;
-    
-else
-    ensemble.gibbsRanges = xDG_std;
-end
+ensemble.idxNotExch   = find(~ismember(1:numel(ensemble.rxns),ensemble.exchRxns));
+ensemble.Sthermo     = ensemble.S(:,ensemble.idxNotExch);
+DGr_std      = xDG_std(ensemble.idxNotExch,:);                                                        % Use only reactions with known thermodynamics
+vmin         = ensemble.fluxRef - 2*ensemble.fluxRefStd;
+vmax         = ensemble.fluxRef + 2*ensemble.fluxRefStd;
+xmin         = xMetsThermo(:,1);
+xmax         = xMetsThermo(:,2);
+DGr_std_min  = DGr_std(:,1);
+DGr_std_max  = DGr_std(:,2);
+
+[fluxRanges,DGrRange,DGfStdRange,lnMetRanges,initialTMFAPoint] = computeGibbsFreeEnergyRanges(ensemble,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,ineqConstraints);
+
+ensemble.fluxRanges = fluxRanges;
+ensemble.gibbsRanges = -1e2*ones(size(ensemble.S',1),2);                          % Allocate memory for DGr calculations
+ensemble.gibbsRanges(ensemble.idxNotExch,:) = DGrRange;                                           % Remove thermodynamic info from exchang rxns
+ensemble.DGfStdRange = DGfStdRange;
+ensemble.lnMetRanges = lnMetRanges;
+ensemble.initialTMFAPoint = initialTMFAPoint;
+
 disp('Thermodynamic data computed and loaded.');
 
 %% 4. Load metabolomic data
