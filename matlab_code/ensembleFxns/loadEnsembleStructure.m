@@ -453,7 +453,7 @@ for jx = 1:ensemble.numStruct
                 ensemble.protDataMax(index,lx)  = protData(kx,3*lx);
             end
         end
-        rxnWithNoProteinData = find(all(ensemble.protDataMax'==1)&all(ensemble.protDataMin'==1)&all(ensemble.protDataMean'==1));        % These rxns are a different kind of 'inactive rxns' thus they are still considered in the active field
+        rxnWithNoProteinData = []; %find(all(ensemble.protDataMax'==1)&all(ensemble.protDataMin'==1)&all(ensemble.protDataMean'==1));        % These rxns are a different kind of 'inactive rxns' thus they are still considered in the active field
         ensemble.protDataMin(rxnWithNoProteinData,:)  = [];                                                                             % remove protein entries for rxns without protein information
         ensemble.protDataMax(rxnWithNoProteinData,:)  = [];
         ensemble.protDataMean(rxnWithNoProteinData,:) = [];
