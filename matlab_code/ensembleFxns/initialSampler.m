@@ -80,9 +80,9 @@ else
 end
 Aeq    = [];                                                               % equality constraints matrix
 beq    = [];                                                               % rhs equality constraints
-x0     = [ensemble.metsDataMean;ensemble.protDataMean; ones(numel(ensemble.ensemble.kinInactRxns), ensemble.numConditions)];                    % initial guess
-lb     = [ensemble.metsDataMin;ensemble.protDataMin; ones(numel(ensemble.ensemble.kinInactRxns), ensemble.numConditions)];                      % lower bounds on free vars
-ub     = [ensemble.metsDataMax;ensemble.protDataMax; ones(numel(ensemble.ensemble.kinInactRxns), ensemble.numConditions)];                      % upper bounds on free vars
+x0     = [ensemble.metsDataMean;ensemble.protDataMean; ones(numel(ensemble.kinInactRxns), ensemble.numConditions)];                    % initial guess
+lb     = [ensemble.metsDataMin;ensemble.protDataMin; ones(numel(ensemble.kinInactRxns), ensemble.numConditions)];                      % lower bounds on free vars
+ub     = [ensemble.metsDataMax;ensemble.protDataMax; ones(numel(ensemble.kinInactRxns), ensemble.numConditions)];                      % upper bounds on free vars
 nlcons = [];                                                               % nonlinear constraints (not used)
 
 %% Execute Rejection-ABC
