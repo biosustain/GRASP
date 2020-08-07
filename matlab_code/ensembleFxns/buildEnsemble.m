@@ -151,13 +151,18 @@ ensemble.eigThreshold = eigThreshold;
 ensemble = initializeEnsemble(ensemble,popIdx,1);
 addKineticFxnsToPath(ensemble);
 
+
+% 3. Sample fluxes and Gibbs energies
+priorType = 'normal';
+ensemble = sampleFluxesAndGibbsFreeEnergies(ensemble,maxNumberOfSamples,priorType);
+
+
 % Create output folder if it doesn't exist yet
 [filepath,~,~] = fileparts(outputFile);
 if ~exist(filepath)
     mkdir(filepath);
 end
 
-% Check whether the job is ran in parallel
 disp('Running initial sampler.');
 
 % Setup folder with temp files
@@ -174,135 +179,76 @@ strucIdx = zeros(ensemble.replenishedParticles(popIdx),1);
 xopt{ensemble.replenishedParticles(popIdx),1}      = [];
 simFluxes{ensemble.replenishedParticles(popIdx),1} = [];
 
-% Figure out the sampling mode
-if ~strcmpi(ensemble.sampler,'ORACLE')
-    
-    % Initiate progress report for rejection sampling
-    progress = zeros(5,1);
-    save progress.txt -ascii progress;
-    if ensemble.parallel
-        
-        sampleCount = 0;
-        nValidModels = 0;
-        
-        while nValidModels < ensemble.numParticles
-            
-            if sampleCount == 0                                             % if no models have been sampled yet, sample ensemble.numParticles models
-                nSamples = ensemble.numParticles * 1.3;
-            else                                                            % else check how many more should be sampled based on the percentage of valid models
-                nSamples = 1 / (nValidModels / sampleCount)*(sampleCount - nValidModels);
-                nSamples = round(nSamples);
-                
-                if nSamples > maxNumberOfSamples - sampleCount
-                    nSamples = maxNumberOfSamples - sampleCount;
-                end
-            end
-            
-            parpool(ensemble.numCores);
-            parfor ix = (sampleCount+1):(sampleCount+nSamples)
-                [validModelList(ix),models(ix),strucIdx(ix),xopt{ix},tolScore(ix),simFluxes{ix}] = initialSampler(ensemble);
-            end
-            delete(gcp);
-            
-            sampleCount = sampleCount + nSamples;           
-            nValidModels = size(models(validModelList), 2);
-            
-            if nValidModels == 0
-                break
-            end
-        
-        end
-        
-        if nValidModels > 0
-            models = models(validModelList);
-            strucIdx = strucIdx(validModelList);
-            xopt = xopt{validModelList};
-            tolScore = tolScore(validModelList);
-            simFluxes = simFluxes{validModelList};
-        end
-        
-    else
-        sampleCount = 1;
-        ix = 1;
-        
-        while ix <= ensemble.numParticles && sampleCount <= maxNumberOfSamples
-            
-            [isModelValid,model,strucIdxTemp,xoptTemp,tolScoreTemp,simFluxesTemp] = initialSampler(ensemble);
-            
-            if isModelValid
-                models(ix) = model;
-                strucIdx(ix) = strucIdxTemp;
-                xopt{ix} = xoptTemp;
-                tolScore(ix) = tolScoreTemp;
-                simFluxes{ix} = simFluxesTemp;
-                
-                ix = ix + 1;
-            end
-            
-            sampleCount = sampleCount + 1;
-        end
-        
-        nValidModels = ix - 1;
-        sampleCount = sampleCount -1;
-      
-    end
-    
-    disp([newline, newline, '*** Out of ',num2str(sampleCount), ' models, ', num2str(nValidModels), ' were valid ***', newline, newline]);
-    
-% In the ORACLE mode we are only interested in the models
-else
 
-    if ensemble.parallel
-        sampleCount = 0;
-        nValidModels = 0;
-        
-        while nValidModels < ensemble.numParticles
-            
-            if sampleCount == 0                                             % if no models have been sampled yet, sample ensemble.numParticles models
-                nSamples = ensemble.numParticles * 1.3;
-            else                                                            % else check how many more should be sampled based on the percentage of valid models
-                nSamples = 1 / (nValidModels / sampleCount)*(sampleCount - nValidModels);
-                nSamples = round(nSamples);
-                
-                if nSamples > maxNumberOfSamples - sampleCount
-                    nSamples = maxNumberOfSamples - sampleCount;
-                end
+% Check whether the job is ran in parallel    
+if ensemble.parallel
+
+    sampleCount = 0;
+    nValidModels = 0;
+
+    while nValidModels < ensemble.numParticles
+
+        if sampleCount == 0                                             % if no models have been sampled yet, sample ensemble.numParticles models
+            nSamples = ensemble.numParticles * 1.3;
+        else                                                            % else check how many more should be sampled based on the percentage of valid models
+            nSamples = 1 / (nValidModels / sampleCount)*(sampleCount - nValidModels);
+            nSamples = round(nSamples);
+
+            if nSamples > maxNumberOfSamples - sampleCount
+                nSamples = maxNumberOfSamples - sampleCount;
             end
-            
-            parpool(ensemble.numCores);
-            parfor ix = (sampleCount+1):(sampleCount+nSamples)
-                [validModelList(ix),models(ix)] =  initialSampler(ensemble);
-            end
-            delete(gcp);
-            
-            sampleCount = sampleCount + nSamples;           
-            nValidModels = size(models(validModelList), 2);
-        
         end
-        models = models(validModelList);
-        
-        
-    else
-        sampleCount = 1;
-        ix = 1;
-        
-        while ix <= ensemble.numParticles && sampleCount <= maxNumberOfSamples
-            
-            [isModelValid,model] =  initialSampler(ensemble);
-            if isModelValid
-                models(ix) = model;
-                ix = ix + 1;
-            end
-            
-            sampleCount = sampleCount + 1;
+
+        parpool(ensemble.numCores);
+        parfor ix = (sampleCount+1):(sampleCount+nSamples)
+            [validModelList(ix),models(ix),strucIdx(ix),xopt{ix},tolScore(ix),simFluxes{ix}] = initialSampler(ensemble, ix);
         end
-        
-        nValidModels = ix - 1;
-        sampleCount = sampleCount -1;
+        delete(gcp);
+
+        sampleCount = sampleCount + nSamples;           
+        nValidModels = size(models(validModelList), 2);
+
+        if nValidModels == 0
+            break
+        end
+
     end
-    
-    disp([newline, newline, '*** Out of ',num2str(sampleCount), ' models, ', num2str(nValidModels), ' were valid ***', newline, newline]);
+
+    if nValidModels > 0
+        models = models(validModelList);
+        strucIdx = strucIdx(validModelList);
+        xopt = xopt{validModelList};
+        tolScore = tolScore(validModelList);
+        simFluxes = simFluxes{validModelList};            
+    end
+
+else
+    sampleCount = 1;
+    ix = 1;
+
+    while ix <= ensemble.numParticles && sampleCount <= maxNumberOfSamples
+
+        [isModelValid,model,strucIdxTemp,xoptTemp,tolScoreTemp,simFluxesTemp] = initialSampler(ensemble,sampleCount);
+
+        if isModelValid
+            models(ix) = model;
+            strucIdx(ix) = strucIdxTemp;
+            xopt{ix} = xoptTemp;
+            tolScore(ix) = tolScoreTemp;
+            simFluxes{ix} = simFluxesTemp;
+
+            ix = ix + 1;
+        end
+
+        sampleCount = sampleCount + 1;
+    end
+
+    nValidModels = ix - 1;
+    sampleCount = sampleCount -1;
+
 end
+
+disp([newline, newline, '*** Out of ',num2str(sampleCount), ' models, ', num2str(nValidModels), ' were valid ***', newline, newline]);
 
 
 if nValidModels > 1
@@ -312,6 +258,8 @@ if nValidModels > 1
     ensemble.populations(1).xopt      = xopt;                                                                               % optimal value found
     ensemble.populations(1).simFluxes = simFluxes;                                                                          % simulated fluxes
     ensemble.populations(1).models    = models;                                                                             % model particles
+    ensemble = rmfield(ensemble, 'gibbsEnergies');
+    ensemble = rmfield(ensemble, 'metConcRef');
     clearvars -except ensemble popIdx modelID outputFile
     save(outputFile);
 else
