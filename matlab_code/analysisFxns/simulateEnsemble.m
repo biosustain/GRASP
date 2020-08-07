@@ -106,7 +106,8 @@ disp ('Simulating models.');
 
 parpool(numCores);																								% Initiate parallel pool and run parallel foor loop
 parfor jx = 1:numModels
-
+    disp(['Model: ', num2str(jx)]);
+    
     model = ensemble.populations(end).models(particleIdx(jx));
     metActiveConcRef = model.metConcRef(ensemble.metsActive);
     metFixedConcRef = model.metConcRef(ensemble.metsFixed);
