@@ -65,10 +65,9 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
                         
             ensemble = loadEnsembleStructure(filepath);   
             ensemble = initializeEnsemble(ensemble,popIdx,verbose);
-            
+
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model3_isoenzymes.mat'));
             trueRes = trueRes.ensemble;          
-            trueRes = rmfield(trueRes, 'metsSimulated');
             
             testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
@@ -86,7 +85,6 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model4.mat'));
             trueRes = trueRes.ensemble;
-            trueRes = rmfield(trueRes, 'metsSimulated');
                         
             testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))  
@@ -104,8 +102,7 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model4_inhibitors.mat'));
             trueRes = trueRes.ensemble;
-            trueRes = rmfield(trueRes, 'metsSimulated');
-                        
+            
             testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
             
@@ -119,10 +116,9 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             
             ensemble = loadEnsembleStructure(filepath);   
             ensemble = initializeEnsemble(ensemble,popIdx,verbose);
-            
+
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model1_nick.mat'));
-            trueRes = trueRes.ensemble;
-            trueRes = rmfield(trueRes, 'metsSimulated');
+            trueRes = trueRes.ensemble;           
                        
             testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))  

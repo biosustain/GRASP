@@ -16,12 +16,18 @@ classdef sampleAllosteryTest < matlab.unittest.TestCase
             
             seed = 1;
             rng(seed)
+        
+            eigThreshold = 10^-5;
+
+            inputFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_allosteric2');
+            outputFile = fullfile(testCase.currentPath{1}, 'testFiles', 'sampleAllostery_toy_model1_allosteric2.mat');
+            maxNumberOfSamples = 2000;
             
-            ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'initializedEnsemble_toy_model1_allosteric2'));
+            ensemble = buildEnsemble(inputFile, outputFile, maxNumberOfSamples, eigThreshold);
+            
+            ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'sampleAllostery_toy_model1_allosteric2.mat'));
             ensemble = ensemble.ensemble;
-            
-            models = load(fullfile(testCase.currentPath{1}, 'testFiles', 'sampledEnzymeAbundances_toy_model1_allosteric2'));
-            models = models.models;
+            models = ensemble.populations.models;
             
             strucIdx = 1;
             [ensemble, models] = sampleAllostery(ensemble, models, strucIdx);
