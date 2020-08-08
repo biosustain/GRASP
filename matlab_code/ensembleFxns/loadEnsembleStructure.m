@@ -344,7 +344,7 @@ DGr_std_max  = DGr_std(:,2);
 [fluxRanges,DGrRange,DGfStdRange,lnMetRanges,initialTMFAPoint] = computeGibbsFreeEnergyRanges(ensemble,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,ineqConstraints);
 
 ensemble.fluxRanges = fluxRanges;
-ensemble.gibbsRanges = -1e2*ones(size(ensemble.S',1),2);                          % Allocate memory for DGr calculations
+ensemble.gibbsRanges = [-100*ones(size(ensemble.S',1),1), 100*ones(size(ensemble.S',1),1)];                          % Allocate memory for DGr calculations
 ensemble.gibbsRanges(ensemble.idxNotExch,:) = DGrRange;                                           % Remove thermodynamic info from exchang rxns
 ensemble.DGfStdRange = DGfStdRange;
 ensemble.lnMetRanges = lnMetRanges;
