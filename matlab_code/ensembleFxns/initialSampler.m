@@ -137,6 +137,7 @@ while true
     end
   
     models(1).refFlux =  ensemble.fluxPoints(:, modelI); 
+    models(1).fixedExch = models(1).refFlux(ensemble.kinInactRxns,:);
     assert(all(abs(ensemble.Sred * models.refFlux) <10^-8), "Your model doesn\'t seem to be at steady-state. Sred * fluxRef != 0");
 
     % Determine gibbs free energy of reaction
@@ -232,7 +233,7 @@ while true
     % Test model consistency
     xconst = ones(size(ensemble.metsFixed,1), 1);
     kineticFxn = str2func(ensemble.kineticFxn{strucIdx});
-    testFlux   = feval(kineticFxn,ones(size(ensemble.freeVars,1),1),xconst,models,ensemble.fixedExch(:,1),ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},0);
+    testFlux   = feval(kineticFxn,ones(size(ensemble.freeVars,1),1),xconst,models,models(1).fixedExch,ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},0);
 
     % If the model is consistent continue
     if any(abs(testFlux-models(1).refFlux)>1e-6) || any(isnan(testFlux))
