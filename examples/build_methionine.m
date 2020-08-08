@@ -11,7 +11,7 @@ addpath(fullfile('..', 'matlab_code', 'analysisFxns'), ...
 %  "Number of particles" defined in the excel is reached, however, it is a
 %  good idea to define the maximum number of models to be sampled in total, 
 %  otherwise if no stable models are foxccxund it will go on sampling forever.
-maxNumberOfSamples = 100;   
+maxNumberOfSamples = 5000;   
 
 
 % threshold of the jacobian's eigenvalues
