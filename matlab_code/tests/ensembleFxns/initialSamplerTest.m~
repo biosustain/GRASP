@@ -55,7 +55,10 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             trueResXopt = 0;
             trueResTolScore = 0;
             trueResSimFluxes = 0;
-                       
+            
+            %trueResModel = rmfield(trueResModel, 'fixedExch');
+            model = rmfield(model, 'fixedExch');
+           
             testCase.verifyEqual(trueResIsModelValid,isModelValid);
             testCase.verifyEqual(trueResStructIdx,strucIdx);
             testCase.verifyEqual(trueResXopt,xopt);
@@ -75,6 +78,7 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             ensemble = loadEnsembleStructure(xlsxFile);
 
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'initializedEnsemble_toy_model1_random.mat');
+
             ensemble = load(filepath);
             ensemble = ensemble.ensemble;
             ensemble.eigThreshold = 10^-5;
@@ -87,13 +91,13 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             trueResModel = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResModel_toy_model1_random.mat'));
             trueResModel = trueResModel.model;
             
-            trueResIsModelValid = true;
+            trueResIsModelValid = false;
             trueResModel.poolFactor = [];
             trueResStructIdx = 1;
             trueResXopt = 0;
             trueResTolScore = 0;
-            trueResSimFluxes = 0;           
-
+            trueResSimFluxes = 0;
+           
             testCase.verifyEqual(trueResIsModelValid,isModelValid);
             testCase.verifyEqual(trueResStructIdx,strucIdx);
             testCase.verifyEqual(trueResXopt,xopt);
@@ -125,8 +129,8 @@ classdef initialSamplerTest < matlab.unittest.TestCase
 
             trueResModel = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResModel_toy_model1_const_effector.mat'));
             trueResModel = trueResModel.model;
-                        
-            trueResIsModelValid = true;
+            
+            trueResIsModelValid = false;
             trueResModel.poolFactor = [];
             trueResStructIdx = 1;
             trueResXopt = 0;

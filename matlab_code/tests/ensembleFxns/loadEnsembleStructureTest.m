@@ -32,10 +32,10 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             
             xlsxFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1');
             ensemble = loadEnsembleStructure(xlsxFile);
-
+            
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model1.mat'));
             trueRes = trueRes.ensemble;
-                        
+            
             testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
                 'Within', matlab.unittest.constraints.AbsoluteTolerance(1e-10) & matlab.unittest.constraints.RelativeTolerance(1)));
         end
@@ -44,10 +44,10 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             
             xlsxFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_allosteric');
             ensemble = loadEnsembleStructure(xlsxFile);
-           
+
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model1_allosteric.mat'));
             trueRes = trueRes.ensemble;
-                        
+                                    
             testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
                 'Within', matlab.unittest.constraints.AbsoluteTolerance(1e-10) & matlab.unittest.constraints.RelativeTolerance(1)));
         end

@@ -41,8 +41,8 @@ classdef calculateMMCurvesTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'OP2_GTHOr_nadph.csv');
             trueResNadph = fileread(filepath);
             
-            testCase.verifyEqual(trueResGthox, resGthox);
-            testCase.verifyEqual(trueResNadph, resNadph);
+            testCase.verifyEqual(resGthox, trueResGthox);
+            testCase.verifyEqual(resNadph, trueResNadph);
         end
         
         function testCalculateMMCurvesGTHPi(testCase)
@@ -64,8 +64,8 @@ classdef calculateMMCurvesTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'OP2_GTHPi_h2o2.csv');
             trueResH2o2 = fileread(filepath);
             
-            testCase.verifyEqual(trueResGthrd, resGthrd);
-            testCase.verifyEqual(trueResH2o2, resH2o2);
+            testCase.verifyEqual(resGthrd, trueResGthrd);
+            testCase.verifyEqual(resH2o2, trueResH2o2);
         end
         
         function testCalculateMMCurvesG6PDH2NAD(testCase)
@@ -89,8 +89,8 @@ classdef calculateMMCurvesTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'OP2_G6PDH2_NAD_nad.csv');
             trueResNad = fileread(filepath);
             
-            testCase.verifyEqual(trueResG6p, resG6p);
-            testCase.verifyEqual(trueResNad, resNad);
+            testCase.verifyEqual(resG6p, trueResG6p);
+            testCase.verifyEqual(resNad, trueResNad);
         end
         
         function testCalculateMMCurvesG6PDH2NADP(testCase)

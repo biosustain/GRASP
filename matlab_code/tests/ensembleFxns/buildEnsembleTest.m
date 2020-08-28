@@ -159,7 +159,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             eigThreshold = 10^-5;
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
-            save(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleLargeModel'), 'ensemble');
+
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleLargeModel'));
             trueRes = trueRes.ensemble;
                                     
@@ -231,6 +231,56 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             ensemble = ensemble.ensemble;
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleExample'));
+            trueRes = trueRes.ensemble;  
+            
+            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
+        end
+        
+        function testBuildEnsembleExampleABCNlopt(testCase)
+            
+            seed = 1;
+            rng(seed)
+
+            
+            modelID = 'methionine_cycle';
+            inputFile = fullfile(testCase.currentPath{1}, '..', '..', '..', 'io', 'input', modelID);
+            outputFile = fullfile(testCase.currentPath{1}, 'testFiles', 'testDir1', 'testDir2', [modelID, '.mat']);
+            
+            maxNumberOfSamples = 100;
+            eigThreshold = 10^-5;
+            
+            ensembleTemp = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
+           
+            ensemble = load(outputFile);
+            ensemble = ensemble.ensemble;
+
+            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleExampleABCNLopt'));
+            trueRes = trueRes.ensemble;  
+            
+            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
+        end
+        
+        function testBuildEnsembleExampleABCFmincon(testCase)
+            
+            seed = 1;
+            rng(seed)
+
+            
+            modelID = 'methionine_cycle';
+            inputFile = fullfile(testCase.currentPath{1}, '..', '..', '..', 'io', 'input', modelID);
+            outputFile = fullfile(testCase.currentPath{1}, 'testFiles', 'testDir1', 'testDir2', [modelID, '.mat']);
+            
+            maxNumberOfSamples = 100;
+            eigThreshold = 10^-5;
+            
+            ensembleTemp = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
+           
+            ensemble = load(outputFile);
+            ensemble = ensemble.ensemble;
+            
+            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleExampleABCFmincon'));
             trueRes = trueRes.ensemble;  
             
             testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...

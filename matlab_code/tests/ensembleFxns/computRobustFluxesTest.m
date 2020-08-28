@@ -38,7 +38,7 @@ classdef computRobustFluxesTest < matlab.unittest.TestCase
             end
             
             [vMean,vStd] = computeRobustFluxes(Sflux,xMean,xStd);
-            
+
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResComputeRobustFluxes1'));
             trueResVmean = trueRes.vMean;
             trueResVstd = trueRes.vStd;

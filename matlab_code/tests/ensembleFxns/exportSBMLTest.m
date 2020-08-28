@@ -18,7 +18,7 @@ classdef exportSBMLTest < matlab.unittest.TestCase
             rng(seed)
             
             loadEnsembleStructure(fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_no_promiscuous2'));
-            ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_no_promiscuous2.mat'));
+            ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'export_sbml_toy_model1_no_promiscuous2.mat'));
             ensemble = ensemble.ensemble;
             
             outputFolder = fullfile(testCase.currentPath{1}, 'testFiles');
