@@ -45,8 +45,8 @@ classdef buildMassActionTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildMassAction1.m');
             trueRes = fileread(filepath);
             
-            testCase.verifyEqual(trueRes,res); 
-            testCase.verifyThat(trueResV, matlab.unittest.constraints.IsEqualTo(v, ...
+            testCase.verifyEqual(res, trueRes); 
+            testCase.verifyThat(v, matlab.unittest.constraints.IsEqualTo(trueResV, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
         
@@ -72,11 +72,12 @@ classdef buildMassActionTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildMassAction1.m');
             trueRes = fileread(filepath);
             
-            testCase.verifyEqual(trueRes,res); 
-            testCase.verifyThat(trueResV, matlab.unittest.constraints.IsEqualTo(v, ...
+            testCase.verifyEqual(res, trueRes); 
+            testCase.verifyThat(v , matlab.unittest.constraints.IsEqualTo(trueResV, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
             
         end
+
         function testBuildMassActionOrderCoef(testCase)
             
             reactionName = 'testMassAction';
@@ -99,8 +100,8 @@ classdef buildMassActionTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildMassAction1.m');
             trueRes = fileread(filepath);
             
-            testCase.verifyEqual(trueRes,res); 
-            testCase.verifyThat(trueResV, matlab.unittest.constraints.IsEqualTo(v, ...
+            testCase.verifyEqual(res, trueRes); 
+            testCase.verifyThat(v, matlab.unittest.constraints.IsEqualTo(trueResV, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
         
@@ -123,8 +124,8 @@ classdef buildMassActionTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildMassAction1.m');
             trueRes = fileread(filepath);
             
-            testCase.verifyEqual(trueRes,res); 
-            testCase.verifyThat(trueResV, matlab.unittest.constraints.IsEqualTo(v, ...
+            testCase.verifyEqual(res, trueRes); 
+            testCase.verifyThat(v, matlab.unittest.constraints.IsEqualTo(trueResV, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
         
@@ -149,8 +150,8 @@ classdef buildMassActionTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildMassAction1.m');
             trueRes = fileread(filepath);
             
-            testCase.verifyEqual(trueRes,res); 
-            testCase.verifyThat(trueResV, matlab.unittest.constraints.IsEqualTo(v, ...
+            testCase.verifyEqual(res, trueRes); 
+            testCase.verifyThat(v, matlab.unittest.constraints.IsEqualTo(trueResV, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
     end

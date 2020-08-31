@@ -122,10 +122,10 @@ classdef calculateMMCurvesTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'OP2_G6PDH2_NADP_nadph.csv');
             trueResNadph = fileread(filepath);
             
-            testCase.verifyEqual(trueResG6p, resG6p);
-            testCase.verifyEqual(trueResNadp, resNadp);
-            testCase.verifyEqual(trueRes6PGL, res6PGL);
-            testCase.verifyEqual(trueResNadph, resNadph);
+            testCase.verifyEqual(resG6p, trueResG6p);
+            testCase.verifyEqual(resNadp, trueResNadp);
+            testCase.verifyEqual(res6PGL, trueRes6PGL);
+            testCase.verifyEqual(resNadph, trueResNadph);
             
         end
         
@@ -162,10 +162,10 @@ classdef calculateMMCurvesTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueRes_r_r3_m_m7.csv');
             trueResR3M7 = fileread(filepath);
             
-            testCase.verifyEqual(trueResR1M3, resR1M3);
-            testCase.verifyEqual(trueResR1M6, resR1M6);
-            testCase.verifyEqual(trueResR3M1, resR3M1);
-            testCase.verifyEqual(trueResR3M7, resR3M7);
+            testCase.verifyEqual(resR1M3, trueResR1M3);
+            testCase.verifyEqual(resR1M6, trueResR1M6);
+            testCase.verifyEqual(resR3M1, trueResR3M1);
+            testCase.verifyEqual(resR3M7, trueResR3M7);
         end
         
         function testCalculateMMCurvesWater(testCase)
@@ -213,12 +213,12 @@ classdef calculateMMCurvesTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueRes_r_r6_m_m10_water.csv');
             trueResR6M10 = fileread(filepath);
             
-            testCase.verifyEqual(trueResR1M3, resR1M3);
-            testCase.verifyEqual(trueResR1M6, resR1M6);
-            testCase.verifyEqual(trueResR3M1, resR3M1);
-            testCase.verifyEqual(trueResR3M7, resR3M7);
-            testCase.verifyEqual(trueResR6M1, resR6M1);
-            testCase.verifyEqual(trueResR6M10, resR6M10);
+            testCase.verifyEqual(resR1M3, trueResR1M3);
+            testCase.verifyEqual(resR1M6, trueResR1M6);
+            testCase.verifyEqual(resR3M1, trueResR3M1);
+            testCase.verifyEqual(resR3M7, trueResR3M7);
+            testCase.verifyEqual(resR6M1, trueResR6M1);
+            testCase.verifyEqual(resR6M10, trueResR6M10);
             testCase.verifyTrue(~exist(fullfile(testCase.currentPath{1}, 'testFiles', 'r_r1_m_m0.csv'), 'file'));
             testCase.verifyTrue(~exist(fullfile(testCase.currentPath{1}, 'testFiles', 'r_r1_m_m0.csv'), 'file'));
         end

@@ -27,7 +27,7 @@ classdef sampleFluxesAndGibbsFreeEnergiesTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSampleFluxesAndGibbsFreeEnergiesNormal.mat'));
             trueResEnsemble = trueRes.ensemble;
            
-            testCase.verifyThat(trueResEnsemble, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+            testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueResEnsemble, ...
                  'Within', matlab.unittest.constraints.RelativeTolerance(1e-12)));
         end
         
@@ -46,7 +46,7 @@ classdef sampleFluxesAndGibbsFreeEnergiesTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSampleFluxesAndGibbsFreeEnergiesUniform.mat'));
             trueResEnsemble = trueRes.ensemble;
            
-            testCase.verifyThat(trueResEnsemble, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+            testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueResEnsemble, ...
                  'Within', matlab.unittest.constraints.RelativeTolerance(1e-12)));
         end
     end

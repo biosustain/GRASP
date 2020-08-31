@@ -9,7 +9,7 @@ classdef cycledPathsTest < matlab.unittest.TestCase
             
             trueRes = {[1,2,4,5,6,1];[2,4,5,6,1,2]};
            
-            testCase.verifyEqual(trueRes, paths);
+            testCase.verifyEqual(paths, trueRes);
             
         end
         
@@ -21,7 +21,7 @@ classdef cycledPathsTest < matlab.unittest.TestCase
             
             trueRes = {[1,2,3,1],[1,4,5,1]};
            
-            testCase.verifyEqual(trueRes, paths);
+            testCase.verifyEqual(paths, trueRes);
             
         end
         
@@ -33,7 +33,7 @@ classdef cycledPathsTest < matlab.unittest.TestCase
             
             trueRes = {[1,2,4,5,6,1],[1,7,9,10,11,1];[2,4,5,6,1,2],[2,4,5,6,1,2];[7,9,10,11,1,7],[7,9,10,11,1,7]};
            
-            testCase.verifyEqual(trueRes, paths);
+            testCase.verifyEqual(paths, trueRes);
             
         end
         
@@ -46,7 +46,7 @@ classdef cycledPathsTest < matlab.unittest.TestCase
             trueRes = {[1,2,4,5,6,1];[2,4,5,6,1,2];[3,4,5,6,1,3];[1,3,4,5,6,1];...
                        [1,3,4,5,7,1];[1,2,4,5,7,1];[2,4,5,7,1,2];[3,4,5,7,1,3]};
            
-            testCase.verifyEqual(trueRes, paths);
+            testCase.verifyEqual(paths, trueRes);
             
         end
      

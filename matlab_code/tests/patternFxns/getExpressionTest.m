@@ -51,9 +51,10 @@ classdef getExpressionTest < matlab.unittest.TestCase
                        'k07*k05.*B*k01.*A*k04*k11','k10.*P*k12.*Q*k02*k04*k06','k07*k10.*P*k12.*Q*k02*k04','k07*k10.*P*k05.*B*k01.*A*k04','k07*k10.*P*k05.*B*k12.*Q*k04';...
                        'k12.*Q*k02*k04*k06*k08','k12.*Q*k09*k02*k04*k06','k12.*Q*k09*k02*k04*k07','k09*k07*k05.*B*k01.*A*k04','k12.*Q*k09*k04*k07*k05.*B'};
            
-            testCase.verifyEqual(trueRes,expression);
+            testCase.verifyEqual(expression, trueRes);
             
         end
+        
         function testGetExpressionPromiscuous(testCase)
             
             Nodes = [1,2,3,4,5,6,7,8,9,10,11];
@@ -81,7 +82,7 @@ classdef getExpressionTest < matlab.unittest.TestCase
             trueRes = load(fullfile(currentPath{1}, 'testFiles', 'trueResExpressionPromiscuous.mat'));
             trueRes = trueRes.trueRes;
             
-            testCase.verifyEqual(trueRes,expression);
+            testCase.verifyEqual(expression, trueRes);
             
         end
         
@@ -109,7 +110,7 @@ classdef getExpressionTest < matlab.unittest.TestCase
             trueRes = load(fullfile(currentPath{1}, 'testFiles', 'trueResExpressionRandomBiBi.mat'));    
             trueRes = trueRes.expression;
            
-            testCase.verifyEqual(trueRes,expression);
+            testCase.verifyEqual(expression, trueRes);
             
         end
         

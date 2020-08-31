@@ -38,7 +38,7 @@ classdef buildAllostericTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildAllostericOneInhib.txt');
             trueRes = textread(filepath,'%s');
             
-            testCase.verifyEqual(trueRes,res);            
+            testCase.verifyEqual(res, trueRes);            
             
         end
         
@@ -57,7 +57,7 @@ classdef buildAllostericTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildAllostericOneInhibOneAct.txt');
             trueRes = textread(filepath,'%s');
             
-            testCase.verifyEqual(trueRes,res); 
+            testCase.verifyEqual(res,trueRes); 
         end
         
         function testBuildAllostericTestMultInhibOneAct(testCase)
@@ -75,7 +75,7 @@ classdef buildAllostericTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildAllostericMultInhibOneAct.txt');
             trueRes = textread(filepath,'%s');
             
-            testCase.verifyEqual(trueRes,res); 
+            testCase.verifyEqual(res, trueRes); 
         end
         
         function testBuildAllostericTestMultInhibMultAct(testCase)
@@ -93,7 +93,7 @@ classdef buildAllostericTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildAllostericMultInhibMultAct.txt');
             trueRes = textread(filepath,'%s');
             
-            testCase.verifyEqual(trueRes,res); 
+            testCase.verifyEqual(res, trueRes); 
         end
     end
 end

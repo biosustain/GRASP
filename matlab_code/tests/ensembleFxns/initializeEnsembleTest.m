@@ -38,7 +38,7 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             ensemble = initializeEnsemble(ensemble,popIdx,verbose);
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model1.mat'));
-            testCase.verifyEqual(trueRes.ensemble,ensemble);   
+            testCase.verifyEqual(ensemble, trueRes.ensemble);   
             
         end
         
@@ -53,7 +53,7 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             ensemble = initializeEnsemble(ensemble,popIdx,verbose);
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model1_random.mat'));
-            testCase.verifyEqual(trueRes.ensemble,ensemble);   
+            testCase.verifyEqual(ensemble, trueRes.ensemble);   
             
         end
         
@@ -69,7 +69,7 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model3_isoenzymes.mat'));
             trueRes = trueRes.ensemble;          
             
-            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+            testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
             
         end
@@ -86,7 +86,7 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model4.mat'));
             trueRes = trueRes.ensemble;
             
-            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+            testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))  
             
         end
@@ -103,7 +103,7 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model4_inhibitors.mat'));
             trueRes = trueRes.ensemble;
             
-            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+            testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
             
         end
@@ -120,7 +120,7 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model1_nick.mat'));
             trueRes = trueRes.ensemble;           
                        
-            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+            testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))  
             
         end

@@ -26,7 +26,7 @@ classdef sampleEnzymeAbundancesTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSampleEnzymeAbundances1'));
             trueRes = trueRes.models;
                    
-            testCase.verifyEqual(trueRes, models);   
+            testCase.verifyEqual(models, trueRes);   
         end
         
         function testSampleEnzymeAbundancesRandom(testCase)
@@ -44,7 +44,7 @@ classdef sampleEnzymeAbundancesTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSampleEnzymeAbundancesRandom'));
             trueRes = trueRes.models;
                    
-            testCase.verifyEqual(trueRes, models);   
+            testCase.verifyEqual(models, trueRes);   
         end
     end
 end

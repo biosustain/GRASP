@@ -38,7 +38,7 @@ classdef buildOdeFxnTest < matlab.unittest.TestCase
             res = fileread(fullfile(testCase.currentPath{1}, '..', '..', '..', 'reactions', [ensemble.description, '_', num2str(strucIdx)], [kineticFxn,'_ode.m']));
             trueRes = fileread(fullfile(testCase.currentPath{1}, 'testFiles', 'trueRes_toy_model1_random2_Kinetics1_ode.m'));
             
-            testCase.verifyEqual(trueRes,res);                   
+            testCase.verifyEqual(res, trueRes);                   
         end
     end
 end

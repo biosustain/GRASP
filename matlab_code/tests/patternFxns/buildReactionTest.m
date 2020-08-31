@@ -46,7 +46,7 @@ classdef buildReactionTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildReaction.txt');
             trueRes = textread(filepath,'%s');
             
-            testCase.verifyEqual(trueRes,res);   
+            testCase.verifyEqual(res, trueRes);   
          end
         
         function testBuildReactionPromiscuous1(testCase)
@@ -80,7 +80,7 @@ classdef buildReactionTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildReactionPromiscuous1.txt');
             trueRes = textread(filepath,'%s');
             
-            testCase.verifyEqual(trueRes,res);   
+            testCase.verifyEqual(res, trueRes);   
         end
         
                 
@@ -107,7 +107,7 @@ classdef buildReactionTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildReactionPromiscuous2.txt');
             trueRes = textread(filepath,'%s');
             
-            testCase.verifyEqual(trueRes,res);              
+            testCase.verifyEqual(res, trueRes);              
         end
 
     end

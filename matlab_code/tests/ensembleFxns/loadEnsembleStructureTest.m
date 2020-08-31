@@ -36,7 +36,7 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model1.mat'));
             trueRes = trueRes.ensemble;
             
-            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+            testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.AbsoluteTolerance(1e-10) & matlab.unittest.constraints.RelativeTolerance(1)));
         end
         
@@ -48,7 +48,7 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model1_allosteric.mat'));
             trueRes = trueRes.ensemble;
                                     
-            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+            testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.AbsoluteTolerance(1e-10) & matlab.unittest.constraints.RelativeTolerance(1)));
         end
         
@@ -60,7 +60,7 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model1_random.mat'));
             trueRes = trueRes.ensemble;
               
-            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+            testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
         end
         
@@ -74,7 +74,7 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             trueRes.LPSolver = 'gurobi';
             trueRes = rmfield(trueRes, 'metsSimulated');
             
-            testCase.verifyEqual(trueRes,ensemble);            
+            testCase.verifyEqual(ensemble, trueRes);            
         end
        
         function testLoadEnsembleStructureInputValidationGeneral(testCase)
@@ -197,7 +197,7 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model4.mat'));
             trueRes = trueRes.ensemble;
                         
-            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
+            testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
         end
     end

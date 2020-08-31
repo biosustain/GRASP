@@ -42,8 +42,8 @@ classdef buildKineticFxnTest < matlab.unittest.TestCase
                                'r_r4'; 'r_r5'; 'r_r6'; 'r_r7'; 'r_r8';
                                'r_r9'; 'r_r10'; 'r_r11'; 'r_r12'; 'r_r13'};
                                        
-            testCase.verifyEqual(trueResKineticFxn,kineticFxn);  
-            testCase.verifyEqual(trueResFreeVars,freeVars);            
+            testCase.verifyEqual(kineticFxn, trueResKineticFxn);  
+            testCase.verifyEqual(freeVars, trueResFreeVars);            
         end
         
         function testKineticFxnStoicCoef(testCase)
@@ -65,8 +65,8 @@ classdef buildKineticFxnTest < matlab.unittest.TestCase
                                'r_r4'; 'r_r5'; 'r_r6'; 'r_r7'; 'r_r8';
                                'r_r9'; 'r_r10'; 'r_r11'; 'r_r12'; 'r_r13'};
                                                  
-            testCase.verifyEqual(trueResKineticFxn,kineticFxn);  
-            testCase.verifyEqual(trueResFreeVars,freeVars);            
+            testCase.verifyEqual(kineticFxn, trueResKineticFxn);  
+            testCase.verifyEqual(freeVars, trueResFreeVars);            
         end
     end
 end

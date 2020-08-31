@@ -9,7 +9,7 @@ classdef algebraTest < matlab.unittest.TestCase
             
             trueRes = [1;4];
             
-            testCase.verifyEqual(trueRes,A);            
+            testCase.verifyEqual(A, trueRes);            
         end
         
         function testAlgebra2(testCase)
@@ -20,7 +20,7 @@ classdef algebraTest < matlab.unittest.TestCase
             
             trueRes = [1 2; 2 4];
             
-            testCase.verifyEqual(trueRes,A);            
+            testCase.verifyEqual(A, trueRes);            
         end
         
         function testAlgebra3(testCase)
@@ -31,7 +31,7 @@ classdef algebraTest < matlab.unittest.TestCase
             
             trueRes = [1 2 4; 1 2 5; 2 4 5];
             
-            testCase.verifyEqual(trueRes,A);            
+            testCase.verifyEqual(A,trueRes);            
         end
         
         function testAlgebra4(testCase)
@@ -42,7 +42,7 @@ classdef algebraTest < matlab.unittest.TestCase
             
             trueRes = [1 2 4 5; 1 2 4 6; 1 2 5 6; 2 4 5 6];
             
-            testCase.verifyEqual(trueRes,A);            
+            testCase.verifyEqual(A, trueRes);            
         end
     end
 end

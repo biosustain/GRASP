@@ -28,8 +28,8 @@ classdef sampleAllosteryTest < matlab.unittest.TestCase
             trueResModels = trueRes.models;
             trueResEnsemble = trueRes.ensemble;
                    
-            testCase.verifyEqual(trueResModels, models);
-            testCase.verifyEqual(trueResEnsemble, ensemble);
+            testCase.verifyEqual(models, trueResModels);
+            testCase.verifyEqual(ensemble, trueResEnsemble);
         end
        
     end
