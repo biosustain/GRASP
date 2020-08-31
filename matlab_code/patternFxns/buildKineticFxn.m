@@ -24,6 +24,7 @@ function freeVars = buildKineticFxn(ensemble,kineticFxn,strucIdx)
 % Define active species (mets/enzymes)
 metsActive = ensemble.metsActive;
 enzActive  = ensemble.activeRxns;
+%enzActive  = ensemble.activeRxns(~ismember(ensemble.activeRxns,ensemble.kinInactRxns));
 totalEvals = numel(metsActive) + numel(enzActive) + 1;
 freeVars   = [ensemble.mets(metsActive);ensemble.rxns(enzActive)];                             % return indexes of the free variables
 

@@ -35,10 +35,7 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model1.mat'));
             trueRes = trueRes.ensemble;
-            trueRes.LPSolver = 'gurobi';
-            trueRes.metsSimulated = [5 6 7 8 9 10 11]';
-            trueRes = rmfield(trueRes, 'metsSimulated');
-            
+                        
             testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
                 'Within', matlab.unittest.constraints.AbsoluteTolerance(1e-10) & matlab.unittest.constraints.RelativeTolerance(1)));
         end
@@ -47,13 +44,10 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             
             xlsxFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_allosteric');
             ensemble = loadEnsembleStructure(xlsxFile);
-
+           
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model1_allosteric.mat'));
             trueRes = trueRes.ensemble;
-            trueRes.LPSolver = 'gurobi';
-            trueRes.metsSimulated = [5 6 7 8 9 10 11]';
-            trueRes = rmfield(trueRes, 'metsSimulated');
-            
+                        
             testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
                 'Within', matlab.unittest.constraints.AbsoluteTolerance(1e-10) & matlab.unittest.constraints.RelativeTolerance(1)));
         end
@@ -65,10 +59,7 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model1_random.mat'));
             trueRes = trueRes.ensemble;
-            trueRes.LPSolver = 'gurobi';
-            trueRes.metsSimulated = [5 6 7 8 9 10 11]';
-            trueRes = rmfield(trueRes, 'metsSimulated');
-            
+              
             testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
         end
@@ -202,12 +193,10 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             
             xlsxFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model4');
             ensemble = loadEnsembleStructure(xlsxFile);
-            
+
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model4.mat'));
             trueRes = trueRes.ensemble;
-            trueRes = rmfield(trueRes, 'metsSimulated');
-           
-            
+                        
             testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
         end

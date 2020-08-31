@@ -124,7 +124,7 @@ end
 
 function fluxEq = generateFixedExchangeFunction(ensemble, rxnI)
 
-fluxEq = num2str(ensemble.fluxRef(rxnI));
+fluxEq = num2str(ensemble.populations.models(1).refFlux(rxnI));
 
 end
 

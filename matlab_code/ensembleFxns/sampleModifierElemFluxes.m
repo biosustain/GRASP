@@ -35,7 +35,6 @@ for activRxnIdx = 1:numel(ensemble.kinActRxns)
         ~strcmp(ensemble.rxnMechanisms{strucIdx}{activRxnIdx},'massAction')
 
         promiscRxnsList = ensemble.promiscuity{strucIdx}{ensemble.kinActRxns(activRxnIdx)};            
-        gibbsTemp = ensemble.gibbsTemp(ensemble.kinActRxns(activRxnIdx));
         revMatrix = ensemble.revMatrix{ensemble.kinActRxns(activRxnIdx),strucIdx};
         reverTemp = ensemble.reverTemp{ensemble.kinActRxns(activRxnIdx)};
 

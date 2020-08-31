@@ -40,7 +40,7 @@ classdef sampleEnzymeAbundancesTest < matlab.unittest.TestCase
             strucIdx = 1;
             
             [models] = sampleEnzymeAbundances(ensemble,models,strucIdx);
-
+            
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSampleEnzymeAbundancesRandom'));
             trueRes = trueRes.models;
                    

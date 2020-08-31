@@ -119,6 +119,8 @@ for ix = 1:nCondition
     mcaResults.xRcounter{ix}    = 0;
     
     for jx = 1:numModels
+        disp(['Model: ', num2str(jx)]);
+        
         mcaResults.enzNames = rxnNames;
         model = ensemble.populations(end).models(particleIdx(jx));
         if ix == 1

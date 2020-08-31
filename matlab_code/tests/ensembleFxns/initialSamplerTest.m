@@ -32,20 +32,24 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             
             % To generate the reaction files 
             xlsxFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1');
+            maxNumberOfSamples  = 100;
+            eigThreshold = 10^-5;
+            popIdx = 1;
+
             ensemble = loadEnsembleStructure(xlsxFile);
-                        
+         
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'initializedEnsemble_toy_model1.mat');
             ensemble = load(filepath);
             ensemble = ensemble.ensemble;
             ensemble.eigThreshold = 10^-5;
-            ensemble.LPSolver = 'gurobi';
+            modelI = 1;
                         
-            [isModelValid,model,strucIdx,xopt,tolScore,simFluxes] = initialSampler(ensemble);
-            
+            [isModelValid,model,strucIdx,xopt,tolScore,simFluxes] = initialSampler(ensemble, modelI);
+
             trueResModel = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResModel_toy_model1.mat'));
             trueResModel = trueResModel.model;
             
-            trueResIsModelValid = true;
+            trueResIsModelValid = false;
             trueResModel.poolFactor = [];
             trueResStructIdx = 1;
             trueResXopt = 0;
@@ -69,16 +73,18 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             % To generate the reaction files 
             xlsxFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1');
             ensemble = loadEnsembleStructure(xlsxFile);
-            
+
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'initializedEnsemble_toy_model1_random.mat');
+
             ensemble = load(filepath);
             ensemble = ensemble.ensemble;
             ensemble.eigThreshold = 10^-5;
             ensemble.freeVars{end+1} = 'r_r13';
             ensemble.LPSolver = 'gurobi';
+            modelI = 1;
                         
-            [isModelValid,model,strucIdx,xopt,tolScore,simFluxes] = initialSampler(ensemble);
-           
+            [isModelValid,model,strucIdx,xopt,tolScore,simFluxes] = initialSampler(ensemble, modelI);
+
             trueResModel = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResModel_toy_model1_random.mat'));
             trueResModel = trueResModel.model;
             
@@ -108,14 +114,20 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             ensemble = loadEnsembleStructure(xlsxFile);
             ensemble = initializeEnsemble(ensemble,1,1);
             ensemble.eigThreshold = 10^-5;
-            ensemble.LPSolver = 'gurobi';
                         
-            [isModelValid,model,strucIdx,xopt,tolScore,simFluxes] = initialSampler(ensemble);
-                        
+            addKineticFxnsToPath(ensemble);
+            maxNumberOfSamples = 100;
+
+            priorType = 'normal';
+            ensemble = sampleFluxesAndGibbsFreeEnergies(ensemble,maxNumberOfSamples,priorType);
+            
+            modelI = 1;
+            [isModelValid,model,strucIdx,xopt,tolScore,simFluxes] = initialSampler(ensemble, modelI);
+
             trueResModel = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResModel_toy_model1_const_effector.mat'));
             trueResModel = trueResModel.model;
             
-            trueResIsModelValid = true;
+            trueResIsModelValid = false;
             trueResModel.poolFactor = [];
             trueResStructIdx = 1;
             trueResXopt = 0;
