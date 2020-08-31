@@ -11,6 +11,16 @@ Three jupyter notebooks are provided in the ``visualization`` folder to visualiz
 
 The package requirements are specified in the ``requirements.txt`` file.
 
+In particular you'll need to install the following packages:
+ - jupyter notebook or jupyter lab 
+ - pandas
+ - numpy
+ - scipy
+ - matplotlib
+ - altair
+
+To install the visualization package itself, open the terminal, go to the `visualization/simulation_viz` folder and type `pip install .`
+
 
 
 Visualizing fluxes and Gibbs energies

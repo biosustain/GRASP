@@ -138,6 +138,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../model_analysis.html">Model analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualizing results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../troubleshoot.html">Troubleshooting</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../api_doc.html">API documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../analysis_functions.html">Analysis functions</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../ensemble_functions.html">Ensemble functions</a><ul class="current">
@@ -241,57 +242,8 @@
 <h1>Simulate ensemble<a class="headerlink" href="#simulate-ensemble" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="ensembleFxns.simulateEnsemble">
-<code class="sig-name descname">simulateEnsemble</code><span class="sig-paren">(</span><em class="sig-param">ensemble</em>, <em class="sig-param">finalTime</em>, <em class="sig-param">enzymesIC</em>, <em class="sig-param">metsIC</em>, <em class="sig-param">metsAbsOrRel</em>, <em class="sig-param">interruptTime</em>, <em class="sig-param">numModels</em><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.simulateEnsemble" title="Permalink to this definition">¶</a></dt>
-<dd><p>Takes in a model ensemble and initial conditions for enzyme and
-metabolite concentrations and simulates all models in the ensemble.</p>
-<p>For metabolites, the initial conditions can be given either in terms of
-relative or absolute concentrations (mol/L) by setting <em>metsAbsOrRel</em> to
-‘rel’ or ‘abs’, respectively.</p>
-<p>If metabolite concentrations are given as absolute concentrations, the
-flux values returned will also be absolute values, otherwise they’ll be
-relative values (to the reference flux).</p>
-<p>If the simulation of a given model takes longer than the specified
-<em>interrupTime</em>, then it is interrupted and no simulation results are
-saved for that model.</p>
-<p>Note that for each model a different set of time points and respective
-concentrations/fluxes will be returned, since the solver’s step size is
-adaptive, i.e., not constant.</p>
-<p><strong>Usage</strong></p>
-<blockquote>
-<div><p>simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC, interruptTime)</p>
-</div></blockquote>
-<p><strong>Inputs</strong></p>
-<blockquote>
-<div><ul class="simple">
-<li><p><strong>ensemble</strong> (<em>struct</em>) –
-model ensemble, see buildEnsemble for fields description</p></li>
-<li><p><strong>finalTime</strong> (<em>double</em>) –
-simulation time</p></li>
-<li><p><strong>enzymesIC</strong> (<em>double vector</em>) –
-initial conditions for enzyme concentrations</p></li>
-<li><p><strong>metsIC</strong> (<em>double vector</em>) –
-initial conditions for metabolite concentrations</p></li>
-<li><p><strong>metsAbsOrRel</strong> (<em>char</em>) –
-specify whether metabolite initial conditions are relative or absolute concentrations. Accepted values for this variable are ‘abs’ and ‘rel’</p></li>
-<li><p><strong>interruptTime</strong> (<em>double</em>)</p></li>
-<li><p><strong>numModels</strong> (<em>int</em>) –
-how many models should be simulated. This number should be lower than the number of models in the ensemble.</p></li>
-</ul>
-</div></blockquote>
-<p><strong>Output</strong></p>
-<blockquote>
-<div><ul class="simple">
-<li><p><strong>simulationRes</strong> (<em>struct</em>) –
-simulation results</p>
-<ul>
-<li><p>t (<em>cell</em>)      : time points in each model simulation</p></li>
-<li><p>conc (<em>cell</em>)   : concentrations for each time point and model simulation</p></li>
-<li><p>flux (<em>cell</em>)   : fluxes for each time point and model simulation</p></li>
-</ul>
-</li>
-</ul>
-</div></blockquote>
-</dd></dl>
+<code class="sig-name descname">simulateEnsemble</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.simulateEnsemble" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 

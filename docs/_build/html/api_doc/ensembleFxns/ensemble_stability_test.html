@@ -138,6 +138,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../model_analysis.html">Model analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualizing results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../troubleshoot.html">Troubleshooting</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../api_doc.html">API documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../analysis_functions.html">Analysis functions</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../ensemble_functions.html">Ensemble functions</a><ul class="current">
@@ -241,44 +242,8 @@
 <h1>Ensemble stability test<a class="headerlink" href="#ensemble-stability-test" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="ensembleFxns.ensembleStabilityTest">
-<code class="sig-name descname">ensembleStabilityTest</code><span class="sig-paren">(</span><em class="sig-param">ensemble</em>, <em class="sig-param">eigThreshold</em>, <em class="sig-param">strucIdx</em><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.ensembleStabilityTest" title="Permalink to this definition">¶</a></dt>
-<dd><p>Takes in a model ensemble, calculates the jacobian and respective
-eigenvalues for each model.
-If any eigenvalue’s real part is higher than <em>eighThreshold</em>, the model
-is considered unstable.</p>
-<p><strong>Usage</strong></p>
-<blockquote>
-<div><p>stabilityRes = ensembleStabilityTest(ensemble, eigThreshold, strucIdx)</p>
-</div></blockquote>
-<p><strong>Inputs</strong></p>
-<blockquote>
-<div><ul class="simple">
-<li><p><strong>ensemble</strong> (<em>struct</em>) –
-model ensemble, see buildEnsemble for fields description</p></li>
-<li><p><strong>eigThreshold</strong> (<em>double</em>) –
-threshold for positive eigenvalues’ real part</p></li>
-</ul>
-</div></blockquote>
-<p><strong>Optional input</strong></p>
-<blockquote>
-<div><ul class="simple">
-<li><p><strong>strucIdx</strong> (<em>int</em>) –
-number of the model structure considered</p></li>
-</ul>
-</div></blockquote>
-<p><strong>Output</strong></p>
-<blockquote>
-<div><ul class="simple">
-<li><p><strong>stabilityRes</strong> (<em>struct</em>) –
-stability analysis results</p>
-<ul>
-<li><p>posEig (<em>cell</em>)               : positive eigenvalues for unstable models</p></li>
-<li><p>unstableModels(<em>int vector</em>)  : list of unstable models</p></li>
-</ul>
-</li>
-</ul>
-</div></blockquote>
-</dd></dl>
+<code class="sig-name descname">ensembleStabilityTest</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.ensembleStabilityTest" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 

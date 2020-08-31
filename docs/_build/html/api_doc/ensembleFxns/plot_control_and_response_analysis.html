@@ -138,6 +138,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../model_analysis.html">Model analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualizing results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../troubleshoot.html">Troubleshooting</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../api_doc.html">API documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../analysis_functions.html">Analysis functions</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../ensemble_functions.html">Ensemble functions</a><ul class="current">
@@ -241,38 +242,8 @@
 <h1>Plot control and response analysis<a class="headerlink" href="#plot-control-and-response-analysis" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="ensembleFxns.plotControlAndResponseAnalysis">
-<code class="sig-name descname">plotControlAndResponseAnalysis</code><span class="sig-paren">(</span><em class="sig-param">mcaResults</em>, <em class="sig-param">ensemble</em><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.plotControlAndResponseAnalysis" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plots the results from the control and response analysis, four subplots
-are generated: one for flux control coefficients, one for concentration
-control, one for enzyme response coefficients, and one for concentration
-response coefficients.</p>
-<p>To plot only some of the reactions/enzymes, the categories argument
-should be used to specify which reactions should be included in the
-plot.
-The categories cell should look like</p>
-<blockquote>
-<div><p>{reactionGroupName1, listOfReactions1; reactionGroupName2, listOfReactions2}</p>
-</div></blockquote>
-<p><strong>Example</strong></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;Glycolysis&#39;</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">20</span><span class="p">];</span> <span class="s1">&#39;Pentose Phosphate Pathway&#39;</span><span class="p">,[</span><span class="mi">25</span><span class="p">,</span><span class="mi">34</span><span class="p">]}</span>
-</pre></div>
-</div>
-<p><strong>Usage</strong></p>
-<blockquote>
-<div><p>plotControlAndResponseAnalysis(mcaResults, ensemble, categories)</p>
-</div></blockquote>
-<p><strong>Inputs</strong></p>
-<blockquote>
-<div><ul class="simple">
-<li><p><strong>mcaResults</strong> (<em>struct</em>) –
-MCA results</p></li>
-<li><p><strong>ensemble</strong> (<em>struct</em>) –
-model ensemble, see buildEnsemble for fields description</p></li>
-<li><p><strong>categories</strong> (<em>cell</em>) –
-categories to be included in the plot</p></li>
-</ul>
-</div></blockquote>
-</dd></dl>
+<code class="sig-name descname">plotControlAndResponseAnalysis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.plotControlAndResponseAnalysis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 

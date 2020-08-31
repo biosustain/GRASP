@@ -139,6 +139,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualizing results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../api_doc.html">API documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../analysis_functions.html">Analysis functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../ensemble_functions.html">Ensemble functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../pattern_functions.html">Pattern functions</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../simulation_viz.html">Simulation visualization</a><ul class="current">
@@ -222,7 +223,7 @@
 <p>This module implements functions that do some quality check on the model simulation results.</p>
 <span class="target" id="module-simulation_viz.check_simulations"></span><dl class="function">
 <dt id="simulation_viz.check_simulations.check_for_negative_concentrations">
-<code class="sig-name descname">check_for_negative_concentrations</code><span class="sig-paren">(</span><em class="sig-param">data_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">scaled: bool</em>, <em class="sig-param">threshold: float = -1e-08</em><span class="sig-paren">)</span><a class="headerlink" href="#simulation_viz.check_simulations.check_for_negative_concentrations" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">check_for_negative_concentrations</code><span class="sig-paren">(</span><em class="sig-param">data_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">quant_type: str</em>, <em class="sig-param">threshold: float = -1e-08</em><span class="sig-paren">)</span><a class="headerlink" href="#simulation_viz.check_simulations.check_for_negative_concentrations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks if all concentrations are higher than the given threshold. The idea is to make sure that there are no
 negative concentrations.</p>
 <p><strong>Inputs</strong></p>
@@ -230,8 +231,8 @@ negative concentrations.</p>
 <div><ul class="simple">
 <li><p><strong>data_df</strong> –
 a pandas dataframe with a concentrations or concentrations_unscaled column.</p></li>
-<li><p><strong>scaled</strong> –
-whether or not one wants to focus on scaled concentrations.</p></li>
+<li><p><strong>quant_type</strong> –
+which quantity to extract: “flux_rel”, “flux_abs”, “conc_rel”, “conc_abs”.</p></li>
 <li><p><strong>threshold</strong> –
 value to use to check if the concentrations are higher than that.</p></li>
 </ul>
@@ -246,7 +247,7 @@ value to use to check if the concentrations are higher than that.</p></li>
 
 <dl class="function">
 <dt id="simulation_viz.check_simulations.get_non_converging_models">
-<code class="sig-name descname">get_non_converging_models</code><span class="sig-paren">(</span><em class="sig-param">conc_df_interp: pandas.core.frame.DataFrame</em>, <em class="sig-param">n_models: int</em>, <em class="sig-param">met_names: list</em>, <em class="sig-param">rel_tol: float = 0.005</em><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#simulation_viz.check_simulations.get_non_converging_models" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_non_converging_models</code><span class="sig-paren">(</span><em class="sig-param">conc_df_interp: pandas.core.frame.DataFrame</em>, <em class="sig-param">n_models: int</em>, <em class="sig-param">met_names: list</em>, <em class="sig-param">quant_type: str</em>, <em class="sig-param">rel_tol: float = 0.005</em><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#simulation_viz.check_simulations.get_non_converging_models" title="Permalink to this definition">¶</a></dt>
 <dd><p>Goes through every model and every metabolite time course, gets the last three time points in the simulation and
 checks if the difference between each pair of concentration values is greater than last_concentration_value*rel_tol,
 where the relative tolerance is defined by the user. If this is false, the model is considered to not converge.</p>
@@ -259,6 +260,8 @@ dataframe with the interpolated concentrations.</p></li>
 number of models in the dataframe.</p></li>
 <li><p><strong>met_names</strong> –
 name of all metabolites.</p></li>
+<li><p><strong>quant_type</strong> –
+which quantity to extract: “flux_rel”, “flux_abs”, “conc_rel”, “conc_abs”.</p></li>
 <li><p><strong>rel_tol</strong> –
 relative tolerance to use when checking if the model is converging.</p></li>
 </ul>

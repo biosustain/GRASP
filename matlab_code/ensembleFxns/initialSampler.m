@@ -1,7 +1,6 @@
 function [isModelValid,models,strucIdx,xopt,tolScore,simulatedFlux] = initialSampler(ensemble, modelI)
 % Samples initial ensemble of kinetic models.
 %
-% [TODO: Pedro write a bit more about the ABC part?]
 %
 % Checks if sampled models are valid and only returns valid ones.
 % A model is considered valid if
@@ -12,6 +11,8 @@ function [isModelValid,models,strucIdx,xopt,tolScore,simulatedFlux] = initialSam
 %    threshold;
 %  - the difference between the predicted flux and the reference flux
 %    is negligible.
+%  - if the rejection sampler is used, the difference between the model 
+%    and the data is smaller than the defined tolerance.
 %
 %
 % USAGE:
@@ -333,19 +334,19 @@ while true
 end
 
 % Save results and write progress to a temp file (except for the ORACLE mode)
-if ~strcmpi(ensemble.sampler,'ORACLE')
-    try
-        load progress.txt
-        progress = [progress(1)+1;progress(4)/(progress(1)+1);progress(5)/(progress(1)+1);progress(4)+acceptanceRate;progress(5)+tolScore];
-        save progress.txt -ascii progress
-        save(['temp/particle_',num2str(progress(1)),'.mat'],'models','strucIdx','xopt','tolScore','simulatedFlux');
-
-        % If another worker is writing on the file, wait a brief random time
-    catch
-        pause(randi(2)*rand(1));
-        load progress.txt
-        progress = [progress(1)+1;progress(4)/(progress(1)+1);progress(5)/(progress(1)+1);progress(4)+acceptanceRate;progress(5)+tolScore];
-        save progress.txt -ascii progress
-        save(['temp/particle_',num2str(progress(1)),'.mat'],'models','strucIdx','xopt','tolScore','simulatedFlux');
-    end
-end
+% if ~strcmpi(ensemble.sampler,'ORACLE')
+%     try
+%         load progress.txt
+%         progress = [progress(1)+1;progress(4)/(progress(1)+1);progress(5)/(progress(1)+1);progress(4)+acceptanceRate;progress(5)+tolScore];
+%         save progress.txt -ascii progress
+%         save(['temp/particle_',num2str(progress(1)),'.mat'],'models','strucIdx','xopt','tolScore','simulatedFlux');
+% 
+%         % If another worker is writing on the file, wait a brief random time
+%     catch
+%         pause(randi(2)*rand(1));
+%         load progress.txt
+%         progress = [progress(1)+1;progress(4)/(progress(1)+1);progress(5)/(progress(1)+1);progress(4)+acceptanceRate;progress(5)+tolScore];
+%         save progress.txt -ascii progress
+%         save(['temp/particle_',num2str(progress(1)),'.mat'],'models','strucIdx','xopt','tolScore','simulatedFlux');
+%     end
+% end

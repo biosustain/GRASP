@@ -142,6 +142,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot.html">Troubleshooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_doc.html">API documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="how_to_contribute.html">How to contribute</a></li>
 </ul>
@@ -217,6 +218,18 @@
 </ul>
 </div></blockquote>
 <p>The package requirements are specified in the <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file.</p>
+<dl class="simple">
+<dt>In particular you’ll need to install the following packages:</dt><dd><ul class="simple">
+<li><p>jupyter notebook or jupyter lab</p></li>
+<li><p>pandas</p></li>
+<li><p>numpy</p></li>
+<li><p>scipy</p></li>
+<li><p>matplotlib</p></li>
+<li><p>altair</p></li>
+</ul>
+</dd>
+</dl>
+<p>To install the visualization package itself, open the terminal, go to the <cite>visualization/simulation_viz</cite> folder and type <cite>pip install .</cite></p>
 <div class="section" id="visualizing-fluxes-and-gibbs-energies">
 <h2>Visualizing fluxes and Gibbs energies<a class="headerlink" href="#visualizing-fluxes-and-gibbs-energies" title="Permalink to this headline">¶</a></h2>
 <p>The jupyter notebook <code class="docutils literal notranslate"><span class="pre">visualize_initial_dgs_and_fluxes</span></code> uses <a class="reference external" href="https://altair-viz.github.io/">altair</a> to plot the Gibbs free energy and respective flux for each reaction side by side.

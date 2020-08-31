@@ -138,6 +138,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../model_analysis.html">Model analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualizing results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../troubleshoot.html">Troubleshooting</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../api_doc.html">API documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../analysis_functions.html">Analysis functions</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../ensemble_functions.html">Ensemble functions</a><ul class="current">
@@ -241,56 +242,8 @@
 <h1>Find problematic reactions<a class="headerlink" href="#find-problematic-reactions" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="ensembleFxns.findProblematicReactions">
-<code class="sig-name descname">findProblematicReactions</code><span class="sig-paren">(</span><em class="sig-param">model</em>, <em class="sig-param">params</em>, <em class="sig-param">DGr_std_min</em>, <em class="sig-param">DGr_std_max</em>, <em class="sig-param">K</em>, <em class="sig-param">delta</em>, <em class="sig-param">n</em>, <em class="sig-param">Sflux</em>, <em class="sig-param">ineqConstraints</em>, <em class="sig-param">rxnNames</em><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.findProblematicReactions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Finds the reactions whose standard Gibbs energy bounds make the
-TMFA problem infeasible.</p>
-<p>First, it sets the bounds for the standard Gibbs energies to
-[-100, 100] kJ/mol and solves the linear problem. Then, while the
-solution is optimal it sets each reaction dG bounds to the original
-values. If at any point the  problem becomes infeasible, it sets
-the reaction dG bounds to [-100, 100] kJ/mol again.
-In the end it returns a list of all reactions whose dG bounds are
-[-100, 100] kJ/mol, i.e. the reactions that cause the linear problem
-solution to be infeasible when their dG bounds are the original.</p>
-<p><strong>Usage</strong></p>
-<blockquote>
-<div><p>[rowList, dGList] = findProblematicReactions(model, params, DGr_std_min, DGr_std_max, K, delta, n, Sflux, ineqConstraints, sol, rxnNames)</p>
-</div></blockquote>
-<p><strong>Inputs</strong></p>
-<blockquote>
-<div><ul class="simple">
-<li><p><strong>model</strong> (<em>struct</em>) –
-gurobi LP model</p></li>
-<li><p><strong>params</strong> (<em>struct</em>) –
-parameters for gurobi LP model</p></li>
-<li><p><strong>DGr_std_min</strong> (<em>double vector</em>) –
-lower bound for standard Gibbs energies</p></li>
-<li><p><strong>DGr_std_max</strong> (<em>double vector</em>) –
-upper bound for standard Gibbs energies</p></li>
-<li><p><strong>K</strong> (<em>double</em>) –
-arbitrarily large number for LP model</p></li>
-<li><p><strong>delta</strong> (<em>double</em>) –
-tolerance for LP model</p></li>
-<li><p><strong>n</strong> (<em>double</em>) –
-number of reactions in the model</p></li>
-<li><p><strong>Sflux</strong> (<em>double</em>) –
-stoichiometric matrix used for flux calculations</p></li>
-<li><p><strong>ineqConstraints</strong> (<em>double</em>) –
-inequality constraints</p></li>
-<li><p><strong>rxnNames</strong> (<em>char vector</em>) –
-reaction names</p></li>
-</ul>
-</div></blockquote>
-<p><strong>Outputs</strong></p>
-<blockquote>
-<div><ul class="simple">
-<li><p><strong>rowList</strong> (<em>int vector</em>) –
-names of reactions that make the LP infeasible</p></li>
-<li><p><strong>dGList</strong> (<em>double vector</em>) –
-dG values of reactions that make the LP infeasible</p></li>
-</ul>
-</div></blockquote>
-</dd></dl>
+<code class="sig-name descname">findProblematicReactions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.findProblematicReactions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 

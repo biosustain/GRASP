@@ -38,6 +38,7 @@ Documentation contents
    model_analysis
    visualization
    tutorials
+   troubleshoot
    api_doc
    how_to_contribute
 

@@ -2,8 +2,27 @@ function points = generalHR(Aeq,LB,UB,x0,nSamples,nSteps,nDiscard,priorType)
 % General Hit and Run algorithm v2.0 (homogeneous version)
 % Samples from A*x = 0, with lb <= x <= ub 
 % (This is a different flavour of HR, which generates though the same
-% results)
-% -------------------- Copyright (C) 2019 Pedro A. Saa --------------------
+% results)hich constraints/variable bounds are causing the issue.
+%
+%
+% USAGE:
+%
+%    points = generalHR(Aeq,LB,UB,x0,nSamples,nSteps,nDiscard,priorType)
+%
+% INPUT:
+%    Aeq (double vector):        matrix with constraints
+%    LB (double vector):         lower bounds for the variables
+%    UB (double vector):         upper bounds for the variables
+%    x0 (double vector):         initial point to start the sampling (comes from TMFA)
+%    nSamples (double vector):   number of samples to get
+%    nSteps (double vector):     number of steps
+%    nDiscard (double vector):	 number of samples to discard
+%    priorType (double vector):  prior type to use in the sampling, either 'normal' or 'uniform'
+%
+%
+% .. Authors:
+%       - Pedro A. Saa   	2020 original code
+
 if (nargin<8)
     priorType  = 'uniform';
 end

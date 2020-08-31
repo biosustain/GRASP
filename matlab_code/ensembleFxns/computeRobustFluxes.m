@@ -7,16 +7,9 @@ function [vMean,vStd] = computeRobustFluxes(Sflux,xMean,xStd)
 %
 % .. math::
 %
-%       S_{known} * v_{known} = S_{unknown} * v_{unknown}
+%       S_{known} * v_{known} = - S_{unknown} * v_{unknown}
 %
 % and solving for :math:`v_{unknown}`. 
-% This follows from the fact that 
-%
-% .. math::
-%           
-%       S_{known} * v_{known} = 0  
-%
-%       S_{unknown} * v_{unknown} = 0
 %
 % Otherwise, [TODO : need Pedro's help xD]
 %

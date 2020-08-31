@@ -136,8 +136,13 @@
 <li class="toctree-l1"><a class="reference internal" href="model_analysis.html">Model analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="visualization.html">Visualizing results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot.html">Troubleshooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_doc.html">API documentation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">How to contribute</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">How to contribute</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#get-started">Get started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reporting-bugs">Reporting bugs</a></li>
+</ul>
+</li>
 </ul>
 
           
@@ -202,7 +207,51 @@
             
   <div class="section" id="how-to-contribute">
 <h1>How to contribute<a class="headerlink" href="#how-to-contribute" title="Permalink to this headline">¶</a></h1>
-<p>Under construction.</p>
+<p>Contributions are always welcome! :)</p>
+<p>Below are some guidelines you should follow to make sure no bugs are introduced in the process (or at least are minimized).</p>
+<div class="section" id="get-started">
+<h2>Get started!<a class="headerlink" href="#get-started" title="Permalink to this headline">¶</a></h2>
+<p>Here’s the workflow you should follow when implementing any changes in the code and/or documentation:</p>
+<ol class="arabic">
+<li><p>If you are not a collaborator in the repo, start by forking it.</p></li>
+<li><p>Clone either your fork (if you are <strong>not</strong> a collaborator on the repo) or the main repo (if you are a collaborator on the repo) into your machine.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git clone &lt;repo_url&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create a local branch starting from <cite>master</cite>, where you will implement your changes. Remember to give it a meaningful name.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git checkout master</span>
+<span class="go">git branch &lt;branch_name&gt;</span>
+<span class="go">git checkout &lt;branch_name&gt;</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>4. When making your changes commit often. This will make it easier to review your work.
+Please use <a class="reference external" href="https://karma-runner.github.io/2.0/dev/git-commit-msg.html">semantic commit messages</a>.</p>
+<blockquote>
+<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git add &lt;file_name1&gt;</span>
+<span class="go">git commit</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic" start="5">
+<li><p>Remember to either update the unit tests for any functions that you changed or add unit tests for any functions that you added.</p></li>
+<li><p>Run the unit tests by going to <cite>matlab_code/tests</cite> and running <cite>run_unit_tests</cite>.</p></li>
+<li><p>Update or add relevant documentation.</p></li>
+<li><p>If all the unit tests pass, go ahead and push your branch to Github:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git push origin &lt;branch_name&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p>On Github, create a pull request from your branch to <cite>master</cite>, provide a detailed description of the changes introduced, and wait for feedback.</p></li>
+</ol>
+<p>Please try to follow the existing coding style.</p>
+</div>
+<div class="section" id="reporting-bugs">
+<h2>Reporting bugs<a class="headerlink" href="#reporting-bugs" title="Permalink to this headline">¶</a></h2>
+<p>To report a bug, please create an issue at <a class="reference external" href="https://github.com/biosustain/GRASP/issues">https://github.com/biosustain/GRASP/issues</a>.</p>
+</div>
 </div>
 
 
