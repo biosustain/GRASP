@@ -283,11 +283,18 @@ while true
                     end
                     opt.fc_tol = 1e-6*ones(1,2*numel(ensemble.poolConst));
                 end
-                [xopt(:,ix),fmin] = nlopt_optimize(opt,x0(:,ix));
+                [xopt(:,ix),fmin, retcode] = nlopt_optimize(opt,x0(:,ix));
+                
+                if retcode < 0
+                    error(['The ABC optimization with NLOPT was not successful. Error code: ', retcode, '. For more information, see "Return values" in https://nlopt.readthedocs.io/en/latest/NLopt_Reference/']);
+                end
 
                 % FMINCON call
             else
-                [xopt(:,ix),fmin] = fmincon(kineticFxn,x0(:,ix),[],[],[],[],lb(:,ix),ub(:,ix),[],options,xconst,models,ensemble.fixedExch,ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},1);
+                [xopt(:,ix),fmin, retcode] = fmincon(kineticFxn,x0(:,ix),[],[],[],[],lb(:,ix),ub(:,ix),[],options,xconst,models,ensemble.fixedExch,ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},1);
+                if retcode < 0
+                    error(['The ABC optimization with fmincon was not successful. Error code: ', retcode, '. For more information, check the Matlab documentation on fmincon.']);
+                end
 
                 % Pool constraints not implemented yet for this solver
             end
