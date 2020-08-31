@@ -11,9 +11,10 @@ function calculateMMCurves(outputFolder, ensemble, numModels, structIdx, saturat
 % The results are written in files that go into outputFolder.
 %
 % The user can also specify the saturating concentration to be considered
-% as well as the range of concentrations for which the flux 
+% as well as the range of concentrations for which the reaction flux will 
+% be calculated.
 %
-% The user can further specify, for which reactions will the MM curves be
+% The user can further specify for which reactions will the MM curves be
 % calculated.
 %
 % USAGE:

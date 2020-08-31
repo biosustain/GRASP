@@ -32,10 +32,6 @@ for activRxnIdx = 1:numel(ensemble.populations(1).probParams(strucIdx).rxnParams
 end
 
 
-%numSamples = 1;
-%thinning = 10;
-%burn_in = 500;
-%tol = 1e-6;
 rTol = 1e-5;
 
 for activRxnIdx = 1:numel(ensemble.kinActRxns)     
@@ -192,12 +188,10 @@ end
 
 
 function isModelValid = checkModelConsistency(gibbsTemp, fluxSign, rxnName)
-%--------------------------------------------------------------------------
 %
 % Checks if the sampled Gibbs free energy and the reaction flux direction
 %  are compatible.
 %
-%---------------------------Marta Matos 2019-------------------------------
 
     isModelValid = true;
     
