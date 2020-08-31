@@ -11,8 +11,12 @@ To use GRASP, first make sure the following Matlab toolboxes are installed:
  - Optimization Toolbox
  - Bioinformatics Toolbox
 
-As well as `Gurobi <https://www.gurobi.com/>`_ for linear program solving. 
+If you want to export models to SBML, you'll also need Matlab's SimBiology Toolbox.
+
+If you want to use gurobi to solve the linear programs, you can get it from `here <https://www.gurobi.com/>`_.
 Even though Gurobi is a commercial solver, academic licenses are free.
+
+If you are using the ABC approach and want to get a better performance, you should also install `nlopt <https://nlopt.readthedocs.io/en/latest/>`_
 
 Then download GRASP from `here <https://github.com/biosustain/GRASP>`_, and you're ready to go.
 

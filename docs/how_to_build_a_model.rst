@@ -18,7 +18,9 @@ Setting up the excel input file is a fairly tedious and error prone process, thu
 This package can also be used to make sure the excel input file is valid.
 
 Below is a description of every sheet and every column that must be filled in the excel input file.
-An example input file can also be found in the folder ``io/input``.
+Example input files can also be found in the folder ``io/input``.
+
+GRASP can be used together with a rejection sampler (following the ABC approach). In that case the excel input file will include more data.
 
 
 
@@ -33,14 +35,13 @@ It has the following sheets:
  - stoic_: where the model's (transposed) stoichiometric matrix is defined;
  - mets_: where all the metabolites are specified;
  - rxns_: where all reactions are specified;
- - splitRatios_: [TODO Pedro];
  - poolConst_: [TODO Pedro];
  - thermo_ineq_constraints_: [TODO Pedro];
  - thermoRxns_: where the standard Gibbs energies are specified for each reaction in the model (in kJ/mol);
  - thermoMets_: where the metabolite concentrations used to calculate reaction Gibbs energies are specified (in mol/L);
  - measRates_: where known reactions fluxes are specified (in mmol/L/h);
- - protData_: where scaled proteomics data is specified - this is only relevant if you have more than one data point;
- - metsData_: where scaled metabolomics data is specified - this is only relevant if you have more than one data point;
+ - protData_: where scaled proteomics data is specified - this is only relevant if you have more than one data point, i.e. if you are using the ABC approach;
+ - metsData_: where scaled metabolomics data is specified - this is only relevant if you have more than one data point, i.e. if you are using the ABC approach;
  - kinetics1_: where enzyme mechanisms and regulation is specified.
 
 
@@ -52,19 +53,17 @@ general
 
 In the general sheet the second column must be filled by the user with:
 
- - ``model name``
- - ``sampling mode``: which can be either ORACLE or rejection. ORACLE mode is used to generate models for only one data point, while rejection mode is used to generate models that can explain multiple data points [TODO Pedro plz check];
- - ``NLP solver``: only relevant if the sampling mode is rejection;
- - ``number of experimental conditions``: basically how many data points there are besides the reference state. If you are only using ORACLE this should be set to ``0``, because there is only the reference state;
- - ``number of model structures``: how many different model structures should be considered, this refers only to regulation though, the reactions and metabolites must be the same in all structures. To specify multiple structures [... TODO Pedro];
+ - ``model name``: the name of the model;
+ - ``sampling mode``: which can be either ``GRASP`` or ``rejection``. GRASP mode is used to generate models for only one data point, while rejection mode is used to generate models that can explain multiple data points;
+ - ``NLP solver``: only relevant if the sampling mode is rejection. It can be either ``fmincon`` or ``nlopt``, the latter is more efficient but you need to install it from `here <https://nlopt.readthedocs.io/en/latest/>`_;
+ - ``LP solver``: the solver for linear programs, it can be either ``linprog``, the LP solver provided by Matlab, or `gurobi` if you have installed it;
+ - ``number of experimental conditions``: how many data points there are besides the reference state. If you are only using GRASP this should be set to ``0``, because there is only the reference state;
+ - ``number of model structures``: how many different model structures should be considered, this refers only to regulation though, the reactions and metabolites must be the same in all structures;
  - ``number of models``: how many models should be generated;
- - ``parallel mode``: whether or not models should be sampled in parallel;
+ - ``parallel mode``: whether (``1``) or not (``0``) models should be sampled in parallel;
  - ``number of cores``: if parallel mode is ON (set to ``1``), how many cores should be used;
- - ``percentile of alive particles for SMC [TODO Pedro, will this be relevant?];
  - ``compute robust fluxes``: if the fluxes are known only for some reactions in the model, the unknown fluxes can be calculated by setting this option to ``1``. For more info on how fluxes are calculated see :ref:`compute_robust_fluxes`;
- - ``compute thermodynamics``: if set to ``1`` the reaction Gibbs free energies will be calculated from the standard Gibbs energies specified in ``thermoRxns`` and the metabolite concentrations specified in ``thermoMets``;
- - ``initial tolerance``:  [TODO Pedro];
- - ``final tolerance``:  [TODO Pedro];
+ - ``rejection sampler tolerance``: this is the maximum deviation of the sampled model to the experimental data allowed in the rejection sampler.
 
 
 stoic
@@ -76,32 +75,24 @@ In this sheet the reaction stoichiometry is specified, reactions in the rows and
 mets
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This sheet must have 6 columns:
+This sheet must have 4 columns:
 
  - ``metabolite ID``: the metabolite ids, to be used in the other sheets;
  - ``metabolite name``: the metabolite names;
- - ``balanced?``: whether or not the metabolite is balanced, i.e. it is consumed and produced in the same amount, its concentration doesn't change;
- - ``active?``: whether or not the metabolite will be modeled;
- - ``constant?``: whether or not the metabolite should be treated as a constant;
+ - ``balanced?``: whether or not the metabolite is balanced, i.e.  whether or not it is consumed and produced in the same amount. If a metabolite is defined as not balanced, then it will be constant;
  - ``measured?``: whether or not the metabolite concentration has been measured experimentally;
 
 
 rxns
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This sheet must have 5 columns:
+This sheet must have 4 columns:
  
  - ``reaction ID``: the reaction ids, to be used in the other sheets;
  - ``reaction name``: the reaction names;
- - ``transport reaction?``: whether or not the reaction is a transport reaction;
- - ``modelled?``: whether or not the reaction is part of the model;
+ - ``transport reaction?``: whether or not the reaction is a transport reaction. This is used only to exclude transport reaction from the TMFA problem;
  - ``isoenzymes``: if there are isoenzymes they must be specified in this column, e.g. if PFK1 and PFK2 are isoenzymes, in the isoenzymes column you should write PFK in PFK1 and PFK2 rows. This is important when the flux through the whole reaction is known but not how much is catalyzed by each isoenzyme individually. By specifying the isoenzymes in this sheet the fraction of flux catalyzed by each isoenzyme individually is sampled randomly for each model.
 
-
-splitRatios
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-[TODO Pedro]
 
 
 poolConst
@@ -122,8 +113,8 @@ thermoRxns
 This sheet must have 3 columns:
  
  - ``reaction ID``: the reaction ids;
- - ``∆Gr'_min (kJ/mol)``: the minimum standard Gibbs energy for each reaction in kJ/mol, tipically calculated as ``mean - standard_deviation``
- - ``∆Gr'_max (kJ/mol)``: the maximum standard Gibbs energy for each reaction in kJ/mol, tipically calculated as ``mean + standard_deviation``
+ - ``∆Gr'_min (kJ/mol)``: the minimum standard Gibbs energy for each reaction in kJ/mol, tipically calculated as ``mean - 2*standard_deviation``
+ - ``∆Gr'_max (kJ/mol)``: the maximum standard Gibbs energy for each reaction in kJ/mol, tipically calculated as ``mean + 2*standard_deviation``
 
 The standard Gibbs energies can be obtained from `eQuilibrator <http://equilibrator.weizmann.ac.il/>`_.
 
@@ -134,8 +125,8 @@ thermoMets
 This sheet must have 3 columns:
  
  - ``metabolite ID``: the metabolite ids;
- - ``min (M)``: the minimum experimental metabolite concentrations in mol/L, typically calculated as ``mean - standard_deviation``;
- - ``max (M)``: the maximum experimental metabolite concentrations in mol/L, typically calculated as ``mean + standard_deviation``.
+ - ``min (M)``: the minimum experimental metabolite concentrations in mol/L, typically calculated as ``mean - 2*standard_deviation``;
+ - ``max (M)``: the maximum experimental metabolite concentrations in mol/L, typically calculated as ``mean + 2*standard_deviation``.
 
 These concentrations are used, together with the standard Gibbs energies in ``thermoRxns``, to calculate each reaction's Gibbs free energy.
 
@@ -151,6 +142,8 @@ This sheet has 3 columns:
 
 Note that here you should only specify fluxes whose values you know and are non-zero. Reactions with zero flux should not be included in the model, as these cannot be parameterized.
 
+Furthermore, the standard deviation should never be zero.
+
 
 protData
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -158,9 +151,9 @@ protData
 This sheet is only relevant if there are experimental conditions and the sampling mode is ``rejection``. It has 4 columns:
 
  - ``reaction / enzyme ID``: the reaction ID
- - ``lower_bound``: the scaled lower bound for the enzyme concentration, typically ``(mean - std) / mean``;
+ - ``lower_bound``: the scaled lower bound for the enzyme concentration, typically ``(mean - 2*std) / mean``;
  - ``mean``: the scaled mean value for the enzyme concentration, ``mean/mean``;
- - ``upper_bound``: the scaled upper bound for the enzyme concentration, typically ``(mean + std) / mean``.
+ - ``upper_bound``: the scaled upper bound for the enzyme concentration, typically ``(mean + 2*std) / mean``.
 
 
 metsData
@@ -169,9 +162,9 @@ metsData
 This sheet is only relevant if there are experimental conditions and the sampling mode is ``rejection``. It sheet has 4 columns:
 
  - ``metabolite ID``: the metabolite ID
- - ``lower_bound``: the scaled lower bound for the metabolite concentration, typically ``(mean - std) / mean``;
+ - ``lower_bound``: the scaled lower bound for the metabolite concentration, typically ``(mean - 2*std) / mean``;
  - ``mean``: the scaled mean value for the metabolite concentration, ``mean/mean``;
- - ``upper_bound``: the scaled upper bound for the metabolite concentration, typically ``(mean - std) / mean``.
+ - ``upper_bound``: the scaled upper bound for the metabolite concentration, typically ``(mean - 2*std) / mean``.
 
 
 kinetics1
