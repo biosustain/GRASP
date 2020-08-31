@@ -49,19 +49,19 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             trueResModel = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResModel_toy_model1.mat'));
             trueResModel = trueResModel.model;
             
-            trueResIsModelValid = false;
+            trueResIsModelValid = true;
             trueResModel.poolFactor = [];
             trueResStructIdx = 1;
             trueResXopt = 0;
             trueResTolScore = 0;
             trueResSimFluxes = 0;
-           
-            testCase.verifyEqual(trueResIsModelValid,isModelValid);
-            testCase.verifyEqual(trueResStructIdx,strucIdx);
-            testCase.verifyEqual(trueResXopt,xopt);
-            testCase.verifyEqual(trueResTolScore,tolScore);
-            testCase.verifyEqual(trueResSimFluxes,simFluxes);
-            testCase.verifyThat(trueResModel, matlab.unittest.constraints.IsEqualTo(model, ...
+                       
+            testCase.verifyEqual(isModelValid, trueResIsModelValid);
+            testCase.verifyEqual(strucIdx, trueResStructIdx);
+            testCase.verifyEqual(xopt, trueResXopt);
+            testCase.verifyEqual(tolScore, trueResTolScore);
+            testCase.verifyEqual(simFluxes, trueResSimFluxes);
+            testCase.verifyThat(model, matlab.unittest.constraints.IsEqualTo(trueResModel, ...
                 'Within', matlab.unittest.constraints.AbsoluteTolerance(1e-2) & matlab.unittest.constraints.RelativeTolerance(1e-9)));
             
         end
@@ -75,7 +75,6 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             ensemble = loadEnsembleStructure(xlsxFile);
 
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'initializedEnsemble_toy_model1_random.mat');
-
             ensemble = load(filepath);
             ensemble = ensemble.ensemble;
             ensemble.eigThreshold = 10^-5;
@@ -88,19 +87,19 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             trueResModel = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResModel_toy_model1_random.mat'));
             trueResModel = trueResModel.model;
             
-            trueResIsModelValid = false;
+            trueResIsModelValid = true;
             trueResModel.poolFactor = [];
             trueResStructIdx = 1;
             trueResXopt = 0;
             trueResTolScore = 0;
-            trueResSimFluxes = 0;
-           
-            testCase.verifyEqual(trueResIsModelValid,isModelValid);
-            testCase.verifyEqual(trueResStructIdx,strucIdx);
-            testCase.verifyEqual(trueResXopt,xopt);
-            testCase.verifyEqual(trueResTolScore,tolScore);
-            testCase.verifyEqual(trueResSimFluxes,simFluxes);
-            testCase.verifyThat(trueResModel, matlab.unittest.constraints.IsEqualTo(model, ...
+            trueResSimFluxes = 0;           
+
+            testCase.verifyEqual(isModelValid, trueResIsModelValid);
+            testCase.verifyEqual(strucIdx, trueResStructIdx);
+            testCase.verifyEqual(xopt, trueResXopt);
+            testCase.verifyEqual(tolScore, trueResTolScore);
+            testCase.verifyEqual(simFluxes, trueResSimFluxes);
+            testCase.verifyThat(model, matlab.unittest.constraints.IsEqualTo(trueResModel, ...
                 'Within', matlab.unittest.constraints.AbsoluteTolerance(1e-6) & matlab.unittest.constraints.RelativeTolerance(1e-12)));
             
         end
@@ -126,20 +125,20 @@ classdef initialSamplerTest < matlab.unittest.TestCase
 
             trueResModel = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResModel_toy_model1_const_effector.mat'));
             trueResModel = trueResModel.model;
-            
-            trueResIsModelValid = false;
+                        
+            trueResIsModelValid = true;
             trueResModel.poolFactor = [];
             trueResStructIdx = 1;
             trueResXopt = 0;
             trueResTolScore = 0;
             trueResSimFluxes = 0;
            
-            testCase.verifyEqual(trueResIsModelValid,isModelValid);
-            testCase.verifyEqual(trueResStructIdx,strucIdx);
-            testCase.verifyEqual(trueResXopt,xopt);
-            testCase.verifyEqual(trueResTolScore,tolScore);
-            testCase.verifyEqual(trueResSimFluxes,simFluxes);
-            testCase.verifyThat(trueResModel, matlab.unittest.constraints.IsEqualTo(model, ...
+            testCase.verifyEqual(isModelValid, trueResIsModelValid);
+            testCase.verifyEqual(strucIdx, trueResStructIdx);
+            testCase.verifyEqual(xopt, trueResXopt);
+            testCase.verifyEqual(tolScore, trueResTolScore);
+            testCase.verifyEqual(simFluxes, trueResSimFluxes);
+            testCase.verifyThat(model, matlab.unittest.constraints.IsEqualTo(trueResModel, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-9)));
             
         end

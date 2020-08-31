@@ -29,7 +29,7 @@ classdef sampleModifierElemFluxesTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSampleModifierElemFluxes1'));
             trueRes= trueRes.models;
                    
-            testCase.verifyEqual(trueRes, models);
+            testCase.verifyEqual(models, trueRes);
         end
         
         function testSampleModifierElemFluxesRandom(testCase)
@@ -49,7 +49,7 @@ classdef sampleModifierElemFluxesTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSampleModifierElemFluxesRandom'));
             trueRes= trueRes.models;
                    
-            testCase.verifyEqual(trueRes, models);
+            testCase.verifyEqual(models, trueRes);
         end
        
     end

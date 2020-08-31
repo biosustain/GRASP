@@ -80,9 +80,9 @@ else
 end
 Aeq    = [];                                                               % equality constraints matrix
 beq    = [];                                                               % rhs equality constraints
-x0     = [ensemble.metsDataMean;ensemble.protDataMean];                    % initial guess
-lb     = [ensemble.metsDataMin;ensemble.protDataMin];                      % lower bounds on free vars
-ub     = [ensemble.metsDataMax;ensemble.protDataMax];                      % upper bounds on free vars
+x0     = [ensemble.metsDataMean;ensemble.protDataMean; ones(numel(ensemble.kinInactRxns), ensemble.numConditions)];                    % initial guess
+lb     = [ensemble.metsDataMin;ensemble.protDataMin; ones(numel(ensemble.kinInactRxns), ensemble.numConditions)];                      % lower bounds on free vars
+ub     = [ensemble.metsDataMax;ensemble.protDataMax; ones(numel(ensemble.kinInactRxns), ensemble.numConditions)];                      % upper bounds on free vars
 nlcons = [];                                                               % nonlinear constraints (not used)
 
 %% Execute Rejection-ABC
@@ -137,6 +137,7 @@ while true
     end
   
     models(1).refFlux =  ensemble.fluxPoints(:, modelI); 
+    models(1).fixedExch = models(1).refFlux(ensemble.kinInactRxns,:);
     assert(all(abs(ensemble.Sred * models.refFlux) <10^-8), "Your model doesn\'t seem to be at steady-state. Sred * fluxRef != 0");
 
     % Determine gibbs free energy of reaction
@@ -232,7 +233,7 @@ while true
     % Test model consistency
     xconst = ones(size(ensemble.metsFixed,1), 1);
     kineticFxn = str2func(ensemble.kineticFxn{strucIdx});
-    testFlux   = feval(kineticFxn,ones(size(ensemble.freeVars,1),1),xconst,models,ensemble.fixedExch(:,1),ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},0);
+    testFlux   = feval(kineticFxn,ones(size(ensemble.freeVars,1),1),xconst,models,models(1).fixedExch,ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},0);
 
     % If the model is consistent continue
     if any(abs(testFlux-models(1).refFlux)>1e-6) || any(isnan(testFlux))
@@ -282,11 +283,18 @@ while true
                     end
                     opt.fc_tol = 1e-6*ones(1,2*numel(ensemble.poolConst));
                 end
-                [xopt(:,ix),fmin] = nlopt_optimize(opt,x0(:,ix));
+                [xopt(:,ix),fmin, retcode] = nlopt_optimize(opt,x0(:,ix));
+                
+                if retcode < 0
+                    error(['The ABC optimization with NLOPT was not successful. Error code: ', retcode, '. For more information, see "Return values" in https://nlopt.readthedocs.io/en/latest/NLopt_Reference/']);
+                end
 
                 % FMINCON call
             else
-                [xopt(:,ix),fmin] = fmincon(kineticFxn,x0(:,ix),[],[],[],[],lb(:,ix),ub(:,ix),[],options,xconst,models,ensemble.fixedExch,ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},1);
+                [xopt(:,ix),fmin, retcode] = fmincon(kineticFxn,x0(:,ix),[],[],[],[],lb(:,ix),ub(:,ix),[],options,xconst,models,ensemble.fixedExch,ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},1);
+                if retcode < 0
+                    error(['The ABC optimization with fmincon was not successful. Error code: ', retcode, '. For more information, check the Matlab documentation on fmincon.']);
+                end
 
                 % Pool constraints not implemented yet for this solver
             end

@@ -12,7 +12,7 @@ classdef calculateExtremePathwaysTest < matlab.unittest.TestCase
             
             trueResExtremePath = [1; 0; 1; 1; 1; 1];
    
-            testCase.verifyEqual(trueResExtremePath,extremePath);            
+            testCase.verifyEqual(extremePath, trueResExtremePath);            
             
         end
         
@@ -27,7 +27,7 @@ classdef calculateExtremePathwaysTest < matlab.unittest.TestCase
             
             trueResExtremePath = [1; 1; 1; 1; 1];
    
-            testCase.verifyEqual(trueResExtremePath,extremePath);            
+            testCase.verifyEqual(extremePath, trueResExtremePath);            
             
         end
         
@@ -58,7 +58,7 @@ classdef calculateExtremePathwaysTest < matlab.unittest.TestCase
                                    0     1;...
                                    0     1];
    
-            testCase.verifyEqual(trueResExtremePath,extremePath);            
+            testCase.verifyEqual(extremePath, trueResExtremePath);            
             
          end
          function testCalculateExtremePathwaysRandom1(testCase)
@@ -83,7 +83,7 @@ classdef calculateExtremePathwaysTest < matlab.unittest.TestCase
                                   1     1     0     0; ...
                                   0     0     1     1];
    
-            testCase.verifyEqual(trueResExtremePath,extremePath);            
+            testCase.verifyEqual(extremePath, trueResExtremePath);            
             
         end
         function testCalculateExtremePathwaysRandom2(testCase)
@@ -109,7 +109,7 @@ classdef calculateExtremePathwaysTest < matlab.unittest.TestCase
                                   1     1; ...
                                   1     1];
    
-            testCase.verifyEqual([],extremePath);            
+            testCase.verifyEqual(extremePath, []);            
             
         end
         

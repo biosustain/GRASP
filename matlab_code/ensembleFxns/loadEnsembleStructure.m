@@ -344,7 +344,7 @@ DGr_std_max  = DGr_std(:,2);
 [fluxRanges,DGrRange,DGfStdRange,lnMetRanges,initialTMFAPoint] = computeGibbsFreeEnergyRanges(ensemble,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,ineqConstraints);
 
 ensemble.fluxRanges = fluxRanges;
-ensemble.gibbsRanges = -1e2*ones(size(ensemble.S',1),2);                          % Allocate memory for DGr calculations
+ensemble.gibbsRanges = [-100*ones(size(ensemble.S',1),1), 100*ones(size(ensemble.S',1),1)];                          % Allocate memory for DGr calculations
 ensemble.gibbsRanges(ensemble.idxNotExch,:) = DGrRange;                                           % Remove thermodynamic info from exchang rxns
 ensemble.DGfStdRange = DGfStdRange;
 ensemble.lnMetRanges = lnMetRanges;
@@ -453,7 +453,7 @@ for jx = 1:ensemble.numStruct
                 ensemble.protDataMax(index,lx)  = protData(kx,3*lx);
             end
         end
-        rxnWithNoProteinData = find(all(ensemble.protDataMax'==1)&all(ensemble.protDataMin'==1)&all(ensemble.protDataMean'==1));        % These rxns are a different kind of 'inactive rxns' thus they are still considered in the active field
+        rxnWithNoProteinData = []; %find(all(ensemble.protDataMax'==1)&all(ensemble.protDataMin'==1)&all(ensemble.protDataMean'==1));        % These rxns are a different kind of 'inactive rxns' thus they are still considered in the active field
         ensemble.protDataMin(rxnWithNoProteinData,:)  = [];                                                                             % remove protein entries for rxns without protein information
         ensemble.protDataMax(rxnWithNoProteinData,:)  = [];
         ensemble.protDataMean(rxnWithNoProteinData,:) = [];

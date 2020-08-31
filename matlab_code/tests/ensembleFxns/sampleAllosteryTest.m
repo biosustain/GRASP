@@ -16,14 +16,6 @@ classdef sampleAllosteryTest < matlab.unittest.TestCase
             
             seed = 1;
             rng(seed)
-        
-            eigThreshold = 10^-5;
-
-            inputFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_allosteric2');
-            outputFile = fullfile(testCase.currentPath{1}, 'testFiles', 'sampleAllostery_toy_model1_allosteric2.mat');
-            maxNumberOfSamples = 2000;
-            
-            ensemble = buildEnsemble(inputFile, outputFile, maxNumberOfSamples, eigThreshold);
             
             ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'sampleAllostery_toy_model1_allosteric2.mat'));
             ensemble = ensemble.ensemble;
@@ -31,13 +23,13 @@ classdef sampleAllosteryTest < matlab.unittest.TestCase
             
             strucIdx = 1;
             [ensemble, models] = sampleAllostery(ensemble, models, strucIdx);
-            
+
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSampleAllosteryTest1'));
             trueResModels = trueRes.models;
             trueResEnsemble = trueRes.ensemble;
                    
-            testCase.verifyEqual(trueResModels, models);
-            testCase.verifyEqual(trueResEnsemble, ensemble);
+            testCase.verifyEqual(models, trueResModels);
+            testCase.verifyEqual(ensemble, trueResEnsemble);
         end
        
     end

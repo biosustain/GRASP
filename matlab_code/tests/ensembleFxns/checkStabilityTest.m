@@ -42,7 +42,7 @@ classdef checkStabilityTest < matlab.unittest.TestCase
             
             trueRes = true;
                    
-            testCase.verifyEqual(trueRes, isModelStable)
+            testCase.verifyEqual(isModelStable, trueRes)
         end
     end
 end

@@ -50,7 +50,7 @@ classdef simulateEnsembleTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSimulateEnsemble1'));
             trueRes = trueRes.simulationRes;
                    
-            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(simulationRes, ...
+            testCase.verifyThat(simulationRes, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
        end
         
@@ -84,7 +84,7 @@ classdef simulateEnsembleTest < matlab.unittest.TestCase
             trueRes = trueRes.simulationRes;
                    
 
-            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(simulationRes, ...
+            testCase.verifyThat(simulationRes, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
     end

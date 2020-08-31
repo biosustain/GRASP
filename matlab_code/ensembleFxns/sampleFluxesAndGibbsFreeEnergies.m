@@ -21,8 +21,8 @@ disp('Sampling Gibbs energies')
 % 2) Sample thermodynamic features
 RT           = 8.314*298.15/1e3;  % [kJ/mol]
 [m, n]       = size(ensemble.Sthermo);
-thermoLB     = [ensemble.gibbsRanges(:,1);ensemble.DGfStdRange(:,1);ensemble.lnMetRanges(:,1)];
-thermoUB     = [ensemble.gibbsRanges(:,2);ensemble.DGfStdRange(:,2);ensemble.lnMetRanges(:,2)];
+thermoLB     = [ensemble.gibbsRanges(ensemble.idxNotExch,1);ensemble.DGfStdRange(:,1);ensemble.lnMetRanges(:,1)];
+thermoUB     = [ensemble.gibbsRanges(ensemble.idxNotExch,2);ensemble.DGfStdRange(:,2);ensemble.lnMetRanges(:,2)];
 thermoAeq    = [eye(size(ensemble.Sthermo,2)),-ensemble.Sthermo',-RT*ensemble.Sthermo'];
 thermoX0     = ensemble.initialTMFAPoint(numel(fluxX0)+1:end);
 thermoPoints = generalHR(thermoAeq,thermoLB,thermoUB,thermoX0,nSamples,nSteps,nDiscard,priorType);

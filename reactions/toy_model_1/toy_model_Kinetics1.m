@@ -8,7 +8,7 @@ xconst = xconst(:);
 v = zeros(14,22);
 E = zeros(14,22);
 x = [x,x(:,ones(1,21)) + diag(h*1i*ones(21,1))];
-xconst = [xconst,xconst(:,ones(1,13)) + diag(h*1i*ones(13,1))];
+xconst = [xconst,xconst(:,ones(1,21))];
 else
 v = zeros(14,size(x,2));
 E = zeros(14,size(x,2));

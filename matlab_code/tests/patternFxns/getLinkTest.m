@@ -12,8 +12,8 @@ classdef  getLinkTest < matlab.unittest.TestCase
             trueResEdgeMatrix = [0,1,2,0,0,3;1,0,0,4,0,0;2,0,0,0,0,0;0,4,0,0,5,0;0,0,0,5,0,6;3,0,0,0,6,0];
             trueResEdgeList = [1,2;1,3;1,6;2,4;4,5;5,6];
            
-            testCase.verifyEqual(trueResEdgeMatrix,edgeMatrix);
-            testCase.verifyEqual(trueResEdgeList,edgeList);
+            testCase.verifyEqual(edgeMatrix, trueResEdgeMatrix);
+            testCase.verifyEqual(edgeList, trueResEdgeList);
             
         end
         
@@ -33,8 +33,8 @@ classdef  getLinkTest < matlab.unittest.TestCase
                                  4,0,0,0,0,0,0,0,0,12,0];
             trueResEdgeList = [1,2;1,6;1,7;1,11;2,3;2,4;4,5;5,6;7,8;7,9;9,10;10,11];
            
-            testCase.verifyEqual(trueResEdgeMatrix,edgeMatrix);
-            testCase.verifyEqual(trueResEdgeList,edgeList);
+            testCase.verifyEqual(edgeMatrix, trueResEdgeMatrix);
+            testCase.verifyEqual(edgeList, trueResEdgeList);
             
         end
         
@@ -51,8 +51,8 @@ classdef  getLinkTest < matlab.unittest.TestCase
                                  4,0,0,0,9,0,0];
             trueResEdgeList = [1,2;1,3;1,6;1,7;2,4;3,4;4,5;5,6;5,7];
            
-            testCase.verifyEqual(trueResEdgeMatrix,edgeMatrix);
-            testCase.verifyEqual(trueResEdgeList,edgeList);
+            testCase.verifyEqual(edgeMatrix, trueResEdgeMatrix);
+            testCase.verifyEqual(edgeList, trueResEdgeList);
             
         end
     end

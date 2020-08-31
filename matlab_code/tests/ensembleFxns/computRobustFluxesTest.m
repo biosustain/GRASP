@@ -38,14 +38,14 @@ classdef computRobustFluxesTest < matlab.unittest.TestCase
             end
             
             [vMean,vStd] = computeRobustFluxes(Sflux,xMean,xStd);
-            
+
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResComputeRobustFluxes1'));
             trueResVmean = trueRes.vMean;
             trueResVstd = trueRes.vStd;
             
-            testCase.verifyThat(trueResVmean, matlab.unittest.constraints.IsEqualTo(vMean, ...
+            testCase.verifyThat(vMean, matlab.unittest.constraints.IsEqualTo(trueResVmean, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
-            testCase.verifyThat(trueResVstd, matlab.unittest.constraints.IsEqualTo(vStd, ...
+            testCase.verifyThat(vStd, matlab.unittest.constraints.IsEqualTo(trueResVstd, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
        

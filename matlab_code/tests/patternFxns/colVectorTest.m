@@ -8,7 +8,7 @@ classdef colVectorTest < matlab.unittest.TestCase
             
             trueRes = {[1,2,4,5,6,1];[2,4,5,6,1,2]};
            
-            testCase.verifyEqual(trueRes,vector);
+            testCase.verifyEqual(vector, trueRes);
             
         end
         
@@ -19,7 +19,7 @@ classdef colVectorTest < matlab.unittest.TestCase
             
             trueRes = {[1,2,3,1];[1,4,5,1]};
            
-            testCase.verifyEqual(trueRes,vector);
+            testCase.verifyEqual(vector, trueRes);
             
         end
     end
