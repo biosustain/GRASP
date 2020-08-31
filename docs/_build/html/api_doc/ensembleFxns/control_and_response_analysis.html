@@ -138,6 +138,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../model_analysis.html">Model analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualizing results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../troubleshoot.html">Troubleshooting</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../api_doc.html">API documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../analysis_functions.html">Analysis functions</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../ensemble_functions.html">Ensemble functions</a><ul class="current">
@@ -241,78 +242,8 @@
 <h1>Control and response analysis<a class="headerlink" href="#control-and-response-analysis" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="ensembleFxns.controlAndResponseAnalysis">
-<code class="sig-name descname">controlAndResponseAnalysis</code><span class="sig-paren">(</span><em class="sig-param">ensemble</em>, <em class="sig-param">saveResMatrices</em>, <em class="sig-param">strucIdx</em><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.controlAndResponseAnalysis" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates both control coefficients and response coefficients.
-Response coefficients here answer the question: what happens if one
-increases a given enzyme’s concentration?</p>
-<p>This is mostly important when modeling promiscuous enzymes, where
-increasing the enzyme’s concentration doesn’t necessarily lead to an
-equal increase in the flux of the reactions it catalyzes.
-Response and control coefficients are the same when enzymes are
-independent and an increase in enzyme concentration leads to a
-proportional increase in the reaction flux.</p>
-<p>Response coefficients are calculated as</p>
-<div class="math notranslate nohighlight">
-\[C_E^J = C_v^J\Pi\]</div>
-<p>where <span class="math notranslate nohighlight">\(C_v^J\)</span> is the flux control coefficient matrix and
-<span class="math notranslate nohighlight">\(\Pi\)</span> is the parameter elasticity matrix.</p>
-<p>The implementation is based on</p>
-<blockquote>
-<div><ul class="simple">
-<li><p><a class="reference external" href="https://doi.org/10.1002/9780470475935.ch3">https://doi.org/10.1002/9780470475935.ch3</a>, section on MCA</p></li>
-<li><p><a class="reference external" href="https://doi.org/10.1111/j.1432-1033.1990.tb15329.x">https://doi.org/10.1111/j.1432-1033.1990.tb15329.x</a></p></li>
-<li><p><a class="reference external" href="https://doi.org/10.1111/j.1432-1033.1990.tb15330.x">https://doi.org/10.1111/j.1432-1033.1990.tb15330.x</a></p></li>
-</ul>
-</div></blockquote>
-<p>For all models in the given ensemble it returns the average flux and
-concentration control coefficients across the ensemble as well as the
-average enzyme and concentration response coefficients.</p>
-<p>It can also return the control and response coefficient matrices for
-each model in the ensemble if <em>saveResMatrices</em> is set to true. But keep
-in mind that for large models this can use a lot of RAM and CPU.</p>
-<p><strong>Usage</strong></p>
-<blockquote>
-<div><p>mcaResults = controlAndResponseAnalysis(ensemble, saveResMatrices, strucIdx)</p>
-</div></blockquote>
-<p><strong>Inputs</strong></p>
-<blockquote>
-<div><ul class="simple">
-<li><p><strong>ensemble</strong> (<em>struct</em>) –
-model ensemble, see buildEnsemble for fields description</p></li>
-<li><p><strong>saveResMatrices</strong> (<em>logical</em>) –
-whether or not to save the elasticity and control coefficient matrices for all models</p></li>
-</ul>
-</div></blockquote>
-<p><strong>Optional input</strong></p>
-<blockquote>
-<div><ul class="simple">
-<li><p><strong>strucIdx</strong> (<em>int</em>) –
-number of the model structure considered</p></li>
-</ul>
-</div></blockquote>
-<p><strong>Output</strong></p>
-<blockquote>
-<div><ul class="simple">
-<li><p><strong>mcaResults</strong> (<em>struct</em>) –
-control and response analysis results</p>
-<ul>
-<li><p>xControlAvg (<em>cell</em>)   : average concentration controls coefficient for each model ensemble</p></li>
-<li><p>vControlAvg (<em>cell</em>)   : average flux control coefficients for each model ensemble</p></li>
-<li><p>eResponseAvg (<em>cell</em>)   : average enzyme response coefficient for each model ensemble</p></li>
-<li><p>xResponseAvg (<em>cell</em>)   : average concentration response coefficients for each model ensemble</p></li>
-<li><p>xcounter (<em>cell</em>)      : number of models in the average concentration control coefficient calculation</p></li>
-<li><p>vcounter (<em>cell</em>)      : number of models in the average flux control coefficient calculation</p></li>
-<li><p>xRcounter (<em>cell</em>)     : number of models in the average concentration response coefficient calculation</p></li>
-<li><p>eRcounter (<em>cell</em>)     : number of models in the average enzyme response coefficient calculation</p></li>
-<li><p>xControl (<em>cell</em>)      : concentration control coefficient matrix for each model</p></li>
-<li><p>vControl (<em>cell</em>)      : flux control coefficient matrix for each model</p></li>
-<li><p>xResponse (<em>cell</em>)     : concentration response coefficient matrix for each model</p></li>
-<li><p>eResponse (<em>cell</em>)     : enzyme response coefficient matrix for each model</p></li>
-</ul>
-</li>
-</ul>
-</div></blockquote>
-</dd></dl>
+<code class="sig-name descname">controlAndResponseAnalysis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.controlAndResponseAnalysis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 

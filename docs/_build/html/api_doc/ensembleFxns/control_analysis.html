@@ -138,6 +138,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../model_analysis.html">Model analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualizing results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../troubleshoot.html">Troubleshooting</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../api_doc.html">API documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../analysis_functions.html">Analysis functions</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../ensemble_functions.html">Ensemble functions</a><ul class="current">
@@ -241,57 +242,8 @@
 <h1>Control analysis<a class="headerlink" href="#control-analysis" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="ensembleFxns.controlAnalysis">
-<code class="sig-name descname">controlAnalysis</code><span class="sig-paren">(</span><em class="sig-param">ensemble</em>, <em class="sig-param">saveResMatrices</em>, <em class="sig-param">strucIdx</em><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.controlAnalysis" title="Permalink to this definition">¶</a></dt>
-<dd><p>Do Metabolic Control Analysis for all models in the given ensemble and
-return the average flux and concentration control coefficients across the
-ensemble.</p>
-<p>It can also return the control coefficient and elasticity matrices for
-each model in the ensemble if <em>saveResMatrices</em> is set to true. But keep
-in mind that for large models this can use a lot of RAM and CPU.</p>
-<p>The implementation is based on</p>
-<ul class="simple">
-<li><p>Computational Models of Metabolism  Stability and Regulation in
-Metabolic Networks, section 1.7.2 on Metabolic Control Analysis
-(<a class="reference external" href="https://doi.org/10.1002/9780470475935.ch3">https://doi.org/10.1002/9780470475935.ch3</a>).</p></li>
-</ul>
-<p><strong>Usage</strong></p>
-<blockquote>
-<div><p>mcaResults = controlAnalysis(ensemble, saveResMatrices, strucIdx)</p>
-</div></blockquote>
-<p><strong>Inputs</strong></p>
-<blockquote>
-<div><ul class="simple">
-<li><p><strong>ensemble</strong> (<em>struct</em>) –
-model ensemble, see buildEnsemble for fields description</p></li>
-<li><p><strong>saveResMatrices</strong> (<em>logical</em>) –
-whether or not to save the elasticity and control coefficient matrices for all models</p></li>
-</ul>
-</div></blockquote>
-<p><strong>Optional input</strong></p>
-<blockquote>
-<div><ul class="simple">
-<li><p><strong>strucIdx</strong> (<em>int</em>) –
-number of the model structure considered</p></li>
-</ul>
-</div></blockquote>
-<p><strong>Output</strong></p>
-<blockquote>
-<div><ul class="simple">
-<li><p><strong>mcaResults</strong> (<em>struct</em>) –
-MCA results</p>
-<ul>
-<li><p>xControlAvg (<em>cell</em>)   : average concentration control coefficient for each model ensemble</p></li>
-<li><p>vControlAvg (<em>cell</em>)   : average flux control coefficient for each model ensemble</p></li>
-<li><p>xcounter (<em>cell</em>)      : number of models in the average concentration control coefficient calculation</p></li>
-<li><p>vcounter (<em>cell</em>)      : number of models in the average flux control coefficient calculation</p></li>
-<li><p>xControl (<em>cell</em>)      : concentration control coefficient matrix for each model</p></li>
-<li><p>vControl (<em>cell</em>)      : flux control coefficient matrix for each model</p></li>
-<li><p>E_x_nor (<em>cell</em>)       : normalized elasticity matrix for each model</p></li>
-</ul>
-</li>
-</ul>
-</div></blockquote>
-</dd></dl>
+<code class="sig-name descname">controlAnalysis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.controlAnalysis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 

@@ -16,7 +16,7 @@ To simulate the model you can use the script ``simulate_model.m`` in the ``examp
 
 It is worth keeping in mind that GRASP uses scaled enzyme and metabolite concentrations. This is important when simulating perturbations.
 
-While for enzymes, the concentrations are always scaled concentrations and any perturbations applied will be relative to the reference state (1), for metabolites perturbations can be defined either relative to the reference state (2) or in terms of absolute concentrations, by setting the variable ``metsAbsOrRel`` to ``'rel'`` or ``'abs'``, respectively.
+While for enzymes, the concentrations are always scaled concentrations and any perturbations applied will be relative to the reference state, for metabolites perturbations can be defined either relative to the reference state or in terms of absolute concentrations, by setting the variable ``metsAbsOrRel`` to ``'rel'`` or ``'abs'``, respectively.
 
 As an example, if the initial concentration for a given enzyme is set to ``2``, this means its concentration will be twice its concentration in the reference state. The same is true for metabolites if ``metsAbsOrRel`` is set to ``'rel'``.
 
@@ -34,8 +34,9 @@ Example:
 .. code-block::  matlab
 
     % Add all GRASP functions to the Matlab path
-    addpath(fullfile('..', 'matlab_code', 'patternFxns'), ...
-            fullfile('..', 'matlab_code', 'ensembleFxns'));
+    addpath(fullfile('..', 'matlab_code', 'analysisFxns'), ...
+            fullfile('..', 'matlab_code', 'ensembleFxns'), ...
+            fullfile('..', 'matlab_code', 'patternFxns'));
 
 
     % Define the model ID (file name of the model ensemble)
@@ -44,6 +45,12 @@ Example:
     % Define the path to the input/output files
     outputFolder = fullfile(, '..', 'io', 'output');
 
+    % How many models in the ensemble you want to simulate
+    numModels = 5;
+
+    % How many cores you want to use to run the simulation
+    numCores = 2;
+
     % Define how many seconds until ODE solver is interrupted. The idea is to
     % skip models that take ages to simulate.
     interruptTime = 40;
@@ -51,32 +58,21 @@ Example:
     % Load model ensemble previously generated
     load(fullfile(outputFolder, [modelID, '.mat']))
 
-
-    % Get default initial conditions, all ones
-    freeVars = numel(ensemble.freeVars);
-    xopt = ones(freeVars,1);
-    ix_mets = 1: numel(ensemble.metsActive);
-    ix_enz = ix_mets(end)+1: freeVars;
-    metsIC = xopt(ix_mets);
-    enzymesIC = xopt(ix_enz);
-
     % Define whether the initial condition for metabolites is a relative or an
     % absolute concentration by setting metsAbsOrRel to either 'rel' or 'abs',
     % respectively
     metsAbsOrRel = 'rel';
 
-    % Change initial conditions here if you want
-
-    % Setting relative concentration for enzyme number 2 to be 1.5x the initial one.
-    enzymesIC(2) = 1.5;
-    % Setting the relative metabolite concentrations for metabolite 5 to be 2x the initial one
-    metsIC(5) = 2;          % If metsAbsOrRel = 'abs', the  concentrations must be given in mol/L
+    % Change initial conditions here if you want, format: {rxn/met ID, initial value}
+    enzymesIC = {{'r1', 1}, {'r10', 1}};       % Always relative concentrations for enzymes
+    metsIC = {{'m5', 0.6}, {'m11', 1.2}};      % When setting metsAbsOrRel = 'abs', absolute concentrations must be given in mol/L
 
     % Specifiy the time of simulation (in hours)
     finalTime = 1;
 
     % Run simulation
-    simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC, metsAbsOrRel, interruptTime);
+    simulationRes = simulateEnsemble(ensemble, finalTime, enzymesIC, metsIC, metsAbsOrRel, interruptTime, numModels, numCores);
+
 
     % Save the results
     save(fullfile(outputFolder, ['simulation_', modelID, '.mat']), 'simulationRes')
@@ -87,9 +83,10 @@ Example:
 The resulting Matlab structure contains the following fields:
 
  - ``t``: time points in each model simulation;
- - ``conc``: concentrations for each time point and model simulation;
- - ``flux``: fluxes for each time point and model simulation.
+ - ``conc``: metabolite concentrations (relative) for each time point and model simulation;
+ - ``flux``: reaction fluxes (absolute) for each time point and model simulation.
 
+Metabolite concentrations are always returned as relative values while reaction fluxes are always returned as absolute values.
 
 To visualize the simulation results you can use the jupyter notebook ``visualize_simulations.ipynb`` in the ``visualization`` folder. More details about this notebook can be found in the :ref:`visualization_python` section.
 

@@ -139,6 +139,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualizing results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../api_doc.html">API documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../analysis_functions.html">Analysis functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../ensemble_functions.html">Ensemble functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../pattern_functions.html">Pattern functions</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../simulation_viz.html">Simulation visualization</a><ul class="current">
@@ -255,20 +256,15 @@ the limits for the y-axis.</p></li>
 
 <dl class="function">
 <dt id="simulation_viz.visualize_simulations_interactive.plot_model_interactive">
-<code class="sig-name descname">plot_model_interactive</code><span class="sig-paren">(</span><em class="sig-param">data_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">data_interp_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">model_i: int</em>, <em class="sig-param">quant_type: str</em>, <em class="sig-param">selected_data: list</em>, <em class="sig-param">x_scale: str = 'linear'</em>, <em class="sig-param">y_scale: str = 'linear'</em>, <em class="sig-param">x_lim: tuple = None</em>, <em class="sig-param">y_lim: tuple = None</em><span class="sig-paren">)</span><a class="headerlink" href="#simulation_viz.visualize_simulations_interactive.plot_model_interactive" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_model_interactive</code><span class="sig-paren">(</span><em class="sig-param">data_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">model_i: int</em>, <em class="sig-param">quant_type: str</em>, <em class="sig-param">selected_data: list</em>, <em class="sig-param">x_scale: str = 'linear'</em>, <em class="sig-param">y_scale: str = 'linear'</em>, <em class="sig-param">x_lim: tuple = None</em>, <em class="sig-param">y_lim: tuple = None</em><span class="sig-paren">)</span><a class="headerlink" href="#simulation_viz.visualize_simulations_interactive.plot_model_interactive" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a pandas dataframe with metabolite concentrations or reaction fluxes, it plots the selected ones
 (specified in selected data) for the selected model.
-The plots are made using altair.
-The data plotted depends on which dataframes are given, data_df contains the pure simulation results, while the
-data_interp_df contains the interpolated simulations. The latter is mandatory and is always plotted, while the
-former is optional.</p>
+The plots are made using altair.</p>
 <p><strong>Inputs</strong></p>
 <blockquote>
 <div><ul class="simple">
 <li><p><strong>data_df</strong> –
 dataframe with metabolite concentrations or reaction fluxes.</p></li>
-<li><p><strong>data_interp_df</strong> –
-dataframe with interpolated metabolite concentrations or reactions fluxes.</p></li>
 <li><p><strong>model_i</strong> –
 number of the model to plot.</p></li>
 <li><p><strong>quant_type</strong> –

@@ -139,6 +139,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualizing results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../api_doc.html">API documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../analysis_functions.html">Analysis functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../ensemble_functions.html">Ensemble functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../pattern_functions.html">Pattern functions</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../simulation_viz.html">Simulation visualization</a><ul class="current">
@@ -221,15 +222,38 @@
 <h1>Import simulation data<a class="headerlink" href="#import-simulation-data" title="Permalink to this headline">¶</a></h1>
 <p>This module implements functions to import and process simulation data.</p>
 <span class="target" id="module-simulation_viz.import_simulation_data"></span><dl class="function">
-<dt id="simulation_viz.import_simulation_data.gather_sim_data">
-<code class="sig-name descname">gather_sim_data</code><span class="sig-paren">(</span><em class="sig-param">mat: dict</em>, <em class="sig-param">met_names: list</em>, <em class="sig-param">rxn_names: list</em>, <em class="sig-param">n_models: int</em>, <em class="sig-param">time_points_spline: list</em>, <em class="sig-param">save_concs: bool = False</em>, <em class="sig-param">save_fluxes: bool = False</em>, <em class="sig-param">ref_conc_dic: dict = None</em><span class="sig-paren">)</span> &#x2192; tuple<a class="headerlink" href="#simulation_viz.import_simulation_data.gather_sim_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Imports the data from the matlab simulation results. Since the time points for which there are concentrations
-may not be the same for all models, it interpolates concentrations and fluxes, and stores the values at certain
-time points (defined in <cite>time_points_spline</cite>). Also, for long simulations, this saves a lot of space.</p>
-<p>Setting save_concs and/or save_fluxes to true may lead to a very large dataframe that occupies a lot of memory, so
-for larger models or just a large number of models, it is advised to set these variables to false.</p>
-<p>If a dictionary with reference concentrations is supplied the resulting dataframe will also contain a column with
-unscaled concentrations (named concentrations_unscaled), i.e. absolute concentrations.</p>
+<dt id="simulation_viz.import_simulation_data.aggregate_time_series">
+<code class="sig-name descname">aggregate_time_series</code><span class="sig-paren">(</span><em class="sig-param">data_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">quant_type: str</em>, <em class="sig-param">name_list: list</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#simulation_viz.import_simulation_data.aggregate_time_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes in a dataframe with either fluxes or concentrations and calculates the median and respective first and third
+quartiles for each flux or metabolite at a given time point over the whole model ensemble.</p>
+<p><strong>Inputs</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>data_df</strong> –
+dataframe with concentrations or fluxes for each time point and model.</p></li>
+<li><p><strong>quant_type</strong> –
+whether the data frame contains relative concentrations (‘conc_rel’), absolute concentrations
+(‘conc_abs’), relative fluxes (‘flux_rel’), or absolute_fluxes (‘flux_abs’).</p></li>
+<li><p><strong>name_list</strong> –
+reaction or metabolite names, depending on what that the dataframe contains.</p></li>
+</ul>
+</div></blockquote>
+<p><strong>Output</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>A pandas dataframe with the concentrations/fluxes median and 1st and 3rd quartiles for each metabolite/reaction.</strong></p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="simulation_viz.import_simulation_data.gather_conc_data">
+<code class="sig-name descname">gather_conc_data</code><span class="sig-paren">(</span><em class="sig-param">mat: dict</em>, <em class="sig-param">met_names: list</em>, <em class="sig-param">n_models: int</em>, <em class="sig-param">quant_type: str</em>, <em class="sig-param">ref_conc_dic: dict = None</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#simulation_viz.import_simulation_data.gather_conc_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Imports the concentration data over time from the matlab simulation results.</p>
+<p>The concentrations are relative to the reference state.</p>
+<p>If a dictionary with reference concentrations is supplied the resulting dataframe will both relative and absolute
+metabolite concentrations. The columns are named conc_rel and conc_abs, respectively.</p>
+<p>Pre-allocated numpy arrays are used for memory performance (vs. previous list extend).</p>
 <p><strong>Inputs</strong></p>
 <blockquote>
 <div><ul class="simple">
@@ -237,26 +261,49 @@ unscaled concentrations (named concentrations_unscaled), i.e. absolute concentra
 matlab structures with simulation results.</p></li>
 <li><p><strong>met_names</strong> –
 names of the simulated metabolites in the model.</p></li>
-<li><p><strong>rxn_names</strong> –
-names of the simulated reactions in the model.</p></li>
 <li><p><strong>n_models</strong> –
 number of models to be simulated.</p></li>
-<li><p><strong>time_points_spline</strong> –
-time points for which concentration and flux values will be returned.</p></li>
-<li><p><strong>save_concs</strong> –
-whether or not to save all concentration values.</p></li>
-<li><p><strong>save_fluxes</strong> –
-whether or not to save all flux values.</p></li>
+<li><p><strong>quant_type</strong> –
+whether to get relative or absolute concentrations. Possible values: conc_abs, conc_rel.</p></li>
 <li><p><strong>ref_conc_dic</strong> –
 a dictionary with the metabolites reference concentrations in each model.</p></li>
 </ul>
 </div></blockquote>
-<p><strong>Outputs</strong></p>
+<p><strong>Output</strong></p>
 <blockquote>
 <div><ul class="simple">
-<li><p><strong>A pandas dataframe with all concentration values (if save_concs==True), a pandas dataframe with concentration</strong></p></li>
-<li><p><strong>values at the time points in `time_points_spline`, and a pandas dataframe with flux values at the time points</strong></p></li>
-<li><p><strong>in `time_points_spline`.</strong></p></li>
+<li><p><strong>A pandas dataframe with all concentration values at each time point.</strong></p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="simulation_viz.import_simulation_data.gather_flux_data">
+<code class="sig-name descname">gather_flux_data</code><span class="sig-paren">(</span><em class="sig-param">mat: dict</em>, <em class="sig-param">rxn_names: list</em>, <em class="sig-param">n_models: int</em>, <em class="sig-param">quant_type: str</em>, <em class="sig-param">ref_flux_dic: dict = None</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#simulation_viz.import_simulation_data.gather_flux_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Imports the flux data over time from the matlab simulation results.</p>
+<p>The fluxes coming from matlab are absolute.</p>
+<p>If a dictionary with reference fluxes is supplied the resulting dataframe will both relative and absolute
+reaction fluxes. The columns are named flux_rel and flux_abs, respectively.</p>
+<p>Pre-allocated numpy arrays are used for memory performance (vs. previous list extend).</p>
+<p><strong>Inputs</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>mat</strong> –
+matlab structures with simulation results.</p></li>
+<li><p><strong>rxn_names</strong> –
+names of the simulated reactions in the model.</p></li>
+<li><p><strong>n_models</strong> –
+number of models to be simulated.</p></li>
+<li><p><strong>quant_type</strong> –
+whether to get relative or absolute fluxes. Possible values: flux_abs, flux_rel.</p></li>
+<li><p><strong>ref_flux_dic</strong> –
+a dictionary with the reactions reference fluxes.</p></li>
+</ul>
+</div></blockquote>
+<p><strong>Output</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>A pandas dataframe with all concentration and flux values at each time point.</strong></p></li>
 </ul>
 </div></blockquote>
 </dd></dl>
@@ -283,35 +330,46 @@ named of the model.</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="simulation_viz.import_simulation_data.get_time_series_quantiles">
-<code class="sig-name descname">get_time_series_quantiles</code><span class="sig-paren">(</span><em class="sig-param">data_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">time_points: list</em>, <em class="sig-param">quant_type: str</em>, <em class="sig-param">name_list: list</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#simulation_viz.import_simulation_data.get_time_series_quantiles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Takes in a dataframe with either fluxes or concentrations and calculates the median and respective first and third
-quartiles for each flux or metabolite at a given time point over the whole model ensemble.</p>
+<dt id="simulation_viz.import_simulation_data.get_time_series_quartiles">
+<code class="sig-name descname">get_time_series_quartiles</code><span class="sig-paren">(</span><em class="sig-param">mat</em>, <em class="sig-param">names_list: list</em>, <em class="sig-param">n_models: int</em>, <em class="sig-param">ref_dic: dict</em>, <em class="sig-param">quant_type: str</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#simulation_viz.import_simulation_data.get_time_series_quartiles" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Given a .mat file from matlab with the simulation results, and the type of quantity the user wants to extract:</dt><dd><ul class="simple">
+<li><p>“flux_rel” - relative fluxes</p></li>
+<li><p>“flux_abs” - absolute fluxes</p></li>
+<li><p>“conc_rel” - relative concentrations</p></li>
+<li><p>“conc_abs” - absolute concentrations</p></li>
+</ul>
+</dd>
+</dl>
+<p>it extracts the data and calculates the median, the first and third quartile for each model, metabolite/reaction,
+and time point.</p>
 <p><strong>Inputs</strong></p>
 <blockquote>
 <div><ul class="simple">
-<li><p><strong>data_df</strong> –
-dataframe with concentrations or fluxes for each time point and model.</p></li>
-<li><p><strong>time_points</strong> –
-time points for which there are concentrations or fluxes.</p></li>
+<li><p><strong>mat</strong> –
+.mat file with simulations from matlab.</p></li>
+<li><p><strong>names_list</strong> –
+list of reaction or metabolite names.</p></li>
+<li><p><strong>n_models</strong> –
+number of models for which to extract the simulations.</p></li>
+<li><p><strong>ref_dic</strong> –
+dictionary with either reference concentrations or fluxes.</p></li>
 <li><p><strong>quant_type</strong> –
-whether the data frame contains concentrations (‘conc’), unscaled concentrations (‘conc_unscaled’),
-or fluxes (‘flux’).</p></li>
-<li><p><strong>name_list</strong> –
-reaction or metabolite names, depending on what that the dataframe contains.</p></li>
+which quantity to extract: “flux_rel”, “flux_abs”, “conc_rel”, “conc_abs”.</p></li>
 </ul>
 </div></blockquote>
-<p><strong>Output</strong></p>
+<p><strong>Outputs</strong></p>
 <blockquote>
 <div><ul class="simple">
-<li><p><strong>A pandas dataframe with the concentrations/fluxes median and 1st and 3rd quartiles for each metabolite/reaction.</strong></p></li>
+<li><p><strong>A dataframe with flux/concentrations median+first+third quartiles for each each model, metabolite/reaction,</strong></p></li>
+<li><p><strong>and time point.</strong></p></li>
 </ul>
 </div></blockquote>
 </dd></dl>
 
 <dl class="function">
 <dt id="simulation_viz.import_simulation_data.import_ref_conc">
-<code class="sig-name descname">import_ref_conc</code><span class="sig-paren">(</span><em class="sig-param">mat: dict</em>, <em class="sig-param">n_models: int</em>, <em class="sig-param">met_names: list</em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#simulation_viz.import_simulation_data.import_ref_conc" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">import_ref_conc</code><span class="sig-paren">(</span><em class="sig-param">mat: dict</em>, <em class="sig-param">n_models: int</em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#simulation_viz.import_simulation_data.import_ref_conc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a .mat file from matlab into a dictionary with reference concentrations for each model.
 Metabolites are the keys, lists of concentrations are the values, where each entry is the concentration for a model.</p>
 <p><strong>Inputs</strong></p>
@@ -321,14 +379,59 @@ Metabolites are the keys, lists of concentrations are the values, where each ent
 ensemble .mat file from matlab in form of dictionary.</p></li>
 <li><p><strong>n_models</strong> –
 number of models to consider.</p></li>
-<li><p><strong>met_names</strong> –
-name of the metabolites.</p></li>
 </ul>
 </div></blockquote>
 <p><strong>Output</strong></p>
 <blockquote>
 <div><ul class="simple">
 <li><p><strong>A dictionary with the reference metabolite concentrations for each model.</strong></p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="simulation_viz.import_simulation_data.import_ref_flux">
+<code class="sig-name descname">import_ref_flux</code><span class="sig-paren">(</span><em class="sig-param">mat: dict</em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#simulation_viz.import_simulation_data.import_ref_flux" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the reference fluxes into a dictionary from a .mat file from matlab.
+Reaction names are the keys and fluxes are the values.</p>
+<p><strong>Input</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>mat</strong> –
+ensemble .mat file from matlab in form of dictionary.</p></li>
+</ul>
+</div></blockquote>
+<p><strong>Output</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>A dictionary with the reference reaction fluxes.</strong></p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="simulation_viz.import_simulation_data.load_simulation">
+<code class="sig-name descname">load_simulation</code><span class="sig-paren">(</span><em class="sig-param">raw_data_dir: str</em>, <em class="sig-param">model_name: str</em>, <em class="sig-param">simulation_name: str</em>, <em class="sig-param">n_models: int</em><span class="sig-paren">)</span> &#x2192; tuple<a class="headerlink" href="#simulation_viz.import_simulation_data.load_simulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes in the path to the folder with the model ensemble and simulation data, loads it and returns the simulation
+Matlab file, the reference concentration and flux dictionaries, as well as the metabolite and reaction names.</p>
+<p><strong>Inputs</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>raw_data_dir</strong> –
+path to folder with simulation and model data.</p></li>
+<li><p><strong>model_name</strong> –
+name of the model</p></li>
+<li><p><strong>simulation_name</strong> –
+name of the simulation</p></li>
+<li><p><strong>n_models</strong> –
+number of models in the simulation to plot</p></li>
+</ul>
+</div></blockquote>
+<p><strong>Outputs</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>The matlab simulation file, reference concentration and fluxes dictionary, and lists of metabolite and</strong></p></li>
+<li><p><strong>reaction names.</strong></p></li>
 </ul>
 </div></blockquote>
 </dd></dl>

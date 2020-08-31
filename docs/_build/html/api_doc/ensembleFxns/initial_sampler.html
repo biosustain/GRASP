@@ -53,7 +53,7 @@
     <link rel="top" title="GRASP 2.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="Ensemble functions" href="../ensemble_functions.html"/>
         <link rel="next" title="Initialize ensemble" href="initialize_ensemble.html"/>
-        <link rel="prev" title="Fix variable names" href="fix_variable_names.html"/> 
+        <link rel="prev" title="General Hit-and-Run sampler" href="general_HR.html"/> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
@@ -138,6 +138,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../model_analysis.html">Model analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualizing results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../troubleshoot.html">Troubleshooting</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../api_doc.html">API documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../analysis_functions.html">Analysis functions</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../ensemble_functions.html">Ensemble functions</a><ul class="current">
@@ -146,24 +147,20 @@
 <li class="toctree-l3"><a class="reference internal" href="check_stability.html">Check stability</a></li>
 <li class="toctree-l3"><a class="reference internal" href="compute_gibbs_free_energy_ranges.html">Compute Gibbs free energy ranges</a></li>
 <li class="toctree-l3"><a class="reference internal" href="compute_robust_fluxes.html">Compute robust fluxes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="control_analysis.html">Control analysis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="control_and_response_analysis.html">Control and response analysis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ensemble_stability_test.html">Ensemble stability test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="export_SBML.html">Export model to SBML</a></li>
 <li class="toctree-l3"><a class="reference internal" href="extract_prior.html">Extract prior</a></li>
-<li class="toctree-l3"><a class="reference internal" href="find_problematic_reactions.html">Find problematic reactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="find_issues_with_TMFA.html">Find issues with TMFA</a></li>
 <li class="toctree-l3"><a class="reference internal" href="fix_variable_names.html">Fix variable names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="general_HR.html">General Hit-and-Run sampler</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Initial sampler</a></li>
 <li class="toctree-l3"><a class="reference internal" href="initialize_ensemble.html">Initialize ensemble</a></li>
 <li class="toctree-l3"><a class="reference internal" href="load_ensemble_structure.html">Load ensemble structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot_control_analysis.html">Plot control analysis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot_control_and_response_analysis.html">Plot control and response analysis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pool_constraint_fxn.html">Pool constraint function</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sample_allostery.html">Sample allostery</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sample_enzyme_abundances.html">Sample enzyme abundances</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sample_flux_and_gibbs_free_energies.html">Sample fluxes and Gibbs free energies for each model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sample_general_reversibilities.html">Sample general reversibilities</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sample_gibbs_reaction_energies.html">Sample Gibbs reaction energies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sample_modifier_elem_fluxes.html">Sample modifier elementary fluxes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulate_ensemble.html">Simulate ensemble</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../pattern_functions.html">Pattern functions</a></li>
@@ -241,9 +238,8 @@
 <h1>Initial sampler<a class="headerlink" href="#initial-sampler" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="ensembleFxns.initialSampler">
-<code class="sig-name descname">initialSampler</code><span class="sig-paren">(</span><em class="sig-param">ensemble</em><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.initialSampler" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">initialSampler</code><span class="sig-paren">(</span><em class="sig-param">ensemble</em>, <em class="sig-param">modelI</em><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.initialSampler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Samples initial ensemble of kinetic models.</p>
-<p>[TODO: Pedro write a bit more about the ABC part?]</p>
 <p>Checks if sampled models are valid and only returns valid ones.
 A model is considered valid if</p>
 <blockquote>
@@ -254,6 +250,8 @@ compatible;</p></li>
 threshold;</p></li>
 <li><p>the difference between the predicted flux and the reference flux
 is negligible.</p></li>
+<li><p>if the rejection sampler is used, the difference between the model
+and the data is smaller than the defined tolerance.</p></li>
 </ul>
 </div></blockquote>
 <p><strong>Usage</strong></p>
@@ -319,7 +317,7 @@ model structure ID</p></li>
         <a href="initialize_ensemble.html" class="btn btn-default float-right" title="Initialize ensemble" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="fix_variable_names.html" class="btn btn-default" title="Fix variable names" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="general_HR.html" class="btn btn-default" title="General Hit-and-Run sampler" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
