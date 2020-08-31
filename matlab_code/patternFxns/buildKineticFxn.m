@@ -1,4 +1,4 @@
-function [freeVars,metsActive] = buildKineticFxn(ensemble,kineticFxn,strucIdx)
+function freeVars = buildKineticFxn(ensemble,kineticFxn,strucIdx)
 % Builds kinetic model .m file that is used to actually run the model.
 %
 %
@@ -22,7 +22,7 @@ function [freeVars,metsActive] = buildKineticFxn(ensemble,kineticFxn,strucIdx)
 %       - Nicholas Cowie	2019 extended for isoenzymes [TODO: confirm this Nick please]
 
 % Define active species (mets/enzymes)
-metsActive = ensemble.metsSimulated(~ismember(ensemble.metsSimulated,ensemble.metsFixed));
+metsActive = ensemble.metsActive;
 enzActive  = ensemble.activeRxns;
 totalEvals = numel(metsActive) + numel(enzActive) + 1;
 freeVars   = [ensemble.mets(metsActive);ensemble.rxns(enzActive)];                             % return indexes of the free variables
@@ -52,7 +52,7 @@ fprintf(fid,'xconst = xconst(:);\n');									% Column vector
 fprintf(fid,['v = zeros(',num2str(size(ensemble.Sred,2)),',',num2str(totalEvals),');\n']);      % Preallocation of memory (rxns)
 fprintf(fid,['E = zeros(',num2str(size(ensemble.Sred,2)),',',num2str(totalEvals),');\n']);      % Preallocation of memory (enz)
 fprintf(fid,['x = [x,x(:,ones(1,',num2str(totalEvals-1),')) + diag(h*1i*ones(',num2str(totalEvals-1),',1))];\n']);      % Preallocation of memory (free vars)
-fprintf(fid,['xconst = [xconst,xconst(:,ones(1,',num2str(numel(ensemble.metsFixed)),')) + diag(h*1i*ones(',num2str(numel(ensemble.metsFixed)),',1))];\n']);      % Preallocation of memory (constant metabolites)
+fprintf(fid,['xconst = [xconst,xconst(:,ones(1,',num2str(totalEvals-1),'))];\n']);      % Preallocation of memory (constant metabolites)
 fprintf(fid,'else\n');
 fprintf(fid,['v = zeros(',num2str(size(ensemble.Sred,2)),',size(x,2));\n']);      % Preallocation of memory (rxns)
 fprintf(fid,['E = zeros(',num2str(size(ensemble.Sred,2)),',size(x,2));\n']);      % Preallocation of memory (enz)
@@ -150,7 +150,7 @@ for i = 1:numel(ensemble.activeRxns)
         else
             substrates  = (ensemble.mets(ensemble.S(:,ensemble.activeRxns(i))<0));
         end
-        substrates  = substrates(ismember(substrates,ensemble.mets(ensemble.metsSimulated)));         % Extract only active substrates
+        
         stoicCoeffsSub = abs(ensemble.S(ismember(ensemble.mets,substrates),ensemble.activeRxns(i)));
       
         % Extract and organize products
@@ -164,7 +164,7 @@ for i = 1:numel(ensemble.activeRxns)
         else
             products    = (ensemble.mets(ensemble.S(:,ensemble.activeRxns(i))>0));
         end
-        products    = products(ismember(products,ensemble.mets(ensemble.metsSimulated)));               % Extract only active products
+        
         stoicCoeffsProd = abs(ensemble.S(ismember(ensemble.mets,products),ensemble.activeRxns(i)));
 
         % Non-enzymatic reactions (diffusion)
@@ -181,14 +181,14 @@ for i = 1:numel(ensemble.activeRxns)
             subCoefList = [];
             for subI=1:numel(substrates)
                 subCoefList = [subCoefList, num2str(stoicCoeffsSub(subI)), '*ones(1,size(x,2));'];
-                subList      = [subList, substrates{subI}, ';'];
+                subList     = [subList, substrates{subI}, ';'];
             end
             
             prodList = [];
             prodCoefList = [];
             for prodI=1:numel(products)
                 prodCoefList = [prodCoefList, num2str(stoicCoeffsProd(prodI)), '*ones(1,size(x,2));'];
-                prodList      = [prodList, products{prodI}, ';'];
+                prodList     = [prodList, products{prodI}, ';'];
             end
             
             

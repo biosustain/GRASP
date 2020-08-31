@@ -52,14 +52,10 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             eigThreshold = 10^-5;
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
-            
+
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleRandom'));
-            trueRes = trueRes.ensemble;
-            
-            trueRes = rmfield(trueRes,'rxnMetLinks');
-            trueRes = rmfield(trueRes,'freeVars');
-            ensemble = rmfield(ensemble,'freeVars');
-            trueRes.LPSolver = 'gurobi';
+            trueRes = trueRes.ensemble;  
+            trueRes = rmfield(trueRes, 'metsSimulated');
                    
             testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
@@ -78,14 +74,10 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             eigThreshold = 10^-5;
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
-            
-            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleRandom'));
+
+            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleRandomLinprog'));
             trueRes = trueRes.ensemble;
-            
-            trueRes = rmfield(trueRes,'rxnMetLinks');
-            trueRes = rmfield(trueRes,'freeVars');
-            ensemble = rmfield(ensemble,'freeVars');
-            trueRes.LPSolver = 'linprog';
+            trueRes = rmfield(trueRes, 'metsSimulated');
                    
             testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
@@ -103,15 +95,11 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             eigThreshold = 10^-5;
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
-            
+
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleAllosteric'));
             trueRes = trueRes.ensemble;
-            
-            trueRes = rmfield(trueRes,'rxnMetLinks');
-            trueRes = rmfield(trueRes,'freeVars');
-            ensemble = rmfield(ensemble,'freeVars');   
-            trueRes.LPSolver = 'gurobi';
-            
+            trueRes = rmfield(trueRes, 'metsSimulated');
+                        
             testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
@@ -130,15 +118,11 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             eigThreshold = 10^-5;
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
-            
+
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleAllStable'));
             trueRes = trueRes.ensemble;
-            
-            trueRes = rmfield(trueRes, 'rxnMetLinks');
-            trueRes = rmfield(trueRes,'freeVars');
-            ensemble = rmfield(ensemble,'freeVars');   
-            trueRes.LPSolver = 'gurobi';
-            
+            trueRes = rmfield(trueRes, 'metsSimulated');
+                       
             testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
@@ -157,14 +141,10 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             eigThreshold = 10^-5;
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
-            
+
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleNoPromiscuous'));
             trueRes = trueRes.ensemble;
-            
-            trueRes = rmfield(trueRes,'rxnMetLinks');
-            trueRes = rmfield(trueRes,'freeVars');
-            ensemble = rmfield(ensemble,'freeVars');       
-            trueRes.LPSolver = 'gurobi';
+            trueRes = rmfield(trueRes, 'metsSimulated');
             
             testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
@@ -183,15 +163,11 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             eigThreshold = 10^-5;
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
-                      
+
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleLargeModel'));
             trueRes = trueRes.ensemble;
-            
-            trueRes = rmfield(trueRes, 'rxnMetLinks');
-            trueRes = rmfield(trueRes,'freeVars');
-            ensemble = rmfield(ensemble,'freeVars');       
-            trueRes.LPSolver = 'gurobi';
-            
+            trueRes = rmfield(trueRes, 'metsSimulated');
+                        
             testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
@@ -209,15 +185,11 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             eigThreshold = 10^-5;
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
-            
+
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleLargeModeldGs'));
             trueRes = trueRes.ensemble;
-            
-            trueRes = rmfield(trueRes,'rxnMetLinks');
-            trueRes = rmfield(trueRes,'freeVars');
-            ensemble = rmfield(ensemble,'freeVars');       
-            trueRes.LPSolver = 'gurobi';
-            
+            trueRes = rmfield(trueRes, 'metsSimulated');
+                       
             testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
@@ -226,7 +198,6 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             
             seed = 1;
             rng(seed)
-
             
             modelID = 'toy_model1_random2';
             inputFile = fullfile(testCase.currentPath{1}, 'testFiles', modelID);
@@ -241,12 +212,8 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             ensemble = ensemble.ensemble;
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleCreateDir'));
-            trueRes = trueRes.ensemble;
-            
-            trueRes = rmfield(trueRes,'rxnMetLinks');
-            trueRes = rmfield(trueRes,'freeVars');
-            ensemble = rmfield(ensemble,'freeVars');       
-            trueRes.LPSolver = 'gurobi';
+            trueRes = trueRes.ensemble;   
+            trueRes = rmfield(trueRes, 'metsSimulated');
             
             testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
@@ -272,7 +239,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleExample'));
             trueRes = trueRes.ensemble;  
-            trueRes.LPSolver = 'gurobi';
+            trueRes = rmfield(trueRes, 'metsSimulated');
             
             testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
