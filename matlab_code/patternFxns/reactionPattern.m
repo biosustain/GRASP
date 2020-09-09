@@ -107,7 +107,7 @@ end
 Pattern = tempPath;       % all possible pattern list
 
 % 3. Calculate every pattern expression corresponding to each state
-PatternNumber = length(Pattern);
+PatternNumber = size(Pattern, 1);
 pathway = [];
 for i = 1:PatternNumber
     try
