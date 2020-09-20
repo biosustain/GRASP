@@ -55,7 +55,6 @@ particleIdx = find(ensemble.populations(end).strucIdx==strucIdx);
 numModels   = numel(particleIdx);
 
 % Optimization & simulation parameters
-fixedExchs   = ensemble.fixedExch;
 kineticFxn   = str2func(ensemble.kineticFxn{strucIdx});
 freeVars     = numel(ensemble.freeVars);
 Sred         = ensemble.Sred;
