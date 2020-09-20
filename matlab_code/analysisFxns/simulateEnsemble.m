@@ -67,7 +67,6 @@ if numModels > numel(particleIdx)
 end
 
 % Optimization & simulation parameters
-fixedExchs   = ensemble.fixedExch;
 kineticFxn   = str2func(ensemble.kineticFxn{strucIdx});
 Sred         = ensemble.Sred;
 kinInactRxns = ensemble.kinInactRxns;
@@ -107,6 +106,8 @@ disp ('Simulating models.');
 parpool(numCores);																								% Initiate parallel pool and run parallel foor loop
 parfor jx = 1:numModels
     disp(['Model: ', num2str(jx)]);
+    
+    fixedExchs = ensemble.populations(end).models(jx).fixedExch;
     
     model = ensemble.populations(end).models(particleIdx(jx));
     metActiveConcRef = model.metConcRef(ensemble.metsActive);
