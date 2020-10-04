@@ -198,11 +198,10 @@ ensemble.numParticles  = xData(3);
 ensemble.parallel      = xData(4);
 ensemble.numCores      = xData(5);
 robustFluxes           = xData(6);
-computeThermo          = xData(7);
-if isnan(xData(9))
-    ensemble.tolerance = [Inf,xData(9)];
+if isnan(xData(8))
+    ensemble.tolerance = [Inf,xData(8)];
 else
-    ensemble.tolerance = [xData(8),xData(9)];
+    ensemble.tolerance = [xData(7),xData(8)];
 end
 ensemble.S             = Sfull';
 ensemble.rxns          = rxnsList(2:end,1);
