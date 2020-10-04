@@ -310,7 +310,7 @@ while true
                 tolScore = [tolScore,max(sqrt(mean(((simulatedFlux(ensemble.freeFluxes,ix)-ensemble.simWeights(:,ix))./ensemble.simWeights(:,ix)).^2)))];
 
                 % Check tolerance inmediately for this condition
-                if (tolScore(end)>ensemble.tolerance(1))
+                if (tolScore(end)>ensemble.tolerance)
                     isModelValid = false;
                     break;
                 end
