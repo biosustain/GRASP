@@ -15,7 +15,7 @@ function ensemble = loadEnsembleStructure(xlsxFile)
 %    ensemble (struct):   model ensemble data structure
 %
 %               * description (*char*)            : model name basically
-%               * sampler (*char*)                : specifies the sampling mode: ORACLE or rejection [TODO Pedro check if this is correct]
+%               * sampler (*char*)                : specifies the sampling mode: GRASP or rejection
 %               * solver (*char*)                 : which solver to use for the rejection sampler
 %               * numConditions (*int*)           : how many experimental conditions    
 %               * numStruct (*int*)               : how many model structures
