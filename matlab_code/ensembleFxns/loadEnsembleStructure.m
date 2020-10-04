@@ -117,8 +117,8 @@ idxProt = fixVariableNames(idxProt, 'r');
 idxMets = fixVariableNames(idxMets, 'm');
 
 % Validate input dimensions
-if ~all(size(xData) == [10, 1]) || ~all(size(strData) == [15, 2])
-    error('Check the general sheet, it should have 15 rows and 2 columns.');
+if ~all(size(xData) == [9, 1]) || ~all(size(strData) == [14, 2])
+    error('Check the general sheet, it should have 14 rows and 2 columns.');
 end
 
 nMets = size(Sfull, 2);
@@ -197,13 +197,12 @@ ensemble.numStruct     = xData(2);
 ensemble.numParticles  = xData(3);
 ensemble.parallel      = xData(4);
 ensemble.numCores      = xData(5);
-ensemble.alphaAlive    = xData(6);
-robustFluxes           = xData(7);
-computeThermo          = xData(8);
+robustFluxes           = xData(6);
+computeThermo          = xData(7);
 if isnan(xData(9))
-    ensemble.tolerance = [Inf,xData(10)];
+    ensemble.tolerance = [Inf,xData(9)];
 else
-    ensemble.tolerance = [xData(9),xData(10)];
+    ensemble.tolerance = [xData(8),xData(9)];
 end
 ensemble.S             = Sfull';
 ensemble.rxns          = rxnsList(2:end,1);
