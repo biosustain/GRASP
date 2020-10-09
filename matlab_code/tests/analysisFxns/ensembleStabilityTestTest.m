@@ -35,7 +35,7 @@ classdef ensembleStabilityTestTest < matlab.unittest.TestCase
             
             eigThreshold = -0.5;
             stabilityRes = ensembleStabilityTest(ensemble,eigThreshold);
-            save(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResEnsembleStabilityTest1'), 'stabilityRes');
+
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResEnsembleStabilityTest1'));
             trueRes = trueRes.stabilityRes;
                    
