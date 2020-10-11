@@ -29,14 +29,14 @@ classdef controlAndResponseAnalysisTest < matlab.unittest.TestCase
             % To make sure reaction files are created properly
             xlsxFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_random2');
             loadEnsembleStructure(xlsxFile);
-                        
+            
             ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'final_ensemble_toy_model1_random2.mat'));
             ensemble = ensemble.ensemble;
             ensemble.freeVars{end+1} = 'r_r13';
             
             saveResMatrices = 0;
             mcaResults = controlAndResponseAnalysis(ensemble,saveResMatrices);
-            
+
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResControlAndResponseAnalysis1'));
             trueRes = trueRes.mcaResults;
                    

@@ -37,7 +37,7 @@ classdef controlAnalysisTest < matlab.unittest.TestCase
             
             saveResMatrices = 0;
             mcaResults = controlAnalysis(ensemble,saveResMatrices);
-
+save(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResControlAnalysis1'), 'mcaResults');
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResControlAnalysis1'));
             trueRes = trueRes.mcaResults;
 

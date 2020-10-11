@@ -32,13 +32,18 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'ensemble_toy_model1.mat');
             ensemble = load(filepath);
             ensemble = ensemble.ensemble;
+            ensemble.sampler = 'GRASP';
             popIdx = 1;
             verbose = 1;
             
             ensemble = initializeEnsemble(ensemble,popIdx,verbose);
-
+            
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model1.mat'));
-            testCase.verifyEqual(ensemble, trueRes.ensemble);   
+            
+            trueRes = trueRes.ensemble;
+            trueRes.sampler = 'GRASP';
+          
+            testCase.verifyEqual(ensemble, trueRes);   
             
         end
         
@@ -47,13 +52,18 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'ensemble_toy_model1_random.mat');
             ensemble = load(filepath);
             ensemble = ensemble.ensemble;
+            ensemble.sampler = 'GRASP';
             popIdx = 1;
             verbose = 1;
             
             ensemble = initializeEnsemble(ensemble,popIdx,verbose);
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model1_random.mat'));
-            testCase.verifyEqual(ensemble, trueRes.ensemble);   
+            
+            trueRes = trueRes.ensemble;
+            trueRes.sampler = 'GRASP';
+            
+            testCase.verifyEqual(ensemble, trueRes);   
             
         end
         
@@ -67,7 +77,12 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             ensemble = initializeEnsemble(ensemble,popIdx,verbose);
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model3_isoenzymes.mat'));
-            trueRes = trueRes.ensemble;          
+            
+            trueRes = trueRes.ensemble; 
+            ensemble = rmfield(ensemble, 'tolerance');
+            trueRes = rmfield(trueRes, 'tolerance');
+            trueRes = rmfield(trueRes, 'alphaAlive');
+            trueRes.sampler = 'GRASP';
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
@@ -84,7 +99,12 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             ensemble = initializeEnsemble(ensemble,popIdx,verbose);
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model4.mat'));
+            
             trueRes = trueRes.ensemble;
+            ensemble = rmfield(ensemble, 'tolerance');
+            trueRes = rmfield(trueRes, 'tolerance');
+            trueRes = rmfield(trueRes, 'alphaAlive');
+            trueRes.sampler = 'GRASP';
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))  
@@ -101,7 +121,12 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             ensemble = initializeEnsemble(ensemble,popIdx,verbose);
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model4_inhibitors.mat'));
+            
             trueRes = trueRes.ensemble;
+            ensemble = rmfield(ensemble, 'tolerance');
+            trueRes = rmfield(trueRes, 'tolerance');
+            trueRes = rmfield(trueRes, 'alphaAlive');
+            trueRes.sampler = 'GRASP';
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
@@ -118,7 +143,12 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             ensemble = initializeEnsemble(ensemble,popIdx,verbose);
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model1_nick.mat'));
-            trueRes = trueRes.ensemble;           
+            
+            trueRes = trueRes.ensemble;       
+            ensemble = rmfield(ensemble, 'tolerance');
+            trueRes = rmfield(trueRes, 'tolerance');
+            trueRes = rmfield(trueRes, 'alphaAlive');
+            trueRes.sampler = 'GRASP';
                        
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))  
