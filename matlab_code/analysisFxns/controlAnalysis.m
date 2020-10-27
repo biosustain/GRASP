@@ -52,7 +52,7 @@ addKineticFxnsToPath(ensemble);
 
 % Find particles of the appropriate structure
 particleIdx = find(ensemble.populations(end).strucIdx==strucIdx);
-numModels   = numel(particleIdx);
+numModels   = numel(ensemble.populations.models);
 
 % Optimization & simulation parameters
 fixedExchs   = ensemble.fixedExch;
