@@ -55,7 +55,6 @@ particleIdx = find(ensemble.populations(end).strucIdx==strucIdx);
 numModels   = numel(particleIdx);
 
 % Optimization & simulation parameters
-fixedExchs   = ensemble.fixedExch;
 kineticFxn   = str2func(ensemble.kineticFxn{strucIdx});
 freeVars     = numel(ensemble.freeVars);
 Sred         = ensemble.Sred;
@@ -90,6 +89,8 @@ for ix = 1:nCondition
     
     for jx = 1:numModels
         disp(['Model: ', num2str(jx)]);
+        
+        fixedExchs = ensemble.populations(end).models(jx).fixedExch;
         
         mcaResults.enzNames = rxnNames;
         model = ensemble.populations(end).models(particleIdx(jx));
@@ -134,6 +135,7 @@ for ix = 1:nCondition
             end
             mcaResults.xControlAvg{ix} = mcaResults.xControlAvg{ix} + C_x;
             mcaResults.xcounter{ix}    = mcaResults.xcounter{ix} + 1;
+            disp([num2str(jx), ' Cx']);
         end
         if all(abs(sum(C_v,2))-1<1e-5)
             if saveResMatrices
@@ -143,6 +145,7 @@ for ix = 1:nCondition
             
             mcaResults.vControlAvg{ix} = mcaResults.vControlAvg{ix} + C_v;
             mcaResults.vcounter{ix}    = mcaResults.vcounter{ix} + 1;
+            disp([num2str(jx), ' Cv']);
         end
     end
     
