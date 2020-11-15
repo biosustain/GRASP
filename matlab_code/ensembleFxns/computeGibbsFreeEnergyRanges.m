@@ -68,14 +68,16 @@ model.ub  = [vmax;M*ones(n,1);DGf_std_max;log(xmax);ones(n,1)];
 Vblock    = eye(nflux);
 Vblock    = Vblock(ensemble.idxNotExch,:);
 
+
+model.Aeq = sparse([Sflux,zeros(size(Sflux,1),2*n+2*m)]);                        % Sflux*v = 0
+
 % Define problem matrix
-model.A  = sparse([Sflux,zeros(size(Sflux,1),2*n+2*m);...         % Sflux*v = 0
-    zeros(n,nflux),eye(n),-Sthermo',-RT*Sthermo',zeros(n);...     % DGr - Sthermo'*DGf_std - RT*Sthermo'*ln(x) <= tol
-    zeros(n,nflux),-eye(n),Sthermo',RT*Sthermo',zeros(n);...      % -DGr + Sthermo'*DGf_std + RT*Sthermo'*ln(x) <= tol
-    -Vblock,zeros(n,n+2*m),K*eye(n);...                           % -v + K*e <= K
-    Vblock,zeros(n,n+2*m),-K*eye(n);...                           % v - K*e <= 0
-    zeros(n,nflux),eye(n),zeros(n,2*m),K*eye(n);...               % DGr + K*e <= K - delta
-    zeros(n,nflux),-eye(n),zeros(n,2*m),-K*eye(n)]);              % -DGr - K*e <= -delta
+model.A  = sparse([zeros(n,nflux),eye(n),-Sthermo',-RT*Sthermo',zeros(n);...     % DGr - Sthermo'*DGf_std - RT*Sthermo'*ln(x) <= tol
+                   zeros(n,nflux),-eye(n),Sthermo',RT*Sthermo',zeros(n);...      % -DGr + Sthermo'*DGf_std + RT*Sthermo'*ln(x) <= tol
+                   -Vblock,zeros(n,n+2*m),K*eye(n);...                           % -v + K*e <= K
+                   Vblock,zeros(n,n+2*m),-K*eye(n);...                           % v - K*e <= 0
+                   zeros(n,nflux),eye(n),zeros(n,2*m),K*eye(n);...               % DGr + K*e <= K - delta
+                   zeros(n,nflux),-eye(n),zeros(n,2*m),-K*eye(n)]);              % -DGr - K*e <= -delta
 
 if ~isempty(ineqConstraints)
     p = size(ineqConstraints,1);
@@ -83,34 +85,62 @@ if ~isempty(ineqConstraints)
 end
 
 % Objective function
-model.obj = zeros(size(model.A,2),1);
+model.f = zeros(size(model.A,2),1);
 
 % Constraints sense and rhs
-model.rhs = [zeros(size(Sflux,1),1);tol*ones(n,1);tol*ones(n,1);K*ones(n,1);zeros(n,1);(K-delta)*ones(n,1);-delta*ones(n,1)];
+model.beq = zeros(size(Sflux,1),1);
+model.b = [tol*ones(n,1);tol*ones(n,1);K*ones(n,1);zeros(n,1);(K-delta)*ones(n,1);-delta*ones(n,1)];
+
 if ~isempty(ineqConstraints)
-    model.rhs = [model.rhs;ineqConstraints(:,end)];
+    model.b = [model.b;ineqConstraints(:,end)];
 end
 
-model.sense = blanks(numel(model.rhs));
-model.sense(1:size(Sflux,1)) = '=';
-model.sense(size(Sflux,1)+1:end) = '<';
+if strcmp(ensemble.LPSolver, 'gurobi')
+    
+    gurobiModel.A = [model.Aeq; model.A];
+    gurobiModel.rhs = [model.beq; model.b];
+    gurobiModel.lb = model.lb;
+    gurobiModel.ub = model.ub;
+    gurobiModel.obj = model.f;
+    
+    gurobiModel.sense = blanks(numel(gurobiModel.rhs));
+    gurobiModel.sense(1:size(Sflux,1)) = '=';
+    gurobiModel.sense(size(Sflux,1)+1:end) = '<';
 
-% Variable type definition
-model.vtype = blanks(numel(model.obj));
-model.vtype(1:nflux+n+2*m) = 'C';
-model.vtype(nflux+n+2*m+1:end) = 'B';
+    % Variable type definition
+    gurobiModel.vtype = blanks(numel(gurobiModel.obj));
+    gurobiModel.vtype(1:(nflux+n+2*m)) = 'C';
+    gurobiModel.vtype((nflux+n+2*m+1):end) = 'B';
 
-% Define optimization parameters
-params.outputflag    = 0;
-params.IntFeasTol    = 1e-9;
-params.MIPGap        = 1e-6;
-params.MIPGapAbs     = 1e-12;
-params.OptimalityTol = 1e-9;
+    % Define optimization parameters
+    params.outputflag     = 0;
+    params.FeasibilityTol = 1e-6;
+    params.IntFeasTol     = 1e-6;
+    params.MIPGap         = 1e-6;
+    params.MIPGapAbs      = 1e-12;
+    params.OptimalityTol  = 1e-9;
 
-% Check the feasibility of the problem
-sol = gurobi(model,params);
+    % Check the feasibility of the problem
+    sol = gurobi(model,params);
 
-if strcmp(sol.status,'INFEASIBLE')
+elseif strcmp(ensemble.LPSolver, 'linprog')
+    options =  optimoptions(@intlinprog, ...
+                            'AbsoluteGapTolerance', 1e-12, ...               % equivalent to MIPGapAbs
+                            'RelativeGapTolerance', 1e-6, ....               % equivalent to MIPGap
+                            'LPOptimalityTolerance', 1e-9, ...               % equivalent to OptimalityTol
+                            'ConstraintTolerance', 1e-6, ...                 % equivalent to FeasibilityTol
+                            'IntegerTolerance', 1e-6, ...                    % equivalent to IntFeasTol
+                            'Display', 'off');
+                        
+    model.intcon = [(nflux+n+2*m+1):numel(model.f)];
+    
+    [x,fval] = intlinprog(model.f, model.intcon, model.A, model.b, model.Aeq, model.beq, model.lb, model.ub, options);
+end
+
+
+if (strcmp(ensemble.LPSolver, 'gurobi') && strcmp(sol.status,'INFEASIBLE')) || ...
+        (strcmp(ensemble.LPSolver, 'linprog') && isempty(fval))
+    
     disp('TMFA problem is infeasible.')
     findIssuesWithTMFA(ensemble,model,DGf_std_min,DGf_std_max,vmin,vmax,xmin,xmax,ineqConstraints,K,RT,delta,M,tol);
 end
@@ -126,29 +156,51 @@ xprev_min = zeros(nflux+n+2*m,1);
 xprev_max = zeros(nflux+n+2*m,1);
 
 for ix = 1:nflux+n+2*m
-    model.obj(ix)    = 1;
     
-    model.modelsense = 'min';
-    solmin = gurobi(model,params);
-    if ~strcmp(solmin.status,'OPTIMAL')
-        error(strcat('Check your metabolite concentration ranges in thermoMets. In particular for minimum values set to 0 change them to a low number like 10^15.'));
-    end
+     if strcmp(ensemble.LPSolver, 'gurobi')
+
+        gurobiModel.obj(ix)    = 1;
+        gurobiModel.modelsense = 'min';
+        solmin                 = gurobi(gurobiModel,params);
+        if ~strcmp(solmin.status,'OPTIMAL')
+              error(strcat('Check your metabolite concentration ranges in thermoMets. In particular for minimum values set to 0 change them to a low number like 10^15.'));
+        end
+        
+        gurobiModel.modelsense = 'max';
+        solmax                 = gurobi(gurobiModel,params);
+        
+        gurobiModel.obj(ix) = 0;
+        solmax              = solmax.objval;
+        solmin              = solmin.objval;
+        
+  	elseif strcmp(ensemble.LPSolver, 'linprog')
+        
+        model.f(ix)      = 1;
+        [x, solmin]      = intlinprog(model.f, model.intcon, model.A, model.b, model.Aeq, model.beq, model.lb, model.ub, options);
+        if  isempty(solmin)
+              error(strcat('Check your metabolite concentration ranges in thermoMets. In particular for minimum values set to 0 change them to a low number like 10^15.'));
+        end
+        
+        model.f(ix)     = -1;
+        [x, solmax]     = intlinprog(model.f, model.intcon, model.A, model.b, model.Aeq, model.beq, model.lb, model.ub, options);
+        solmax          = -solmax;
+        model.f(ix)     = 0;
+        
+    end  
+    
     xprev_min(:,ix) = solmin.x(1:nflux+n+2*m);                            % save previous min solution for later
-    
-    model.modelsense = 'max';
-    solmax = gurobi(model,params);
     xprev_max(:,ix) = solmax.x(1:nflux+n+2*m);                            % save previous max solution for later
     
     if (ix<=nflux)
-        v_range(ix,:) = [solmin.objval,solmax.objval];                    % [umol or mmol/gdcw/h]
+        v_range(ix,:) = [solmin, solmax];                    % [umol or mmol/gdcw/h]
     elseif (ix<=nflux+n)
-        DGr_range(ix-nflux,:) = [solmin.objval,solmax.objval];            % [kJ/mol]
+        DGr_range(ix-nflux,:) = [solmin, solmax];            % [kJ/mol]
     elseif (ix<=nflux+n+m)
-        DGf_std_range(ix-nflux-n,:) = [solmin.objval,solmax.objval];      % [kJ/mol]
+        DGf_std_range(ix-nflux-n,:) = [solmin, solmax];      % [kJ/mol]
     else
-        lnx_range(ix-nflux-n-m,:)   = [solmin.objval,solmax.objval];      % log([M])
+        lnx_range(ix-nflux-n-m,:)   = [solmin, solmax];      % log([M])
     end
-    model.obj(ix) = 0;
+    
 end
 
 
@@ -159,6 +211,7 @@ Nint = null(Sthermo,'r');
 loopCondition = Nint' * x0(nflux+1:nflux+n);
 
 % Check that the initial point is feasible
+model.A = [model.Aeq, model.A];
 Acheck = full(model.A(1:(size(Sflux,1)+2*n),1:(nflux+n+2*m)));              % Generate checking matrix
 if all(abs(Acheck*x0)<1e-6)
     if ~isempty(Nint)
