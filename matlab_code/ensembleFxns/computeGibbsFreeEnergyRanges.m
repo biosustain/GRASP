@@ -1,4 +1,4 @@
-function [v_range,DGr_range,DGf_std_range,lnx_range,x0] = computeGibbsFreeEnergyRanges(ensemble,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,ineqConstraints)
+function [v_range,DGr_range,DGf_std_range,lnx_range,x0] = computeGibbsFreeEnergyRanges(ensemble,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,ineqConstraints,K)
 % Applies Thermodynamic Flux Balance Analysis (TMFA) to find
 % thermodynamically feasible ranges for reactions fluxes, metabolite
 % concentrations, and reactions Gibbs energies.
@@ -11,6 +11,20 @@ function [v_range,DGr_range,DGf_std_range,lnx_range,x0] = computeGibbsFreeEnergy
 % Note that those formation energies are compatible with the
 % given standard Gibbs energies, but are not necessarily
 % similar to formation energies obtained from e.g. eQuilibrator.
+%
+% Note: The value for K is now decreased if the initial point to use for
+%       sampling gibbs energies and fluxes is thermodynamically infeasible
+%       (Gibbs energies and reaction fluxes are not compatible).
+%       This happens sometimes because of numerical precision issues.
+%       For instance, intlinprog considers anything lower than 
+%       1e-6 to be the same as zero. Thus, it is possible to have 
+%       a constraint like -dGr -K*e <= -1e-6, if dGr = -10, K = 1e10,
+%       and e= 1e-7 the constraint is satisfied, even though it wouldn't
+%       be if e=0. In this case e should be 1, which is not the case 
+%       due to numerical imprecision. Thus, in this case, K would be set 
+%       to 1e7, so that K*e >= 10^0 is true even when e=1e-7, forcing e 
+%       to be 1 when it should be 1, e.g. to satisfy -dGr -K*e <= -1e-6,
+%       with dGr = -10, K = 1e7. 
 %
 %
 % USAGE:
@@ -54,7 +68,9 @@ end
 
 
 % Build the adapted TMFA problem
-K       = 1e12;
+if nargin <= 8
+    K = 1e12;
+end
 delta   = 1e-6;
 RT      = 8.314*298.15/1e3;  % [kJ/mol]
 M       = 1e5;
@@ -120,8 +136,9 @@ if strcmp(ensemble.LPSolver, 'gurobi')
     params.MIPGapAbs      = 1e-12;
     params.OptimalityTol  = 1e-9;
 
+
     % Check the feasibility of the problem
-    sol = gurobi(model,params);
+    sol = gurobi(gurobiModel,params);
 
 elseif strcmp(ensemble.LPSolver, 'linprog')
     options =  optimoptions(@intlinprog, ...
@@ -170,26 +187,29 @@ for ix = 1:nflux+n+2*m
         solmax                 = gurobi(gurobiModel,params);
         
         gurobiModel.obj(ix) = 0;
+        solmaxX             = solmax.x;
+        solminX             = solmin.x;
         solmax              = solmax.objval;
         solmin              = solmin.objval;
         
   	elseif strcmp(ensemble.LPSolver, 'linprog')
         
         model.f(ix)      = 1;
-        [x, solmin]      = intlinprog(model.f, model.intcon, model.A, model.b, model.Aeq, model.beq, model.lb, model.ub, options);
+        [solminX, solmin]   = intlinprog(model.f, model.intcon, model.A, model.b, model.Aeq, model.beq, model.lb, model.ub, options);
         if  isempty(solmin)
               error(strcat('Check your metabolite concentration ranges in thermoMets. In particular for minimum values set to 0 change them to a low number like 10^15.'));
         end
         
         model.f(ix)     = -1;
-        [x, solmax]     = intlinprog(model.f, model.intcon, model.A, model.b, model.Aeq, model.beq, model.lb, model.ub, options);
+        [solmaxX, solmax]  = intlinprog(model.f, model.intcon, model.A, model.b, model.Aeq, model.beq, model.lb, model.ub, options);
         solmax          = -solmax;
-        model.f(ix)     = 0;
         
+        model.f(ix)     = 0;        
+
     end  
     
-    xprev_min(:,ix) = solmin.x(1:nflux+n+2*m);                            % save previous min solution for later
-    xprev_max(:,ix) = solmax.x(1:nflux+n+2*m);                            % save previous max solution for later
+    xprev_min(:,ix) = solminX(1:nflux+n+2*m);                            % save previous min solution for later
+    xprev_max(:,ix) = solmaxX(1:nflux+n+2*m);                            % save previous max solution for later
     
     if (ix<=nflux)
         v_range(ix,:) = [solmin, solmax];                    % [umol or mmol/gdcw/h]
@@ -211,10 +231,48 @@ Nint = null(Sthermo,'r');
 loopCondition = Nint' * x0(nflux+1:nflux+n);
 
 % Check that the initial point is feasible
-model.A = [model.Aeq, model.A];
+model.A = [model.Aeq; model.A];
 Acheck = full(model.A(1:(size(Sflux,1)+2*n),1:(nflux+n+2*m)));              % Generate checking matrix
+
 if all(abs(Acheck*x0)<1e-6)
-    if ~isempty(Nint)
+    
+    if sum(sign(xprev_min(1:nflux)) - sign(xprev_max(1:nflux))) == 0    
+        disp('Flux directions are consistent.');
+    else 
+        error('The flux directions are not consistent. Please make sure that both the lower and upper bound of the flux ranges (fluxMean - 2*fluxStd and fluxMean + 2*fluxStd, respectively) are either positive or negative.');
+    end
+    
+    nonZeroIndMin = find(xprev_min(nflux+1:nflux+n) ~= 0);
+    nonZeroIndMax = find(xprev_max(nflux+1:nflux+n) ~= 0);
+    if all(nonZeroIndMin == nonZeroIndMax)
+        
+        if sum(sign(xprev_min(nonZeroIndMin+nflux)) - sign(xprev_max(nonZeroIndMax+nflux))) == 0    
+            disp('Gibbs energy directions are consistent.');
+        else 
+            error('The mininum and maximum values of Gibbs energies used to calculate the initial point for dG and flux sampling are not consistent.');
+        end
+       
+    end
+    
+    if sum(sign(x0(ensemble.idxNotExch)) + sign(x0(ensemble.idxNotExch+nflux))) == 0 
+            
+        disp('The fluxes and Gibbs energies are consistent.');
+
+        if K < 1e12
+            disp(['The K value in the TMFA problem was modified and set to 10^', num2str(log10(K))]);
+        end
+
+    else
+        if K >= 1
+            n = log10(K);
+            K = 10^(n-1);
+            [v_range,DGr_range,DGf_std_range,lnx_range,x0] = computeGibbsFreeEnergyRanges(ensemble,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,ineqConstraints,K);
+        else
+           error('The fluxes and Gibbs energies are not consistent.');
+        end
+    end
+        
+	if ~isempty(Nint)
         if max(abs(loopCondition)) <= 1e-6
             disp('The initial point obtained from TMFA is feasible and valid for starting the sampler.');
         else
@@ -223,12 +281,6 @@ if all(abs(Acheck*x0)<1e-6)
     else
         disp('The initial point obtained from TMFA is feasible and valid for starting the sampler.');
     end            
-
-    if all(sign(xprev_min(1:nflux))&sign(xprev_max(1:nflux)))    
-        disp('Flux directions are consistent.');
-    else 
-        error('The flux directions are not consistent. Please make sure that both the lower and upper bound of the flux ranges (fluxMean - 2*fluxStd and fluxMean + 2*fluxStd, respectively) are either positive or negative.');
-    end
     
 else
     error('The initial point obtained from TMFA is not thermodynamically feasible.')
