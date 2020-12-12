@@ -79,9 +79,6 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model3_isoenzymes.mat'));
             
             trueRes = trueRes.ensemble; 
-            ensemble = rmfield(ensemble, 'tolerance');
-            trueRes = rmfield(trueRes, 'tolerance');
-            trueRes = rmfield(trueRes, 'alphaAlive');
             trueRes.sampler = 'GRASP';
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
@@ -101,9 +98,6 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model4.mat'));
             
             trueRes = trueRes.ensemble;
-            ensemble = rmfield(ensemble, 'tolerance');
-            trueRes = rmfield(trueRes, 'tolerance');
-            trueRes = rmfield(trueRes, 'alphaAlive');
             trueRes.sampler = 'GRASP';
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
@@ -123,9 +117,6 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model4_inhibitors.mat'));
             
             trueRes = trueRes.ensemble;
-            ensemble = rmfield(ensemble, 'tolerance');
-            trueRes = rmfield(trueRes, 'tolerance');
-            trueRes = rmfield(trueRes, 'alphaAlive');
             trueRes.sampler = 'GRASP';
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
@@ -145,9 +136,6 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model1_nick.mat'));
             
             trueRes = trueRes.ensemble;       
-            ensemble = rmfield(ensemble, 'tolerance');
-            trueRes = rmfield(trueRes, 'tolerance');
-            trueRes = rmfield(trueRes, 'alphaAlive');
             trueRes.sampler = 'GRASP';
                        
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
