@@ -41,6 +41,7 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'initializedEnsemble_toy_model1.mat');
             ensemble = load(filepath);
             ensemble = ensemble.ensemble;
+            ensemble.sampler = 'GRASP';
             ensemble.eigThreshold = 10^-5;
             modelI = 1;
                         
@@ -77,6 +78,7 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'initializedEnsemble_toy_model1_random.mat');
             ensemble = load(filepath);
             ensemble = ensemble.ensemble;
+            ensemble.sampler = 'GRASP';
             ensemble.eigThreshold = 10^-5;
             ensemble.freeVars{end+1} = 'r_r13';
             ensemble.LPSolver = 'gurobi';

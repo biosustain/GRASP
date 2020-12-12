@@ -31,7 +31,7 @@ function plotControlAndResponseAnalysis(mcaResults, ensemble, categories, enzyme
 %       - Marina de Leeuw   2019 added categories
 
 % Check sampler mode to determine the numer of conditions
-if ~strcmpi(ensemble.sampler,'ORACLE')
+if ~strcmpi(ensemble.sampler,'GRASP')
     nCondition   = size(ensemble.expFluxes,2)+1;
 else
     nCondition = 1;

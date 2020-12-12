@@ -18,7 +18,7 @@ classdef fixVariableNamesTest < matlab.unittest.TestCase
             [xRxns,rxnsList] = xlsread(xlsxFile,'rxns');                         % load rxn info            
            
             rxnsList = fixVariableNames(rxnsList, 'r');
-                       
+
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResFixVariableNames1'));
             trueRes = trueRes.rxnsList;
                    

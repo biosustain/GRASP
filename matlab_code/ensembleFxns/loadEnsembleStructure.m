@@ -15,7 +15,7 @@ function ensemble = loadEnsembleStructure(xlsxFile)
 %    ensemble (struct):   model ensemble data structure
 %
 %               * description (*char*)            : model name basically
-%               * sampler (*char*)                : specifies the sampling mode: ORACLE or rejection [TODO Pedro check if this is correct]
+%               * sampler (*char*)                : specifies the sampling mode: GRASP or rejection
 %               * solver (*char*)                 : which solver to use for the rejection sampler
 %               * numConditions (*int*)           : how many experimental conditions    
 %               * numStruct (*int*)               : how many model structures
@@ -117,24 +117,24 @@ idxProt = fixVariableNames(idxProt, 'r');
 idxMets = fixVariableNames(idxMets, 'm');
 
 % Validate input dimensions
-if ~all(size(xData) == [10, 1]) || ~all(size(strData) == [15, 2])
-    error('Check the general sheet, it should have 15 rows and 2 columns.');
+if ~all(size(xData) == [7, 1]) || ~all(size(strData) == [12, 2])
+    error('Check the general sheet, it should have 12 rows and 2 columns.');
 end
 
 nMets = size(Sfull, 2);
 nRxns = size(Sfull, 1);
 
 
-if ~all(size(rxnsList) == [nRxns+1, 5])
-    error(['Check the rxns sheet, it should have ', num2str(nRxns+1), ' rows and 5 columns.', ...
+if ~all(size(rxnsList) == [nRxns+1, 4])
+    error(['Check the rxns sheet, it should have ', num2str(nRxns+1), ' rows and 4 columns.', ...
            newline, ...
            'Columns it should have: reaction ID, reaction name, transport reaction?, modelled?, isoenzymes.', ...
            newline, ...
            'For a more detailed input validation please use the set_up_grasp_models package.']);
 end
 
-if ~all(size(metsList) == [nMets+1, 6])
-    error(['Check the mets sheet, it should have ', num2str(nMets+1), ' rows and 6 columns.', ...
+if ~all(size(metsList) == [nMets+1, 4])
+    error(['Check the mets sheet, it should have ', num2str(nMets+1), ' rows and 4 columns.', ...
            newline, ...
            'Columns it should have: metabolite ID, Metabolite name, balanced?, active?, constant?, measured?',...
            newline, ...
@@ -165,12 +165,10 @@ if ~all(size(xMetsThermo) == [nMets, 2])
            'For a more detailed input validation please use the set_up_grasp_models package.']);
 end
 
-nRxnsActive = size(find(xRxns(:,2)), 1);
 nMetsActive = size(find(xMets(:,2)), 1);
 
-
-if size(idxProt,1) ~= nRxnsActive+1 || size(idxProt,2) < 4
-    error(['Check the protData sheet, it should have ', num2str(nRxnsActive+1), ' rows and 4 columns.', ...
+if size(idxProt,1) ~= nRxns+1 || size(idxProt,2) < 4
+    error(['Check the protData sheet, it should have ', num2str(nRxns+1), ' rows and 4 columns.', ...
           newline, ...
           'Columns it should have: reaction/enzyme ID, lower_bound, mean, upper_bound',...
            newline, ...
@@ -197,26 +195,21 @@ ensemble.numStruct     = xData(2);
 ensemble.numParticles  = xData(3);
 ensemble.parallel      = xData(4);
 ensemble.numCores      = xData(5);
-ensemble.alphaAlive    = xData(6);
-robustFluxes           = xData(7);
-computeThermo          = xData(8);
-if isnan(xData(9))
-    ensemble.tolerance = [Inf,xData(10)];
-else
-    ensemble.tolerance = [xData(9),xData(10)];
-end
+robustFluxes           = xData(6);
+ensemble.tolerance     = xData(7);
+
 ensemble.S             = Sfull';
 ensemble.rxns          = rxnsList(2:end,1);
 ensemble.rxnNames      = rxnsList(2:end,2);
 ensemble.exchRxns      = find(xRxns(:,1));
 ensemble.activeRxns    = [1:numel(ensemble.rxns)]';
-ensemble.isoenzymes    = rxnsList([2:end],5);
+ensemble.isoenzymes    = rxnsList([2:end],4);
 ensemble.uniqueIso     = unique(ensemble.isoenzymes(~cellfun(@isempty, ensemble.isoenzymes)));
 ensemble.mets          = metsList(2:end,1);
 ensemble.metNames      = metsList(2:end,2);
 ensemble.rxnMets       = cell(length(ensemble.rxnNames),1);
 ensemble.metsBalanced  = find(xMets(:,1));
-ensemble.measuredMets  = find(xMets(:,4));
+ensemble.measuredMets  = find(xMets(:,2));
 ensemble.Sred          = ensemble.S(ensemble.metsBalanced,ensemble.activeRxns);   % Reduced stoichiometry for kinetic model simulation
 ensemble.Sred(sum(abs(ensemble.Sred),2)==0,:) = [];                               % Remove zero rows
 ensemble.Sred(sum(ensemble.Sred~=0,2)==1,:)   = [];                               % Remove unbalanced mets
@@ -394,8 +387,8 @@ for jx = 1:ensemble.numStruct
     end
     try
         [xKinetic,strKinetic] = xlsread(xlsxFile,['kinetics',num2str(jx)]);                    % read kinetic info from structure jx
-        if size(strKinetic, 1) ~= nRxnsActive+1 || size(strKinetic, 2) < 11
-            error(['Check the kinetics sheet, it should have ', num2str(nRxnsActive+1), ' rows and at least 11 columns.', ...
+        if size(strKinetic, 1) ~= nRxns+1 || size(strKinetic, 2) < 11
+            error(['Check the kinetics sheet, it should have ', num2str(nRxns+1), ' rows and at least 11 columns.', ...
                    newline, ...
                    'Columns it should have: reaction ID, kinetic mechanism, substrate order, product order, promiscuous, inhibitors, activators, negative effectors, positive effectors, allosteric, subunits',...
                    newline, ...

@@ -92,7 +92,7 @@ metNames     = ensemble.mets(ensemble.metsActive);
 rxnNames     = ensemble.rxns;
 
 % Check sampler mode to determine the numer of conditions
-if ~strcmpi(ensemble.sampler,'ORACLE')
+if ~strcmpi(ensemble.sampler,'GRASP')
     nCondition   = size(ensemble.expFluxes,2)+1;
 else
     nCondition = 1;

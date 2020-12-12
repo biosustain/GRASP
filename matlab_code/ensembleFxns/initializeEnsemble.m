@@ -17,7 +17,7 @@ function ensemble = initializeEnsemble(ensemble,popIdx,verbose)
 %    ensemble (struct):   initialized model ensemble data structure
 %
 %               * description (*char*)            : model name basically
-%               * sampler (*char*)                : specifies the sampling mode: ORACLE or rejection [TODO Pedro check if this is correct]
+%               * sampler (*char*)                : specifies the sampling mode: GRASP or rejection
 %               * solver (*char*)                 : which solver to use for the rejection sampler
 %               * numConditions (*int*)           : how many experimental conditions    
 %               * numStruct (*int*)               : how many model structures
@@ -125,8 +125,8 @@ function ensemble = initializeEnsemble(ensemble,popIdx,verbose)
 
 if (nargin<3); verbose = 0; end
 
-% Determine the type of sampler selected (rejection is the only sampler currently supported)
-if strcmpi(ensemble.sampler,'ORACLE')||strcmpi(ensemble.sampler,'rejection')||strcmpi(ensemble.sampler,'SMC_rejection')||strcmpi(ensemble.sampler,'SMC')||strcmpi(ensemble.sampler,'MCMC-SMC')
+% Determine the type of sampler selected
+if strcmpi(ensemble.sampler,'GRASP') || strcmpi(ensemble.sampler,'rejection')
 
 	% Determine thermo-active reactions
 	ensemble.thermoActive = find((ensemble.gibbsRanges(:,1)~=-1e2)&(ensemble.gibbsRanges(:,1)~=ensemble.gibbsRanges(:,2)));

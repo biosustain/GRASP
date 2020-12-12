@@ -252,12 +252,12 @@ while true
     end
     
 
-    % Check sampling mode. For the ORACLE mode, no need to simulate
-    if strcmpi(ensemble.sampler,'ORACLE'); break;
+    % Check sampling mode. For the GRASP mode, no need to simulate
+    if strcmpi(ensemble.sampler,'GRASP'); break;
 
         % For the remaining modes, we need to simulate the model in the
         % experimental conditions
-    elseif ~strcmpi(ensemble.sampler,'ORACLE') && isModelValid
+    elseif ~strcmpi(ensemble.sampler,'GRASP') && isModelValid
 
         % Simulate fluxes
         tolScore      = [];
@@ -310,7 +310,7 @@ while true
                 tolScore = [tolScore,max(sqrt(mean(((simulatedFlux(ensemble.freeFluxes,ix)-ensemble.simWeights(:,ix))./ensemble.simWeights(:,ix)).^2)))];
 
                 % Check tolerance inmediately for this condition
-                if (tolScore(end)>ensemble.tolerance(1))
+                if (tolScore(end)>ensemble.tolerance)
                     isModelValid = false;
                     break;
                 end
@@ -333,8 +333,8 @@ while true
     end
 end
 
-% Save results and write progress to a temp file (except for the ORACLE mode)
-% if ~strcmpi(ensemble.sampler,'ORACLE')
+% Save results and write progress to a temp file (except for the GRASP mode)
+% if ~strcmpi(ensemble.sampler,'GRASP')
 %     try
 %         load progress.txt
 %         progress = [progress(1)+1;progress(4)/(progress(1)+1);progress(5)/(progress(1)+1);progress(4)+acceptanceRate;progress(5)+tolScore];

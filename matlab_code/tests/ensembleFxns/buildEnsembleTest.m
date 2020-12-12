@@ -55,6 +55,11 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleRandom'));
             trueRes = trueRes.ensemble;  
+            
+            ensemble = rmfield(ensemble, 'tolerance');
+            trueRes = rmfield(trueRes, 'tolerance');
+            trueRes = rmfield(trueRes, 'alphaAlive');
+            trueRes.sampler = 'GRASP';
                                
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
@@ -77,7 +82,10 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleRandomLinprog'));
             trueRes = trueRes.ensemble;
             trueRes = rmfield(trueRes, 'metsSimulated');
-                   
+            ensemble = rmfield(ensemble, 'tolerance');
+            trueRes = rmfield(trueRes, 'tolerance');
+            trueRes = rmfield(trueRes, 'alphaAlive');
+            trueRes.sampler = 'GRASP';       
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
@@ -97,7 +105,10 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleAllosteric'));
             trueRes = trueRes.ensemble;
-                        
+            ensemble = rmfield(ensemble, 'tolerance');
+            trueRes = rmfield(trueRes, 'tolerance');
+            trueRes = rmfield(trueRes, 'alphaAlive');
+            trueRes.sampler = 'GRASP';            
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
@@ -119,7 +130,10 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleAllStable'));
             trueRes = trueRes.ensemble;
-                       
+            ensemble = rmfield(ensemble, 'tolerance');
+            trueRes = rmfield(trueRes, 'tolerance');
+            trueRes = rmfield(trueRes, 'alphaAlive');
+            trueRes.sampler = 'GRASP';           
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
@@ -141,7 +155,10 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleNoPromiscuous'));
             trueRes = trueRes.ensemble;
-            
+            ensemble = rmfield(ensemble, 'tolerance');
+            trueRes = rmfield(trueRes, 'tolerance');
+            trueRes = rmfield(trueRes, 'alphaAlive');
+            trueRes.sampler = 'GRASP';
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
@@ -162,7 +179,10 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleLargeModel'));
             trueRes = trueRes.ensemble;
-                                    
+            ensemble = rmfield(ensemble, 'tolerance');
+            trueRes = rmfield(trueRes, 'tolerance');
+            trueRes = rmfield(trueRes, 'alphaAlive');
+            trueRes.sampler = 'GRASP';                        
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
@@ -183,7 +203,10 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleLargeModeldGs'));
             trueRes = trueRes.ensemble;
-                       
+            ensemble = rmfield(ensemble, 'tolerance');
+            trueRes = rmfield(trueRes, 'tolerance');
+            trueRes = rmfield(trueRes, 'alphaAlive');
+            trueRes.sampler = 'GRASP';           
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
@@ -207,7 +230,10 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleCreateDir'));
             trueRes = trueRes.ensemble;   
-            
+            ensemble = rmfield(ensemble, 'tolerance');
+            trueRes = rmfield(trueRes, 'tolerance');
+            trueRes = rmfield(trueRes, 'alphaAlive');
+            trueRes.sampler = 'GRASP';
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
@@ -233,6 +259,10 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleExample'));
             trueRes = trueRes.ensemble;  
             
+            ensemble = rmfield(ensemble, 'tolerance');
+            trueRes = rmfield(trueRes, 'tolerance');
+            trueRes = rmfield(trueRes, 'alphaAlive');
+            trueRes.sampler = 'GRASP';
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
@@ -256,7 +286,11 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             ensemble = ensemble.ensemble;
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleExampleABCNLopt'));
+            
             trueRes = trueRes.ensemble;  
+            ensemble = rmfield(ensemble, 'tolerance');
+            trueRes = rmfield(trueRes, 'tolerance');
+            trueRes = rmfield(trueRes, 'alphaAlive');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
@@ -268,7 +302,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             rng(seed)
 
             
-            modelID = 'methionine_cycle';
+            modelID = 'methionine_cycle_fmincon';
             inputFile = fullfile(testCase.currentPath{1}, '..', '..', '..', 'io', 'input', modelID);
             outputFile = fullfile(testCase.currentPath{1}, 'testFiles', 'testDir1', 'testDir2', [modelID, '.mat']);
             
@@ -279,7 +313,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
            
             ensemble = load(outputFile);
             ensemble = ensemble.ensemble;
-            
+
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleExampleABCFmincon'));
             trueRes = trueRes.ensemble;  
             
