@@ -32,10 +32,6 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             
             % To generate the reaction files 
             xlsxFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1');
-            maxNumberOfSamples  = 100;
-            eigThreshold = 10^-5;
-            popIdx = 1;
-
             ensemble = loadEnsembleStructure(xlsxFile);
          
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'initializedEnsemble_toy_model1.mat');
