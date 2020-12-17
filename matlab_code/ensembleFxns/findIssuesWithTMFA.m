@@ -9,6 +9,11 @@ function findIssuesWithTMFA(ensemble,model,DGf_std_min,DGf_std_max,vmin,vmax,xmi
 % a text file and the function `gurobi_iis` is used to find
 % which constraints/variable bounds are causing the issue.
 %
+% Problematic metabolites and/or reactions can be missed due to a 
+% large K value, especially when using intlinprog (same issue as in
+% computeGibbsFreeEnergyRanges). Thus the loop for decreasing K values 
+% when the lists of problematic reactions and metabolites are empty.
+%
 %
 % USAGE:
 %
@@ -36,20 +41,24 @@ function findIssuesWithTMFA(ensemble,model,DGf_std_min,DGf_std_max,vmin,vmax,xmi
 
 
 [metsList, metsBoundaryList] = findProblematicMetabolites(ensemble,DGf_std_min,DGf_std_max,vmin,vmax,xmin,xmax,ineqConstraints,K,RT,delta,M,tol);
-
 [rxnsList, rxnsBoundaryList] = findProblematicReactions(ensemble,DGf_std_min,DGf_std_max,vmin,vmax,xmin,xmax,ineqConstraints,K,RT,delta,M,tol);
 
-if isempty(metsList) && isempty(rxnsList)
-    
-    if strcmp(ensemble.LPSolver, 'gurobi')
-        gurobi_write(model, 'TMFA_problem.lp');
-        solIIS = gurobi_iis(model);
-        constraintsIssues = find(solIIS.Arows == 1);
-        lbIssues = find(solIIS.lb == 1);
-        ubIssues = find(solIIS.ub == 1);
-        
-        error(strcat('The TMFA is infeasible. The MILP model has been written in the examples folder so that you can inspect it (TMFA_problem.lp). There might be issues with constraints number: ', num2str(constraintsIssues), ' variable lower bounds number ', num2str(lbIssues), ' or upper bounds number ', num2str(ubIssues), '. '));
-    end
+while isempty(metsList) && isempty(rxnsList) && K >= 1
+    n = log10(K);
+    K = 10^(n-1);
+    [metsList, metsBoundaryList] = findProblematicMetabolites(ensemble,DGf_std_min,DGf_std_max,vmin,vmax,xmin,xmax,ineqConstraints,K,RT,delta,M,tol);
+    [rxnsList, rxnsBoundaryList] = findProblematicReactions(ensemble,DGf_std_min,DGf_std_max,vmin,vmax,xmin,xmax,ineqConstraints,K,RT,delta,M,tol);
+
+end
+
+if isempty(metsList) && isempty(rxnsList) && strcmp(ensemble.LPSolver, 'gurobi')
+    gurobi_write(model, 'TMFA_problem.lp');
+    solIIS = gurobi_iis(model);
+    constraintsIssues = find(solIIS.Arows == 1);
+    lbIssues = find(solIIS.lb == 1);
+    ubIssues = find(solIIS.ub == 1);
+
+    error(strcat('The TMFA is infeasible. The MILP model has been written in the examples folder so that you can inspect it (TMFA_problem.lp). There might be issues with constraints number: ', num2str(constraintsIssues), ' variable lower bounds number ', num2str(lbIssues), ' or upper bounds number ', num2str(ubIssues), '. '));
 else
     error(strcat('The TMFA problem is infeasible. This can be a problem with the metabolite bounds ', strjoin(metsBoundaryList, ', ') ,' for metabolites ', strjoin(metsList, ', '), ' in thermoMets, or a problem with the reaction bounds ', strjoin(rxnsBoundaryList, ', '), ' for reactions ', strjoin(rxnsList, ', '), ' in thermoRxns.Verify that the standard Gibbs free energy and metabolite concentration values are valid/correct. Note that the problem can also be with the reaction fluxes. Bottom line, for each reaction, fluxes and Gibbs energies need to agree.'));
 end
@@ -116,13 +125,14 @@ Vblock    = eye(nflux);
 Vblock    = Vblock(ensemble.idxNotExch,:);
 
 % Define problem matrix
-model.A  = sparse([Sflux,zeros(size(Sflux,1),2*n+2*m+2*n);...                       % Sflux*v = 0
-    zeros(n,nflux),eye(n),-Sthermo',-RT*Sthermo',zeros(n),K*eye(n),zeros(n,n);...   % DGr - Sthermo'*DGf_std - RT*Sthermo'*ln(x) + K*ubound <= tol
-    zeros(n,nflux),-eye(n),Sthermo',RT*Sthermo',zeros(n),zeros(n,n),-K*eye(n);...   % -DGr + Sthermo'*DGf_std + RT*Sthermo'*ln(x) - K*lbound <= tol
-    -Vblock,zeros(n,n+2*m),K*eye(n),zeros(n,2*n);...                                % -v + K*e <= K
-    Vblock,zeros(n,n+2*m),-K*eye(n),zeros(n,2*n);...                                % v - K*e <= 0
-    zeros(n,nflux),eye(n),zeros(n,2*m),K*eye(n),zeros(n,2*n);...                    % DGr + K*e <= K - delta
-    zeros(n,nflux),-eye(n),zeros(n,2*m),-K*eye(n),zeros(n,2*n)]);                   % -DGr - K*e <= -delta
+
+model.Aeq = sparse([Sflux,zeros(size(Sflux,1),2*n+2*m+2*n)]);
+model.A   = sparse([zeros(n,nflux),eye(n),-Sthermo',-RT*Sthermo',zeros(n),K*eye(n),zeros(n,n);...   % DGr - Sthermo'*DGf_std - RT*Sthermo'*ln(x) + K*ubound <= tol
+                    zeros(n,nflux),-eye(n),Sthermo',RT*Sthermo',zeros(n),zeros(n,n),-K*eye(n);...   % -DGr + Sthermo'*DGf_std + RT*Sthermo'*ln(x) - K*lbound <= tol
+                    -Vblock,zeros(n,n+2*m),K*eye(n),zeros(n,2*n);...                                % -v + K*e <= K
+                    Vblock,zeros(n,n+2*m),-K*eye(n),zeros(n,2*n);...                                % v - K*e <= 0
+                    zeros(n,nflux),eye(n),zeros(n,2*m),K*eye(n),zeros(n,2*n);...                    % DGr + K*e <= K - delta
+                    zeros(n,nflux),-eye(n),zeros(n,2*m),-K*eye(n),zeros(n,2*n)]);                   % -DGr - K*e <= -delta
 
 if ~isempty(ineqConstraints)
     p = size(ineqConstraints,1);
@@ -130,42 +140,74 @@ if ~isempty(ineqConstraints)
 end
 
 % Objective function
-model.obj = [zeros(size(model.A,2)-2*n,1); ones(2*n,1)];
+model.f = [zeros(size(model.A,2)-2*n,1); ones(2*n,1)];
 
 % Constraints sense and rhs
-model.rhs = [zeros(size(Sflux,1),1);tol*ones(n,1);tol*ones(n,1);K*ones(n,1);zeros(n,1);(K-delta)*ones(n,1);-delta*ones(n,1)];
+model.beq = zeros(size(Sflux,1),1);
+model.b   = [tol*ones(n,1);tol*ones(n,1);K*ones(n,1);zeros(n,1);(K-delta)*ones(n,1);-delta*ones(n,1)];
+
 if ~isempty(ineqConstraints)
-    model.rhs = [model.rhs;ineqConstraints(:,end)];
+    model.b = [model.rhs;ineqConstraints(:,end)];
 end
 
-model.sense = blanks(numel(model.rhs));
-model.sense(1:size(Sflux,1)) = '=';
-model.sense(size(Sflux,1)+1:end) = '<';
+if strcmp(ensemble.LPSolver, 'gurobi')
+
+    gurobiModel.A = [model.Aeq; model.A];
+    gurobiModel.rhs = [model.beq; model.b];
+    gurobiModel.lb = model.lb;
+    gurobiModel.ub = model.ub;
+    gurobiModel.obj = model.f;
+
+    gurobiModel.sense = blanks(numel(gurobiModel.rhs));
+    gurobiModel.sense(1:size(Sflux,1)) = '=';
+    gurobiModel.sense(size(Sflux,1)+1:end) = '<';
+
+    % Variable type definition
+    gurobiModel.vtype = blanks(numel(gurobiModel.obj));
+    gurobiModel.vtype(1:(nflux+n+2*m)) = 'C';
+    gurobiModel.vtype((nflux+n+2*m+1):end) = 'B';
+
+    % Define optimization parameters
+    params.outputflag     = 0;
+    params.FeasibilityTol = 1e-6;
+    params.IntFeasTol     = 1e-6;
+    params.MIPGap         = 1e-6;
+    params.MIPGapAbs      = 1e-12;
+    params.OptimalityTol  = 1e-9;
 
 
-% Variable type definition
-model.vtype = blanks(numel(model.obj));
-model.vtype(1:nflux+n+2*m) = 'C';
-model.vtype(nflux+n+2*m+1:end) = 'B';
+    % Check the feasibility of the problem
+    sol = gurobi(gurobiModel,params);
+    solX = sol.x;
 
-% Define optimization parameters
-params.outputflag    = 0;
-params.IntFeasTol    = 1e-9;
-params.MIPGap        = 1e-6;
-params.MIPGapAbs     = 1e-12;
-params.OptimalityTol = 1e-9;
 
-% Check the feasibility of the problem
-sol = gurobi(model,params);
+elseif strcmp(ensemble.LPSolver, 'linprog')
+    options =  optimoptions(@intlinprog, ...
+                            'AbsoluteGapTolerance', 1e-12, ...               % equivalent to MIPGapAbs
+                            'RelativeGapTolerance', 1e-6, ....               % equivalent to MIPGap
+                            'LPOptimalityTolerance', 1e-9, ...               % equivalent to OptimalityTol
+                            'ConstraintTolerance', 1e-6, ...                 % equivalent to FeasibilityTol
+                            'IntegerTolerance', 1e-6, ...                    % equivalent to IntFeasTol
+                            'Display', 'off');
 
-if ~strcmp(sol.status,'OPTIMAL')
+    model.intcon = [(nflux+n+2*m+1):numel(model.f)];
+
+    [solX,fval] = intlinprog(model.f, model.intcon, model.A, model.b, model.Aeq, model.beq, model.lb, model.ub, options);
+end
+
+
+    
+        
+if (strcmp(ensemble.LPSolver, 'gurobi') && strcmp(sol.status,'INFEASIBLE')) || ...
+   (strcmp(ensemble.LPSolver, 'linprog') && isempty(fval))
+        
     rxnsList = [];
     boundaryList = [];
     disp('Infeasible solution when trying to find problematic reactions.');    
     return;
 end
 
-rowList = find(sol.x(end-2*n+1:end)==1);
+rowList = find(solX(end-2*n+1:end)==1);
 boundaryList = cell(numel(rowList),1);
 
 for entry=1:numel(rowList)
@@ -249,15 +291,15 @@ Vblock    = eye(nflux);
 Vblock    = Vblock(ensemble.idxNotExch,:);
 
 % Define problem matrix
-model.A  = sparse([Sflux,zeros(size(Sflux,1),2*n+2*m+2*m);...                      % Sflux*v = 0
-    zeros(n,nflux),eye(n),-Sthermo',-RT*Sthermo',zeros(n),zeros(n,2*m);...         % DGr - Sthermo'*DGf_std - RT*Sthermo'*ln(x) <= tol
-    zeros(n,nflux),-eye(n),Sthermo',RT*Sthermo',zeros(n),zeros(n,2*m);...          % -DGr + Sthermo'*DGf_std + RT*Sthermo'*ln(x) <= tol
-    -Vblock,zeros(n,n+2*m),K*eye(n),zeros(n,2*m);...                               % -v + K*e <= K
-    Vblock,zeros(n,n+2*m),-K*eye(n),zeros(n,2*m);...                               % v - K*e <= 0
-    zeros(n,nflux),eye(n),zeros(n,2*m),K*eye(n),zeros(n,2*m);...                   % DGr + K*e <= K - delta
-    zeros(n,nflux),-eye(n),zeros(n,2*m),-K*eye(n),zeros(n,2*m);...                 % -DGr - K*e <= -delta
-    zeros(m,nflux),zeros(m,n),zeros(m,m),eye(m),zeros(m,n),-K*eye(m),zeros(m);...  % ln(x) - K*ubound <= ln(xmax)
-    zeros(m,nflux),zeros(m,n),zeros(m,m),-eye(m),zeros(m,n),zeros(m),-K*eye(m)]);  % -ln(x) - K*lbound <= -ln(xmin)
+model.Aeq = sparse([Sflux,zeros(size(Sflux,1),2*n+2*m+2*m)]);
+model.A  = sparse([zeros(n,nflux),eye(n),-Sthermo',-RT*Sthermo',zeros(n),zeros(n,2*m);...         % DGr - Sthermo'*DGf_std - RT*Sthermo'*ln(x) <= tol
+                   zeros(n,nflux),-eye(n),Sthermo',RT*Sthermo',zeros(n),zeros(n,2*m);...          % -DGr + Sthermo'*DGf_std + RT*Sthermo'*ln(x) <= tol
+                   -Vblock,zeros(n,n+2*m),K*eye(n),zeros(n,2*m);...                               % -v + K*e <= K
+                   Vblock,zeros(n,n+2*m),-K*eye(n),zeros(n,2*m);...                               % v - K*e <= 0
+                   zeros(n,nflux),eye(n),zeros(n,2*m),K*eye(n),zeros(n,2*m);...                   % DGr + K*e <= K - delta
+                   zeros(n,nflux),-eye(n),zeros(n,2*m),-K*eye(n),zeros(n,2*m);...                 % -DGr - K*e <= -delta
+                   zeros(m,nflux),zeros(m,n),zeros(m,m),eye(m),zeros(m,n),-K*eye(m),zeros(m);...  % ln(x) - K*ubound <= ln(xmax)
+                   zeros(m,nflux),zeros(m,n),zeros(m,m),-eye(m),zeros(m,n),zeros(m),-K*eye(m)]);  % -ln(x) - K*lbound <= -ln(xmin)
 
 if ~isempty(ineqConstraints)
     p = size(ineqConstraints,1);
@@ -265,42 +307,70 @@ if ~isempty(ineqConstraints)
 end
 
 % Objective function
-model.obj = [zeros(size(model.A,2)-2*m,1); ones(2*m,1)];
+model.f = [zeros(size(model.A,2)-2*m,1); ones(2*m,1)];
 
 % Constraints sense and rhs
-model.rhs = [zeros(size(Sflux,1),1);tol*ones(n,1);tol*ones(n,1);K*ones(n,1);zeros(n,1);(K-delta)*ones(n,1);-delta*ones(n,1);log(xmax);-log(xmin)];
+model.beq = zeros(size(Sflux,1),1);
+model.b   = [tol*ones(n,1);tol*ones(n,1);K*ones(n,1);zeros(n,1);(K-delta)*ones(n,1);-delta*ones(n,1);log(xmax);-log(xmin)];
 if ~isempty(ineqConstraints)
     model.rhs = [model.rhs;ineqConstraints(:,end)];
 end
 
-model.sense = blanks(numel(model.rhs));
-model.sense(1:size(Sflux,1)) = '=';
-model.sense(size(Sflux,1)+1:end) = '<';
+
+if strcmp(ensemble.LPSolver, 'gurobi')
+
+    gurobiModel.A = [model.Aeq; model.A];
+    gurobiModel.rhs = [model.beq; model.b];
+    gurobiModel.lb = model.lb;
+    gurobiModel.ub = model.ub;
+    gurobiModel.obj = model.f;
+
+    gurobiModel.sense = blanks(numel(gurobiModel.rhs));
+    gurobiModel.sense(1:size(Sflux,1)) = '=';
+    gurobiModel.sense(size(Sflux,1)+1:end) = '<';
+
+    % Variable type definition
+    gurobiModel.vtype = blanks(numel(gurobiModel.obj));
+    gurobiModel.vtype(1:(nflux+n+2*m)) = 'C';
+    gurobiModel.vtype((nflux+n+2*m+1):end) = 'B';
+    
+    % Define optimization parameters
+    params.outputflag     = 0;
+    params.FeasibilityTol = 1e-6;
+    params.IntFeasTol     = 1e-6;
+    params.MIPGap         = 1e-6;
+    params.MIPGapAbs      = 1e-12;
+    params.OptimalityTol  = 1e-9;
+
+    % Check the feasibility of the problem
+    sol = gurobi(gurobiModel,params);
+    solX = sol.x;
+
+elseif strcmp(ensemble.LPSolver, 'linprog')
+    options =  optimoptions(@intlinprog, ...
+                            'AbsoluteGapTolerance', 1e-12, ...               % equivalent to MIPGapAbs
+                            'RelativeGapTolerance', 1e-6, ....               % equivalent to MIPGap
+                            'LPOptimalityTolerance', 1e-9, ...               % equivalent to OptimalityTol
+                            'ConstraintTolerance', 1e-6, ...                 % equivalent to FeasibilityTol
+                            'IntegerTolerance', 1e-6, ...                    % equivalent to IntFeasTol
+                            'Display', 'off');
+
+    model.intcon = [(nflux+n+2*m+1):numel(model.f)];
+
+    [solX,fval] = intlinprog(model.f, model.intcon, model.A, model.b, model.Aeq, model.beq, model.lb, model.ub, options);
+end
 
 
-% Variable type definition
-model.vtype = blanks(numel(model.obj));
-model.vtype(1:nflux+n+2*m) = 'C';
-model.vtype(nflux+n+2*m+1:end) = 'B';
-
-% Define optimization parameters
-params.outputflag    = 0;
-params.IntFeasTol    = 1e-9;
-params.MIPGap        = 1e-6;
-params.MIPGapAbs     = 1e-12;
-params.OptimalityTol = 1e-9;
-
-% Check the feasibility of the problem
-sol = gurobi(model,params);
-
-if ~strcmp(sol.status,'OPTIMAL')
+if (strcmp(ensemble.LPSolver, 'gurobi') && strcmp(sol.status,'INFEASIBLE')) || ...
+   (strcmp(ensemble.LPSolver, 'linprog') && isempty(fval))
+   
     metsList = [];
     boundaryList = [];
     disp('Infeasible solution when trying to find problematic metabolites.');
     return;
 end
     
-rowList = find(sol.x(end-2*m+1:end)==1);
+rowList = find(solX(end-2*m+1:end)==1);
 boundaryList = cell(numel(rowList),1);
 
 for entry=1:numel(rowList)

@@ -1,4 +1,4 @@
-classdef sampleGibbsReactionEnergiesTest < matlab.unittest.TestCase
+classdef sampleGeneralReversibilitiesTest < matlab.unittest.TestCase
 
     properties
         currentPath
@@ -12,56 +12,43 @@ classdef sampleGibbsReactionEnergiesTest < matlab.unittest.TestCase
     
  
     methods (Test)
-        function testSampleGibbsReactionEnergiesGurobi(testCase)
+        function testSampleGeneralReversibilities(testCase)
             
             seed = 1;
             rng(seed)
            
-            ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'initializedEnsemble_toy_model1_measuredMets'));
-            ensemble = ensemble.ensemble;
-            models(1).poolFactor = [];
-            strucIdx = 1;
-            
-            solver  = 'gurobi';
-            ensemble.LPSolver = solver;            
- 
-            [ensemble, models] = sampleGibbsReactionEnergies(ensemble, models, strucIdx);
+            load(fullfile(testCase.currentPath{1}, 'testFiles', 'sampleGeneralReversibilities_toy_model1'));
 
-            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSampleGibbsReactionEnergies1'));
+            [ensemble, models, isModelValid] = sampleGeneralReversibilities(ensemble, models, RT, strucIdx);
+
+            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSampleGeneralReversibilities1'));
             trueResModels = trueRes.models;
             trueResEnsemble = trueRes.ensemble;
-            trueResEnsemble.LPSolver = solver;
-           
+            
+            testCase.verifyEqual(isModelValid, true);
             testCase.verifyThat(models, matlab.unittest.constraints.IsEqualTo(trueResModels, ...
                  'Within', matlab.unittest.constraints.RelativeTolerance(1e-12)));
-            
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueResEnsemble, ...
                  'Within', matlab.unittest.constraints.RelativeTolerance(1e-12)));
         end
-       
-        function testSampleGibbsReactionEnergiesLinprog(testCase)
+        
+        function testSampleGeneralReversibilitiesRandom(testCase)
             
             seed = 1;
             rng(seed)
            
-            ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'initializedEnsemble_toy_model1_measuredMets'));
-            ensemble = ensemble.ensemble;
-            models(1).poolFactor = [];
-            strucIdx = 1;
+            load(fullfile(testCase.currentPath{1}, 'testFiles', 'sampleGeneralReversibilities_toy_model_random2'));
             
-            solver  = 'linprog';
-            ensemble.LPSolver = solver;            
- 
-            [ensemble, models] = sampleGibbsReactionEnergies(ensemble, models, strucIdx);
 
-            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSampleGibbsReactionEnergies1'));
+            [ensemble, models, isModelValid] = sampleGeneralReversibilities(ensemble, models, RT, strucIdx);
+
+            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSampleGeneralReversibilitiesRandom'));
             trueResModels = trueRes.models;
             trueResEnsemble = trueRes.ensemble;
-            trueResEnsemble.LPSolver = solver;
-           
+            
+            testCase.verifyEqual(isModelValid, true);
             testCase.verifyThat(models, matlab.unittest.constraints.IsEqualTo(trueResModels, ...
                  'Within', matlab.unittest.constraints.RelativeTolerance(1e-12)));
-            
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueResEnsemble, ...
                  'Within', matlab.unittest.constraints.RelativeTolerance(1e-12)));
         end

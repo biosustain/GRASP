@@ -142,7 +142,6 @@ while true
     assert(all(abs(ensemble.Sred * models.refFlux) <10^-8), "Your model doesn\'t seem to be at steady-state. Sred * fluxRef != 0");
 
     % Determine gibbs free energy of reaction
-    %[ensemble, models] = sampleGibbsReactionEnergies(ensemble, models, strucIdx);
     models(1).gibbsTemp = ensemble.gibbsEnergies(:, modelI);
     models(1).metConcRef = ensemble.metConcRef(:, modelI); 
 
