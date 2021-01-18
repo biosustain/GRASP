@@ -61,9 +61,9 @@ Sred         = ensemble.Sred;
 kinInactRxns = ensemble.kinInactRxns;
 subunits     = ensemble.subunits{strucIdx};
 numFluxes    = numel(ensemble.fluxRef);
-ix_mets      = 1:numel(ensemble.metsActive);
+ix_mets      = 1:numel(ensemble.metsBalanced);
 ix_enz       = ix_mets(end)+1:freeVars;
-metNames     = ensemble.mets(ensemble.metsActive);
+metNames     = ensemble.mets(ensemble.metsBalanced);
 rxnNames     = ensemble.rxns;
 
 % Check sampler mode to determine the numer of conditions
@@ -135,7 +135,6 @@ for ix = 1:nCondition
             end
             mcaResults.xControlAvg{ix} = mcaResults.xControlAvg{ix} + C_x;
             mcaResults.xcounter{ix}    = mcaResults.xcounter{ix} + 1;
-            disp([num2str(jx), ' Cx']);
         end
         if all(abs(sum(C_v,2))-1<1e-5)
             if saveResMatrices
@@ -145,7 +144,6 @@ for ix = 1:nCondition
             
             mcaResults.vControlAvg{ix} = mcaResults.vControlAvg{ix} + C_v;
             mcaResults.vcounter{ix}    = mcaResults.vcounter{ix} + 1;
-            disp([num2str(jx), ' Cv']);
         end
     end
     

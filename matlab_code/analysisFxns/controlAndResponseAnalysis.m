@@ -86,9 +86,9 @@ Sred         = ensemble.Sred;
 kinInactRxns = ensemble.kinInactRxns;
 subunits     = ensemble.subunits{strucIdx};
 numFluxes    = numel(ensemble.fluxRef);
-ix_mets      = 1:numel(ensemble.metsActive);
+ix_mets      = 1:numel(ensemble.metsBalanced);
 ix_enz       = ix_mets(end)+1:freeVars;
-metNames     = ensemble.mets(ensemble.metsActive);
+metNames     = ensemble.mets(ensemble.metsBalanced);
 rxnNames     = ensemble.rxns;
 
 % Check sampler mode to determine the numer of conditions

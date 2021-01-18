@@ -26,7 +26,7 @@ kineticFxn   = str2func(ensemble.kineticFxn{strucIdx});
 freeVars     = numel(ensemble.freeVars);
 Sred         = ensemble.Sred;
 numFluxes    = numel(ensemble.fluxRef);
-ix_mets      = 1:numel(ensemble.metsActive);
+ix_mets      = 1:numel(ensemble.metsBalanced);
 ix_enz       = ix_mets(end)+1:freeVars;
 xconst       = ones(numel(ensemble.metsFixed), numel(ix_mets));
 
