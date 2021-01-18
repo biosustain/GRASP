@@ -43,7 +43,7 @@ function findIssuesWithTMFA(ensemble,model,DGf_std_min,DGf_std_max,vmin,vmax,xmi
 [metsList, metsBoundaryList] = findProblematicMetabolites(ensemble,DGf_std_min,DGf_std_max,vmin,vmax,xmin,xmax,ineqConstraints,K,RT,delta,M,tol);
 [rxnsList, rxnsBoundaryList] = findProblematicReactions(ensemble,DGf_std_min,DGf_std_max,vmin,vmax,xmin,xmax,ineqConstraints,K,RT,delta,M,tol);
 
-while isempty(metsList) && isempty(rxnsList) && K >= 1
+while isempty(metsList) && isempty(rxnsList) && K >= max(abs(vmax), [], 'all')
     n = log10(K);
     K = 10^(n-1);
     [metsList, metsBoundaryList] = findProblematicMetabolites(ensemble,DGf_std_min,DGf_std_max,vmin,vmax,xmin,xmax,ineqConstraints,K,RT,delta,M,tol);

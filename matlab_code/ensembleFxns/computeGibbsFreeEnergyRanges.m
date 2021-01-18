@@ -248,7 +248,7 @@ while fluxdGInconsistent
             end
 
         else
-            if K >= 1
+            if K >=max(abs(v_range), [], 'all') && K >= max(abs(DGr_range), [], 'all')
                 n = log10(K);
                 K = 10^(n-1);
                 continue
