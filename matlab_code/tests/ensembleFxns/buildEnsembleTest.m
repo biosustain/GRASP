@@ -287,6 +287,27 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
+        
+        function testBuildEnsembleMethionineATPchange(testCase)
+            
+            seed = 1;
+            rng(seed)
+            
+            modelID = 'methionine_cycle_atp_change';
+            inputFile = fullfile(testCase.currentPath{1}, 'testFiles', modelID);
+            outputFile = fullfile(testCase.currentPath{1}, 'testFiles', [modelID, '.mat']);
+            
+            maxNumberOfSamples = 1000;
+            eigThreshold = 10^-5;
+            
+            ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
+save(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResTestBuildEnsembleMethionineATPchange'));
+            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResTestBuildEnsembleMethionineATPchange'));
+            trueRes = trueRes.ensemble;
+       
+            testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
+        end
 	end
 end
 
