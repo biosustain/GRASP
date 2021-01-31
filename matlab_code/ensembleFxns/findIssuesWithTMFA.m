@@ -178,7 +178,9 @@ if strcmp(ensemble.LPSolver, 'gurobi')
 
     % Check the feasibility of the problem
     sol = gurobi(gurobiModel,params);
-    solX = sol.x;
+    if ~strcmp(sol.status,'INFEASIBLE')
+        solX = sol.x;
+    end
 
 
 elseif strcmp(ensemble.LPSolver, 'linprog')
@@ -344,7 +346,9 @@ if strcmp(ensemble.LPSolver, 'gurobi')
 
     % Check the feasibility of the problem
     sol = gurobi(gurobiModel,params);
-    solX = sol.x;
+    if ~strcmp(sol.status,'INFEASIBLE')
+        solX = sol.x;
+    end
 
 elseif strcmp(ensemble.LPSolver, 'linprog')
     options =  optimoptions(@intlinprog, ...
