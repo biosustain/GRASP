@@ -56,6 +56,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleRandom'));
             trueRes = trueRes.ensemble;
             trueRes.sampler = 'GRASP';
+            trueRes = rmfield(trueRes, 'measuredMets');
                                
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
@@ -77,7 +78,9 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleRandomLinprog'));
             trueRes = trueRes.ensemble;
-            trueRes.sampler = 'GRASP';       
+            trueRes.sampler = 'GRASP';    
+            trueRes = rmfield(trueRes, 'measuredMets');
+            
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
@@ -97,7 +100,9 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleAllosteric'));
             trueRes = trueRes.ensemble;
-            trueRes.sampler = 'GRASP';            
+            trueRes.sampler = 'GRASP';  
+            trueRes = rmfield(trueRes, 'measuredMets');
+            
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
@@ -119,7 +124,9 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleAllStable'));
             trueRes = trueRes.ensemble;
-            trueRes.sampler = 'GRASP';           
+            trueRes.sampler = 'GRASP';         
+            trueRes = rmfield(trueRes, 'measuredMets');
+            
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
@@ -142,6 +149,8 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleNoPromiscuous'));
             trueRes = trueRes.ensemble;
             trueRes.sampler = 'GRASP';
+            trueRes = rmfield(trueRes, 'measuredMets');
+            
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
@@ -162,7 +171,9 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleLargeModel'));
             trueRes = trueRes.ensemble;
-            trueRes.sampler = 'GRASP';                        
+            trueRes.sampler = 'GRASP'; 
+            trueRes = rmfield(trueRes, 'measuredMets');
+            
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
@@ -183,7 +194,9 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleLargeModeldGs'));
             trueRes = trueRes.ensemble;
-            trueRes.sampler = 'GRASP';           
+            trueRes.sampler = 'GRASP';    
+            trueRes = rmfield(trueRes, 'measuredMets');
+            
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
@@ -208,6 +221,8 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleCreateDir'));
             trueRes = trueRes.ensemble;
             trueRes.sampler = 'GRASP';
+            trueRes = rmfield(trueRes, 'measuredMets');
+            
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
@@ -234,6 +249,8 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = trueRes.ensemble;  
             
             trueRes.sampler = 'GRASP';
+            trueRes = rmfield(trueRes, 'measuredMets');
+            
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
@@ -258,7 +275,8 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleExampleABCNLopt'));
             
             trueRes = trueRes.ensemble;
-            
+            trueRes = rmfield(trueRes, 'measuredMets');
+                        
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
         end
@@ -283,6 +301,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleExampleABCFmincon'));
             trueRes = trueRes.ensemble;  
+            trueRes = rmfield(trueRes, 'measuredMets');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
@@ -301,7 +320,6 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             eigThreshold = 10^-5;
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
-save(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResTestBuildEnsembleMethionineATPchange'));
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResTestBuildEnsembleMethionineATPchange'));
             trueRes = trueRes.ensemble;
        

@@ -80,6 +80,7 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             
             trueRes = trueRes.ensemble; 
             trueRes.sampler = 'GRASP';
+            trueRes = rmfield(trueRes, 'measuredMets');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
@@ -99,6 +100,7 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             
             trueRes = trueRes.ensemble;
             trueRes.sampler = 'GRASP';
+            trueRes = rmfield(trueRes, 'measuredMets');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))  
@@ -118,6 +120,7 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             
             trueRes = trueRes.ensemble;
             trueRes.sampler = 'GRASP';
+            trueRes = rmfield(trueRes, 'measuredMets');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
@@ -137,6 +140,7 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             
             trueRes = trueRes.ensemble;       
             trueRes.sampler = 'GRASP';
+            trueRes = rmfield(trueRes, 'measuredMets');
                        
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))  

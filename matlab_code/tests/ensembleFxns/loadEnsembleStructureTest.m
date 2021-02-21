@@ -36,6 +36,7 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model1.mat'));
             trueRes = trueRes.ensemble;
             trueRes.sampler = 'GRASP';
+            trueRes = rmfield(trueRes, 'measuredMets');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.AbsoluteTolerance(1e-10) & matlab.unittest.constraints.RelativeTolerance(1)));
@@ -48,8 +49,8 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model1_allosteric.mat'));
             trueRes = trueRes.ensemble;
-
             trueRes.sampler = 'GRASP';
+            trueRes = rmfield(trueRes, 'measuredMets');
                                     
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.AbsoluteTolerance(1e-10) & matlab.unittest.constraints.RelativeTolerance(1)));
@@ -61,9 +62,9 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             ensemble = loadEnsembleStructure(xlsxFile);
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model1_random.mat'));            
-            
             trueRes = trueRes.ensemble;
             trueRes.sampler = 'GRASP';
+            trueRes = rmfield(trueRes, 'measuredMets');
                        
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
@@ -83,6 +84,7 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             ensemble = rmfield(ensemble, 'tolerance');
             trueRes = rmfield(trueRes, 'tolerance');
             trueRes = rmfield(trueRes, 'alphaAlive');
+            trueRes = rmfield(trueRes, 'measuredMets');
             trueRes.sampler = 'GRASP';
             
             testCase.verifyEqual(ensemble, trueRes);            
@@ -207,8 +209,8 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model4.mat'));
             trueRes = trueRes.ensemble;
-
             trueRes.sampler = 'GRASP';   
+            trueRes = rmfield(trueRes, 'measuredMets');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
