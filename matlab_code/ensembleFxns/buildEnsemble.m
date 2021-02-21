@@ -58,7 +58,6 @@ function ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThr
 %               * metsBalanced (*int vector*)     : [TODO Pedro]  
 %               * metsSimulated (*int vector*)    : [TODO Pedro]  
 %               * metsFixed (*int vector*)        : which metabolites concentrations are defined as fixed (constant)
-%               * measuredMets (*int vector*)     : which metabolite concentrations were actually measured (vs. estimated)
 %               * Sred (*int matrix*)             : reduced stoichiometric matrix, includes only balanced metabolites and active reactions
 %               * measRates (*double matrix*)     : measured reaction fluxes means
 %               * measRatesStd (*double matrix*)  : measured reaction fluxes standard deviations
