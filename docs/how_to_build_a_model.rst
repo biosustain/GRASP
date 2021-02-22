@@ -80,7 +80,6 @@ This sheet must have 4 columns:
  - ``metabolite ID``: the metabolite ids, to be used in the other sheets;
  - ``metabolite name``: the metabolite names;
  - ``balanced?``: whether or not the metabolite is balanced, i.e.  whether or not it is consumed and produced in the same amount. If a metabolite is defined as not balanced, then it will be constant;
- - ``measured?``: whether or not the metabolite concentration has been measured experimentally;
 
 
 rxns
