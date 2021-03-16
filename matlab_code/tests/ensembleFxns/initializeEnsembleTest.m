@@ -2,6 +2,8 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
 
     properties
         currentPath
+        relTol = 1e-10;
+        absTol = 1e-10;
     end
     
     methods(TestClassSetup)
@@ -43,7 +45,8 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             trueRes = trueRes.ensemble;
             trueRes.sampler = 'GRASP';
           
-            testCase.verifyEqual(ensemble, trueRes);   
+             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
             
         end
         
@@ -63,7 +66,8 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             trueRes = trueRes.ensemble;
             trueRes.sampler = 'GRASP';
             
-            testCase.verifyEqual(ensemble, trueRes);   
+             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
             
         end
         
@@ -84,7 +88,7 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             trueRes = rmfield(trueRes, 'splitRatios');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
             
         end
          
@@ -105,7 +109,7 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             trueRes = rmfield(trueRes, 'splitRatios');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))  
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
             
         end
         
@@ -126,7 +130,7 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             trueRes = rmfield(trueRes, 'splitRatios');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
             
         end
         
@@ -147,7 +151,7 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             trueRes = rmfield(trueRes, 'splitRatios');
                        
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))  
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
             
         end
     end

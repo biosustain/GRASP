@@ -2,6 +2,8 @@ classdef sampleGeneralReversibilitiesTest < matlab.unittest.TestCase
 
     properties
         currentPath
+        relTol = 1e-10;
+        absTol = 1e-10;
     end
     
     methods(TestClassSetup)
@@ -27,9 +29,9 @@ classdef sampleGeneralReversibilitiesTest < matlab.unittest.TestCase
             
             testCase.verifyEqual(isModelValid, true);
             testCase.verifyThat(models, matlab.unittest.constraints.IsEqualTo(trueResModels, ...
-                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-12)));
+                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueResEnsemble, ...
-                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-12)));
+                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
         end
         
         function testSampleGeneralReversibilitiesRandom(testCase)
@@ -48,9 +50,9 @@ classdef sampleGeneralReversibilitiesTest < matlab.unittest.TestCase
             
             testCase.verifyEqual(isModelValid, true);
             testCase.verifyThat(models, matlab.unittest.constraints.IsEqualTo(trueResModels, ...
-                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-12)));
+                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueResEnsemble, ...
-                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-12)));
+                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
         end
     end
 end

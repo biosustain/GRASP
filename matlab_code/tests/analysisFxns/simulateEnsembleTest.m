@@ -2,6 +2,8 @@ classdef simulateEnsembleTest < matlab.unittest.TestCase
 
     properties
         currentPath
+        relTol = 1e-10;
+        absTol = 1e-10;
     end
     
     methods(TestClassSetup)
@@ -51,7 +53,7 @@ classdef simulateEnsembleTest < matlab.unittest.TestCase
             trueRes = trueRes.simulationRes;
                    
             testCase.verifyThat(simulationRes, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
        end
         
         function testSimulateEnsembleAbs(testCase)
@@ -85,7 +87,7 @@ classdef simulateEnsembleTest < matlab.unittest.TestCase
                    
 
             testCase.verifyThat(simulationRes, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
         end
     end
 end

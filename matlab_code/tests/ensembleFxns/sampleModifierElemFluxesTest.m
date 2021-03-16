@@ -2,6 +2,8 @@ classdef sampleModifierElemFluxesTest < matlab.unittest.TestCase
 
     properties
         currentPath
+        relTol = 1e-10;
+        absTol = 1e-10;
     end
     
     methods(TestClassSetup)
@@ -29,7 +31,8 @@ classdef sampleModifierElemFluxesTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSampleModifierElemFluxes1'));
             trueRes= trueRes.models;
                    
-            testCase.verifyEqual(models, trueRes);
+            testCase.verifyThat(models, matlab.unittest.constraints.IsEqualTo(trueRes, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
         end
         
         function testSampleModifierElemFluxesRandom(testCase)
@@ -49,7 +52,9 @@ classdef sampleModifierElemFluxesTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSampleModifierElemFluxesRandom'));
             trueRes= trueRes.models;
                    
-            testCase.verifyEqual(models, trueRes);
+            testCase.verifyThat(models, matlab.unittest.constraints.IsEqualTo(trueRes, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
+
         end
        
     end

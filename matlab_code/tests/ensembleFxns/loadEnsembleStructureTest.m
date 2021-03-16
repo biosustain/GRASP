@@ -2,6 +2,8 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
 
     properties
         currentPath
+        relTol = 1e-10;
+        absTol = 1e-10;        
     end
     
     methods(TestClassSetup)
@@ -40,7 +42,7 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             trueRes = rmfield(trueRes, 'splitRatios');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.AbsoluteTolerance(1e-10) & matlab.unittest.constraints.RelativeTolerance(1)));
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
         end
         
         function testLoadEnsembleStructure1WithAllostery(testCase)
@@ -55,7 +57,7 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             trueRes = rmfield(trueRes, 'splitRatios');
                                     
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.AbsoluteTolerance(1e-10) & matlab.unittest.constraints.RelativeTolerance(1)));
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
         end
         
         function testLoadEnsembleStructure1WithRandom(testCase)
@@ -71,7 +73,7 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
                        
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
         end
         
         function testLoadEnsembleStructureWithFreeExchange(testCase)
@@ -91,7 +93,9 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             trueRes = rmfield(trueRes, 'splitRatios');
             trueRes.sampler = 'GRASP';
             
-            testCase.verifyEqual(ensemble, trueRes);            
+            
+            testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));         
         end
        
         function testLoadEnsembleStructureInputValidationGeneral(testCase)
@@ -218,7 +222,7 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             trueRes = rmfield(trueRes, 'splitRatios');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
         end
     end
 end

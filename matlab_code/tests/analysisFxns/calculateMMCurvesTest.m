@@ -3,6 +3,8 @@ classdef calculateMMCurvesTest < matlab.unittest.TestCase
     properties
         currentPath
         ensemble
+        relTol = 1e-10;
+        absTol = 1e-10;
     end
     
     methods(TestClassSetup)
@@ -41,8 +43,10 @@ classdef calculateMMCurvesTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'OP2_GTHOr_nadph.csv');
             trueResNadph = fileread(filepath);
             
-            testCase.verifyEqual(resGthox, trueResGthox);
-            testCase.verifyEqual(resNadph, trueResNadph);
+            testCase.verifyThat(resGthox, matlab.unittest.constraints.IsEqualTo(trueResGthox, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
+            testCase.verifyThat(resNadph, matlab.unittest.constraints.IsEqualTo(trueResNadph, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
         end
         
         function testCalculateMMCurvesGTHPi(testCase)
@@ -64,8 +68,10 @@ classdef calculateMMCurvesTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'OP2_GTHPi_h2o2.csv');
             trueResH2o2 = fileread(filepath);
             
-            testCase.verifyEqual(resGthrd, trueResGthrd);
-            testCase.verifyEqual(resH2o2, trueResH2o2);
+            testCase.verifyThat(resGthrd, matlab.unittest.constraints.IsEqualTo(trueResGthrd, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
+            testCase.verifyThat(resH2o2, matlab.unittest.constraints.IsEqualTo(trueResH2o2, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
         end
         
         function testCalculateMMCurvesG6PDH2NAD(testCase)
@@ -89,8 +95,10 @@ classdef calculateMMCurvesTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'OP2_G6PDH2_NAD_nad.csv');
             trueResNad = fileread(filepath);
             
-            testCase.verifyEqual(resG6p, trueResG6p);
-            testCase.verifyEqual(resNad, trueResNad);
+            testCase.verifyThat(resG6p, matlab.unittest.constraints.IsEqualTo(trueResG6p, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
+            testCase.verifyThat(resNad, matlab.unittest.constraints.IsEqualTo(trueResNad, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
         end
         
         function testCalculateMMCurvesG6PDH2NADP(testCase)
@@ -121,11 +129,15 @@ classdef calculateMMCurvesTest < matlab.unittest.TestCase
             trueRes6PGL = fileread(filepath);
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'OP2_G6PDH2_NADP_nadph.csv');
             trueResNadph = fileread(filepath);
-            
-            testCase.verifyEqual(resG6p, trueResG6p);
-            testCase.verifyEqual(resNadp, trueResNadp);
-            testCase.verifyEqual(res6PGL, trueRes6PGL);
-            testCase.verifyEqual(resNadph, trueResNadph);
+
+            testCase.verifyThat(resG6p, matlab.unittest.constraints.IsEqualTo(trueResG6p, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
+            testCase.verifyThat(resNadp, matlab.unittest.constraints.IsEqualTo(trueResNadp, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
+            testCase.verifyThat(res6PGL, matlab.unittest.constraints.IsEqualTo(trueRes6PGL, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
+            testCase.verifyThat(resNadph, matlab.unittest.constraints.IsEqualTo(trueResNadph, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
             
         end
         
@@ -161,11 +173,15 @@ classdef calculateMMCurvesTest < matlab.unittest.TestCase
             trueResR3M1 = fileread(filepath);
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueRes_r_r3_m_m7.csv');
             trueResR3M7 = fileread(filepath);
-            
-            testCase.verifyEqual(resR1M3, trueResR1M3);
-            testCase.verifyEqual(resR1M6, trueResR1M6);
-            testCase.verifyEqual(resR3M1, trueResR3M1);
-            testCase.verifyEqual(resR3M7, trueResR3M7);
+
+            testCase.verifyThat(resR1M3, matlab.unittest.constraints.IsEqualTo(trueResR1M3, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
+            testCase.verifyThat(resR1M6, matlab.unittest.constraints.IsEqualTo(trueResR1M6, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
+            testCase.verifyThat(resR3M1, matlab.unittest.constraints.IsEqualTo(trueResR3M1, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
+            testCase.verifyThat(resR3M7, matlab.unittest.constraints.IsEqualTo(trueResR3M7, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
         end
         
         function testCalculateMMCurvesWater(testCase)
@@ -213,12 +229,19 @@ classdef calculateMMCurvesTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueRes_r_r6_m_m10_water.csv');
             trueResR6M10 = fileread(filepath);
             
-            testCase.verifyEqual(resR1M3, trueResR1M3);
-            testCase.verifyEqual(resR1M6, trueResR1M6);
-            testCase.verifyEqual(resR3M1, trueResR3M1);
-            testCase.verifyEqual(resR3M7, trueResR3M7);
-            testCase.verifyEqual(resR6M1, trueResR6M1);
-            testCase.verifyEqual(resR6M10, trueResR6M10);
+            testCase.verifyThat(resR1M3, matlab.unittest.constraints.IsEqualTo(trueResR1M3, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
+            testCase.verifyThat(resR1M6, matlab.unittest.constraints.IsEqualTo(trueResR1M6, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
+            testCase.verifyThat(resR3M1, matlab.unittest.constraints.IsEqualTo(trueResR3M1, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
+            testCase.verifyThat(resR3M7, matlab.unittest.constraints.IsEqualTo(trueResR3M7, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
+            testCase.verifyThat(resR6M1, matlab.unittest.constraints.IsEqualTo(trueResR6M1, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
+            testCase.verifyThat(resR6M10, matlab.unittest.constraints.IsEqualTo(trueResR6M10, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
+            
             testCase.verifyTrue(~exist(fullfile(testCase.currentPath{1}, 'testFiles', 'r_r1_m_m0.csv'), 'file'));
             testCase.verifyTrue(~exist(fullfile(testCase.currentPath{1}, 'testFiles', 'r_r1_m_m0.csv'), 'file'));
         end

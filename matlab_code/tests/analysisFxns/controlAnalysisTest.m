@@ -2,6 +2,8 @@ classdef controlAnalysisTest < matlab.unittest.TestCase
    
     properties
         currentPath
+        relTol = 1e-10;
+        absTol = 1e-10;
     end
     
     methods(TestClassSetup)
@@ -42,7 +44,7 @@ classdef controlAnalysisTest < matlab.unittest.TestCase
             trueRes = trueRes.mcaResults;
 
             testCase.verifyThat(mcaResults, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.AbsoluteTolerance(1e-10)));
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
         end
     end
 end

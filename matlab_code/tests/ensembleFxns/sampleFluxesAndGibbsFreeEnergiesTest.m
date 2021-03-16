@@ -2,6 +2,8 @@ classdef sampleFluxesAndGibbsFreeEnergiesTest < matlab.unittest.TestCase
 
     properties
         currentPath
+        relTol = 1e-10;
+        absTol = 1e-10;
     end
     
     methods(TestClassSetup)
@@ -28,7 +30,7 @@ classdef sampleFluxesAndGibbsFreeEnergiesTest < matlab.unittest.TestCase
             trueResEnsemble = trueRes.ensemble;
            
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueResEnsemble, ...
-                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-12)));
+                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));    
         end
         
         function testSampleFluxesAndGibbsFreeEnergiesUniform(testCase)
@@ -47,7 +49,7 @@ classdef sampleFluxesAndGibbsFreeEnergiesTest < matlab.unittest.TestCase
             trueResEnsemble = trueRes.ensemble;
            
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueResEnsemble, ...
-                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-12)));
+                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
         end
     end
 end

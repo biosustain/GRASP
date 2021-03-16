@@ -2,6 +2,8 @@ classdef computRobustFluxesTest < matlab.unittest.TestCase
 
     properties
         currentPath
+        relTol = 1e-10;
+        absTol = 1e-10;
     end
     
     methods(TestClassSetup)
@@ -44,9 +46,9 @@ classdef computRobustFluxesTest < matlab.unittest.TestCase
             trueResVstd = trueRes.vStd;
             
             testCase.verifyThat(vMean, matlab.unittest.constraints.IsEqualTo(trueResVmean, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
             testCase.verifyThat(vStd, matlab.unittest.constraints.IsEqualTo(trueResVstd, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
         end
        
     end

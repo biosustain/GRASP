@@ -2,6 +2,8 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
 
     properties
         currentPath
+        relTol = 1e-10;
+        absTol = 1e-10;
     end
     
     methods(TestClassSetup)
@@ -60,7 +62,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = rmfield(trueRes, 'splitRatios');            
                                
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
         end
 
         function testBuildEnsembleRandomLinprog(testCase)
@@ -84,7 +86,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = rmfield(trueRes, 'splitRatios');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
+                'Within',matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
         end
                
         function testBuildEnsembleAllosteric(testCase)
@@ -107,7 +109,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = rmfield(trueRes, 'splitRatios');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
         end
         
         function testBuildEnsembleAllStable(testCase)
@@ -132,7 +134,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = rmfield(trueRes, 'splitRatios');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
         end
         
         function testBuildEnsembleNoPromiscuous(testCase)
@@ -157,7 +159,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = rmfield(trueRes, 'splitRatios');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
         end
         
         function testBuildEnsembleLargeModel(testCase)
@@ -181,7 +183,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = rmfield(trueRes, 'splitRatios');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
         end
         
         function testBuildEnsembleLargeModeldGs(testCase)
@@ -205,7 +207,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = rmfield(trueRes, 'splitRatios');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
         end
         
         function testBuildEnsembleCreateDir(testCase)
@@ -232,7 +234,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = rmfield(trueRes, 'splitRatios');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
         end
 
         function testBuildEnsembleExample(testCase)
@@ -261,7 +263,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = rmfield(trueRes, 'splitRatios');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
         end
         
         function testBuildEnsembleExampleABCNlopt(testCase)
@@ -288,7 +290,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = rmfield(trueRes, 'splitRatios');
                         
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
         end
         
         function testBuildEnsembleExampleABCFmincon(testCase)
@@ -315,7 +317,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = rmfield(trueRes, 'splitRatios');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
         end
         
         function testBuildEnsembleMethionineATPchange(testCase)
@@ -336,7 +338,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = rmfield(trueRes, 'splitRatios');
        
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
         end
 	end
 end
