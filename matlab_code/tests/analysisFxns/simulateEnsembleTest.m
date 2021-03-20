@@ -2,8 +2,8 @@ classdef simulateEnsembleTest < matlab.unittest.TestCase
 
     properties
         currentPath
-        relTol = 1e-10;
-        absTol = 1e-10;
+        relTol = 1e-8;
+        absTol = 1e-8;
     end
     
     methods(TestClassSetup)
