@@ -39,8 +39,7 @@ function ensemble = loadEnsembleStructure(xlsxFile)
 %               * metsFixed (*int vector*)        : which metabolites concentrations are defined as fixed (constant)
 %               * Sred (*int matrix*)             : reduced stoichiometric matrix, includes only balanced metabolites and active reactions
 %               * measRates (*double matrix*)     : measured reaction fluxes means
-%               * measRatesStd (*double matrix*)  : measured reaction fluxes standard deviations
-%               * splitRatios (*vector*)          : [TODO Pedro]  
+%               * measRatesStd (*double matrix*)  : measured reaction fluxes standard deviations 
 %               * poolConst (*vector*)            : [TODO Pedro]  
 %               * ineqThermoConst (*vector*)      : [TODO Pedro]      
 %               * expFluxes (*double vector*)     : [TODO Pedro]  
@@ -98,7 +97,6 @@ xlsxFile            = [xlsxFile,'.xlsx'];                               % add ex
 Sfull               = xlsread(xlsxFile,'stoic');                        % load full stoichiometry
 [xRxns,rxnsList]    = xlsread(xlsxFile,'rxns');                         % load rxn info
 [xMets,metsList]    = xlsread(xlsxFile,'mets');                         % load mets info
-splitRatios         = xlsread(xlsxFile,'splitRatios');                  % load split ratios
 poolConstraints     = xlsread(xlsxFile,'poolConst');                    % load pool constraints
 [measRates,idxMeas] = xlsread(xlsxFile,'measRates');                    % load meas rates data
 xDG_std             = xlsread(xlsxFile,'thermoRxns');                   % load thermodynamic data (rxns)
@@ -246,13 +244,6 @@ for ix = 1:ensemble.numConditions+1                     % We have to add the ref
     ensemble.measRatesStd(:,ix) = measRates(:,2*ix);
 end    
 
-
-% Add split ratios (if any)
-ensemble.splitRatios = [];
-if ~isempty(splitRatios)
-    ensemble.splitRatios = splitRatios';
-end
-
 % Add pool constraints (if any)
 ensemble.poolConst = [];
 if ~isempty(poolConstraints)
@@ -281,13 +272,9 @@ for ix = 1:ensemble.numConditions+1
         xStd(index)  = ensemble.measRatesStd(jx,ix);
     end
 
-    % Compute fluxes robustly (add split ratios if any)
+    % Compute fluxes robustly
     if robustFluxes
-        if (~isempty(ensemble.splitRatios) && any(ensemble.splitRatios(ix,:)))
-            [vMean,vStd] = computeRobustFluxes([ensemble.Sflux;ensemble.splitRatios(ix,:)],xMean,xStd);
-        else
-            [vMean,vStd] = computeRobustFluxes(ensemble.Sflux,xMean,xStd);
-        end
+        [vMean,vStd] = computeRobustFluxes(ensemble.Sflux,xMean,xStd);
     else
         vMean = xMean;
         vStd  = xStd;
