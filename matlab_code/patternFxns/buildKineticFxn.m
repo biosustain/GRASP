@@ -131,7 +131,17 @@ for i = 1:numel(ensemble.activeRxns)
             end
         end
         
-        reactants = strsplit(reactants, ';');
+        try
+            reactants = strsplit(reactants, ';');
+        catch ME
+            if (strcmp(ME.identifier,'MATLAB:strsplit:InvalidStringType'))
+                error('MATLAB:strsplit:InvalidStringType',...
+                      'Check the pattern file for the reaction %s. ', ensemble.rxns{ensemble.activeRxns(i)},...
+                      'In particular, the multiplications should be element-wise, i.e. k01.*A and not k01*A');
+            else
+                rethrow(ME);
+            end
+        end
         reactants = strjoin(reactants, ';');
         
     else
