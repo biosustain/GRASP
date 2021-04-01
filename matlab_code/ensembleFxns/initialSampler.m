@@ -1,7 +1,6 @@
 function [isModelValid,models,strucIdx,xopt,tolScore,simulatedFlux] = initialSampler(ensemble)
 % Samples initial ensemble of kinetic models.
 %
-% [TODO: Pedro write a bit more about the ABC part?]
 %
 % Checks if sampled models are valid and only returns valid ones.
 % A model is considered valid if
@@ -25,7 +24,7 @@ function [isModelValid,models,strucIdx,xopt,tolScore,simulatedFlux] = initialSam
 %    isModelValid (logical):   whether or not model is valid.
 %    models (struct):          sampled model
 %
-%               * poolFactor (*double vector*) : [TODO Pedro]
+%               * poolFactor (*double vector*) : relative pool proportions of specific metabolites at reference state (e.g., atp/adp)
 %               * refFlux (*double vector*)    : reference reaction fluxes (mean)
 %               * metConcRef (*double vector*) : reference metabolite concentrations (sampled within thermodynamically feasible ranges)
 %               * gibbsTemp (*double vector*)  : Gibbs reactions energies
@@ -36,10 +35,10 @@ function [isModelValid,models,strucIdx,xopt,tolScore,simulatedFlux] = initialSam
 %                       * modifierElemFlux (*double vector*) : [TODO Pedro]
 %                       * branchFactor (*double vector*)     : [TODO Pedro]
 %                       * kineticParams (*double vector*)    : reaction kinetic parameters
-%    strucIdx (int):           model structure ID
-%    xopt (logical):           [TODO: Pedro]
-%    tolScore (logical):       [TODO: Pedro]
-%    simulatedFlux (logical):  [TODO: Pedro]
+%    strucIdx (int):                   model structure ID
+%    xopt (*double vector*):           predicted metabolite and enzyme concentrations of an experimentally consistent model
+%    tolScore (*double vector*):       discrepancy tolerance between predicted and experimental fluxes
+%    simulatedFlux (*double vector*):  predicted fluxes
 %
 % .. Authors:
 %       - Pedro Saa         2016 original code
@@ -272,11 +271,11 @@ while true
                 opt.lower_bounds  = lb(:,ix);
                 opt.upper_bounds  = ub(:,ix);
 
-                % Solve S*v(k,X) = 0; s.t. A*X <= beq, lb < X <ub, with extra constraints (e.g., pool or ratio constraints). Otherwise solve solve S*v(k,X) = 0; s.t. lb < X <ub, with no extra constraints
+                % Solves S*v(k,X) = 0; s.t. A*X <= beq, lb < X <ub, with extra constraints (e.g., pool or ratio constraints). Otherwise solve solve S*v(k,X) = 0; s.t. lb < X <ub, with no extra constraints
                 if ~isempty(ensemble.poolConst)
                     for jx = 1:numel(ensemble.poolConst)
-                        opt.fc{1,2*jx-1} = (@(x) poolConstraintFxn(x,[A_opt{jx},zeros(1,numel(ensemble.freeVars)-numel(ensemble.metsActive))],b{jx}(2*ix-1)));
-                        opt.fc{1,2*jx}   = (@(x) poolConstraintFxn(x,[-A_opt{jx},zeros(1,numel(ensemble.freeVars)-numel(ensemble.metsActive))],-b{jx}(2*ix)));
+                        opt.fc{1,2*jx-1} = (@(x) poolConstraintFxn(x,[A_opt{jx},zeros(1,numel(x0(:,ix))-numel(ensemble.metsActive))],b{jx}(2*ix-1)));
+                        opt.fc{1,2*jx}   = (@(x) poolConstraintFxn(x,[-A_opt{jx},zeros(1,numel(x0(:,ix))-numel(ensemble.metsActive))],-b{jx}(2*ix)));
                     end
                     opt.fc_tol = 1e-6*ones(1,2*numel(ensemble.poolConst));
                 end
@@ -284,9 +283,15 @@ while true
 
                 % FMINCON call
             else
-                [xopt(:,ix),fmin] = fmincon(kineticFxn,x0(:,ix),[],[],[],[],lb(:,ix),ub(:,ix),[],options,xconst,models,ensemble.fixedExch,ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},1);
+                % Solves S*v(k,X) = 0; s.t. Aeq*X = beq, lb < X <ub, with extra constraints (e.g., pool or ratio constraints). Otherwise solve solve S*v(k,X) = 0; s.t. lb < X <ub, with no extra constraints
+                Aeq_fmin = [];
+                beq_fmin = [];
+                if ~isempty(ensemble.poolConst)                    
+                    Aeq_fmin = [A_opt{ix},zeros(1,numel(x0(:,ix))-numel(ensemble.metsActive))];
+                    beq_fmin = b{ix}(end);
+                end
+                [xopt(:,ix),fmin] = fmincon(kineticFxn,x0(:,ix),[],[],Aeq_fmin,beq_fmin,lb(:,ix),ub(:,ix),[],options,xconst,models,ensemble.fixedExch,ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},1);
 
-                % Pool constraints not implemented yet for this solver
             end
 
             % Check mass balance consistency
