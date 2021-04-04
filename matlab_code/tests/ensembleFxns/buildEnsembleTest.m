@@ -57,6 +57,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = trueRes.ensemble;
             trueRes.sampler = 'GRASP';
             trueRes = rmfield(trueRes, 'measuredMets');
+            trueRes = rmfield(trueRes, 'splitRatios');            
                                
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
@@ -80,6 +81,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = trueRes.ensemble;
             trueRes.sampler = 'GRASP';    
             trueRes = rmfield(trueRes, 'measuredMets');
+            trueRes = rmfield(trueRes, 'splitRatios');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
@@ -102,6 +104,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = trueRes.ensemble;
             trueRes.sampler = 'GRASP';  
             trueRes = rmfield(trueRes, 'measuredMets');
+            trueRes = rmfield(trueRes, 'splitRatios');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
@@ -126,6 +129,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = trueRes.ensemble;
             trueRes.sampler = 'GRASP';         
             trueRes = rmfield(trueRes, 'measuredMets');
+            trueRes = rmfield(trueRes, 'splitRatios');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
@@ -150,6 +154,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = trueRes.ensemble;
             trueRes.sampler = 'GRASP';
             trueRes = rmfield(trueRes, 'measuredMets');
+            trueRes = rmfield(trueRes, 'splitRatios');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
@@ -173,6 +178,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = trueRes.ensemble;
             trueRes.sampler = 'GRASP'; 
             trueRes = rmfield(trueRes, 'measuredMets');
+            trueRes = rmfield(trueRes, 'splitRatios');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
@@ -196,6 +202,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = trueRes.ensemble;
             trueRes.sampler = 'GRASP';    
             trueRes = rmfield(trueRes, 'measuredMets');
+            trueRes = rmfield(trueRes, 'splitRatios');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
@@ -222,6 +229,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = trueRes.ensemble;
             trueRes.sampler = 'GRASP';
             trueRes = rmfield(trueRes, 'measuredMets');
+            trueRes = rmfield(trueRes, 'splitRatios');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
@@ -250,6 +258,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             
             trueRes.sampler = 'GRASP';
             trueRes = rmfield(trueRes, 'measuredMets');
+            trueRes = rmfield(trueRes, 'splitRatios');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
@@ -276,6 +285,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             
             trueRes = trueRes.ensemble;
             trueRes = rmfield(trueRes, 'measuredMets');
+            trueRes = rmfield(trueRes, 'splitRatios');
                         
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
@@ -302,6 +312,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleExampleABCFmincon'));
             trueRes = trueRes.ensemble;  
             trueRes = rmfield(trueRes, 'measuredMets');
+            trueRes = rmfield(trueRes, 'splitRatios');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
@@ -322,6 +333,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResTestBuildEnsembleMethionineATPchange'));
             trueRes = trueRes.ensemble;
+            trueRes = rmfield(trueRes, 'splitRatios');
        
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
