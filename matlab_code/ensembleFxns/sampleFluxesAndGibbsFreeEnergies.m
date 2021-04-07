@@ -11,7 +11,19 @@ fluxLB     = ensemble.fluxRanges(:,1);
 fluxUB     = ensemble.fluxRanges(:,2);
 fluxX0     = ensemble.initialTMFAPoint(1:size(fluxLB,1));
 fluxAeq    = ensemble.Sflux;
-fluxPoints = generalHR(fluxAeq,fluxLB,fluxUB,fluxX0,nSamples,nSteps,nDiscard,priorType);
+if ~ensemble.parallel
+    fluxPoints = generalHR(fluxAeq,fluxLB,fluxUB,fluxX0,nSamples,nSteps,nDiscard,priorType);
+else
+    fluxPoints{ensemble.numCores} = [];
+    numSamplesPerCore = round(nSamples/ensemble.numCores);
+    parpool(ensemble.numCores);                 % Run one Markov chain per core
+    parfor ix = 1:ensemble.numCores
+        rng('shuffle');                         % This is necessary to avoid generating the same results by the workers 
+        fluxPoints{ix} = generalHR(fluxAeq,fluxLB,fluxUB,fluxX0,numSamplesPerCore,nSteps,nDiscard,priorType);
+    end
+    delete(gcp('nocreate'));
+    fluxPoints = cell2mat(fluxPoints);
+end
 ensemble.fluxPoints = fluxPoints(:,end-maxNumberOfSamples+1:end);
 
 assert(all(all(abs(ensemble.Sred * ensemble.fluxPoints) <10^-8)), "Not all sampled flux points lead to S.v = 0");
@@ -25,7 +37,18 @@ thermoLB     = [ensemble.gibbsRanges(ensemble.idxNotExch,1);ensemble.DGfStdRange
 thermoUB     = [ensemble.gibbsRanges(ensemble.idxNotExch,2);ensemble.DGfStdRange(:,2);ensemble.lnMetRanges(:,2)];
 thermoAeq    = [eye(size(ensemble.Sthermo,2)),-ensemble.Sthermo',-RT*ensemble.Sthermo'];
 thermoX0     = ensemble.initialTMFAPoint(numel(fluxX0)+1:end);
-thermoPoints = generalHR(thermoAeq,thermoLB,thermoUB,thermoX0,nSamples,nSteps,nDiscard,priorType);
+if ~ensemble.parallel
+    thermoPoints = generalHR(thermoAeq,thermoLB,thermoUB,thermoX0,nSamples,nSteps,nDiscard,priorType);
+else
+    thermoPoints{ensemble.numCores} = [];
+    parpool(ensemble.numCores);                 % Run one Markov chain per core
+    parfor ix = 1:ensemble.numCores
+        rng('shuffle');
+        thermoPoints{ix} = generalHR(thermoAeq,thermoLB,thermoUB,thermoX0,numSamplesPerCore,nSteps,nDiscard,priorType);
+    end
+    delete(gcp('nocreate'));
+    thermoPoints = cell2mat(thermoPoints);
+end
 ensemble.gibbsEnergies = thermoPoints(1:n,end-maxNumberOfSamples+1:end);
 ensemble.metConcRef = exp(thermoPoints(n+m+1:end,end-maxNumberOfSamples+1:end));
 
