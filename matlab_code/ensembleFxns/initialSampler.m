@@ -259,7 +259,7 @@ while true
     elseif ~strcmpi(ensemble.sampler,'GRASP') && isModelValid
 
         % Simulate fluxes
-        tolScore      = [];
+        tolScore      = 10000*ones(1, ensemble.numConditions);
         simulatedFlux = zeros(numel(ensemble.activeRxns),ensemble.numConditions);
         xopt          = zeros(size(x0,1),ensemble.numConditions);
 
@@ -306,10 +306,10 @@ while true
                 simulatedFlux(:,ix) = feval(kineticFxn,xopt(:,ix),xconst,models,ensemble.fixedExch(:,ix+1),ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},0);
 
                 % Calculate discrepancy score
-                tolScore = [tolScore,max(sqrt(mean(((simulatedFlux(ensemble.freeFluxes,ix)-ensemble.simWeights(:,ix))./ensemble.simWeights(:,ix)).^2)))];
+                tolScore(ix) = max(sqrt(mean(((simulatedFlux(ensemble.freeFluxes,ix)-ensemble.simWeights(:,ix))./ensemble.simWeights(:,ix)).^2)));
 
                 % Check tolerance inmediately for this condition
-                if (tolScore(end)>ensemble.tolerance)
+                if (tolScore(ix)>ensemble.tolerance)
                     isModelValid = false;
                     break;
                 end
@@ -321,7 +321,6 @@ while true
 
         % Compute tolerance, acceptance rate and break
         if isModelValid
-            tolScore       = max(tolScore);                 % Infinity norm as discrepancy measure
             acceptanceRate = 1/counter;
             break;
 

@@ -173,7 +173,7 @@ catch
 end
 
 % Preallocate memory for the remaing fields in the ensemble structure
-tolScore = zeros(ensemble.replenishedParticles(popIdx),1);
+tolScore = zeros(ensemble.replenishedParticles(popIdx),ensemble.numConditions);
 strucIdx = zeros(ensemble.replenishedParticles(popIdx),1);
 xopt{ensemble.replenishedParticles(popIdx),1}      = [];
 simFluxes{ensemble.replenishedParticles(popIdx),1} = [];
@@ -199,8 +199,8 @@ if ensemble.parallel
         end
 
         parpool(ensemble.numCores);
-        parfor ix = (sampleCount+1):(sampleCount+nSamples)
-            [validModelList(ix),models(ix),strucIdx(ix),xopt{ix},tolScore(ix),simFluxes{ix}] = initialSampler(ensemble, ix);
+        parfor ix = (sampleCount+1):(sampleCount+nSamples)   
+            [validModelList(ix),models(ix),strucIdx(ix),xopt{ix},tolScore(ix,:),simFluxes{ix}] = initialSampler(ensemble, ix);
         end
         delete(gcp);
 
