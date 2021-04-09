@@ -188,7 +188,7 @@ if ensemble.parallel
     while nValidModels < ensemble.numParticles
 
         if sampleCount == 0                                             % if no models have been sampled yet, sample ensemble.numParticles models
-            nSamples = ensemble.numParticles * 1.3;
+            nSamples = ceil(ensemble.numParticles * 1.3);
         else                                                            % else check how many more should be sampled based on the percentage of valid models
             nSamples = 1 / (nValidModels / sampleCount)*(sampleCount - nValidModels);
             nSamples = round(nSamples);
