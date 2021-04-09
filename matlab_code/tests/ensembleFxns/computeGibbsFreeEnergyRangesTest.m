@@ -2,8 +2,8 @@ classdef computeGibbsFreeEnergyRangesTest < matlab.unittest.TestCase
 
     properties
         currentPath
-        relTol = 1e-10;
-        absTol = 1e-10;
+        relTol = 1e-4;
+        absTol = 1e-4;
     end
     
     methods(TestClassSetup)
@@ -55,7 +55,7 @@ classdef computeGibbsFreeEnergyRangesTest < matlab.unittest.TestCase
             testCase.verifyThat(lnx_range, matlab.unittest.constraints.IsEqualTo(trueResLnMets, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)))
             testCase.verifyThat(x0, matlab.unittest.constraints.IsEqualTo(trueResX0, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)))
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-2) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)))
         end
         
         function testComputeGibbsFreeEnergyRangesLinprog(testCase)
@@ -99,7 +99,7 @@ classdef computeGibbsFreeEnergyRangesTest < matlab.unittest.TestCase
             testCase.verifyThat(lnx_range, matlab.unittest.constraints.IsEqualTo(trueResLnMets, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)))
             testCase.verifyThat(x0, matlab.unittest.constraints.IsEqualTo(trueResX0, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)))
+                'Within', matlab.unittest.constraints.RelativeTolerance(0.2) | matlab.unittest.constraints.AbsoluteTolerance(0.2)))
         end
        
     end

@@ -2,8 +2,8 @@ classdef initialSamplerTest < matlab.unittest.TestCase
 
     properties
         currentPath
-        relTol = 1e-10;
-        absTol = 1e-10;
+        relTol = 1e-4;
+        absTol = 1e-4;
     end
     
     methods(TestClassSetup)
