@@ -173,8 +173,8 @@ catch
 end
 
 % Preallocate memory for the remaing fields in the ensemble structure
-tolScore = zeros(ensemble.replenishedParticles(popIdx),1);
-strucIdx = zeros(ensemble.replenishedParticles(popIdx),1);
+tolScore = zeros(ensemble.replenishedParticles(popIdx), ensemble.numConditions);
+strucIdx = zeros(ensemble.replenishedParticles(popIdx), 1);
 xopt{ensemble.replenishedParticles(popIdx),1}      = [];
 simFluxes{ensemble.replenishedParticles(popIdx),1} = [];
 
@@ -188,7 +188,7 @@ if ensemble.parallel
     while nValidModels < ensemble.numParticles
 
         if sampleCount == 0                                             % if no models have been sampled yet, sample ensemble.numParticles models
-            nSamples = ensemble.numParticles * 1.3;
+            nSamples = ceil(ensemble.numParticles * 1.3);
         else                                                            % else check how many more should be sampled based on the percentage of valid models
             nSamples = 1 / (nValidModels / sampleCount)*(sampleCount - nValidModels);
             nSamples = round(nSamples);
@@ -199,8 +199,8 @@ if ensemble.parallel
         end
 
         parpool(ensemble.numCores);
-        parfor ix = (sampleCount+1):(sampleCount+nSamples)
-            [validModelList(ix),models(ix),strucIdx(ix),xopt{ix},tolScore(ix),simFluxes{ix}] = initialSampler(ensemble, ix);
+        parfor ix = (sampleCount+1):(sampleCount+nSamples)   
+            [validModelList(ix),models(ix),strucIdx(ix),xopt{ix},tolScore(ix,:),simFluxes{ix}] = initialSampler(ensemble, ix);
         end
         delete(gcp);
 
@@ -233,7 +233,7 @@ else
             models(ix) = model;
             strucIdx(ix) = strucIdxTemp;
             xopt{ix} = xoptTemp;
-            tolScore(ix) = tolScoreTemp;
+            tolScore(ix,:) = tolScoreTemp;
             simFluxes{ix} = simFluxesTemp;
 
             ix = ix + 1;
