@@ -173,8 +173,8 @@ catch
 end
 
 % Preallocate memory for the remaing fields in the ensemble structure
-tolScore = zeros(ensemble.replenishedParticles(popIdx),ensemble.numConditions);
-strucIdx = zeros(ensemble.replenishedParticles(popIdx),1);
+tolScore = zeros(ensemble.replenishedParticles(popIdx), ensemble.numConditions);
+strucIdx = zeros(ensemble.replenishedParticles(popIdx), 1);
 xopt{ensemble.replenishedParticles(popIdx),1}      = [];
 simFluxes{ensemble.replenishedParticles(popIdx),1} = [];
 
@@ -233,7 +233,7 @@ else
             models(ix) = model;
             strucIdx(ix) = strucIdxTemp;
             xopt{ix} = xoptTemp;
-            tolScore(ix) = tolScoreTemp;
+            tolScore(ix,:) = tolScoreTemp;
             simFluxes{ix} = simFluxesTemp;
 
             ix = ix + 1;
