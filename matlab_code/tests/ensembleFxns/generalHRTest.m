@@ -2,6 +2,8 @@ classdef generalHRTest < matlab.unittest.TestCase
 
     properties
         currentPath
+        relTol = 1e-4;
+        absTol = 1e-4;
     end
     
     methods(TestClassSetup)
@@ -35,7 +37,7 @@ classdef generalHRTest < matlab.unittest.TestCase
             trueRes = trueRes.fluxPoints;
             
             testCase.verifyThat(fluxPoints, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-12)))
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
          end
         
          function testGeneralHRFluxesUniform(testCase)
@@ -61,7 +63,7 @@ classdef generalHRTest < matlab.unittest.TestCase
             trueRes = trueRes.fluxPoints;
             
             testCase.verifyThat(fluxPoints, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-12)))
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
         end
         
         function testGeneralHRFGNormal(testCase)
@@ -89,7 +91,7 @@ classdef generalHRTest < matlab.unittest.TestCase
             trueRes = trueRes.thermoPoints;
             
             testCase.verifyThat(thermoPoints, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-12)))
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
         end
         
         function testGeneralHRFGUniform(testCase)
@@ -117,7 +119,7 @@ classdef generalHRTest < matlab.unittest.TestCase
             trueRes = trueRes.thermoPoints;
             
             testCase.verifyThat(thermoPoints, matlab.unittest.constraints.IsEqualTo(trueRes, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-12)))
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
         end
     end
 end
