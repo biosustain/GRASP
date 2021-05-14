@@ -43,8 +43,7 @@ function ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThr
 %               * numParticles (*int*)            : how many models to be sampled   
 %               * parallel (*int*)                : whether or not to parallelize sampling process
 %               * numCores (*int*)                : if *parallel* is true, how many cores to use
-%               * alphaAlive (*double*)           : [TODO Pedro]
-%               * tolerance (*double vector*)     : [TODO Pedro]
+%               * tolerance (*double*)            : max allowable flux discrepancy between simulations and flux data
 %               * S (*int matrix*)                : stoichiometric matrix as defined in the input file
 %               * rxns (*char cell*)              : reaction IDs
 %               * rxnNames (*char cell*)          : reaction names
@@ -55,21 +54,19 @@ function ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThr
 %               * mets (*char cell*)              : metabolite IDs
 %               * metNames (*char cell*)          : metabolite names
 %               * rxnMets (*char cell*)           : [TODO Pedro]
-%               * metsBalanced (*int vector*)     : [TODO Pedro]  
-%               * metsSimulated (*int vector*)    : [TODO Pedro]  
+%               * metsBalanced (*int vector*)     : Indices of mass-balanced metabolites
 %               * metsFixed (*int vector*)        : which metabolites concentrations are defined as fixed (constant)
 %               * Sred (*int matrix*)             : reduced stoichiometric matrix, includes only balanced metabolites and active reactions
 %               * measRates (*double matrix*)     : measured reaction fluxes means
 %               * measRatesStd (*double matrix*)  : measured reaction fluxes standard deviations
-%               * splitRatios (*vector*)          : [TODO Pedro]  
-%               * poolConst (*vector*)            : [TODO Pedro]  
-%               * ineqThermoConst (*vector*)      : [TODO Pedro]      
-%               * expFluxes (*double vector*)     : [TODO Pedro]  
-%               * expFluxesStd (*double vector*)  : [TODO Pedro]     
+%               * poolConst (*vector*)            : pool conservation constraints 
+%               * ineqThermoConst (*vector*)      : thermodynamic inequality constraints on log concentrations (ratios in linear space). Used in TMFA
+%               * expFluxes (*double vector*)     : mean of experimental fluxes
+%               * expFluxesStd (*double vector*)  : std of experimental fluxes    
 %               * fluxRef (*double vector*)       : reference reaction fluxes means
 %               * fluxRefStd (*double vector*)    : reference reaction fluxes standard deviations
-%               * freeFluxes (*int vector*)       : [TODO Pedro]  
-%               * simWeights (*double vector*)    : [TODO Pedro]  
+%               * freeFluxes (*int vector*)       : indices of linearly independent fluxes   
+%               * simWeights (*double vector*)    : discrepancy flux weights (by default experimental fluxes) 
 %               * Sthermo (*int matrix*)          : stoichiometric matrix used for thermodynamics, excludes exchange reactions
 %               * gibbsRanges (*double matrix*)   : thermodynamically feasible ranges for Gibbs energies  
 %               * metRanges (*double matrix*)     : thermodynamically feasible ranges for metabolite concentrations
@@ -77,8 +74,8 @@ function ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThr
 %               * metsDataMin (*double vector*)   : minimum value for scaled metabolite concentrations   
 %               * metsDataMax (*double vector*)   : maximum value for scaled metabolite concentrations  
 %               * metsDataMean (*double vector*)  : mean value for scaled metabolite concentrations   
-%               * prevPrior (*cell*)              : [TODO Pedro] 
-%               * prevPriorInfo (*cell*)          : [TODO Pedro]     
+%               * prevPrior (*cell*)              : previous prior information available for the reactions
+%               * prevPriorInfo (*cell*)          : description of previous prior information  
 %               * allosteric (*cell*)             : which reactions are allosterically regulated
 %               * subunits (*int cell*)           : number of enzyme subunits for each reaction
 %               * rxnMechanisms (*char cell*)     : reaction mechanisms    
@@ -98,42 +95,41 @@ function ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThr
 %               * fixedExch (*double matrix*)     : fixed exchange reactions
 %               * kineticFxn (*char cell*)        : name of kinetic function used to build the model with all rate laws
 %               * metLists (*char cell*)          : list of metabolites (as defined in patterns) for each reaction
-%               * revMatrix (*int matrix*)        : [TODO Pedro]
-%               * forwardFlux (*int cell*)        : [TODO Pedro]  
-%               * Nelem (*int cell*)              : [TODO Pedro]
-%               * freeVars (*char cell*)          : [TODO Pedro]
-%               * metsActive (*int vector*)       : [TODO Pedro]
+%               * revMatrix (*int matrix*)        : reversibilty matrix for the kinetic mechanism
+%               * forwardFlux (*int cell*)        : link matrix of forward elementary fluxes connecting enzyme intermediates
+%               * Nelem (*double cell*)           : null space basis for the mass balanced elementary fluxes
+%               * freeVars (*char cell*)          : free variables, includes both proteins and metabolites concentrations
+%               * metsActive (*int vector*)       : indices of active (non-constant) metabolites
 %               * eigThreshold (*double*)         : threshold for the real part of the jacobian eigenvalues, if there is any higher than the threshold the model is discarded
-%               * thermoActive (*int vector*)     : [TODO Pedro]
-%               * populations (*struct*)          : [TODO Pedro]
+%               * thermoActive (*int vector*)     : thermodynamically active reactions indices (e.g. excludes fixed exchanges) 
+%               * populations (*struct*)          : population of model ensembles
 %
-%                       * probParams (*struct*)      : [TODO Pedro]
+%                       * probParams (*struct*)      : probabilitis parameters of the ensemble
 %
-%                               * muGibbsFactor (*double vector*)     : [TODO Pedro]
-%                               * sigmaGibbsFactor (*double vector*)  : [TODO Pedro]
+%                               * muGibbsFactor (*double vector*)     : [THIS SHOULD BE REMOVED FROM THE ENSEMBLE STRUCTURE AS WE USE THE HR SAMPLER]
+%                               * sigmaGibbsFactor (*double vector*)  : [THIS SHOULD BE REMOVED FROM THE ENSEMBLE STRUCTURE AS WE USE THE HR SAMPLER]
 %                               * rxnParams (*struct*)                : reaction parameters
 %
-%                                       * alphaEnzymeAbundances (*int vector*)  : [TODO Pedro]
-%                                       * alphaReversibilities (*int vector*)   : [TODO Pedro]
-%                                       * betaModifierElemeFlux (*int vector*)  : [TODO Pedro]
-%                                       * betaBranchFactor (*int vector*)       : [TODO Pedro]
-%                       * weights (*double vector*)  : [TODO Pedro]
+%                                       * alphaEnzymeAbundances (*double vector*)  : prior hyper parameters of the Dirichlet distribution for sampling enzyme abundances
+%                                       * alphaReversibilities (*double vector*)   : prior hyper parameters of the Dirichlet distribution for sampling reversibilities
+%                                       * betaModifierElemeFlux (*double vector*)  : prior hyper parameters of the beta distribution for sampling elementary modifier flux
+%                                       * betaBranchFactor (*double vector*)       : prior hyper parameters of the beta distribution for flux branching factors
+%                       * weights (*double vector*)  : relative weight of the models
 %                       * models (*struct*)          : models in the ensemble
 %
-%                                * poolFactor (*double vector*)  : [TODO Pedro]
-%                                * gibbsFactor (*double vector*) : [TODO Pedro]
+%                                * poolFactor (*double vector*)  : proportions of conserved moieties at the reference state
 %                                * rxnParams (*struct*)          : reaction parameters
 %
 %                                        * reversibilities (*double vector*)   : sampled elementary reaction reversibilities
 %                                        * enzymeAbundances (*double vector*)  : sampled enzyme intermediates abundances
-%                                        * branchFactor (*double vector*)      : [TODO Pedro]
-%                                        * modifierElemeFlux (*double vector*) : [TODO Pedro]
+%                                        * branchFactor (*double vector*)      : random branching flux factor in random order mechanisms (one per branching point)
+%                                        * modifierElemeFlux (*double vector*) : random flux through an elementary reaction involving a modifier (inhibitor or activator) 
 %                                        * kineticParams (*double vector*)     : reaction kinetic parameters
 %                       * strucIdx (*double vector*)  : model structure ID
-%                       * tolScore (*double vector*)  : [TODO Pedro]
-%                       * xopt (*cell*)               : [TODO Pedro]
-%                       * simFluxes (*cell*)          : [TODO Pedro]
-%               * replenished particles (*int*)   : [TODO Pedro]
+%                       * tolScore (*double vector*)  : max flux discrepancy of the model
+%                       * xopt (*cell*)               : simulated metabolite and enzyme concentrations for each experimental condition
+%                       * simFluxes (*cell*)          : simulated fluxes by the model
+%               * replenished particles (*int*)   : number of models generated in the current population
 %
 % .. Authors:
 %       - Pedro Saa     2016 original code
@@ -199,7 +195,8 @@ if ensemble.parallel
         end
 
         parpool(ensemble.numCores);
-        parfor ix = (sampleCount+1):(sampleCount+nSamples)   
+        parfor ix = (sampleCount+1):(sampleCount+nSamples)
+            rng(sum(fix(clock))+ix)                                             % This is necessary to avoid generating the same results each time
             [validModelList(ix),models(ix),strucIdx(ix),xopt{ix},tolScore(ix,:),simFluxes{ix}] = initialSampler(ensemble, ix);
         end
         delete(gcp);
