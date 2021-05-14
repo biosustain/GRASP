@@ -196,7 +196,7 @@ if ensemble.parallel
 
         parpool(ensemble.numCores);
         parfor ix = (sampleCount+1):(sampleCount+nSamples)
-            rng('default');                                             % This is necessary to avoid generating the same results each time
+            rng(sum(fix(clock))+ix)                                             % This is necessary to avoid generating the same results each time
             [validModelList(ix),models(ix),strucIdx(ix),xopt{ix},tolScore(ix,:),simFluxes{ix}] = initialSampler(ensemble, ix);
         end
         delete(gcp);
