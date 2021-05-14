@@ -2,6 +2,8 @@ classdef initialSamplerTest < matlab.unittest.TestCase
 
     properties
         currentPath
+        relTol = 1e-4;
+        absTol = 1e-4;
     end
     
     methods(TestClassSetup)
@@ -59,7 +61,7 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             testCase.verifyEqual(tolScore, trueResTolScore);
             testCase.verifyEqual(simFluxes, trueResSimFluxes);
             testCase.verifyThat(model, matlab.unittest.constraints.IsEqualTo(trueResModel, ...
-                'Within', matlab.unittest.constraints.AbsoluteTolerance(1e-2) & matlab.unittest.constraints.RelativeTolerance(1e-9)));
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
             
         end
         
@@ -98,7 +100,7 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             testCase.verifyEqual(tolScore, trueResTolScore);
             testCase.verifyEqual(simFluxes, trueResSimFluxes);
             testCase.verifyThat(model, matlab.unittest.constraints.IsEqualTo(trueResModel, ...
-                'Within', matlab.unittest.constraints.AbsoluteTolerance(1e-6) & matlab.unittest.constraints.RelativeTolerance(1e-12)));
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
             
         end
         
@@ -137,7 +139,7 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             testCase.verifyEqual(tolScore, trueResTolScore);
             testCase.verifyEqual(simFluxes, trueResSimFluxes);
             testCase.verifyThat(model, matlab.unittest.constraints.IsEqualTo(trueResModel, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-9)));
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
             
         end
     end

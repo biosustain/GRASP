@@ -2,6 +2,8 @@ classdef sampleAllosteryTest < matlab.unittest.TestCase
 
     properties
         currentPath
+        relTol = 1e-4;
+        absTol = 1e-4;
     end
     
     methods(TestClassSetup)
@@ -34,10 +36,11 @@ classdef sampleAllosteryTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSampleAllosteryTest1'));
             trueResModels = trueRes.models;
             trueResEnsemble = trueRes.ensemble;
-
-            
-            testCase.verifyEqual(models, trueResModels);
-            testCase.verifyEqual(ensemble, trueResEnsemble);
+                   
+            testCase.verifyThat(models, matlab.unittest.constraints.IsEqualTo(trueResModels, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
+            testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueResEnsemble, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
         end
        
     end
