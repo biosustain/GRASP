@@ -1,4 +1,4 @@
-function ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold)
+function ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold,testing)
 % Samples a kinetic model ensemble which contains only valid models.
 %
 % Valid models are models where
@@ -141,6 +141,14 @@ popIdx   = 1;
 ensemble = loadEnsembleStructure(inputFile);
 ensemble.eigThreshold = eigThreshold;
 
+% This is used to always specify the same seed
+%  for the random number generator when in testing in 
+%  parallel mode
+if nargin == 5
+    ensemble.testing = testing;
+else
+    ensemble.testing = false;
+end
 
 % 2. Initialize and perform rejection sampling
 ensemble = initializeEnsemble(ensemble,popIdx,1);
@@ -196,7 +204,11 @@ if ensemble.parallel
 
         parpool(ensemble.numCores);
         parfor ix = (sampleCount+1):(sampleCount+nSamples)
-            rng(sum(fix(clock))+ix)                                             % This is necessary to avoid generating the same results each time
+            if ensemble.testing == true
+                rng(1+ix);
+            else
+                rng(sum(clock)+ix)                                             % This is necessary to avoid generating the same results each time
+            end
             [validModelList(ix),models(ix),strucIdx(ix),xopt{ix},tolScore(ix,:),simFluxes{ix}] = initialSampler(ensemble, ix);
         end
         delete(gcp);
