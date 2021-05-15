@@ -1,4 +1,4 @@
-function ensemble = sampleFluxesAndGibbsFreeEnergies(ensemble,maxNumberOfSamples,priorType)
+function ensemble = sampleFluxesAndGibbsFreeEnergies(ensemble,maxNumberOfSamples)
 
 % Define sampling parameters and sample
 nDiscard = 1e5;
@@ -11,9 +11,10 @@ fluxLB     = ensemble.fluxRanges(:,1);
 fluxUB     = ensemble.fluxRanges(:,2);
 fluxX0     = ensemble.initialTMFAPoint(1:size(fluxLB,1));
 fluxAeq    = ensemble.Sflux;
+fluxPrior  = ensemble.fluxPrior;
 
 if ~ensemble.parallel
-    fluxPoints = generalHR(fluxAeq,fluxLB,fluxUB,fluxX0,nSamples,nSteps,nDiscard,priorType);
+    fluxPoints = generalHR(fluxAeq,fluxLB,fluxUB,fluxX0,nSamples,nSteps,nDiscard,fluxPrior);
 else
     fluxPoints{ensemble.numCores} = [];
     nSamplesPerCore = round(nSamples/ensemble.numCores);
@@ -24,7 +25,7 @@ else
         else
             rng(sum(clock)+ix)     % This is necessary to avoid generating the same results by the workers 
         end
-        fluxPoints{ix} = generalHR(fluxAeq,fluxLB,fluxUB,fluxX0,nSamplesPerCore,nSteps,nDiscard,priorType);
+        fluxPoints{ix} = generalHR(fluxAeq,fluxLB,fluxUB,fluxX0,nSamplesPerCore,nSteps,nDiscard,fluxPrior);
     end
     delete(gcp('nocreate'));
     fluxPoints = cell2mat(fluxPoints);
@@ -44,9 +45,10 @@ thermoLB     = [ensemble.gibbsRanges(ensemble.idxNotExch,1);ensemble.DGfStdRange
 thermoUB     = [ensemble.gibbsRanges(ensemble.idxNotExch,2);ensemble.DGfStdRange(:,2);ensemble.lnMetRanges(:,2)];
 thermoAeq    = [eye(size(ensemble.Sthermo,2)),-ensemble.Sthermo',-RT*ensemble.Sthermo'];
 thermoX0     = ensemble.initialTMFAPoint(numel(fluxX0)+1:end);
+thermoPrior  = ensemble.thermoPrior;
 
 if ~ensemble.parallel
-    thermoPoints = generalHR(thermoAeq,thermoLB,thermoUB,thermoX0,nSamples,nSteps,nDiscard,priorType);
+    thermoPoints = generalHR(thermoAeq,thermoLB,thermoUB,thermoX0,nSamples,nSteps,nDiscard,thermoPrior);
 else
     thermoPoints{ensemble.numCores} = [];
     parpool(ensemble.numCores);                 % Run one Markov chain per core
@@ -56,7 +58,7 @@ else
         else
             rng(sum(clock)+ix)     % This is necessary to avoid generating the same results by the workers 
         end                      % This is necessary to avoid generating the same results by the workers 
-        thermoPoints{ix} = generalHR(thermoAeq,thermoLB,thermoUB,thermoX0,nSamplesPerCore,nSteps,nDiscard,priorType);
+        thermoPoints{ix} = generalHR(thermoAeq,thermoLB,thermoUB,thermoX0,nSamplesPerCore,nSteps,nDiscard,fluxPrior);
     end
     delete(gcp('nocreate'));
     thermoPoints = cell2mat(thermoPoints);
