@@ -278,8 +278,8 @@ while true
                 % Solve S*v(k,X) = 0; s.t. A*X <= beq, lb < X <ub, with extra constraints (e.g., pool or ratio constraints). Otherwise solve solve S*v(k,X) = 0; s.t. lb < X <ub, with no extra constraints
                 if ~isempty(ensemble.poolConst)
                     for jx = 1:numel(ensemble.poolConst)
-                        opt.fc{1,2*jx-1} = (@(x) poolConstraintFxn(x,[A_opt{jx},zeros(1,numel(ensemble.freeVars)-numel(ensemble.metsActive))],b{jx}(2*ix-1)));
-                        opt.fc{1,2*jx}   = (@(x) poolConstraintFxn(x,[-A_opt{jx},zeros(1,numel(ensemble.freeVars)-numel(ensemble.metsActive))],-b{jx}(2*ix)));
+                        opt.fc{1,2*jx-1} = (@(x) poolConstraintFxn(x,[A_opt{jx},zeros(1,numel(x0(:,ix))-numel(ensemble.metsActive))],b{jx}(2*ix-1)));
+                        opt.fc{1,2*jx}   = (@(x) poolConstraintFxn(x,[-A_opt{jx},zeros(1,numel(x0(:,ix))-numel(ensemble.metsActive))],-b{jx}(2*ix)));
                     end
                     opt.fc_tol = 1e-6*ones(1,2*numel(ensemble.poolConst));
                 end
@@ -291,12 +291,19 @@ while true
 
                 % FMINCON call
             else
-                [xopt(:,ix),fmin, retcode] = fmincon(kineticFxn,x0(:,ix),[],[],[],[],lb(:,ix),ub(:,ix),[],options,xconst,models,ensemble.fixedExch,ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},1);
+                % Solves S*v(k,X) = 0; s.t. Aeq*X = beq, lb < X <ub, with extra constraints (e.g., pool or ratio constraints). Otherwise solve solve S*v(k,X) = 0; s.t. lb < X <ub, with no extra constraints
+                Aeq_fmin = [];
+                beq_fmin = [];
+                if ~isempty(ensemble.poolConst)                    
+                    Aeq_fmin = [A_opt{ix},zeros(1,numel(x0(:,ix))-numel(ensemble.metsActive))];
+                    beq_fmin = b{ix}(end);
+                end
+                [xopt(:,ix),fmin,retcode] = fmincon(kineticFxn,x0(:,ix),[],[],Aeq_fmin,beq_fmin,lb(:,ix),ub(:,ix),[],options,xconst,models,ensemble.fixedExch,ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},1);
+                
                 if retcode < 0
                     error(['The ABC optimization with fmincon was not successful. Error code: ', retcode, '. For more information, check the Matlab documentation on fmincon.']);
                 end
 
-                % Pool constraints not implemented yet for this solver
             end
 
             % Check mass balance consistency
