@@ -45,14 +45,13 @@ xenz    = repmat(Eref,1,numel(xref));
 xstep   = [xmets;xenz];
 
 % Simulate flux for metabolite perturbation
-%simFlux = feval(kineticFxn,xstep,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits,0);
 simFlux = feval(kineticFxn,xstep,xconst,models,ensemble.fixedExch(:,1),ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},0);
 
 % Compute elasticiy matrices
-E_x_abs  = -(imag(simFlux')./hstep_x(:,ones(1,numFluxes)))'; % equivalent to imag(simFlux)./1.0e-10 ? 
+E_x_abs  = -(imag(simFlux')./hstep_x(:,ones(1,numFluxes)))';
 
 % Compute Jacobian eigenvalues
-jacobian   = Sred*E_x_abs;
+jacobian   = Sred(ensemble.metsLI,:)*E_x_abs(:,ensemble.metsLI);
 
 try
     eigenvalues = eig(jacobian);
