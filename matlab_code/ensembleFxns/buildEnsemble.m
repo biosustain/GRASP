@@ -253,9 +253,6 @@ if nValidModels > 1
     ensemble.populations(1).xopt      = xopt;                                                                               % optimal value found
     ensemble.populations(1).simFluxes = simFluxes;                                                                          % simulated fluxes
     ensemble.populations(1).models    = models;                                                                             % model particles
-    ensemble = rmfield(ensemble, 'gibbsEnergies');
-    ensemble = rmfield(ensemble, 'metConcRef');
-    ensemble = rmfield(ensemble, 'fluxPoints');
     clearvars -except ensemble popIdx modelID outputFile
     save(outputFile);
 else
