@@ -148,8 +148,7 @@ addKineticFxnsToPath(ensemble);
 
 
 % 3. Sample fluxes and Gibbs energies
-priorType = 'normal';
-ensemble = sampleFluxesAndGibbsFreeEnergies(ensemble,maxNumberOfSamples,priorType);
+ensemble = sampleFluxesAndGibbsFreeEnergies(ensemble,maxNumberOfSamples);
 
 
 % Create output folder if it doesn't exist yet
@@ -213,9 +212,9 @@ if ensemble.parallel
     if nValidModels > 0
         models = models(validModelList);
         strucIdx = strucIdx(validModelList);
-        xopt = xopt{validModelList};
+        xopt = xopt(validModelList);
         tolScore = tolScore(validModelList);
-        simFluxes = simFluxes{validModelList};            
+        simFluxes = simFluxes(validModelList);            
     end
 
 else
@@ -256,6 +255,7 @@ if nValidModels > 1
     ensemble.populations(1).models    = models;                                                                             % model particles
     ensemble = rmfield(ensemble, 'gibbsEnergies');
     ensemble = rmfield(ensemble, 'metConcRef');
+    ensemble = rmfield(ensemble, 'fluxPoints');
     clearvars -except ensemble popIdx modelID outputFile
     save(outputFile);
 else
