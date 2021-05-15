@@ -76,11 +76,12 @@ function ensemble = loadEnsembleStructure(xlsxFile)
 %               * fixedExch (*double matrix*)     : fixed exchange reactions
 %               * kineticFxn (*char cell*)        : name of kinetic function used to build the model with all rate laws
 %               * metLists (*char cell*)          : list of metabolites (as defined in patterns) for each reaction
-%               * revMatrix (*int matrix*)        : [TODO Pedro]
-%               * forwardFlux (*int cell*)        : [TODO Pedro]  
-%               * Nelem (*int cell*)              : [TODO Pedro]
-%               * freeVars (*char cell*)          : [TODO Pedro]
-%               * metsActive (*int vector*)       : [TODO Pedro]
+%               * revMatrix (*int matrix*)        : reversibility matrix of the reaction mechanism
+%               * forwardFlux (*int cell*)        : link matrix of enzyme intermediate (nodes) connections in the forward direction 
+%               * Nelem (*int cell*)              : null space basis of the stoichiometric matrix of elementary steps
+%               * freeVars (*char cell*)          : free variables of the model
+%               * metsActive (*int vector*)       : indices of metabolites participating in kinetic reactions
+%               * metsLi (*int vector*)           : indices of linearly independent mass-balanced active metabolites
 %
 % .. Authors:
 %       - Pedro Saa         2016 original code
@@ -114,8 +115,8 @@ idxProt = fixVariableNames(idxProt, 'r');
 idxMets = fixVariableNames(idxMets, 'm');
 
 % Validate input dimensions
-if ~all(size(xData) == [7, 1]) || ~all(size(strData) == [12, 2])
-    error('Check the general sheet, it should have 12 rows and 2 columns.');
+if ~all(size(xData) == [7, 1]) || ~all(size(strData) == [14, 2])
+    error('Check the general sheet, it should have 14 rows and 2 columns.');
 end
 
 nMets = size(Sfull, 2);
@@ -168,6 +169,8 @@ ensemble.description   = strData{2,2};
 ensemble.sampler       = strData{3,2};
 ensemble.solver        = strData{4,2};
 ensemble.LPSolver      = strData{5,2};
+ensemble.fluxPrior     = strData{6,2};
+ensemble.thermoPrior   = strData{7,2};
 ensemble.numConditions = xData(1);
 ensemble.numStruct     = xData(2);
 ensemble.numParticles  = xData(3);
@@ -190,7 +193,7 @@ ensemble.metsBalanced  = find(xMets(:,1));
 ensemble.Sred          = ensemble.S(ensemble.metsBalanced,ensemble.activeRxns);   % Reduced stoichiometry for kinetic model simulation
 ensemble.Sred(sum(abs(ensemble.Sred),2)==0,:) = [];                               % Remove zero rows
 ensemble.Sred(sum(ensemble.Sred~=0,2)==1,:)   = [];                               % Remove unbalanced mets
-    
+[~,ensemble.metsLI] = rref(ensemble.Sred');                                       % Determine linearly independent mass balances    
 
 metsAll = 1:numel(ensemble.mets);
 
@@ -231,6 +234,14 @@ end
 
 if ~strcmp(ensemble.LPSolver, 'gurobi') && ~strcmp(ensemble.LPSolver, 'linprog')
     error('The linear programming solver must be specified and the value should be either "gurobi" or "linprog".');
+end
+
+if ~strcmp(ensemble.fluxPrior, 'uniform') && ~strcmp(ensemble.fluxPrior, 'normal')
+    error('The prior distribution for the fluxes must be specified and the value should be either "uniform" or "normal".');
+end
+
+if ~strcmp(ensemble.thermoPrior, 'uniform') && ~strcmp(ensemble.thermoPrior, 'normal')
+    error('The prior distribution for the thermodynamic quantities must be specified and the value should be either "uniform" or "normal".');
 end
 
 disp('General information loaded.');
