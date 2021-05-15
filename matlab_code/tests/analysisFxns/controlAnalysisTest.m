@@ -46,6 +46,25 @@ classdef controlAnalysisTest < matlab.unittest.TestCase
             testCase.verifyThat(mcaResults, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
         end
+        
+        function testControlAnalysisNumbers(testCase)
+                        
+            % To make sure reaction files are created properly
+            xlsxFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_numbers');
+            loadEnsembleStructure(xlsxFile);
+
+            ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_numbers.mat'));
+            ensemble = ensemble.ensemble;
+            
+            saveResMatrices = 0;
+            mcaResults = controlAnalysis(ensemble,saveResMatrices);
+
+            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResControlAnalysisNumbers'));
+            trueRes = trueRes.mcaResults;
+
+            testCase.verifyThat(mcaResults, matlab.unittest.constraints.IsEqualTo(trueRes, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
+        end
     end
 end
 
