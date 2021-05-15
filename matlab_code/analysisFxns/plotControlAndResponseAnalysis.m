@@ -53,6 +53,17 @@ ix_mets      = 1:numel(ensemble.metsActive);
 metNames     = ensemble.mets(ensemble.metsActive);
 rxnNames     = ensemble.rxns;
 
+% Remove prefixes
+for ix = 1:numel(metNames)
+    metTemp = strsplit(metNames{ix},'m_');
+    metNames{ix} = metTemp{2};
+end
+
+for ix = 1:numel(rxnNames)
+    rxnTemp = strsplit(rxnNames{ix},'r_');
+    rxnNames{ix} = rxnTemp{2};
+end
+
 % Checks whether any categories were defined
 if (nargin < 3) || isempty(categories)
     categories = {'ControlAndResponse_reactions',[1, length(rxnNames)]};
