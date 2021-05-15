@@ -234,23 +234,20 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
         
         function testBuildEnsembleLargeModelParallel(testCase)
             
-            seed = 1;
-            rng(seed)
-            
+           
             modelID = 'toy_model5_parallel';
             inputFile = fullfile(testCase.currentPath{1}, 'testFiles', modelID);
             outputFile = fullfile(testCase.currentPath{1}, 'testFiles', [modelID, '.mat']);
             
             maxNumberOfSamples = 1000;
             eigThreshold = 10^-5;
+            testing = true;
             
-            ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
+            ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold, testing);
             ensemble.populations = rmfield(ensemble.populations, 'tolScore');
-
+        
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleLargeModelParallel'));
             trueRes = trueRes.ensemble;
-            trueRes.sampler = 'GRASP'; 
-            trueRes.populations = rmfield(trueRes.populations, 'tolScore');
 
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(1e-1)));
@@ -387,19 +384,16 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
         end
         
         function testBuildEnsembleMethioninePedroParallel(testCase)
-            
-            seed = 1;
-            rng(seed)
-            
+                        
             modelID = 'methionine_cycle_pedro';
             inputFile = fullfile(testCase.currentPath{1}, 'testFiles', modelID);
             outputFile = fullfile(testCase.currentPath{1}, 'testFiles', [modelID, '.mat']);
             
             maxNumberOfSamples = 1000;
             eigThreshold = 10^-5;
+            testing = true;
             
-            ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
-
+            ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold, testing);
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResTestBuildEnsembleMethioninePedroParallel'));
             trueRes = trueRes.ensemble;
        

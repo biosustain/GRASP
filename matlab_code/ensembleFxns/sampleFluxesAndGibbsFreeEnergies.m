@@ -19,7 +19,11 @@ else
     nSamplesPerCore = round(nSamples/ensemble.numCores);
     parpool(ensemble.numCores);                 % Run one Markov chain per core
     parfor ix = 1:ensemble.numCores
-        rng(sum(fix(clock))+ix)                         % This is necessary to avoid generating the same results by the workers 
+        if ensemble.testing == true
+            rng(1+ix)                   % The results need to be reproducible when testing
+        else
+            rng(sum(clock)+ix)     % This is necessary to avoid generating the same results by the workers 
+        end
         fluxPoints{ix} = generalHR(fluxAeq,fluxLB,fluxUB,fluxX0,nSamplesPerCore,nSteps,nDiscard,priorType);
     end
     delete(gcp('nocreate'));
@@ -47,7 +51,11 @@ else
     thermoPoints{ensemble.numCores} = [];
     parpool(ensemble.numCores);                 % Run one Markov chain per core
     parfor ix = 1:ensemble.numCores
-        rng(sum(fix(clock))+ix)                         % This is necessary to avoid generating the same results by the workers 
+        if ensemble.testing == true
+            rng(1+ix)                   % The results need to be reproducible when testing
+        else
+            rng(sum(clock)+ix)     % This is necessary to avoid generating the same results by the workers 
+        end                      % This is necessary to avoid generating the same results by the workers 
         thermoPoints{ix} = generalHR(thermoAeq,thermoLB,thermoUB,thermoX0,nSamplesPerCore,nSteps,nDiscard,priorType);
     end
     delete(gcp('nocreate'));
