@@ -15,7 +15,8 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
     methods(TestMethodTeardown)
         function removeReactionsFolder(testCase)           
 
-            reactionsFolderList = {fullfile(testCase.currentPath{1}, '..', '..', '..', 'reactions', 'toy_model1_random2_1'), ...
+            reactionsFolderList = {fullfile(testCase.currentPath{1}, '..', '..', '..', 'reactions', 'toy_model_numbers_1'), ...
+                                   fullfile(testCase.currentPath{1}, '..', '..', '..', 'reactions', 'toy_model1_random2_1'), ...
                                    fullfile(testCase.currentPath{1}, '..', '..', '..', 'reactions', 'toy_model1_random2_linprog_1'), ...
                                    fullfile(testCase.currentPath{1}, '..', '..', '..', 'reactions', 'toy_model1_allosteric2_1'), ...
                                    fullfile(testCase.currentPath{1}, '..', '..', '..', 'reactions', 'toy_model1_new_1'), ...
@@ -49,6 +50,28 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
     
     
     methods (Test)
+        function testBuildEnsembleNumbers(testCase)
+            
+            seed = 1;
+            rng(seed)
+            
+            modelID = 'toy_model1_numbers';
+            inputFile = fullfile(testCase.currentPath{1}, 'testFiles', modelID);
+            outputFile = fullfile(testCase.currentPath{1}, 'testFiles', [modelID, '.mat']);
+            
+            maxNumberOfSamples = 1000;
+            eigThreshold = 10^-5;
+            
+            ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
+            ensemble.populations = rmfield(ensemble.populations, 'tolScore');
+
+            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleNumbers'));
+            trueRes = trueRes.ensemble;
+                               
+            testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
+        end
+        
         function testBuildEnsembleRandom(testCase)
             
             seed = 1;
