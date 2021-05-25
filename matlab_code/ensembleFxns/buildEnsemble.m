@@ -146,6 +146,9 @@ ensemble.eigThreshold = eigThreshold;
 %  parallel mode
 if nargin == 5
     ensemble.testing = testing;
+    if ensemble.testing
+        rng('default');     % for reproducibility
+    end
 else
     ensemble.testing = false;
 end
@@ -154,10 +157,9 @@ end
 ensemble = initializeEnsemble(ensemble,popIdx,1);
 addKineticFxnsToPath(ensemble);
 
-
 % 3. Sample fluxes and Gibbs energies
 ensemble = sampleFluxesAndGibbsFreeEnergies(ensemble,maxNumberOfSamples);
-
+ensemble.numRefPoints = size(ensemble.fluxPoints,2);
 
 % Create output folder if it doesn't exist yet
 [filepath,~,~] = fileparts(outputFile);
@@ -175,101 +177,79 @@ catch
     mkdir('temp');
 end
 
-% Preallocate memory for the remaing fields in the ensemble structure
-tolScore = zeros(ensemble.replenishedParticles(popIdx), ensemble.numConditions);
-strucIdx = zeros(ensemble.replenishedParticles(popIdx), 1);
-xopt{ensemble.replenishedParticles(popIdx),1}      = [];
-simFluxes{ensemble.replenishedParticles(popIdx),1} = [];
-
-
-% Check whether the job is ran in parallel    
+% Check whether the job is ran in parallel
+% Parallel mode ON
 if ensemble.parallel
 
+        % Determine the number of particles and max samples per core
+    numParticlesPerCore = ceil(ensemble.numParticles/ensemble.numCores);
+    
+    % Initialize for ensemble variables (client)
+    ensemble.populations(1).strucIdx  = [];
+    ensemble.populations(1).tolScore  = [];
+    ensemble.populations(1).xopt      = [];
+    ensemble.populations(1).simFluxes = [];
+    ensemble.populations(1).models    = [];
+    
+    % Initialize counters
     sampleCount = 0;
-    nValidModels = 0;
-
-    while nValidModels < ensemble.numParticles
-
-        if sampleCount == 0                                             % if no models have been sampled yet, sample ensemble.numParticles models
-            nSamples = ceil(ensemble.numParticles * 1.3);
-        else                                                            % else check how many more should be sampled based on the percentage of valid models
-            nSamples = 1 / (nValidModels / sampleCount)*(sampleCount - nValidModels);
-            nSamples = round(nSamples);
-
-            if nSamples > maxNumberOfSamples - sampleCount
-                nSamples = maxNumberOfSamples - sampleCount;
-            end
+    ixModels    = 0;
+    totalCount  = 0;
+    
+    % Initiate parallel loop
+    parpool(ensemble.numCores);  
+    spmd(ensemble.numCores)
+        while ixModels < numParticlesPerCore && sampleCount <= maxNumberOfSamples
+            ixModels = ixModels + 1;
+            [nModels,models(ixModels,1),strucIdx(ixModels,1),xopt{ixModels,1},tolScore(ixModels,:),simFluxes{ixModels,1}] = initialSampler(ensemble);
+            
+            % Update total counter counter
+            sampleCount = sampleCount + nModels;
         end
-
-        parpool(ensemble.numCores);
-        parfor ix = (sampleCount+1):(sampleCount+nSamples)
-            if ensemble.testing == true
-                rng(1+ix);
-            else
-                rng(sum(clock)+ix)                                             % This is necessary to avoid generating the same results each time
-            end
-            [validModelList(ix),models(ix),strucIdx(ix),xopt{ix},tolScore(ix,:),simFluxes{ix}] = initialSampler(ensemble, ix);
-        end
-        delete(gcp);
-
-        sampleCount = sampleCount + nSamples;           
-        nValidModels = size(models(validModelList), 2);
-
-        if nValidModels == 0
-            break
-        end
-
     end
-
-    if nValidModels > 0
-        models = models(validModelList);
-        strucIdx = strucIdx(validModelList);
-        xopt = xopt(validModelList);
-        tolScore = tolScore(validModelList);
-        simFluxes = simFluxes(validModelList);            
+    
+    % Assign composites to the client
+    for jx = 1:ensemble.numCores
+        ensemble.populations(1).strucIdx  = [ensemble.populations(1).strucIdx;strucIdx{jx}];    % model structure
+        ensemble.populations(1).tolScore  = [ensemble.populations(1).tolScore;tolScore{jx}];    % tolerance score
+        ensemble.populations(1).xopt      = [ensemble.populations(1).xopt;xopt{jx}];            % optimal value found
+        ensemble.populations(1).simFluxes = [ensemble.populations(1).simFluxes;simFluxes{jx}];  % simulated fluxes
+        ensemble.populations(1).models    = [ensemble.populations(1).models;models{jx}];        % model particles
+        totalCount                        = totalCount + sampleCount{jx};
     end
-
+    delete(gcp);    
+    
+    % Parallel mode OFF
 else
-    sampleCount = 1;
-    ix = 1;
 
-    while ix <= ensemble.numParticles && sampleCount <= maxNumberOfSamples
+    % Preallocate memory for the remaing fields in the ensemble structure
+    tolScore = zeros(ensemble.numParticles, ensemble.numConditions);
+    strucIdx = zeros(ensemble.numParticles, 1);
+    xopt{ensemble.numParticles,1}      = [];
+    simFluxes{ensemble.numParticles,1} = [];
+    
+    % Initialize counters
+    totalCount = 0;
+    ixModels   = 0;    
+    while ixModels < ensemble.numParticles && totalCount <= maxNumberOfSamples
+        ixModels = ixModels + 1;
+        [nModels,models(ixModels,1),strucIdx(ixModels),xopt{ixModels},tolScore(ixModels,:),simFluxes{ixModels}] = initialSampler(ensemble);
 
-        [isModelValid,model,strucIdxTemp,xoptTemp,tolScoreTemp,simFluxesTemp] = initialSampler(ensemble,sampleCount);
-
-        if isModelValid
-            models(ix) = model;
-            strucIdx(ix) = strucIdxTemp;
-            xopt{ix} = xoptTemp;
-            tolScore(ix,:) = tolScoreTemp;
-            simFluxes{ix} = simFluxesTemp;
-
-            ix = ix + 1;
-        end
-
-        sampleCount = sampleCount + 1;
+        % Update total counter counter
+        totalCount = totalCount + nModels;
     end
-
-    nValidModels = ix - 1;
-    sampleCount = sampleCount -1;
-
+    
+    % Assign final values
+    ensemble.populations(1).strucIdx  = strucIdx;                          % model structures
+    ensemble.populations(1).tolScore  = tolScore;                          % tolerance score
+    ensemble.populations(1).xopt      = xopt;                              % optimal value found
+    ensemble.populations(1).simFluxes = simFluxes;                         % simulated fluxes
+    ensemble.populations(1).models    = models;                            % model particles  
 end
 
-disp([newline, newline, '*** Out of ',num2str(sampleCount), ' models, ', num2str(nValidModels), ' were valid ***', newline, newline]);
-
-
-if nValidModels > 1
-    % Append sampling results
-    ensemble.populations(1).strucIdx  = strucIdx;                                                                           % model structures
-    ensemble.populations(1).tolScore  = tolScore;                                                                           % tolerance score
-    ensemble.populations(1).xopt      = xopt;                                                                               % optimal value found
-    ensemble.populations(1).simFluxes = simFluxes;                                                                          % simulated fluxes
-    ensemble.populations(1).models    = models;                                                                             % model particles
-    clearvars -except ensemble popIdx modelID outputFile
-    save(outputFile);
-else
-    disp('No valid models were sampled.');
-end
+disp([newline, newline, '*** Out of ',num2str(totalCount), ' models, ', num2str(numel(ensemble.populations(1).models)), ' were valid ***', newline, newline]);
+clearvars -except ensemble popIdx modelID outputFile
+save(outputFile);
 
 end
 
