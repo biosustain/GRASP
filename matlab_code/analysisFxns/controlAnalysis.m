@@ -131,7 +131,8 @@ for ix = 1:nCondition
         C_x_abs   = -(pinv(Sred*E_x_abs))*Sred;
         C_x       = diag(xref.^-1)*C_x_abs*diag(vref);
         C_v       = eye(numel(vref)) + E_x_nor*C_x;
-
+        C_v(vref==0,:) = 0;                             % Make zero reactions with zero flux
+        
         % Save control coefficients only if the result is accurate
         if all(abs(sum(C_x,2))<1e-5)
             if saveResMatrices
@@ -140,7 +141,7 @@ for ix = 1:nCondition
             mcaResults.xControlAvg{ix} = mcaResults.xControlAvg{ix} + C_x;
             mcaResults.xcounter{ix}    = mcaResults.xcounter{ix} + 1;
         end
-        if all(abs(sum(C_v,2))-1<1e-5)
+        if all(abs(sum(C_v(vref~=0,:),2))-1<1e-5)
             if saveResMatrices
                 mcaResults.vControl{ix}    = [mcaResults.vControl{ix}; C_v];
                 mcaResults.E_x_nor{ix}     = [mcaResults.E_x_nor{ix}; E_x_nor];
