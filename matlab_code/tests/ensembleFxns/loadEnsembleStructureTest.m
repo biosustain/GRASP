@@ -34,12 +34,9 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             
             xlsxFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1');
             ensemble = loadEnsembleStructure(xlsxFile);
-
+            
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model1.mat'));
             trueRes = trueRes.ensemble;
-            trueRes.sampler = 'GRASP';
-            trueRes = rmfield(trueRes, 'measuredMets');
-            trueRes = rmfield(trueRes, 'splitRatios');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
@@ -52,9 +49,6 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model1_allosteric.mat'));
             trueRes = trueRes.ensemble;
-            trueRes.sampler = 'GRASP';
-            trueRes = rmfield(trueRes, 'measuredMets');
-            trueRes = rmfield(trueRes, 'splitRatios');
                                     
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
@@ -64,14 +58,10 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             
             xlsxFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_random');
             ensemble = loadEnsembleStructure(xlsxFile);
-
+            
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model1_random.mat'));            
             trueRes = trueRes.ensemble;
-            trueRes.sampler = 'GRASP';
-            trueRes = rmfield(trueRes, 'measuredMets');
-            trueRes = rmfield(trueRes, 'splitRatios');
-                       
-            
+                                              
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
         end
@@ -82,17 +72,7 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             ensemble = loadEnsembleStructure(xlsxFile);
             
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model1_freeExchange.mat'));
-            trueRes = trueRes.ensemble;
-            
-            trueRes.LPSolver = 'gurobi';
-            trueRes = rmfield(trueRes, 'metsSimulated');
-            ensemble = rmfield(ensemble, 'tolerance');
-            trueRes = rmfield(trueRes, 'tolerance');
-            trueRes = rmfield(trueRes, 'alphaAlive');
-            trueRes = rmfield(trueRes, 'measuredMets');
-            trueRes = rmfield(trueRes, 'splitRatios');
-            trueRes.sampler = 'GRASP';
-            
+            trueRes = trueRes.ensemble;            
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));         
@@ -214,12 +194,9 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             
             xlsxFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model4');
             ensemble = loadEnsembleStructure(xlsxFile);
-
+            
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model4.mat'));
             trueRes = trueRes.ensemble;
-            trueRes.sampler = 'GRASP';   
-            trueRes = rmfield(trueRes, 'measuredMets');
-            trueRes = rmfield(trueRes, 'splitRatios');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  

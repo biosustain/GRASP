@@ -35,6 +35,7 @@ classdef checkStabilityTest < matlab.unittest.TestCase
             ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'ensemble_toy_model1_random2_checkStab.mat'));
             ensemble = ensemble.ensemble;
             ensemble.freeVars{end+1} = 'r_r13';
+            [~,ensemble.metsLI] = rref(ensemble.Sred');
             
             strucIdx = 1;
             eigThreshold = 10^-5;
