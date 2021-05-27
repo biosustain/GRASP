@@ -86,13 +86,9 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
             ensemble.populations = rmfield(ensemble.populations, 'tolScore');
-
+            
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleRandom'));
             trueRes = trueRes.ensemble;
-            trueRes.sampler = 'GRASP';
-            trueRes = rmfield(trueRes, 'measuredMets');
-            trueRes = rmfield(trueRes, 'splitRatios'); 
-            trueRes.populations = rmfield(trueRes.populations, 'tolScore');
                                
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
@@ -115,10 +111,6 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleRandomLinprog'));
             trueRes = trueRes.ensemble;
-            trueRes.sampler = 'GRASP';    
-            trueRes = rmfield(trueRes, 'measuredMets');
-            trueRes = rmfield(trueRes, 'splitRatios');
-            trueRes.populations = rmfield(trueRes.populations, 'tolScore');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within',matlab.unittest.constraints.RelativeTolerance(1.7e-1) | matlab.unittest.constraints.AbsoluteTolerance(1.4e-1)));
@@ -137,13 +129,10 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
             ensemble.populations = rmfield(ensemble.populations, 'tolScore');
-            
+
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleAllosteric'));
             trueRes = trueRes.ensemble;
             trueRes.sampler = 'GRASP';  
-            trueRes = rmfield(trueRes, 'measuredMets');
-            trueRes = rmfield(trueRes, 'splitRatios');
-            trueRes.populations = rmfield(trueRes.populations, 'tolScore');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
@@ -164,13 +153,9 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
             ensemble.populations = rmfield(ensemble.populations, 'tolScore');
-
+ 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleAllStable'));
             trueRes = trueRes.ensemble;
-            trueRes.sampler = 'GRASP';         
-            trueRes = rmfield(trueRes, 'measuredMets');
-            trueRes = rmfield(trueRes, 'splitRatios');
-            trueRes.populations = rmfield(trueRes.populations, 'tolScore');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
@@ -191,13 +176,9 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
             ensemble.populations = rmfield(ensemble.populations, 'tolScore');
-
+            
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleNoPromiscuous'));
             trueRes = trueRes.ensemble;
-            trueRes.sampler = 'GRASP';
-            trueRes = rmfield(trueRes, 'measuredMets');
-            trueRes = rmfield(trueRes, 'splitRatios');
-            trueRes.populations = rmfield(trueRes.populations, 'tolScore');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
@@ -216,14 +197,9 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             eigThreshold = 10^-5;
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
-            ensemble.populations = rmfield(ensemble.populations, 'tolScore');
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleLargeModel'));
             trueRes = trueRes.ensemble;
-            trueRes.sampler = 'GRASP'; 
-            trueRes = rmfield(trueRes, 'measuredMets');
-            trueRes = rmfield(trueRes, 'splitRatios');
-            trueRes.populations = rmfield(trueRes.populations, 'tolScore');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(1e-1)));
@@ -243,13 +219,9 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
             ensemble.populations = rmfield(ensemble.populations, 'tolScore');
-
+            
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleLargeModeldGs'));
             trueRes = trueRes.ensemble;
-            trueRes.sampler = 'GRASP';    
-            trueRes = rmfield(trueRes, 'measuredMets');
-            trueRes = rmfield(trueRes, 'splitRatios');
-            trueRes.populations = rmfield(trueRes.populations, 'tolScore');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)));
@@ -267,8 +239,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             testing = true;
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold, testing);
-            ensemble.populations = rmfield(ensemble.populations, 'tolScore');
-        
+          
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleLargeModelParallel'));
             trueRes = trueRes.ensemble;
 
@@ -293,13 +264,9 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             ensemble = load(outputFile);
             ensemble = ensemble.ensemble;
             ensemble.populations = rmfield(ensemble.populations, 'tolScore');
-
+            
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleCreateDir'));
             trueRes = trueRes.ensemble;
-            trueRes.sampler = 'GRASP';
-            trueRes = rmfield(trueRes, 'measuredMets');
-            trueRes = rmfield(trueRes, 'splitRatios');
-            trueRes.populations = rmfield(trueRes.populations, 'tolScore');
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
@@ -322,16 +289,10 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
            
             ensemble = load(outputFile);
             ensemble = ensemble.ensemble;
-            ensemble.populations = rmfield(ensemble.populations, 'tolScore');
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleExample'));
             trueRes = trueRes.ensemble;  
-            
-            trueRes.sampler = 'GRASP';
-            trueRes = rmfield(trueRes, 'measuredMets');
-            trueRes = rmfield(trueRes, 'splitRatios');
-            trueRes.populations = rmfield(trueRes.populations, 'tolScore');
-            
+                        
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
         end
@@ -349,9 +310,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             maxNumberOfSamples = 100;
             eigThreshold = 10^-5;
             
-            ensembleTemp = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
-            ensemble = load(outputFile);
-            ensemble = ensemble.ensemble;
+            ensemble= buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleExampleABCNLopt'));
             trueRes = trueRes.ensemble;
@@ -399,6 +358,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
 
+
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResTestBuildEnsembleMethionineATPchange'));
             trueRes = trueRes.ensemble;
        
@@ -417,6 +377,8 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             testing = true;
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold, testing);
+
+
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResTestBuildEnsembleMethioninePedroParallel'));
             trueRes = trueRes.ensemble;
        

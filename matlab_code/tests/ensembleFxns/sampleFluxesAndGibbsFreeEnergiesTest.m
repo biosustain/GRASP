@@ -22,9 +22,12 @@ classdef sampleFluxesAndGibbsFreeEnergiesTest < matlab.unittest.TestCase
             ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'initializedEnsemble_toy_model1_sampleFluxGibbs.mat'));
             ensemble = ensemble.ensemble;
             maxNumberOfSamples = 100;
-            priorType = 'normal';
+            ensemble.fluxPrior = 'normal';
+            ensemble.thermoPrior = 'normal';
             
-            ensemble = sampleFluxesAndGibbsFreeEnergies(ensemble,maxNumberOfSamples,priorType);
+            ensemble = sampleFluxesAndGibbsFreeEnergies(ensemble,maxNumberOfSamples);
+            ensemble = rmfield(ensemble, 'fluxPrior');
+            ensemble = rmfield(ensemble, 'thermoPrior');
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSampleFluxesAndGibbsFreeEnergiesNormal.mat'));
             trueResEnsemble = trueRes.ensemble;
@@ -41,9 +44,12 @@ classdef sampleFluxesAndGibbsFreeEnergiesTest < matlab.unittest.TestCase
             ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'initializedEnsemble_toy_model1_sampleFluxGibbs'));
             ensemble = ensemble.ensemble;
             maxNumberOfSamples = 100;
-            priorType = 'uniform';
+            ensemble.fluxPrior = 'uniform';
+            ensemble.thermoPrior = 'uniform';
             
-            ensemble = sampleFluxesAndGibbsFreeEnergies(ensemble,maxNumberOfSamples,priorType);
+            ensemble = sampleFluxesAndGibbsFreeEnergies(ensemble,maxNumberOfSamples);
+            ensemble = rmfield(ensemble, 'fluxPrior');
+            ensemble = rmfield(ensemble, 'thermoPrior');
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSampleFluxesAndGibbsFreeEnergiesUniform.mat'));
             trueResEnsemble = trueRes.ensemble;

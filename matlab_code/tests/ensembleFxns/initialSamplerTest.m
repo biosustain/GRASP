@@ -42,6 +42,7 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             ensemble.sampler = 'GRASP';
             ensemble.eigThreshold = 10^-5;
             modelI = 1;
+            [~,ensemble.metsLI] = rref(ensemble.Sred');
                         
             [isModelValid,model,strucIdx,xopt,tolScore,simFluxes] = initialSampler(ensemble, modelI);
 
@@ -81,6 +82,7 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             ensemble.freeVars{end+1} = 'r_r13';
             ensemble.LPSolver = 'gurobi';
             modelI = 1;
+            [~,ensemble.metsLI] = rref(ensemble.Sred');
                         
             [isModelValid,model,strucIdx,xopt,tolScore,simFluxes] = initialSampler(ensemble, modelI);
 
@@ -117,8 +119,7 @@ classdef initialSamplerTest < matlab.unittest.TestCase
             addKineticFxnsToPath(ensemble);
             maxNumberOfSamples = 100;
 
-            priorType = 'normal';
-            ensemble = sampleFluxesAndGibbsFreeEnergies(ensemble,maxNumberOfSamples,priorType);
+            ensemble = sampleFluxesAndGibbsFreeEnergies(ensemble,maxNumberOfSamples);
             
             modelI = 1;
             [isModelValid,model,strucIdx,xopt,tolScore,simFluxes] = initialSampler(ensemble, modelI);

@@ -64,7 +64,7 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model1_random.mat'));
             
             trueRes = trueRes.ensemble;
-            trueRes.sampler = 'GRASP';
+            trueRes.sampler = 'GRASP'; 
             
              testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
@@ -81,11 +81,7 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             ensemble = initializeEnsemble(ensemble,popIdx,verbose);
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model3_isoenzymes.mat'));
-            
-            trueRes = trueRes.ensemble; 
-            trueRes.sampler = 'GRASP';
-            trueRes = rmfield(trueRes, 'measuredMets');
-            trueRes = rmfield(trueRes, 'splitRatios');
+            trueRes = trueRes.ensemble;   
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
@@ -102,11 +98,7 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             ensemble = initializeEnsemble(ensemble,popIdx,verbose);
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model4.mat'));
-            
-            trueRes = trueRes.ensemble;
-            trueRes.sampler = 'GRASP';
-            trueRes = rmfield(trueRes, 'measuredMets');
-            trueRes = rmfield(trueRes, 'splitRatios');
+            trueRes = trueRes.ensemble; 
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
@@ -123,12 +115,8 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             ensemble = initializeEnsemble(ensemble,popIdx,verbose);
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model4_inhibitors.mat'));
-            
             trueRes = trueRes.ensemble;
-            trueRes.sampler = 'GRASP';
-            trueRes = rmfield(trueRes, 'measuredMets');
-            trueRes = rmfield(trueRes, 'splitRatios');
-            
+                       
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
             
@@ -144,11 +132,7 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
             ensemble = initializeEnsemble(ensemble,popIdx,verbose);
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model1_nick.mat'));
-            
             trueRes = trueRes.ensemble;       
-            trueRes.sampler = 'GRASP';
-            trueRes = rmfield(trueRes, 'measuredMets');
-            trueRes = rmfield(trueRes, 'splitRatios');
                        
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(8e-3) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
