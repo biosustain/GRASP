@@ -1,4 +1,4 @@
-function mcaResults = controlAnalysis(ensemble,saveResMatrices,strucIdx)
+function mcaResults = controlAnalysis(ensemble,saveResMatrices,conditionI,strucIdx)
 % Do Metabolic Control Analysis for all models in the given ensemble and
 % return the average flux and concentration control coefficients across the 
 % ensemble.
@@ -40,7 +40,7 @@ function mcaResults = controlAnalysis(ensemble,saveResMatrices,strucIdx)
 %       - Pedro Saa     2018 original code
 %       - Marta Matos   2019 refactored code
 
-if nargin<3
+if nargin<4
     strucIdx = 1;
     if ensemble.populations(end).strucIdx(1)==0
         ensemble.populations(end).strucIdx = ones(numel(ensemble.populations(end).strucIdx),1);
@@ -73,9 +73,17 @@ else
     nCondition = 1;
 end
 
+if nargin<3
+    startCondition = 1;
+    endCondition = nCondition;
+else
+    startCondition = conditionI;
+    endCondition = conditionI;
+end
+
 % Main loop
 hstep = 1e-10;              % Step size for control coefficient computations
-for ix = 1:nCondition
+for ix = startCondition:endCondition
     if saveResMatrices
         mcaResults.xControl{ix}    = [];
         mcaResults.vControl{ix}    = [];

@@ -1,4 +1,4 @@
-function mcaResults = controlAndResponseAnalysis(ensemble,saveResMatrices,strucIdx)
+function mcaResults = controlAndResponseAnalysis(ensemble,saveResMatrices,conditionI,strucIdx)
 % Calculates both control coefficients and response coefficients.
 % Response coefficients here answer the question: what happens if one 
 % increases a given enzyme's concentration?
@@ -98,9 +98,17 @@ else
     nCondition = 1;
 end
 
+if nargin<3
+    startCondition = 1;
+    endCondition = nCondition;
+else
+    startCondition = conditionI;
+    endCondition = conditionI;
+end
+
 % Main loop
 hstep = 1e-10;              % Step size for control coefficient computations
-for ix = 1:nCondition
+for ix = startCondition:endCondition
     if saveResMatrices
         mcaResults.xControl{ix}     = [];
         mcaResults.vControl{ix}     = [];
