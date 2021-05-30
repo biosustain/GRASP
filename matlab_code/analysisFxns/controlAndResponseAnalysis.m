@@ -207,6 +207,7 @@ for ix = startCondition:endCondition
         C_x_abs   = -(pinv(Sred*E_x_abs))*Sred;
         C_x       = diag(xref.^-1)*C_x_abs*diag(vref);
         C_v       = eye(numel(vref)) + E_x_nor*C_x;
+        C_v(vref==0,:) = 0;  
         R_e       = C_v * E_pi_nor;
         R_x       = C_x * E_pi_nor;
         
@@ -222,7 +223,7 @@ for ix = startCondition:endCondition
             mcaResults.xResponseAvg{ix} = mcaResults.xResponseAvg{ix} + R_x;
             mcaResults.xRcounter{ix}    = mcaResults.xRcounter{ix} + 1;
         end
-        if all(abs(sum(C_v,2))-1<1e-5)
+        if all(abs(sum(C_v(vref~=0,:),2))-1<1e-5)
             if saveResMatrices
                 mcaResults.vControl{ix}     = [mcaResults.vControl{ix}; C_v];
                 mcaResults.eResponse{ix}    = [mcaResults.eResponse{ix}; R_e];
