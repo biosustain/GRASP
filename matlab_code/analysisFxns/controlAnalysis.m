@@ -23,6 +23,8 @@ function mcaResults = controlAnalysis(ensemble,saveResMatrices,conditionI,strucI
 %    saveResMatrices (logical):   whether or not to save the elasticity and control coefficient matrices for all models
 %
 % OPTIONAL INPUT:
+%    conditionI (int):  condition for which the user wants for run MCA when having multiple coniditions, by
+%                       default MCA is run for all conditions
 %    strucIdx (int):	number of the model structure considered
 %
 % OUTPUT:
