@@ -1,4 +1,4 @@
-function mcaResults = controlAnalysis(ensemble,saveResMatrices,strucIdx)
+function mcaResults = controlAnalysis(ensemble,saveResMatrices,conditionI,strucIdx)
 % Do Metabolic Control Analysis for all models in the given ensemble and
 % return the average flux and concentration control coefficients across the 
 % ensemble.
@@ -40,7 +40,7 @@ function mcaResults = controlAnalysis(ensemble,saveResMatrices,strucIdx)
 %       - Pedro Saa     2018 original code
 %       - Marta Matos   2019 refactored code
 
-if nargin<3
+if nargin<4
     strucIdx = 1;
     if ensemble.populations(end).strucIdx(1)==0
         ensemble.populations(end).strucIdx = ones(numel(ensemble.populations(end).strucIdx),1);
@@ -73,9 +73,17 @@ else
     nCondition = 1;
 end
 
+if nargin<3
+    startCondition = 1;
+    endCondition = nCondition;
+else
+    startCondition = conditionI;
+    endCondition = conditionI;
+end
+
 % Main loop
 hstep = 1e-10;              % Step size for control coefficient computations
-for ix = 1:nCondition
+for ix = startCondition:endCondition
     if saveResMatrices
         mcaResults.xControl{ix}    = [];
         mcaResults.vControl{ix}    = [];
@@ -131,7 +139,8 @@ for ix = 1:nCondition
         C_x_abs   = -(pinv(Sred*E_x_abs))*Sred;
         C_x       = diag(xref.^-1)*C_x_abs*diag(vref);
         C_v       = eye(numel(vref)) + E_x_nor*C_x;
-
+        C_v(vref==0,:) = 0;                             % Make zero reactions with zero flux
+        
         % Save control coefficients only if the result is accurate
         if all(abs(sum(C_x,2))<1e-5)
             if saveResMatrices
@@ -140,7 +149,7 @@ for ix = 1:nCondition
             mcaResults.xControlAvg{ix} = mcaResults.xControlAvg{ix} + C_x;
             mcaResults.xcounter{ix}    = mcaResults.xcounter{ix} + 1;
         end
-        if all(abs(sum(C_v,2))-1<1e-5)
+        if all(abs(sum(C_v(vref~=0,:),2))-1<1e-5)
             if saveResMatrices
                 mcaResults.vControl{ix}    = [mcaResults.vControl{ix}; C_v];
                 mcaResults.E_x_nor{ix}     = [mcaResults.E_x_nor{ix}; E_x_nor];
