@@ -1,4 +1,4 @@
-function [isModelValid,models,strucIdx,xopt,tolScore,simulatedFlux] = initialSampler(ensemble, modelI)
+function [nModels,models,strucIdx,xopt,tolScore,simulatedFlux] = initialSampler(ensemble)
 % Samples initial ensemble of kinetic models.
 %
 %
@@ -55,9 +55,9 @@ RT       = 8.314*298.15/1e3;                                               % gas
 massTol  = size(ensemble.Sred,1)*1e-10;								       % #balances*tol^2
 
 % Just so the tests don't crash because these variables were not assigned
-xopt = 0';
-tolScore = 0;
 simulatedFlux = 0;
+tolScore      = 0;
+xopt          = 0;
 
 % Figure out NLP solver
 if strcmpi(ensemble.solver,'NLOPT')											   % Solver parameters for NLOPT
@@ -73,7 +73,7 @@ end
 if ~isempty(ensemble.poolConst)
     for ix = 1:numel(ensemble.poolConst)
         A{ix} = ensemble.poolConst{ix}(1:numel(ensemble.metsActive));      % extract rhs of from pool constraint matrix
-        b{ix} = ensemble.poolConst{ix}(numel(ensemble.metsActive)+1:end);
+        b{ix} = ensemble.poolConst{ix}(end);
     end
 else
     A = [];                                                                % inequality constraints matrix
@@ -87,37 +87,42 @@ ub     = [ensemble.metsDataMax;ensemble.protDataMax; ones(numel(ensemble.kinInac
 nlcons = [];                                                               % nonlinear constraints (not used)
 
 %% Execute Rejection-ABC
-acceptanceRate = 1;
-counter        = 0;
+nModels = 0;
 
 % Loop until the number of valid particles is reached
 while true
-    isModelValid = true;
-    
+
     % Update attempt counter
-    counter = counter+1;
+    nModels = nModels+1;
 
     % Sample model structure
     strucIdx = randi(ensemble.numStruct);
+	
+	% Sample reference point
+	refID = randi(ensemble.numRefPoints);
 
     % Sample pool parameters (if any)
     if ~isempty(ensemble.poolConst)
-        poolFactor{numel(ensemble.poolConst)} = [];
-        for ix = 1:numel(ensemble.poolConst)
-
+        poolFactor = [];
+        poolFactor{size(ensemble.poolConst{1},1)} = 0;
+        for ix = 1:numel(poolFactor)
+            
             % Generate pool factor ~ Dir(alpha) using independent gamma distributions
             alphaPoolFactor = ensemble.populations(1).probParams(strucIdx).alphaPoolFactor{ix};
             poolFactorTemp  = randg(alphaPoolFactor);
-            poolFactorTemp  = poolFactorTemp/sum(poolFactorTemp);
-
+            poolFactor      = poolFactorTemp/sum(poolFactorTemp);
+            
             % Update pool constraint matrix accordingly
-            A_opt{ix} = A{ix};
-            A_opt{ix}(A{ix}~=0) = poolFactorTemp;
-
-            % Save sampled poolfactor
-            poolFactor{ix} = poolFactorTemp;
+            for jx = 1:ensemble.numConditions                        
+                A_opt{jx} = A{jx};
+                A_opt{jx}(A{jx}~=0) = poolFactor;
+            end            
+            if (ix==1)
+                models(1).poolFactor = poolFactor;
+            else
+                models(1).poolFactor = [models(1).poolFactor;poolFactor];
+            end
         end
-        models(1).poolFactor = poolFactor;
     else
         models(1).poolFactor = [];
     end
@@ -128,27 +133,27 @@ while true
         for xi = 1:size(ensemble.uniqueIso,1)
             group = find(strcmp(ensemble.isoenzymes,ensemble.uniqueIso{xi}));
             splitFactor = zeros(size(group,1),1);
-            totalFlux = sum(ensemble.fluxPoints(group, modelI));
+            totalFlux = sum(ensemble.fluxPoints(group, refID));
             for yi = 1:size(splitFactor,1)
                 splitFactor(yi) = randg();
             end
             splitFactor = splitFactor./sum(splitFactor);
-            ensemble.fluxPoints(group, modelI) = splitFactor.*totalFlux;
+            ensemble.fluxPoints(group, refID) = splitFactor.*totalFlux;
         end
     end
   
-    models(1).refFlux =  ensemble.fluxPoints(:, modelI); 
+    models(1).refFlux =  ensemble.fluxPoints(:, refID); 
     models(1).fixedExch = models(1).refFlux(ensemble.kinInactRxns,:);
     assert(all(abs(ensemble.Sred * models.refFlux) <10^-8), "Your model doesn\'t seem to be at steady-state. Sred * fluxRef != 0");
 
     % Determine gibbs free energy of reaction
-    models(1).gibbsTemp = ensemble.gibbsEnergies(:, modelI);
-    models(1).metConcRef = ensemble.metConcRef(:, modelI); 
+    models(1).gibbsTemp = ensemble.gibbsEnergies(:, refID);
+    models(1).metConcRef = ensemble.metConcRef(:, refID); 
 
     % Sample Reversibilities
-    [ensemble, models, isModelValid] = sampleGeneralReversibilities(ensemble, models, RT, strucIdx);
-    if ~isModelValid
-        break;
+    [ensemble, models, isReversibilityOK] = sampleGeneralReversibilities(ensemble, models, RT, strucIdx);
+    if ~isReversibilityOK
+        continue;
     end
 
     % Sample enzyme abundances
@@ -236,33 +241,35 @@ while true
     testFlux   = feval(kineticFxn,ones(size(ensemble.freeVars,1),1),xconst,models,models(1).fixedExch,ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},0);
 
     % If the model is consistent continue
-    if any(abs(testFlux-models(1).refFlux)>1e-6) || any(isnan(testFlux))
-        isModelValid = false;
+    isRefFluxOK = (all(abs(testFlux-models(1).refFlux)<1e-6) & all(~isnan(testFlux)));
+    if ~isRefFluxOK
         disp(['There are consistency problems during the reaction sampling. Model ID: ',num2str(strucIdx)]);
-        return
+        continue;
     end
     
     % Test if the real part of the jacobian's eigenvalue is greater than
     % threshold
-    isModelValid = checkStability(ensemble,models,strucIdx, ensemble.eigThreshold);
-    if ~isModelValid
+    isStable = checkStability(ensemble,models,strucIdx, ensemble.eigThreshold);
+    if ~isStable
         disp(['There are eigenvalues larger than ', num2str(ensemble.eigThreshold), '. Model ID: ',num2str(strucIdx)]);
-        return
+        continue;
     end
     
 
     % Check sampling mode. For the GRASP mode, no need to simulate
-    if strcmpi(ensemble.sampler,'GRASP'); break;
+    if strcmpi(ensemble.sampler,'GRASP')
+        break;
 
         % For the remaining modes, we need to simulate the model in the
         % experimental conditions
-    elseif ~strcmpi(ensemble.sampler,'GRASP') && isModelValid
+    else
 
         % Simulate fluxes
-        tolScore      = 10000*ones(1, ensemble.numConditions);
+        tolScore      = 1e3*ones(1, ensemble.numConditions);
         simulatedFlux = zeros(numel(ensemble.activeRxns),ensemble.numConditions);
         xopt          = zeros(size(x0,1),ensemble.numConditions);
-
+        isModelAccurate = true; 
+        
         % Solver call (OPTI Toolbox not implemented yet)
         for ix = 1:ensemble.numConditions
 
@@ -278,8 +285,8 @@ while true
                 % Solve S*v(k,X) = 0; s.t. A*X <= beq, lb < X <ub, with extra constraints (e.g., pool or ratio constraints). Otherwise solve solve S*v(k,X) = 0; s.t. lb < X <ub, with no extra constraints
                 if ~isempty(ensemble.poolConst)
                     for jx = 1:numel(ensemble.poolConst)
-                        opt.fc{1,2*jx-1} = (@(x) poolConstraintFxn(x,[A_opt{jx},zeros(1,numel(x0(:,ix))-numel(ensemble.metsActive))],b{jx}(2*ix-1)));
-                        opt.fc{1,2*jx}   = (@(x) poolConstraintFxn(x,[-A_opt{jx},zeros(1,numel(x0(:,ix))-numel(ensemble.metsActive))],-b{jx}(2*ix)));
+                        opt.fc{1,2*jx-1} = (@(x) poolConstraintFxn(x,[A_opt{jx},zeros(1,numel(x0(:,ix))-numel(ensemble.metsActive))],b{jx}));
+                        opt.fc{1,2*jx}   = (@(x) poolConstraintFxn(x,[-A_opt{jx},zeros(1,numel(x0(:,ix))-numel(ensemble.metsActive))],-b{jx}));
                     end
                     opt.fc_tol = 1e-6*ones(1,2*numel(ensemble.poolConst));
                 end
@@ -296,14 +303,13 @@ while true
                 beq_fmin = [];
                 if ~isempty(ensemble.poolConst)                    
                     Aeq_fmin = [A_opt{ix},zeros(1,numel(x0(:,ix))-numel(ensemble.metsActive))];
-                    beq_fmin = b{ix}(end);
+                    beq_fmin = b{ix};
                 end
                 [xopt(:,ix),fmin,retcode] = fmincon(kineticFxn,x0(:,ix),[],[],Aeq_fmin,beq_fmin,lb(:,ix),ub(:,ix),[],options,xconst,models,ensemble.fixedExch,ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},1);
                 
                 if retcode < 0
                     error(['The ABC optimization with fmincon was not successful. Error code: ', retcode, '. For more information, check the Matlab documentation on fmincon.']);
                 end
-
             end
 
             % Check mass balance consistency
@@ -321,37 +327,14 @@ while true
                     break;
                 end
             else
-                isModelValid = false;
+                isModelAccurate = false;
                 break;
             end
         end
 
-        % Compute tolerance, acceptance rate and break
-        if isModelValid
-            acceptanceRate = 1/counter;
+        % Save final particle
+        if isModelAccurate
             break;
-
-            % Delete model if not accurate or mass-balanced
-        else
-            models = [];
         end
     end
 end
-
-% Save results and write progress to a temp file (except for the GRASP mode)
-% if ~strcmpi(ensemble.sampler,'GRASP')
-%     try
-%         load progress.txt
-%         progress = [progress(1)+1;progress(4)/(progress(1)+1);progress(5)/(progress(1)+1);progress(4)+acceptanceRate;progress(5)+tolScore];
-%         save progress.txt -ascii progress
-%         save(['temp/particle_',num2str(progress(1)),'.mat'],'models','strucIdx','xopt','tolScore','simulatedFlux');
-% 
-%         % If another worker is writing on the file, wait a brief random time
-%     catch
-%         pause(randi(2)*rand(1));
-%         load progress.txt
-%         progress = [progress(1)+1;progress(4)/(progress(1)+1);progress(5)/(progress(1)+1);progress(4)+acceptanceRate;progress(5)+tolScore];
-%         save progress.txt -ascii progress
-%         save(['temp/particle_',num2str(progress(1)),'.mat'],'models','strucIdx','xopt','tolScore','simulatedFlux');
-%     end
-% end
