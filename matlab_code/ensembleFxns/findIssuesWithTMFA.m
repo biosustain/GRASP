@@ -52,8 +52,18 @@ while isempty(metsList) && isempty(rxnsList) && K >= max(abs(vmax), [], 'all')
 end
 
 if isempty(metsList) && isempty(rxnsList) && strcmp(ensemble.LPSolver, 'gurobi')
+    
     gurobi_write(model, 'TMFA_problem.lp');
-    solIIS = gurobi_iis(model);
+    
+    params.outputflag     = 0;
+    params.FeasibilityTol = 1e-6;
+    params.IntFeasTol     = 1e-6;
+    params.MIPGap         = 1e-6;
+    params.MIPGapAbs      = 1e-12;
+    params.OptimalityTol  = 1e-9;
+    
+    solIIS = gurobi_iis(model, params);
+
     constraintsIssues = find(solIIS.Arows == 1);
     lbIssues = find(solIIS.lb == 1);
     ubIssues = find(solIIS.ub == 1);
