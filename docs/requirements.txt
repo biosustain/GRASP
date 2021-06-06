@@ -42,5 +42,5 @@ git+https://github.com/martamatos/sphinxcontrib-napoleon.git@develop#egg=sphinxc
 sphinxcontrib-qthelp==1.0.2
 sphinxcontrib-serializinghtml==1.1.3
 toolz==0.10.0
-urllib3==1.25.8
+urllib3==1.26.5
 zipp==0.6.0
