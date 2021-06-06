@@ -161,7 +161,13 @@ while fluxdGInconsistent
             (strcmp(ensemble.LPSolver, 'linprog') && isempty(fval))
 
         disp('TMFA problem is infeasible.')
-        findIssuesWithTMFA(ensemble,model,DGf_std_min,DGf_std_max,vmin,vmax,xmin,xmax,ineqConstraints,K,RT,delta,M,tol);
+        if strcmp(ensemble.LPSolver, 'gurobi')
+            modelWithIssues = gurobiModel;
+        else
+            modelWithIssues = model;
+        end
+        
+        findIssuesWithTMFA(ensemble,modelWithIssues,DGf_std_min,DGf_std_max,vmin,vmax,xmin,xmax,ineqConstraints,K,RT,delta,M,tol);
     end
 
 
