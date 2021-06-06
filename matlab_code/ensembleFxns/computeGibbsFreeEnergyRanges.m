@@ -196,7 +196,7 @@ while fluxdGInconsistent
             if ~strcmp(solmax.status,'OPTIMAL')
                   error(strcat('Check your metabolite concentration ranges in thermoMets. In particular for minimum values set to 0 change them to a low number like 10^15.'));
             end
-
+            
             gurobiModel.obj(ix) = 0;
             solmaxX             = solmax.x;
             solminX             = solmin.x;
@@ -268,24 +268,23 @@ while fluxdGInconsistent
                error('The fluxes and Gibbs energies are not consistent.');
             end
          end
-        
+         
         if sum(sign(xprev_min(1:nflux)) - sign(xprev_max(1:nflux))) == 0    
             disp('Flux directions are consistent.');
         else 
             error('The flux directions are not consistent. Please make sure that both the lower and upper bound of the flux ranges (fluxMean - 2*fluxStd and fluxMean + 2*fluxStd, respectively) are either positive or negative.');
         end
-
+        
         nonZeroIndMin = find(xprev_min(nflux+1:nflux+n) ~= 0);
         nonZeroIndMax = find(xprev_max(nflux+1:nflux+n) ~= 0);
-        if all(nonZeroIndMin == nonZeroIndMax)
+        nonZeroIntersec = intersect(nonZeroIndMin, nonZeroIndMax);
 
-            if sum(sign(xprev_min(nonZeroIndMin+nflux)) - sign(xprev_max(nonZeroIndMax+nflux))) == 0    
-                disp('Gibbs energy directions are consistent.');
-            else 
-                error('The mininum and maximum values of Gibbs energies used to calculate the initial point for dG and flux sampling are not consistent.');
-            end
-
+        if sum(sign(xprev_min(nonZeroIntersec)) - sign(xprev_max(nonZeroIntersec))) == 0    
+            disp('Gibbs energy directions are consistent.');
+        else 
+            error('The mininum and maximum values of Gibbs energies used to calculate the initial point for dG and flux sampling are not consistent.');
         end
+
 
         if ~isempty(Nint)
             if max(abs(loopCondition)) <= 1e-6
