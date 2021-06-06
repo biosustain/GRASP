@@ -72,7 +72,7 @@ Nint = null(ensemble.Sthermo,'r');
 
 assert(all(all(abs(Nint' * ensemble.gibbsEnergies) < 1e-6)), 'The sum of dGs for reactions involved in closed loops is not zero for all.');
 assert(all(all(thermoAeq * thermoPoints(:,maxNumberOfSamples+1:end) < 1e-6)), 'Not all thermodynamic dynamic points are valid.');
-assert(sum(sum(sign(ensemble.fluxPoints(ensemble.idxNotExch,:)) + sign(ensemble.gibbsEnergies))) == 0, 'There seem to be dG values inconsistent with the respective flux values. Make sure that the fluxes standard deviaton is not zero in measRates.');
+assert(sum(sum(sign(ensemble.fluxPoints(ensemble.idxNotExch,:)) + sign(ensemble.gibbsEnergies))) == 0, 'There seem to be dG values inconsistent with the respective flux values. Make sure that the fluxes standard deviaton is not zero in measRates and flux < 2*flux_std.');
 
 
 disp('Fluxes and Gibbs energies successfully sampled');
