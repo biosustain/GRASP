@@ -193,6 +193,9 @@ while fluxdGInconsistent
 
             gurobiModel.modelsense = 'max';
             solmax                 = gurobi(gurobiModel,params);
+            if ~strcmp(solmax.status,'OPTIMAL')
+                  error(strcat('Check your metabolite concentration ranges in thermoMets. In particular for minimum values set to 0 change them to a low number like 10^15.'));
+            end
 
             gurobiModel.obj(ix) = 0;
             solmaxX             = solmax.x;
@@ -211,8 +214,11 @@ while fluxdGInconsistent
             model.f(ix)     = -1;
             [solmaxX, solmax]  = intlinprog(model.f, model.intcon, model.A, model.b, model.Aeq, model.beq, model.lb, model.ub, options);
             solmax          = -solmax;
+            if  isempty(solmax)
+                  error(strcat('Check your metabolite concentration ranges in thermoMets. In particular for minimum values set to 0 change them to a low number like 10^15.'));
+            end
 
-            model.f(ix)     = 0;        
+            model.f(ix)     = 0;
 
         end  
 
