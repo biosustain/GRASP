@@ -116,8 +116,6 @@ while true
                 A_opt{jx} = A{jx};
                 A_opt{jx}(A{jx}~=0) = poolFactor;
             end            
-        end
-            end            
             if (ix==1)
                 models(1).poolFactor = poolFactor;
             else
