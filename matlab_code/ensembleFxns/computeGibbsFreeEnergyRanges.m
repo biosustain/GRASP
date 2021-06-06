@@ -53,6 +53,7 @@ function [v_range,DGr_range,DGf_std_range,lnx_range,x0] = computeGibbsFreeEnergy
 %       - Marta Matos	            2018 added error messanges and findProblematicReactions
 %       - Pedro Saa and Marta Matos	2020  modified the TMFA MILP to use formation energies
 
+
 Sthermo   = ensemble.Sthermo;
 Sflux     = ensemble.Sflux;
 
@@ -249,7 +250,8 @@ while fluxdGInconsistent
     Acheck = full(model.A(1:(size(Sflux,1)+2*n),1:(nflux+n+2*m)));              % Generate checking matrix
 
     if all(abs(Acheck*x0)<1e-6)
-
+         
+        %Check that the initial point fluxes and dG values have opposite signs
          if sum(sign(x0(ensemble.idxNotExch)) + sign(x0(ensemble.idxNotExch+nflux))) == 0 
 
             disp('The fluxes and Gibbs energies are consistent.');
@@ -259,10 +261,10 @@ while fluxdGInconsistent
                 disp(['The K value in the TMFA problem was modified and set to 10^', num2str(log10(K))]);
             end
 
-        else
-            if K >=max(abs(v_range), [], 'all') && K >= max(abs(DGr_range), [], 'all')
-                n = log10(K);
-                K = 10^(n-1);
+         else
+            n = log10(K);
+            K = 10^(n-1);
+            if K >= max(abs(v_range), [], 'all') && K >= max(abs(DGr_range), [], 'all')
                 continue
             else
                error('The fluxes and Gibbs energies are not consistent.');
