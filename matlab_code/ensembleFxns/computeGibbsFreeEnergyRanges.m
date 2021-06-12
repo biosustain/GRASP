@@ -57,19 +57,74 @@ function [v_range,DGr_range,DGf_std_range,lnx_range,x0] = computeGibbsFreeEnergy
 Sthermo   = ensemble.Sthermo;
 Sflux     = ensemble.Sflux;
 
-DGf_std_max = pinv(Sthermo*Sthermo')*Sthermo*DGr_std_max;
-DGf_std_min = pinv(Sthermo*Sthermo')*Sthermo*DGr_std_min;
-for ix = 1:numel(DGf_std_max)
-    if (DGf_std_min(ix)>DGf_std_max(ix))
-        DGf_std_temp    = DGf_std_max(ix);
-        DGf_std_max(ix) = DGf_std_min(ix);
-        DGf_std_min(ix) = DGf_std_temp;
+% First we estimate feasible ranges for DGf_std from DGr_std_max. This is
+% done solving various LP problems to ensure consistency
+[m,n]       = size(Sthermo);
+[~,nflux]   = size(Sflux);
+M           = 1e3;
+DGf_std_min = zeros(m,1);
+DGf_std_max = zeros(m,1);
+
+if strcmp(ensemble.LPSolver, 'gurobi')
+    
+    gurobiModel.A   = sparse([eye(n),-Sthermo']);
+    gurobiModel.rhs = zeros(n,1);
+    gurobiModel.lb  = [DGr_std_min(:);-M*ones(m,1)];    % Only negative DGf_std
+    gurobiModel.ub  = [DGr_std_max(:);zeros(m,1)];
+    gurobiModel.obj = zeros(m+n,1);
+    gurobiModel.sense = '=';            % Constraint type definition
+    gurobiModel.vtype = 'C';            % Variable type definition
+    
+    % Define optimization parameters
+    params.outputflag     = 0;
+    params.FeasibilityTol = 1e-9;
+    params.OptimalityTol  = 1e-9;
+       
+    % Find feasible ranges for each DGf_std
+    for ix = 1:m
+        gurobiModel.obj(n+ix)  = 1;
+        gurobiModel.modelsense = 'min';
+        solmin = gurobi(gurobiModel,params);
+        DGf_std_min(ix) = solmin.objval;
+        
+        gurobiModel.modelsense = 'max';
+        solmax = gurobi(gurobiModel,params);
+        DGf_std_max(ix) = solmax.objval;
+        gurobiModel.obj(n+ix)  = 0;
     end
+    
+elseif strcmp(ensemble.LPSolver, 'linprog')
+    
+    A    = [];
+    b    = [];
+    Aeq  = [eye(n),-Sthermo'];
+    beq  = zeros(n,1);
+    lb   = [DGr_std_min(:);-M*ones(m,1)];
+    ub   = [DGr_std_max(:);zeros(m,1)];
+    x0   = [];
+    fobj = zeros(m+n,1);
+    
+    options =  optimoptions(@linprog, ...
+        'OptimalityTolerance', 1e-9, ...
+        'ConstraintTolerance', 1e-9, ...
+        'Display', 'off');
+    
+    % Find feasible ranges for each DGf_std
+    for ix = 1:m
+        fobj(n+ix) = 1;
+        [~,fval]   = linprog(fobj, A, b, Aeq, beq, lb, ub, x0, options);
+        DGf_std_min(ix) = fval;
+        fobj(n+ix) = -1;
+        [~,fval]   = linprog(fobj, A, b, Aeq, beq, lb, ub, x0, options);
+        DGf_std_max(ix) = -fval;
+        fobj(n+ix) = 1;
+    end
+    
 end
 
 
 % Build the adapted TMFA problem
-K = 1e12;
+K       = 1e12;
 delta   = 1e-6;
 RT      = 8.314*298.15/1e3;  % [kJ/mol]
 M       = 1e5;
