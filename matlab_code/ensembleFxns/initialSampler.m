@@ -55,7 +55,7 @@ RT       = 8.314*298.15/1e3;                                               % gas
 massTol  = size(ensemble.Sred,1)*1e-10;								       % #balances*tol^2
 
 % Just so the tests don't crash because these variables were not assigned
-xopt = 0';
+xopt = 0;
 tolScore = 0;
 simulatedFlux = 0;
 
@@ -73,7 +73,7 @@ end
 if ~isempty(ensemble.poolConst)
     for ix = 1:numel(ensemble.poolConst)
         A{ix} = ensemble.poolConst{ix}(1:numel(ensemble.metsActive));      % extract rhs of from pool constraint matrix
-        b{ix} = ensemble.poolConst{ix}(numel(ensemble.metsActive)+1:end);
+        b{ix} = ensemble.poolConst{ix}(end);
     end
 else
     A = [];                                                                % inequality constraints matrix
@@ -102,22 +102,26 @@ while true
 
     % Sample pool parameters (if any)
     if ~isempty(ensemble.poolConst)
-        poolFactor{numel(ensemble.poolConst)} = [];
-        for ix = 1:numel(ensemble.poolConst)
+        poolFactor = [];
+        poolFactor{size(ensemble.poolConst{1},1)} = 0;
+        for ix = 1:numel(poolFactor)
 
             % Generate pool factor ~ Dir(alpha) using independent gamma distributions
             alphaPoolFactor = ensemble.populations(1).probParams(strucIdx).alphaPoolFactor{ix};
             poolFactorTemp  = randg(alphaPoolFactor);
-            poolFactorTemp  = poolFactorTemp/sum(poolFactorTemp);
+            poolFactor      = poolFactorTemp/sum(poolFactorTemp);
 
             % Update pool constraint matrix accordingly
-            A_opt{ix} = A{ix};
-            A_opt{ix}(A{ix}~=0) = poolFactorTemp;
-
-            % Save sampled poolfactor
-            poolFactor{ix} = poolFactorTemp;
+            for jx = 1:ensemble.numConditions                        
+                A_opt{jx} = A{jx};
+                A_opt{jx}(A{jx}~=0) = poolFactor;
+            end            
+            if (ix==1)
+                models(1).poolFactor = poolFactor;
+            else
+                models(1).poolFactor = [models(1).poolFactor;poolFactor];
+            end
         end
-        models(1).poolFactor = poolFactor;
     else
         models(1).poolFactor = [];
     end
@@ -278,8 +282,8 @@ while true
                 % Solve S*v(k,X) = 0; s.t. A*X <= beq, lb < X <ub, with extra constraints (e.g., pool or ratio constraints). Otherwise solve solve S*v(k,X) = 0; s.t. lb < X <ub, with no extra constraints
                 if ~isempty(ensemble.poolConst)
                     for jx = 1:numel(ensemble.poolConst)
-                        opt.fc{1,2*jx-1} = (@(x) poolConstraintFxn(x,[A_opt{jx},zeros(1,numel(x0(:,ix))-numel(ensemble.metsActive))],b{jx}(2*ix-1)));
-                        opt.fc{1,2*jx}   = (@(x) poolConstraintFxn(x,[-A_opt{jx},zeros(1,numel(x0(:,ix))-numel(ensemble.metsActive))],-b{jx}(2*ix)));
+                        opt.fc{1,2*jx-1} = (@(x) poolConstraintFxn(x,[A_opt{jx},zeros(1,numel(x0(:,ix))-numel(ensemble.metsActive))],b{jx}));
+                        opt.fc{1,2*jx}   = (@(x) poolConstraintFxn(x,[-A_opt{jx},zeros(1,numel(x0(:,ix))-numel(ensemble.metsActive))],-b{jx}));
                     end
                     opt.fc_tol = 1e-6*ones(1,2*numel(ensemble.poolConst));
                 end
@@ -296,7 +300,7 @@ while true
                 beq_fmin = [];
                 if ~isempty(ensemble.poolConst)                    
                     Aeq_fmin = [A_opt{ix},zeros(1,numel(x0(:,ix))-numel(ensemble.metsActive))];
-                    beq_fmin = b{ix}(end);
+                    beq_fmin = b{ix};
                 end
                 [xopt(:,ix),fmin,retcode] = fmincon(kineticFxn,x0(:,ix),[],[],Aeq_fmin,beq_fmin,lb(:,ix),ub(:,ix),[],options,xconst,models,ensemble.fixedExch,ensemble.Sred,ensemble.kinInactRxns,ensemble.subunits{strucIdx},1);
                 
