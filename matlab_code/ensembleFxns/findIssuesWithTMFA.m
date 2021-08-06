@@ -61,7 +61,13 @@ if isempty(metsList) && isempty(rxnsList) && strcmp(ensemble.LPSolver, 'gurobi')
 
     error(strcat('The TMFA is infeasible. The MILP model has been written in the examples folder so that you can inspect it (TMFA_problem.lp). There might be issues with constraints number: ', num2str(constraintsIssues), ' variable lower bounds number ', num2str(lbIssues), ' or upper bounds number ', num2str(ubIssues), '. '));
 else
-    error(strcat('The TMFA problem is infeasible. This can be a problem with the metabolite bounds ', strjoin(metsBoundaryList, ', ') ,' for metabolites ', strjoin(metsList, ', '), ' in thermoMets, or a problem with the reaction bounds ', strjoin(rxnsBoundaryList, ', '), ' for reactions ', strjoin(rxnsList, ', '), ' in thermoRxns.Verify that the standard Gibbs free energy and metabolite concentration values are valid/correct. Note that the problem can also be with the reaction fluxes. Bottom line, for each reaction, fluxes and Gibbs energies need to agree.'));
+    if ~isempty(metsList)
+        disp(['There is a problem with the metabolite bounds ', strjoin(metsBoundaryList, ', ') ,' for metabolites ', strjoin(metsList, ', '), ' in thermoMets']);
+    end
+   if ~isempty(rxnsList)
+        disp(['There is a problem with the reaction bounds ', strjoin(rxnsBoundaryList, ', '), ' for reactions ', strjoin(rxnsList, ', '), ' in thermoRxns']);
+    end
+    error(strcat('The TMFA problem is infeasible, see message above. Verify that the standard Gibbs free energy and metabolite concentration values are valid/correct. Note that the problem can also be with the reaction fluxes. Bottom line, for each reaction, fluxes and Gibbs energies need to agree.'));
 end
     
 end
