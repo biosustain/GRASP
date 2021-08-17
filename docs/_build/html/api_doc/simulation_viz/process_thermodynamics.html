@@ -45,6 +45,10 @@
   
 
   
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/cobra.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
@@ -192,11 +196,13 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../api_doc.html">API documentation</a> &raquo;</li>
         
@@ -207,7 +213,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/api_doc/simulation_viz/process_thermodynamics.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -224,9 +230,9 @@
   <div class="section" id="process-thermodynamic-data">
 <h1>Process thermodynamic data<a class="headerlink" href="#process-thermodynamic-data" title="Permalink to this headline">¶</a></h1>
 <p>This module implements functions that import and process thermodynamic data for plotting.</p>
-<span class="target" id="module-simulation_viz.process_thermodynamics"></span><dl class="function">
-<dt id="simulation_viz.process_thermodynamics.calculate_dG">
-<code class="sig-name descname">calculate_dG</code><span class="sig-paren">(</span><em class="sig-param">data_dict: dict</em>, <em class="sig-param">gas_constant: float</em>, <em class="sig-param">temperature: float</em>, <em class="sig-param">rxn_order: list = None</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#simulation_viz.process_thermodynamics.calculate_dG" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="module-simulation_viz.process_thermodynamics"></span><dl class="py function">
+<dt class="sig sig-object py" id="simulation_viz.process_thermodynamics.calculate_dG">
+<span class="sig-name descname"><span class="pre">calculate_dG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gas_constant</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rxn_order</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#simulation_viz.process_thermodynamics.calculate_dG" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a dictionary representing a GRASP input file, calculates the minimum and maximum reaction dGs based on the
 standard dGs in thermoRxns and metabolite concentrations in thermoMets.</p>
 <p><strong>Inputs</strong></p>
@@ -250,9 +256,9 @@ a list with the reactions order (optional).</p></li>
 </div></blockquote>
 </dd></dl>
 
-<dl class="function">
-<dt id="simulation_viz.process_thermodynamics.get_fluxes_and_dGs">
-<code class="sig-name descname">get_fluxes_and_dGs</code><span class="sig-paren">(</span><em class="sig-param">data_dict: dict</em><span class="sig-paren">)</span> &#x2192; tuple<a class="headerlink" href="#simulation_viz.process_thermodynamics.get_fluxes_and_dGs" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="simulation_viz.process_thermodynamics.get_fluxes_and_dGs">
+<span class="sig-name descname"><span class="pre">get_fluxes_and_dGs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="headerlink" href="#simulation_viz.process_thermodynamics.get_fluxes_and_dGs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a dictionary representing a GRASP input file, it calculates the reaction dG and possibly the reaction fluxes.
 It works both when all fluxes are specified in measRates and when robust fluxes are calculated
 for a fully determined system. If the fluxes are not fully specified or the system is not fully determined, it
@@ -272,9 +278,9 @@ a dictionary representing a GRASP input file.</p></li>
 </div></blockquote>
 </dd></dl>
 
-<dl class="function">
-<dt id="simulation_viz.process_thermodynamics.get_robust_fluxes">
-<code class="sig-name descname">get_robust_fluxes</code><span class="sig-paren">(</span><em class="sig-param">data_dict: dict</em>, <em class="sig-param">rxn_order: list = None</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#simulation_viz.process_thermodynamics.get_robust_fluxes" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="simulation_viz.process_thermodynamics.get_robust_fluxes">
+<span class="sig-name descname"><span class="pre">get_robust_fluxes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rxn_order</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#simulation_viz.process_thermodynamics.get_robust_fluxes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a dictionary representing a GRASP input file, it calculates the robust fluxes (almost) as in GRASP,
 unless the system is not fully determined.</p>
 <p><strong>Inputs</strong></p>
@@ -347,11 +353,10 @@ dataframe with flux mean and std values</p></li>
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+    <script type="text/javascript" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mathjax/MathJax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

@@ -45,6 +45,10 @@
   
 
   
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/cobra.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
@@ -205,11 +209,13 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../api_doc.html">API documentation</a> &raquo;</li>
         
@@ -220,7 +226,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/api_doc/ensembleFxns/compute_gibbs_free_energy_ranges.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -236,9 +242,9 @@
             
   <div class="section" id="compute-gibbs-free-energy-ranges">
 <h1>Compute Gibbs free energy ranges<a class="headerlink" href="#compute-gibbs-free-energy-ranges" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="ensembleFxns.computeGibbsFreeEnergyRanges">
-<code class="sig-name descname">computeGibbsFreeEnergyRanges</code><span class="sig-paren">(</span><em class="sig-param">ensemble</em>, <em class="sig-param">DGr_std_min</em>, <em class="sig-param">DGr_std_max</em>, <em class="sig-param">vmin</em>, <em class="sig-param">vmax</em>, <em class="sig-param">xmin</em>, <em class="sig-param">xmax</em>, <em class="sig-param">ineqConstraints</em><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.computeGibbsFreeEnergyRanges" title="Permalink to this definition">¶</a></dt>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="ensembleFxns.computeGibbsFreeEnergyRanges">
+<span class="sig-name descname"><span class="pre">computeGibbsFreeEnergyRanges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">ensemble</span></em>, <em class="sig-param"><span class="pre">DGr_std_min</span></em>, <em class="sig-param"><span class="pre">DGr_std_max</span></em>, <em class="sig-param"><span class="pre">vmin</span></em>, <em class="sig-param"><span class="pre">vmax</span></em>, <em class="sig-param"><span class="pre">xmin</span></em>, <em class="sig-param"><span class="pre">xmax</span></em>, <em class="sig-param"><span class="pre">ineqConstraints</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.computeGibbsFreeEnergyRanges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Applies Thermodynamic Flux Balance Analysis (TMFA) to find
 thermodynamically feasible ranges for reactions fluxes, metabolite
 concentrations, and reactions Gibbs energies.</p>
@@ -249,6 +255,21 @@ involved in a loop sum to zero.
 Note that those formation energies are compatible with the
 given standard Gibbs energies, but are not necessarily
 similar to formation energies obtained from e.g. eQuilibrator.</p>
+<dl class="simple">
+<dt>Note: The value for K is now decreased if the initial point to use for</dt><dd><p>sampling gibbs energies and fluxes is thermodynamically infeasible
+(Gibbs energies and reaction fluxes are not compatible).
+This happens sometimes because of numerical precision issues.
+For instance, intlinprog considers anything lower than
+1e-6 to be the same as zero. Thus, it is possible to have
+a constraint like -dGr -K*e &lt;= -1e-6, if dGr = -10, K = 1e10,
+and e= 1e-7 the constraint is satisfied, even though it wouldn’t
+be if e=0. In this case e should be 1, which is not the case
+due to numerical imprecision. Thus, in this case, K would be set
+to 1e7, so that K*e &gt;= 10^0 is true even when e=1e-7, forcing e
+to be 1 when it should be 1, e.g. to satisfy -dGr -K*e &lt;= -1e-6,
+with dGr = -10, K = 1e7.</p>
+</dd>
+</dl>
 <p><strong>Usage</strong></p>
 <blockquote>
 <div><p>[v_range,DGr_range,DGf_std_range,lnx_range,x0] = computeGibbsFreeEnergyRanges(ensemble,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,ineqConstraints)</p>
@@ -343,11 +364,10 @@ initial point to be used for the sampling with hit-and-run method</p></li>
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+    <script type="text/javascript" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mathjax/MathJax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

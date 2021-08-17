@@ -45,6 +45,10 @@
   
 
   
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/css/cobra.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
@@ -182,18 +186,20 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Visualizing results</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/visualization.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -212,14 +218,15 @@
 <p>Three jupyter notebooks are provided in the <code class="docutils literal notranslate"><span class="pre">visualization</span></code> folder to visualize:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>the reactions free Gibbs energies and fluxes, to check if these are compatible;</p></li>
+<li><p>the reactions Gibbs free energies and fluxes, to check if these are compatible;</p></li>
 <li><p>the metabolic control analysis (MCA) results;</p></li>
 <li><p>the results from model simulations.</p></li>
 </ul>
 </div></blockquote>
-<p>The package requirements are specified in the <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file.</p>
-<dl class="simple">
-<dt>In particular you’ll need to install the following packages:</dt><dd><ul class="simple">
+<p>The package requirements are specified in the <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file. <br>
+In particular you’ll need to install the following packages:</p>
+<blockquote>
+<div><ul class="simple">
 <li><p>jupyter notebook or jupyter lab</p></li>
 <li><p>pandas</p></li>
 <li><p>numpy</p></li>
@@ -227,9 +234,8 @@
 <li><p>matplotlib</p></li>
 <li><p>altair</p></li>
 </ul>
-</dd>
-</dl>
-<p>To install the visualization package itself, open the terminal, go to the <cite>visualization/simulation_viz</cite> folder and type <cite>pip install .</cite></p>
+</div></blockquote>
+<p>To install the visualization package itself, open the terminal, go to the <code class="docutils literal notranslate"><span class="pre">visualization/simulation_viz</span></code> folder and type <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code></p>
 <div class="section" id="visualizing-fluxes-and-gibbs-energies">
 <h2>Visualizing fluxes and Gibbs energies<a class="headerlink" href="#visualizing-fluxes-and-gibbs-energies" title="Permalink to this headline">¶</a></h2>
 <p>The jupyter notebook <code class="docutils literal notranslate"><span class="pre">visualize_initial_dgs_and_fluxes</span></code> uses <a class="reference external" href="https://altair-viz.github.io/">altair</a> to plot the Gibbs free energy and respective flux for each reaction side by side.
@@ -317,11 +323,10 @@ The goal is to easily visualize if all Gibbs energies and fluxes in the model ar
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mathjax/MathJax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

@@ -45,6 +45,10 @@
   
 
   
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/cobra.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
@@ -205,11 +209,13 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../api_doc.html">API documentation</a> &raquo;</li>
         
@@ -220,7 +226,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/api_doc/ensembleFxns/find_issues_with_TMFA.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -236,9 +242,9 @@
             
   <div class="section" id="find-issues-with-tmfa">
 <h1>Find issues with TMFA<a class="headerlink" href="#find-issues-with-tmfa" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="ensembleFxns.findIssuesWithTMFA">
-<code class="sig-name descname">findIssuesWithTMFA</code><span class="sig-paren">(</span><em class="sig-param">ensemble</em>, <em class="sig-param">model</em>, <em class="sig-param">DGf_std_min</em>, <em class="sig-param">DGf_std_max</em>, <em class="sig-param">vmin</em>, <em class="sig-param">vmax</em>, <em class="sig-param">xmin</em>, <em class="sig-param">xmax</em>, <em class="sig-param">ineqConstraints</em>, <em class="sig-param">K</em>, <em class="sig-param">RT</em>, <em class="sig-param">delta</em>, <em class="sig-param">M</em>, <em class="sig-param">tol</em><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.findIssuesWithTMFA" title="Permalink to this definition">¶</a></dt>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="ensembleFxns.findIssuesWithTMFA">
+<span class="sig-name descname"><span class="pre">findIssuesWithTMFA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">ensemble</span></em>, <em class="sig-param"><span class="pre">DGr_std_min</span></em>, <em class="sig-param"><span class="pre">DGr_std_max</span></em>, <em class="sig-param"><span class="pre">vmin</span></em>, <em class="sig-param"><span class="pre">vmax</span></em>, <em class="sig-param"><span class="pre">xmin</span></em>, <em class="sig-param"><span class="pre">xmax</span></em>, <em class="sig-param"><span class="pre">ineqConstraints</span></em>, <em class="sig-param"><span class="pre">K</span></em>, <em class="sig-param"><span class="pre">RT</span></em>, <em class="sig-param"><span class="pre">delta</span></em>, <em class="sig-param"><span class="pre">M</span></em>, <em class="sig-param"><span class="pre">tol</span></em>, <em class="sig-param"><span class="pre">gurobiModel</span></em>, <em class="sig-param"><span class="pre">options</span></em>, <em class="sig-param"><span class="pre">params</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.findIssuesWithTMFA" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finds out why the TMFA problem is infeasible.</p>
 <p>This is done by first trying to find which reactions’ standard
 Gibbs energies or metabolite concentrations are causing the
@@ -247,6 +253,10 @@ If no reactions nor metabolites are deemed to be the cause and
 if the LP solver is set to gurobi, the MILP is written into
 a text file and the function <cite>gurobi_iis</cite> is used to find
 which constraints/variable bounds are causing the issue.</p>
+<p>Problematic metabolites and/or reactions can be missed due to a
+large K value, especially when using intlinprog (same issue as in
+computeGibbsFreeEnergyRanges). Thus the loop for decreasing K values
+when the lists of problematic reactions and metabolites are empty.</p>
 <p><strong>Usage</strong></p>
 <blockquote>
 <div><p>findIssuesWithTMFA(ensemble,model,DGf_std_min,DGf_std_max,vmin,vmax,xmin,xmax,ineqConstraints,K,RT,delta,M,tol)</p>
@@ -338,11 +348,10 @@ tolerance value to use when comparing results to zero.</p></li>
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+    <script type="text/javascript" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mathjax/MathJax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

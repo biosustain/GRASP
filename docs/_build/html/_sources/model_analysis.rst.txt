@@ -26,7 +26,7 @@ If you want to define the initial concentration for a given metabolite in terms 
 Other important variables to define are:
 
  - ``finalTime``:  the time of the simulation given in hours;
- - ``interruptTime``:  when the simulation will be aborted if it is still running, this time is specified in seconds. The idea is to skip simulations that take a long time to run;
+ - ``interruptTime``:  when the simulation will be aborted if it is still running, this time is specified in seconds. The idea is to skip simulations that take a long time to run (probably something is wrong with them anyways);
 
 
 Example:
@@ -103,8 +103,8 @@ If the variable ``saveMCAMatrices`` is set to ``1`` it wil also return the contr
 
 The resulting Matlab structure contains the following fields:
 
- - ``xControlAvg``: average concentration control coefficient for each model ensemble;
- - ``vControlAvg``: average flux control coefficient for each model ensemble;
+ - ``xControlAvg``: average concentration control coefficient for each metabolite over the whole model ensemble;
+ - ``vControlAvg``: average flux control coefficient for each reaction over the whole model ensemble;
  - ``xcounter``: number of models in the average concentration control coefficient calculation;
  - ``vcounter``: number of models in the average flux control coefficient calculation;
  - ``xControl``: concentration control coefficient matrix for each model;

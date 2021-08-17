@@ -45,6 +45,10 @@
   
 
   
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/cobra.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
@@ -205,11 +209,13 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../api_doc.html">API documentation</a> &raquo;</li>
         
@@ -220,7 +226,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/api_doc/ensembleFxns/build_ensemble.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -236,9 +242,9 @@
             
   <div class="section" id="build-ensemble">
 <h1>Build ensemble<a class="headerlink" href="#build-ensemble" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="ensembleFxns.buildEnsemble">
-<code class="sig-name descname">buildEnsemble</code><span class="sig-paren">(</span><em class="sig-param">inputFile</em>, <em class="sig-param">outputFile</em>, <em class="sig-param">maxNumberOfSamples</em>, <em class="sig-param">eigThreshold</em><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.buildEnsemble" title="Permalink to this definition">¶</a></dt>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="ensembleFxns.buildEnsemble">
+<span class="sig-name descname"><span class="pre">buildEnsemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputFile</span></em>, <em class="sig-param"><span class="pre">outputFile</span></em>, <em class="sig-param"><span class="pre">maxNumberOfSamples</span></em>, <em class="sig-param"><span class="pre">eigThreshold</span></em>, <em class="sig-param"><span class="pre">testing</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.buildEnsemble" title="Permalink to this definition">¶</a></dt>
 <dd><p>Samples a kinetic model ensemble which contains only valid models.</p>
 <p>Valid models are models where</p>
 <blockquote>
@@ -283,15 +289,14 @@ threshold for positive eigenvalues’ real part</p></li>
 model ensemble</p>
 <ul>
 <li><p>description (<em>char</em>)            : model name basically</p></li>
-<li><p>sampler (<em>char</em>)                : specifies the sampling mode: ORACLE or rejection [TODO Pedro check if this is correct]</p></li>
+<li><p>sampler (<em>char</em>)                : specifies the sampling mode: GRASP or rejection</p></li>
 <li><p>solver (<em>char</em>)                 : which solver to use for the rejection sampler</p></li>
 <li><p>numConditions (<em>int</em>)           : how many experimental conditions</p></li>
 <li><p>numStruct (<em>int</em>)               : how many model structures</p></li>
 <li><p>numParticles (<em>int</em>)            : how many models to be sampled</p></li>
 <li><p>parallel (<em>int</em>)                : whether or not to parallelize sampling process</p></li>
 <li><p>numCores (<em>int</em>)                : if <em>parallel</em> is true, how many cores to use</p></li>
-<li><p>alphaAlive (<em>double</em>)           : [TODO Pedro]</p></li>
-<li><p>tolerance (<em>double vector</em>)     : [TODO Pedro]</p></li>
+<li><p>tolerance (<em>double</em>)            : max allowable flux discrepancy between simulations and flux data</p></li>
 <li><p>S (<em>int matrix</em>)                : stoichiometric matrix as defined in the input file</p></li>
 <li><p>rxns (<em>char cell</em>)              : reaction IDs</p></li>
 <li><p>rxnNames (<em>char cell</em>)          : reaction names</p></li>
@@ -302,22 +307,19 @@ model ensemble</p>
 <li><p>mets (<em>char cell</em>)              : metabolite IDs</p></li>
 <li><p>metNames (<em>char cell</em>)          : metabolite names</p></li>
 <li><p>rxnMets (<em>char cell</em>)           : [TODO Pedro]</p></li>
-<li><p>metsBalanced (<em>int vector</em>)     : [TODO Pedro]</p></li>
-<li><p>metsSimulated (<em>int vector</em>)    : [TODO Pedro]</p></li>
+<li><p>metsBalanced (<em>int vector</em>)     : Indices of mass-balanced metabolites</p></li>
 <li><p>metsFixed (<em>int vector</em>)        : which metabolites concentrations are defined as fixed (constant)</p></li>
-<li><p>measuredMets (<em>int vector</em>)     : which metabolite concentrations were actually measured (vs. estimated)</p></li>
 <li><p>Sred (<em>int matrix</em>)             : reduced stoichiometric matrix, includes only balanced metabolites and active reactions</p></li>
 <li><p>measRates (<em>double matrix</em>)     : measured reaction fluxes means</p></li>
 <li><p>measRatesStd (<em>double matrix</em>)  : measured reaction fluxes standard deviations</p></li>
-<li><p>splitRatios (<em>vector</em>)          : [TODO Pedro]</p></li>
-<li><p>poolConst (<em>vector</em>)            : [TODO Pedro]</p></li>
-<li><p>ineqThermoConst (<em>vector</em>)      : [TODO Pedro]</p></li>
-<li><p>expFluxes (<em>double vector</em>)     : [TODO Pedro]</p></li>
-<li><p>expFluxesStd (<em>double vector</em>)  : [TODO Pedro]</p></li>
+<li><p>poolConst (<em>vector</em>)            : pool conservation constraints</p></li>
+<li><p>ineqThermoConst (<em>vector</em>)      : thermodynamic inequality constraints on log concentrations (ratios in linear space). Used in TMFA</p></li>
+<li><p>expFluxes (<em>double vector</em>)     : mean of experimental fluxes</p></li>
+<li><p>expFluxesStd (<em>double vector</em>)  : std of experimental fluxes</p></li>
 <li><p>fluxRef (<em>double vector</em>)       : reference reaction fluxes means</p></li>
 <li><p>fluxRefStd (<em>double vector</em>)    : reference reaction fluxes standard deviations</p></li>
-<li><p>freeFluxes (<em>int vector</em>)       : [TODO Pedro]</p></li>
-<li><p>simWeights (<em>double vector</em>)    : [TODO Pedro]</p></li>
+<li><p>freeFluxes (<em>int vector</em>)       : indices of linearly independent fluxes</p></li>
+<li><p>simWeights (<em>double vector</em>)    : discrepancy flux weights (by default experimental fluxes)</p></li>
 <li><p>Sthermo (<em>int matrix</em>)          : stoichiometric matrix used for thermodynamics, excludes exchange reactions</p></li>
 <li><p>gibbsRanges (<em>double matrix</em>)   : thermodynamically feasible ranges for Gibbs energies</p></li>
 <li><p>metRanges (<em>double matrix</em>)     : thermodynamically feasible ranges for metabolite concentrations</p></li>
@@ -325,8 +327,8 @@ model ensemble</p>
 <li><p>metsDataMin (<em>double vector</em>)   : minimum value for scaled metabolite concentrations</p></li>
 <li><p>metsDataMax (<em>double vector</em>)   : maximum value for scaled metabolite concentrations</p></li>
 <li><p>metsDataMean (<em>double vector</em>)  : mean value for scaled metabolite concentrations</p></li>
-<li><p>prevPrior (<em>cell</em>)              : [TODO Pedro]</p></li>
-<li><p>prevPriorInfo (<em>cell</em>)          : [TODO Pedro]</p></li>
+<li><p>prevPrior (<em>cell</em>)              : previous prior information available for the reactions</p></li>
+<li><p>prevPriorInfo (<em>cell</em>)          : description of previous prior information</p></li>
 <li><p>allosteric (<em>cell</em>)             : which reactions are allosterically regulated</p></li>
 <li><p>subunits (<em>int cell</em>)           : number of enzyme subunits for each reaction</p></li>
 <li><p>rxnMechanisms (<em>char cell</em>)     : reaction mechanisms</p></li>
@@ -346,47 +348,46 @@ model ensemble</p>
 <li><p>fixedExch (<em>double matrix</em>)     : fixed exchange reactions</p></li>
 <li><p>kineticFxn (<em>char cell</em>)        : name of kinetic function used to build the model with all rate laws</p></li>
 <li><p>metLists (<em>char cell</em>)          : list of metabolites (as defined in patterns) for each reaction</p></li>
-<li><p>revMatrix (<em>int matrix</em>)        : [TODO Pedro]</p></li>
-<li><p>forwardFlux (<em>int cell</em>)        : [TODO Pedro]</p></li>
-<li><p>Nelem (<em>int cell</em>)              : [TODO Pedro]</p></li>
-<li><p>freeVars (<em>char cell</em>)          : [TODO Pedro]</p></li>
-<li><p>metsActive (<em>int vector</em>)       : [TODO Pedro]</p></li>
+<li><p>revMatrix (<em>int matrix</em>)        : reversibilty matrix for the kinetic mechanism</p></li>
+<li><p>forwardFlux (<em>int cell</em>)        : link matrix of forward elementary fluxes connecting enzyme intermediates</p></li>
+<li><p>Nelem (<em>double cell</em>)           : null space basis for the mass balanced elementary fluxes</p></li>
+<li><p>freeVars (<em>char cell</em>)          : free variables, includes both proteins and metabolites concentrations</p></li>
+<li><p>metsActive (<em>int vector</em>)       : indices of active (non-constant) metabolites</p></li>
 <li><p>eigThreshold (<em>double</em>)         : threshold for the real part of the jacobian eigenvalues, if there is any higher than the threshold the model is discarded</p></li>
-<li><p>thermoActive (<em>int vector</em>)     : [TODO Pedro]</p></li>
-<li><p>populations (<em>struct</em>)          : [TODO Pedro]</p>
+<li><p>thermoActive (<em>int vector</em>)     : thermodynamically active reactions indices (e.g. excludes fixed exchanges)</p></li>
+<li><p>populations (<em>struct</em>)          : population of model ensembles</p>
 <blockquote>
 <div><ul>
-<li><p>probParams (<em>struct</em>)      : [TODO Pedro]</p>
+<li><p>probParams (<em>struct</em>)      : probabilitis parameters of the ensemble</p>
 <blockquote>
 <div><ul>
-<li><p>muGibbsFactor (<em>double vector</em>)     : [TODO Pedro]</p></li>
-<li><p>sigmaGibbsFactor (<em>double vector</em>)  : [TODO Pedro]</p></li>
+<li><p>muGibbsFactor (<em>double vector</em>)     : [THIS SHOULD BE REMOVED FROM THE ENSEMBLE STRUCTURE AS WE USE THE HR SAMPLER]</p></li>
+<li><p>sigmaGibbsFactor (<em>double vector</em>)  : [THIS SHOULD BE REMOVED FROM THE ENSEMBLE STRUCTURE AS WE USE THE HR SAMPLER]</p></li>
 <li><p>rxnParams (<em>struct</em>)                : reaction parameters</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>alphaEnzymeAbundances (<em>int vector</em>)  : [TODO Pedro]</p></li>
-<li><p>alphaReversibilities (<em>int vector</em>)   : [TODO Pedro]</p></li>
-<li><p>betaModifierElemeFlux (<em>int vector</em>)  : [TODO Pedro]</p></li>
-<li><p>betaBranchFactor (<em>int vector</em>)       : [TODO Pedro]</p></li>
+<li><p>alphaEnzymeAbundances (<em>double vector</em>)  : prior hyper parameters of the Dirichlet distribution for sampling enzyme abundances</p></li>
+<li><p>alphaReversibilities (<em>double vector</em>)   : prior hyper parameters of the Dirichlet distribution for sampling reversibilities</p></li>
+<li><p>betaModifierElemeFlux (<em>double vector</em>)  : prior hyper parameters of the beta distribution for sampling elementary modifier flux</p></li>
+<li><p>betaBranchFactor (<em>double vector</em>)       : prior hyper parameters of the beta distribution for flux branching factors</p></li>
 </ul>
 </div></blockquote>
 </li>
 </ul>
 </div></blockquote>
 </li>
-<li><p>weights (<em>double vector</em>)  : [TODO Pedro]</p></li>
+<li><p>weights (<em>double vector</em>)  : relative weight of the models</p></li>
 <li><p>models (<em>struct</em>)          : models in the ensemble</p>
 <blockquote>
 <div><ul>
-<li><p>poolFactor (<em>double vector</em>)  : [TODO Pedro]</p></li>
-<li><p>gibbsFactor (<em>double vector</em>) : [TODO Pedro]</p></li>
+<li><p>poolFactor (<em>double vector</em>)  : proportions of conserved moieties at the reference state</p></li>
 <li><p>rxnParams (<em>struct</em>)          : reaction parameters</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>reversibilities (<em>double vector</em>)   : sampled elementary reaction reversibilities</p></li>
 <li><p>enzymeAbundances (<em>double vector</em>)  : sampled enzyme intermediates abundances</p></li>
-<li><p>branchFactor (<em>double vector</em>)      : [TODO Pedro]</p></li>
-<li><p>modifierElemeFlux (<em>double vector</em>) : [TODO Pedro]</p></li>
+<li><p>branchFactor (<em>double vector</em>)      : random branching flux factor in random order mechanisms (one per branching point)</p></li>
+<li><p>modifierElemeFlux (<em>double vector</em>) : random flux through an elementary reaction involving a modifier (inhibitor or activator)</p></li>
 <li><p>kineticParams (<em>double vector</em>)     : reaction kinetic parameters</p></li>
 </ul>
 </div></blockquote>
@@ -395,13 +396,13 @@ model ensemble</p>
 </div></blockquote>
 </li>
 <li><p>strucIdx (<em>double vector</em>)  : model structure ID</p></li>
-<li><p>tolScore (<em>double vector</em>)  : [TODO Pedro]</p></li>
-<li><p>xopt (<em>cell</em>)               : [TODO Pedro]</p></li>
-<li><p>simFluxes (<em>cell</em>)          : [TODO Pedro]</p></li>
+<li><p>tolScore (<em>double vector</em>)  : max flux discrepancy of the model</p></li>
+<li><p>xopt (<em>cell</em>)               : simulated metabolite and enzyme concentrations for each experimental condition</p></li>
+<li><p>simFluxes (<em>cell</em>)          : simulated fluxes by the model</p></li>
 </ul>
 </div></blockquote>
 </li>
-<li><p>replenished particles (<em>int</em>)   : [TODO Pedro]</p></li>
+<li><p>replenished particles (<em>int</em>)   : number of models generated in the current population</p></li>
 </ul>
 </li>
 </ul>
@@ -460,11 +461,10 @@ model ensemble</p>
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+    <script type="text/javascript" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mathjax/MathJax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

@@ -45,6 +45,10 @@
   
 
   
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/cobra.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
@@ -193,11 +197,13 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../api_doc.html">API documentation</a> &raquo;</li>
         
@@ -208,7 +214,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/api_doc/analysisFxns/control_and_response_analysis.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -224,9 +230,9 @@
             
   <div class="section" id="metabolic-control-and-response-analysis">
 <h1>Metabolic Control and Response Analysis<a class="headerlink" href="#metabolic-control-and-response-analysis" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="analysisFxns.controlAndResponseAnalysis">
-<code class="sig-name descname">controlAndResponseAnalysis</code><span class="sig-paren">(</span><em class="sig-param">ensemble</em>, <em class="sig-param">saveResMatrices</em>, <em class="sig-param">strucIdx</em><span class="sig-paren">)</span><a class="headerlink" href="#analysisFxns.controlAndResponseAnalysis" title="Permalink to this definition">¶</a></dt>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="analysisFxns.controlAndResponseAnalysis">
+<span class="sig-name descname"><span class="pre">controlAndResponseAnalysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">ensemble</span></em>, <em class="sig-param"><span class="pre">saveResMatrices</span></em>, <em class="sig-param"><span class="pre">conditionI</span></em>, <em class="sig-param"><span class="pre">strucIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#analysisFxns.controlAndResponseAnalysis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates both control coefficients and response coefficients.
 Response coefficients here answer the question: what happens if one
 increases a given enzyme’s concentration?</p>
@@ -268,9 +274,12 @@ model ensemble, see buildEnsemble for fields description</p></li>
 whether or not to save the elasticity and control coefficient matrices for all models</p></li>
 </ul>
 </div></blockquote>
-<p><strong>Optional input</strong></p>
+<p><strong>Optional inputs</strong></p>
 <blockquote>
 <div><ul class="simple">
+<li><p><strong>conditionI</strong> (<em>int</em>) –
+condition for which the user wants for run MCA when having multiple coniditions, by
+default MCA is run for all conditions</p></li>
 <li><p><strong>strucIdx</strong> (<em>int</em>) –
 number of the model structure considered</p></li>
 </ul>
@@ -351,10 +360,10 @@ control and response analysis results</p>
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+    <script type="text/javascript" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mathjax/MathJax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   

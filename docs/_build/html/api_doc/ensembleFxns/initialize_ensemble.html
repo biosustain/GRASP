@@ -45,6 +45,10 @@
   
 
   
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/cobra.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
@@ -205,11 +209,13 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../api_doc.html">API documentation</a> &raquo;</li>
         
@@ -220,7 +226,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/api_doc/ensembleFxns/initialize_ensemble.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -236,9 +242,9 @@
             
   <div class="section" id="initialize-ensemble">
 <h1>Initialize ensemble<a class="headerlink" href="#initialize-ensemble" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="ensembleFxns.initializeEnsemble">
-<code class="sig-name descname">initializeEnsemble</code><span class="sig-paren">(</span><em class="sig-param">ensemble</em>, <em class="sig-param">popIdx</em>, <em class="sig-param">verbose</em><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.initializeEnsemble" title="Permalink to this definition">¶</a></dt>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="ensembleFxns.initializeEnsemble">
+<span class="sig-name descname"><span class="pre">initializeEnsemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">ensemble</span></em>, <em class="sig-param"><span class="pre">popIdx</span></em>, <em class="sig-param"><span class="pre">verbose</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.initializeEnsemble" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize ensemble structure.</p>
 <p><strong>Usage</strong></p>
 <blockquote>
@@ -267,7 +273,7 @@ verbosity level</p></li>
 initialized model ensemble data structure</p>
 <ul>
 <li><p>description (<em>char</em>)            : model name basically</p></li>
-<li><p>sampler (<em>char</em>)                : specifies the sampling mode: ORACLE or rejection [TODO Pedro check if this is correct]</p></li>
+<li><p>sampler (<em>char</em>)                : specifies the sampling mode: GRASP or rejection</p></li>
 <li><p>solver (<em>char</em>)                 : which solver to use for the rejection sampler</p></li>
 <li><p>numConditions (<em>int</em>)           : how many experimental conditions</p></li>
 <li><p>numStruct (<em>int</em>)               : how many model structures</p></li>
@@ -289,7 +295,6 @@ initialized model ensemble data structure</p>
 <li><p>metsBalanced (<em>int vector</em>)     : [TODO Pedro]</p></li>
 <li><p>metsSimulated (<em>int vector</em>)    : [TODO Pedro]</p></li>
 <li><p>metsFixed (<em>int vector</em>)        : which metabolites concentrations are defined as fixed (constant)</p></li>
-<li><p>measuredMets (<em>int vector</em>)     : which metabolite concentrations were actually measured (vs. estimated)</p></li>
 <li><p>Sred (<em>int matrix</em>)             : reduced stoichiometric matrix, includes only balanced metabolites and active reactions</p></li>
 <li><p>measRates (<em>double matrix</em>)     : measured reaction fluxes means</p></li>
 <li><p>measRatesStd (<em>double matrix</em>)  : measured reaction fluxes standard deviations</p></li>
@@ -443,11 +448,10 @@ initialized model ensemble data structure</p>
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+    <script type="text/javascript" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mathjax/MathJax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

@@ -45,6 +45,10 @@
   
 
   
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/cobra.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
@@ -192,11 +196,13 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../api_doc.html">API documentation</a> &raquo;</li>
         
@@ -207,7 +213,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/api_doc/simulation_viz/visualize_MCA.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -224,9 +230,9 @@
   <div class="section" id="visualize-mca">
 <h1>Visualize MCA<a class="headerlink" href="#visualize-mca" title="Permalink to this headline">¶</a></h1>
 <p>This module implements functions to visualize the MCA results using <a class="reference external" href="https://altair-viz.github.io/">altair</a>.</p>
-<span class="target" id="module-simulation_viz.visualize_simulations"></span><dl class="function">
-<dt id="simulation_viz.visualize_simulations.plot_ensemble">
-<code class="sig-name descname">plot_ensemble</code><span class="sig-paren">(</span><em class="sig-param">data_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">quant_type: str</em>, <em class="sig-param">selected_data: list</em>, <em class="sig-param">x_scale: str = 'linear'</em>, <em class="sig-param">y_scale: str = 'linear'</em>, <em class="sig-param">x_lim: tuple = None</em>, <em class="sig-param">y_lim: tuple = None</em>, <em class="sig-param">fig_size: tuple = None</em>, <em class="sig-param">save_plot: bool = False</em>, <em class="sig-param">output_file: str = ''</em><span class="sig-paren">)</span><a class="headerlink" href="#simulation_viz.visualize_simulations.plot_ensemble" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="module-simulation_viz.visualize_simulations"></span><dl class="py function">
+<dt class="sig sig-object py" id="simulation_viz.visualize_simulations.plot_ensemble">
+<span class="sig-name descname"><span class="pre">plot_ensemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quant_type</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_scale</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_scale</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_lim</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_lim</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_plot</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simulation_viz.visualize_simulations.plot_ensemble" title="Permalink to this definition">¶</a></dt>
 <dd><p>Does the same as plot_ensemble_interactive but using matplotlib instead of altair.
 Takes in a pandas dataframe with median and 1st and 3rd quartile concentration or flux values calculated
 over all models in the ensemble for each time point, and plots them using matplotlib.
@@ -264,9 +270,9 @@ path to plot file to be saved, if save_plot == True.</p></li>
 </div></blockquote>
 </dd></dl>
 
-<dl class="function">
-<dt id="simulation_viz.visualize_simulations.plot_model">
-<code class="sig-name descname">plot_model</code><span class="sig-paren">(</span><em class="sig-param">data_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">model_i: int</em>, <em class="sig-param">quant_type: str</em>, <em class="sig-param">selected_data: list</em>, <em class="sig-param">x_scale: str = 'linear'</em>, <em class="sig-param">y_scale: str = 'linear'</em>, <em class="sig-param">x_lim: tuple = None</em>, <em class="sig-param">y_lim: tuple = None</em>, <em class="sig-param">fig_size: tuple = None</em>, <em class="sig-param">save_plot: bool = False</em>, <em class="sig-param">output_file: str = ''</em><span class="sig-paren">)</span><a class="headerlink" href="#simulation_viz.visualize_simulations.plot_model" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="simulation_viz.visualize_simulations.plot_model">
+<span class="sig-name descname"><span class="pre">plot_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_i</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quant_type</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_scale</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_scale</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_lim</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_lim</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_plot</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simulation_viz.visualize_simulations.plot_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a pandas dataframe with metabolite concentrations or reaction fluxes, it plots the selected ones
 (specified in selected data) for the selected model.
 The plots are made using matplotlib.</p>
@@ -357,11 +363,10 @@ path to plot file to be saved, if save_plot == True.</p></li>
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+    <script type="text/javascript" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mathjax/MathJax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 
