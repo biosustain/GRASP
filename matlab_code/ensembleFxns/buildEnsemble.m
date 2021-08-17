@@ -203,7 +203,7 @@ if ensemble.parallel
 
         parpool(ensemble.numCores);
         parfor ix = (sampleCount+1):(sampleCount+nSamples)
-            disp(['Sampling model: ', num2str(sampleCount)]);
+            disp(['Sampling model: ', num2str(ix)]);
             if ensemble.testing == true
                 rng(1+ix);
             else
