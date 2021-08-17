@@ -242,7 +242,7 @@ while true
     % If the model is consistent continue
     if any(abs(testFlux-models(1).refFlux)>1e-6) || any(isnan(testFlux))
         isModelValid = false;
-        disp(['There are consistency problems during the reaction sampling. Model ID: ',num2str(strucIdx)]);
+        disp(['There are consistency problems during the reaction sampling. Model ID: ',num2str(modelI)]);
         return
     end
     
@@ -250,7 +250,7 @@ while true
     % threshold
     isModelValid = checkStability(ensemble,models,strucIdx, ensemble.eigThreshold);
     if ~isModelValid
-        disp(['There are eigenvalues larger than ', num2str(ensemble.eigThreshold), '. Model ID: ',num2str(strucIdx)]);
+        disp(['There are eigenvalues larger than ', num2str(ensemble.eigThreshold), '. Model ID: ',num2str(modelI)]);
         return
     end
     

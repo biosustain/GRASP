@@ -63,7 +63,6 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             eigThreshold = 10^-5;
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
-            ensemble.populations = rmfield(ensemble.populations, 'tolScore');
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleNumbers'));
             trueRes = trueRes.ensemble;
@@ -85,7 +84,6 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             eigThreshold = 10^-5;
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
-            ensemble.populations = rmfield(ensemble.populations, 'tolScore');
             
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleRandom'));
             trueRes = trueRes.ensemble;
@@ -107,8 +105,7 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             eigThreshold = 10^-5;
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
-            ensemble.populations = rmfield(ensemble.populations, 'tolScore');
-
+            
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleRandomLinprog'));
             trueRes = trueRes.ensemble;
             
@@ -128,7 +125,6 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             eigThreshold = 10^-5;
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
-            ensemble.populations = rmfield(ensemble.populations, 'tolScore');
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleAllosteric'));
             trueRes = trueRes.ensemble;
@@ -152,10 +148,9 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             eigThreshold = 10^-5;
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
-            ensemble.populations = rmfield(ensemble.populations, 'tolScore');
  
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleAllStable'));
-            trueRes = trueRes.ensemble;
+            trueRes = trueRes.ensemble;          
             
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
@@ -175,7 +170,6 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             eigThreshold = 10^-5;
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
-            ensemble.populations = rmfield(ensemble.populations, 'tolScore');
             
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleNoPromiscuous'));
             trueRes = trueRes.ensemble;
@@ -218,7 +212,6 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             eigThreshold = 10^-5;
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
-            ensemble.populations = rmfield(ensemble.populations, 'tolScore');
             
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleLargeModeldGs'));
             trueRes = trueRes.ensemble;
@@ -263,7 +256,6 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             
             ensemble = load(outputFile);
             ensemble = ensemble.ensemble;
-            ensemble.populations = rmfield(ensemble.populations, 'tolScore');
             
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildEnsembleCreateDir'));
             trueRes = trueRes.ensemble;
@@ -358,7 +350,6 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold);
 
-
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResTestBuildEnsembleMethionineATPchange'));
             trueRes = trueRes.ensemble;
        
@@ -377,7 +368,6 @@ classdef buildEnsembleTest < matlab.unittest.TestCase
             testing = true;
             
             ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThreshold, testing);
-
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResTestBuildEnsembleMethioninePedroParallel'));
             trueRes = trueRes.ensemble;

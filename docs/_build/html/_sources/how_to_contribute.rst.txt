@@ -40,7 +40,7 @@ Please use `semantic commit messages <https://karma-runner.github.io/2.0/dev/git
 
 5. Remember to either update the unit tests for any functions that you changed or add unit tests for any functions that you added.
 
-6. Run the unit tests by going to `matlab_code/tests` and running `run_unit_tests`.
+6. Run the unit tests by going to ``matlab_code/tests`` and running ``run_unit_tests``.
 
 7. Update or add relevant documentation.
 
@@ -51,7 +51,7 @@ Please use `semantic commit messages <https://karma-runner.github.io/2.0/dev/git
         git push origin <branch_name>
 
 
-9. On Github, create a pull request from your branch to `master`, provide a detailed description of the changes introduced, and wait for feedback.
+9. On Github, create a pull request from your branch to ``master``, provide a detailed description of the changes introduced, and wait for feedback.
 
 
 Please try to follow the existing coding style.

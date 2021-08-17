@@ -45,6 +45,10 @@
   
 
   
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/cobra.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
@@ -52,7 +56,7 @@
         <link rel="search" title="Search" href="../../search.html"/>
     <link rel="top" title="GRASP 2.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="Simulation visualization" href="../simulation_viz.html"/>
-        <link rel="next" title="Visualize simulations" href="visualize_simulations.html"/>
+        <link rel="next" title="Process thermodynamic data" href="process_thermodynamics.html"/>
         <link rel="prev" title="Check simulations" href="check_simulations.html"/> 
 
   
@@ -138,6 +142,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../model_analysis.html">Model analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualizing results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../troubleshoot.html">Troubleshooting</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../api_doc.html">API documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../analysis_functions.html">Analysis functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../ensemble_functions.html">Ensemble functions</a></li>
@@ -145,6 +150,8 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../simulation_viz.html">Simulation visualization</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="check_simulations.html">Check simulations</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Import simulation data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="process_thermodynamics.html">Process thermodynamic data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="visualize_MCA.html">Visualize MCA</a></li>
 <li class="toctree-l3"><a class="reference internal" href="visualize_simulations.html">Visualize simulations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="visualize_simulations_interactive.html">Visualize simulations, interactively</a></li>
 </ul>
@@ -189,11 +196,13 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../api_doc.html">API documentation</a> &raquo;</li>
         
@@ -204,7 +213,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/api_doc/simulation_viz/import_simulation_data.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -221,9 +230,9 @@
   <div class="section" id="import-simulation-data">
 <h1>Import simulation data<a class="headerlink" href="#import-simulation-data" title="Permalink to this headline">¶</a></h1>
 <p>This module implements functions to import and process simulation data.</p>
-<span class="target" id="module-simulation_viz.import_simulation_data"></span><dl class="function">
-<dt id="simulation_viz.import_simulation_data.aggregate_time_series">
-<code class="sig-name descname">aggregate_time_series</code><span class="sig-paren">(</span><em class="sig-param">data_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">quant_type: str</em>, <em class="sig-param">name_list: list</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#simulation_viz.import_simulation_data.aggregate_time_series" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="module-simulation_viz.import_simulation_data"></span><dl class="py function">
+<dt class="sig sig-object py" id="simulation_viz.import_simulation_data.aggregate_time_series">
+<span class="sig-name descname"><span class="pre">aggregate_time_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quant_type</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_list</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#simulation_viz.import_simulation_data.aggregate_time_series" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes in a dataframe with either fluxes or concentrations and calculates the median and respective first and third
 quartiles for each flux or metabolite at a given time point over the whole model ensemble.</p>
 <p><strong>Inputs</strong></p>
@@ -246,9 +255,9 @@ reaction or metabolite names, depending on what that the dataframe contains.</p>
 </div></blockquote>
 </dd></dl>
 
-<dl class="function">
-<dt id="simulation_viz.import_simulation_data.gather_conc_data">
-<code class="sig-name descname">gather_conc_data</code><span class="sig-paren">(</span><em class="sig-param">mat: dict</em>, <em class="sig-param">met_names: list</em>, <em class="sig-param">n_models: int</em>, <em class="sig-param">quant_type: str</em>, <em class="sig-param">ref_conc_dic: dict = None</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#simulation_viz.import_simulation_data.gather_conc_data" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="simulation_viz.import_simulation_data.gather_conc_data">
+<span class="sig-name descname"><span class="pre">gather_conc_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mat</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">met_names</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_models</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quant_type</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_conc_dic</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#simulation_viz.import_simulation_data.gather_conc_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Imports the concentration data over time from the matlab simulation results.</p>
 <p>The concentrations are relative to the reference state.</p>
 <p>If a dictionary with reference concentrations is supplied the resulting dataframe will both relative and absolute
@@ -277,9 +286,9 @@ a dictionary with the metabolites reference concentrations in each model.</p></l
 </div></blockquote>
 </dd></dl>
 
-<dl class="function">
-<dt id="simulation_viz.import_simulation_data.gather_flux_data">
-<code class="sig-name descname">gather_flux_data</code><span class="sig-paren">(</span><em class="sig-param">mat: dict</em>, <em class="sig-param">rxn_names: list</em>, <em class="sig-param">n_models: int</em>, <em class="sig-param">quant_type: str</em>, <em class="sig-param">ref_flux_dic: dict = None</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#simulation_viz.import_simulation_data.gather_flux_data" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="simulation_viz.import_simulation_data.gather_flux_data">
+<span class="sig-name descname"><span class="pre">gather_flux_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mat</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rxn_names</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_models</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quant_type</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_flux_dic</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#simulation_viz.import_simulation_data.gather_flux_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Imports the flux data over time from the matlab simulation results.</p>
 <p>The fluxes coming from matlab are absolute.</p>
 <p>If a dictionary with reference fluxes is supplied the resulting dataframe will both relative and absolute
@@ -308,9 +317,9 @@ a dictionary with the reactions reference fluxes.</p></li>
 </div></blockquote>
 </dd></dl>
 
-<dl class="function">
-<dt id="simulation_viz.import_simulation_data.get_met_rxn_names">
-<code class="sig-name descname">get_met_rxn_names</code><span class="sig-paren">(</span><em class="sig-param">raw_data_dir: str</em>, <em class="sig-param">model_name: str</em><span class="sig-paren">)</span> &#x2192; tuple<a class="headerlink" href="#simulation_viz.import_simulation_data.get_met_rxn_names" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="simulation_viz.import_simulation_data.get_met_rxn_names">
+<span class="sig-name descname"><span class="pre">get_met_rxn_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data_dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="headerlink" href="#simulation_viz.import_simulation_data.get_met_rxn_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the names of metabolites and reactions in the model.</p>
 <p><strong>Inputs</strong></p>
 <blockquote>
@@ -329,9 +338,9 @@ named of the model.</p></li>
 </div></blockquote>
 </dd></dl>
 
-<dl class="function">
-<dt id="simulation_viz.import_simulation_data.get_time_series_quartiles">
-<code class="sig-name descname">get_time_series_quartiles</code><span class="sig-paren">(</span><em class="sig-param">mat</em>, <em class="sig-param">names_list: list</em>, <em class="sig-param">n_models: int</em>, <em class="sig-param">ref_dic: dict</em>, <em class="sig-param">quant_type: str</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#simulation_viz.import_simulation_data.get_time_series_quartiles" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="simulation_viz.import_simulation_data.get_time_series_quartiles">
+<span class="sig-name descname"><span class="pre">get_time_series_quartiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names_list</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_models</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_dic</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quant_type</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#simulation_viz.import_simulation_data.get_time_series_quartiles" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Given a .mat file from matlab with the simulation results, and the type of quantity the user wants to extract:</dt><dd><ul class="simple">
 <li><p>“flux_rel” - relative fluxes</p></li>
@@ -367,9 +376,9 @@ which quantity to extract: “flux_rel”, “flux_abs”, “conc_rel”, “co
 </div></blockquote>
 </dd></dl>
 
-<dl class="function">
-<dt id="simulation_viz.import_simulation_data.import_ref_conc">
-<code class="sig-name descname">import_ref_conc</code><span class="sig-paren">(</span><em class="sig-param">mat: dict</em>, <em class="sig-param">n_models: int</em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#simulation_viz.import_simulation_data.import_ref_conc" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="simulation_viz.import_simulation_data.import_ref_conc">
+<span class="sig-name descname"><span class="pre">import_ref_conc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mat</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_models</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#simulation_viz.import_simulation_data.import_ref_conc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a .mat file from matlab into a dictionary with reference concentrations for each model.
 Metabolites are the keys, lists of concentrations are the values, where each entry is the concentration for a model.</p>
 <p><strong>Inputs</strong></p>
@@ -389,9 +398,9 @@ number of models to consider.</p></li>
 </div></blockquote>
 </dd></dl>
 
-<dl class="function">
-<dt id="simulation_viz.import_simulation_data.import_ref_flux">
-<code class="sig-name descname">import_ref_flux</code><span class="sig-paren">(</span><em class="sig-param">mat: dict</em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#simulation_viz.import_simulation_data.import_ref_flux" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="simulation_viz.import_simulation_data.import_ref_flux">
+<span class="sig-name descname"><span class="pre">import_ref_flux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mat</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#simulation_viz.import_simulation_data.import_ref_flux" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the reference fluxes into a dictionary from a .mat file from matlab.
 Reaction names are the keys and fluxes are the values.</p>
 <p><strong>Input</strong></p>
@@ -409,9 +418,9 @@ ensemble .mat file from matlab in form of dictionary.</p></li>
 </div></blockquote>
 </dd></dl>
 
-<dl class="function">
-<dt id="simulation_viz.import_simulation_data.load_simulation">
-<code class="sig-name descname">load_simulation</code><span class="sig-paren">(</span><em class="sig-param">raw_data_dir: str</em>, <em class="sig-param">model_name: str</em>, <em class="sig-param">simulation_name: str</em>, <em class="sig-param">n_models: int</em><span class="sig-paren">)</span> &#x2192; tuple<a class="headerlink" href="#simulation_viz.import_simulation_data.load_simulation" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="simulation_viz.import_simulation_data.load_simulation">
+<span class="sig-name descname"><span class="pre">load_simulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data_dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulation_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_models</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="headerlink" href="#simulation_viz.import_simulation_data.load_simulation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes in the path to the folder with the model ensemble and simulation data, loads it and returns the simulation
 Matlab file, the reference concentration and flux dictionaries, as well as the metabolite and reaction names.</p>
 <p><strong>Inputs</strong></p>
@@ -448,7 +457,7 @@ number of models in the simulation to plot</p></li>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="visualize_simulations.html" class="btn btn-default float-right" title="Visualize simulations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="process_thermodynamics.html" class="btn btn-default float-right" title="Process thermodynamic data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="check_simulations.html" class="btn btn-default" title="Check simulations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -488,11 +497,10 @@ number of models in the simulation to plot</p></li>
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+    <script type="text/javascript" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mathjax/MathJax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

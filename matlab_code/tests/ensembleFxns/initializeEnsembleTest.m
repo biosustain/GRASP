@@ -82,7 +82,7 @@ classdef initializeEnsembleTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResInitializedEnsemble_toy_model3_isoenzymes.mat'));
             trueRes = trueRes.ensemble;   
-            
+       
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
                 'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));
             

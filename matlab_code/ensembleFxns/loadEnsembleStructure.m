@@ -332,12 +332,16 @@ xmax         = xMetsThermo(:,2);
 DGr_std_min  = DGr_std(:,1);
 DGr_std_max  = DGr_std(:,2);
 
-[fluxRanges,DGrRange,DGfStdRange,lnMetRanges,initialTMFAPoint] = computeGibbsFreeEnergyRanges(ensemble,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,ineqConstraints);
+assert(sum(sign(vmin) - sign(vmax)) == 0, 'The flux directions are not consistent. Please make sure that both the lower and upper bound of the flux ranges (fluxMean - 2*fluxStd and fluxMean + 2*fluxStd, respectively) are either positive or negative.');    
+assert(all(DGr_std_min <= DGr_std_max), "Check the thermoRxns sheet, at least one lower bound is greater than the respective upper bound");
+assert(all(xmin <= xmax), "Check the thermoMets sheet, at least one lower bound is greater than the respective upper bound");
+
+[fluxRanges,DGrRange,DGrStdRange,lnMetRanges,initialTMFAPoint] = computeGibbsFreeEnergyRanges(ensemble,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,ineqConstraints);
 
 ensemble.fluxRanges = fluxRanges;
 ensemble.gibbsRanges = [-100*ones(size(ensemble.S',1),1), 100*ones(size(ensemble.S',1),1)];                          % Allocate memory for DGr calculations
 ensemble.gibbsRanges(ensemble.idxNotExch,:) = DGrRange;                                           % Remove thermodynamic info from exchang rxns
-ensemble.DGfStdRange = DGfStdRange;
+ensemble.DGrStdRange = DGrStdRange;
 ensemble.lnMetRanges = lnMetRanges;
 ensemble.initialTMFAPoint = initialTMFAPoint;
 

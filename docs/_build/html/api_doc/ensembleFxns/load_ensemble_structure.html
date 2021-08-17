@@ -45,6 +45,10 @@
   
 
   
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/cobra.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
@@ -205,11 +209,13 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../api_doc.html">API documentation</a> &raquo;</li>
         
@@ -220,7 +226,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/api_doc/ensembleFxns/load_ensemble_structure.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -236,9 +242,9 @@
             
   <div class="section" id="load-ensemble-structure">
 <h1>Load ensemble structure<a class="headerlink" href="#load-ensemble-structure" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="ensembleFxns.loadEnsembleStructure">
-<code class="sig-name descname">loadEnsembleStructure</code><span class="sig-paren">(</span><em class="sig-param">xlsxFile</em><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.loadEnsembleStructure" title="Permalink to this definition">¶</a></dt>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="ensembleFxns.loadEnsembleStructure">
+<span class="sig-name descname"><span class="pre">loadEnsembleStructure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">xlsxFile</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.loadEnsembleStructure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes in an excel file and sets up the model ensemble data structure.</p>
 <p>Also calculates reactions fluxes and Gibbs energies if wanted.</p>
 <p><strong>Usage</strong></p>
@@ -259,7 +265,7 @@ path to input excel file</p></li>
 model ensemble data structure</p>
 <ul>
 <li><p>description (<em>char</em>)            : model name basically</p></li>
-<li><p>sampler (<em>char</em>)                : specifies the sampling mode: ORACLE or rejection [TODO Pedro check if this is correct]</p></li>
+<li><p>sampler (<em>char</em>)                : specifies the sampling mode: GRASP or rejection</p></li>
 <li><p>solver (<em>char</em>)                 : which solver to use for the rejection sampler</p></li>
 <li><p>numConditions (<em>int</em>)           : how many experimental conditions</p></li>
 <li><p>numStruct (<em>int</em>)               : how many model structures</p></li>
@@ -281,11 +287,9 @@ model ensemble data structure</p>
 <li><p>metsBalanced (<em>int vector</em>)     : [TODO Pedro]</p></li>
 <li><p>metsSimulated (<em>int vector</em>)    : [TODO Pedro]</p></li>
 <li><p>metsFixed (<em>int vector</em>)        : which metabolites concentrations are defined as fixed (constant)</p></li>
-<li><p>measuredMets (<em>int vector</em>)     : which metabolite concentrations were actually measured (vs. estimated)</p></li>
 <li><p>Sred (<em>int matrix</em>)             : reduced stoichiometric matrix, includes only balanced metabolites and active reactions</p></li>
 <li><p>measRates (<em>double matrix</em>)     : measured reaction fluxes means</p></li>
 <li><p>measRatesStd (<em>double matrix</em>)  : measured reaction fluxes standard deviations</p></li>
-<li><p>splitRatios (<em>vector</em>)          : [TODO Pedro]</p></li>
 <li><p>poolConst (<em>vector</em>)            : [TODO Pedro]</p></li>
 <li><p>ineqThermoConst (<em>vector</em>)      : [TODO Pedro]</p></li>
 <li><p>expFluxes (<em>double vector</em>)     : [TODO Pedro]</p></li>
@@ -322,11 +326,12 @@ model ensemble data structure</p>
 <li><p>fixedExch (<em>double matrix</em>)     : fixed exchange reactions</p></li>
 <li><p>kineticFxn (<em>char cell</em>)        : name of kinetic function used to build the model with all rate laws</p></li>
 <li><p>metLists (<em>char cell</em>)          : list of metabolites (as defined in patterns) for each reaction</p></li>
-<li><p>revMatrix (<em>int matrix</em>)        : [TODO Pedro]</p></li>
-<li><p>forwardFlux (<em>int cell</em>)        : [TODO Pedro]</p></li>
-<li><p>Nelem (<em>int cell</em>)              : [TODO Pedro]</p></li>
-<li><p>freeVars (<em>char cell</em>)          : [TODO Pedro]</p></li>
-<li><p>metsActive (<em>int vector</em>)       : [TODO Pedro]</p></li>
+<li><p>revMatrix (<em>int matrix</em>)        : reversibility matrix of the reaction mechanism</p></li>
+<li><p>forwardFlux (<em>int cell</em>)        : link matrix of enzyme intermediate (nodes) connections in the forward direction</p></li>
+<li><p>Nelem (<em>int cell</em>)              : null space basis of the stoichiometric matrix of elementary steps</p></li>
+<li><p>freeVars (<em>char cell</em>)          : free variables of the model</p></li>
+<li><p>metsActive (<em>int vector</em>)       : indices of metabolites participating in kinetic reactions</p></li>
+<li><p>metsLi (<em>int vector</em>)           : indices of linearly independent mass-balanced active metabolites</p></li>
 </ul>
 </li>
 </ul>
@@ -385,11 +390,10 @@ model ensemble data structure</p>
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+    <script type="text/javascript" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mathjax/MathJax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

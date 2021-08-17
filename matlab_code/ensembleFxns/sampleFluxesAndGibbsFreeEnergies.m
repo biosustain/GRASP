@@ -39,11 +39,15 @@ assert(all(all(abs(ensemble.Sred * ensemble.fluxPoints) <10^-8)), "Not all sampl
 disp('Sampling Gibbs energies')
 
 % 2) Sample thermodynamic features
+Nint         = null(ensemble.Sthermo,'r');
 RT           = 8.314*298.15/1e3;  % [kJ/mol]
 [m, n]       = size(ensemble.Sthermo);
-thermoLB     = [ensemble.gibbsRanges(ensemble.idxNotExch,1);ensemble.DGfStdRange(:,1);ensemble.lnMetRanges(:,1)];
-thermoUB     = [ensemble.gibbsRanges(ensemble.idxNotExch,2);ensemble.DGfStdRange(:,2);ensemble.lnMetRanges(:,2)];
-thermoAeq    = [eye(size(ensemble.Sthermo,2)),-ensemble.Sthermo',-RT*ensemble.Sthermo'];
+thermoLB     = [ensemble.gibbsRanges(ensemble.idxNotExch,1);ensemble.DGrStdRange(ensemble.idxNotExch,1);ensemble.lnMetRanges(:,1)];
+thermoUB     = [ensemble.gibbsRanges(ensemble.idxNotExch,2);ensemble.DGrStdRange(ensemble.idxNotExch,2);ensemble.lnMetRanges(:,2)];
+thermoAeq    = [eye(size(ensemble.Sthermo,2)),-eye(size(ensemble.Sthermo,2)),-RT*ensemble.Sthermo'];
+if ~isnan(Nint)
+    thermoAeq = [thermoAeq;zeros(size(Nint',1),numel(ensemble.idxNotExch)),Nint',zeros(size(Nint',1),size(ensemble.lnMetRanges,1))];
+end
 thermoX0     = ensemble.initialTMFAPoint(numel(fluxX0)+1:end);
 thermoPrior  = ensemble.thermoPrior;
 
@@ -64,14 +68,13 @@ else
     thermoPoints = cell2mat(thermoPoints);
 end
 ensemble.gibbsEnergies = thermoPoints(1:n,end-maxNumberOfSamples+1:end);
-ensemble.metConcRef = exp(thermoPoints(n+m+1:end,end-maxNumberOfSamples+1:end));
+ensemble.metConcRef = exp(thermoPoints(2*n+1:end,end-maxNumberOfSamples+1:end));
 
 
 % Check that everything is consistent
-Nint = null(ensemble.Sthermo,'r');
 
-assert(all(all(abs(Nint' * ensemble.gibbsEnergies) < 1e-6)), 'The sum of dGs for reactions involved in closed loops is not zero for all.');
-assert(all(all(thermoAeq * thermoPoints(:,maxNumberOfSamples+1:end) < 1e-6)), 'Not all thermodynamic dynamic points are valid.');
+assert(all(all(abs(Nint' * ensemble.gibbsEnergies) < 1e-4)), 'The sum of dGs for reactions involved in closed loops is not zero for all.');
+assert(all(all(thermoAeq * thermoPoints(:,maxNumberOfSamples+1:end) < 1e-4)), 'Not all thermodynamic dynamic points are valid.');
 assert(sum(sum(sign(ensemble.fluxPoints(ensemble.idxNotExch,:)) + sign(ensemble.gibbsEnergies))) == 0, 'There seem to be dG values inconsistent with the respective flux values. Make sure that the fluxes standard deviaton is not zero in measRates.');
 
 

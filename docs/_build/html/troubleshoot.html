@@ -45,6 +45,10 @@
   
 
   
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/css/cobra.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
@@ -185,18 +189,20 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Troubleshooting</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/troubleshoot.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -212,7 +218,7 @@
             
   <div class="section" id="troubleshooting">
 <h1>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h1>
-<p>There are multiple errors that you can get when running GRASP.
+<p>There are multiple errors that you can get when running GRASP. <br>
 Here we go through some of the most common (or tricky) errors, what they mean and what you can do about them.</p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
@@ -226,13 +232,13 @@ Here we go through some of the most common (or tricky) errors, what they mean an
 </div>
 <div class="section" id="the-jacobian-matrix-is-not-square-hint-check-if-the-correct-metabolites-are-set-as-constants">
 <h2><a class="toc-backref" href="#id1">‘The jacobian matrix is not square. Hint: check if the correct metabolites are set as constants.’</a><a class="headerlink" href="#the-jacobian-matrix-is-not-square-hint-check-if-the-correct-metabolites-are-set-as-constants" title="Permalink to this headline">¶</a></h2>
-<p>This error can occur when running the function <cite>checkStability</cite>, which calculates the eigenvalues of the system’s Jacobian and checks if the real part of the eigenvalues is below a certain threshold.</p>
-<p>The error happens when the jacobian matrix is not square. This is generally because the user has defined the wrong metabolites as fixed in the <cite>mets</cite> sheet of the excel input file.</p>
+<p>This error can occur when running the function <code class="docutils literal notranslate"><span class="pre">checkStability</span></code>, which calculates the eigenvalues of the system’s Jacobian and checks if the real part of the eigenvalues is below a certain threshold.</p>
+<p>The error happens when the jacobian matrix is not square. This is generally because the user has defined the wrong metabolites as balanced in the <code class="docutils literal notranslate"><span class="pre">mets</span></code> sheet of the excel input file.</p>
 </div>
 <div class="section" id="check-your-metabolite-concentration-ranges-in-thermomets-in-particular-for-minimum-values-set-to-0-change-them-to-a-low-number-like-10-15">
 <h2><a class="toc-backref" href="#id2">‘Check your metabolite concentration ranges in thermoMets. In particular for minimum values set to 0 change them to a low number like 10^15.’</a><a class="headerlink" href="#check-your-metabolite-concentration-ranges-in-thermomets-in-particular-for-minimum-values-set-to-0-change-them-to-a-low-number-like-10-15" title="Permalink to this headline">¶</a></h2>
 <p>This error occurs when using TMFA to find the bounds for Gibbs energies, reaction fluxes, and metabolite concentrations.</p>
-<p>It often happens because the lower or upper bound value in the <cite>thermoMets</cite> sheet of the excel input file has been set to 0. If a metabolite has concentration of 0 mol/L, a very small value must be used instead, otherwise we will have numerical issues.</p>
+<p>It often happens because the lower or upper bound value in the <code class="docutils literal notranslate"><span class="pre">thermoMets</span></code> sheet of the excel input file has been set to 0. If a metabolite has concentration of 0 mol/L, a very small value must be used instead, otherwise we will have numerical issues.</p>
 </div>
 <div class="section" id="the-initial-point-obtained-from-tmfa-is-not-thermodynamically-feasible">
 <h2><a class="toc-backref" href="#id3">‘The initial point obtained from TMFA is not thermodynamically feasible.’</a><a class="headerlink" href="#the-initial-point-obtained-from-tmfa-is-not-thermodynamically-feasible" title="Permalink to this headline">¶</a></h2>
@@ -242,27 +248,32 @@ Here we go through some of the most common (or tricky) errors, what they mean an
 </div>
 <div class="section" id="the-flux-directions-are-not-consistent-please-make-sure-that-both-the-lower-and-upper-bound-of-the-flux-ranges-fluxmean-2-fluxstd-and-fluxmean-2-fluxstd-respectively-are-either-positive-or-negative">
 <h2><a class="toc-backref" href="#id4">‘The flux directions are not consistent. Please make sure that both the lower and upper bound of the flux ranges (fluxMean - 2*fluxStd and fluxMean + 2*fluxStd, respectively) are either positive or negative.’</a><a class="headerlink" href="#the-flux-directions-are-not-consistent-please-make-sure-that-both-the-lower-and-upper-bound-of-the-flux-ranges-fluxmean-2-fluxstd-and-fluxmean-2-fluxstd-respectively-are-either-positive-or-negative" title="Permalink to this headline">¶</a></h2>
-<p>This error happens if the flux lower and upper bounds calculated in <cite>computeGibbsFreeEnergyRanges</cite> by using TMFA don’t have the same sign, i.e. are not both positive or both negative.</p>
-<p>An easy fix is to make sure that the mean and standard deviation given in <cite>measRates</cite> in the excel input file lead to lower and upper bounds that are either both positive or both negative.</p>
-<dl class="simple">
-<dt>The flux bounds are calculated as:</dt><dd><ul class="simple">
+<p>This error can happen in two situations:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>when the input excel file is loaded and the flux lower bounds don’t have the same sign, where the bounds are calculated as:</p>
+<ul>
 <li><p>lower bound: fluxMean - 2*fluxStd</p></li>
 <li><p>upper bound: fluxMean + 2*fluxStd</p></li>
 </ul>
-</dd>
-</dl>
+</li>
+<li><p>if the flux lower and upper bounds calculated in <code class="docutils literal notranslate"><span class="pre">computeGibbsFreeEnergyRanges</span></code> by using TMFA don’t have the same sign, i.e. are not both positive or both negative.</p></li>
+</ul>
+</div></blockquote>
+<p>In practice it should only happen in the first situtation.</p>
+<p>An easy fix is to make sure that the mean and standard deviation given in <code class="docutils literal notranslate"><span class="pre">measRates</span></code> in the excel input file lead to lower and upper bounds that are either both positive or both negative.</p>
 </div>
 <div class="section" id="the-tmfa-problem-is-infeasible-verify-that-the-standard-gibbs-free-energy-and-metabolite-concentration-values-are-valid-correct">
 <h2><a class="toc-backref" href="#id5">‘The TMFA problem is infeasible. Verify that the standard Gibbs free energy and metabolite concentration values are valid/correct.’</a><a class="headerlink" href="#the-tmfa-problem-is-infeasible-verify-that-the-standard-gibbs-free-energy-and-metabolite-concentration-values-are-valid-correct" title="Permalink to this headline">¶</a></h2>
-<p>When you get this error it means that the given ranges for standard Gibbs energies (in <cite>thermoRxns</cite>), the ranges for reactions fluxes (given in <cite>measRates</cite>), and the ranges for metabolite concentrations (given in <cite>thermoMets</cite>) are not compatible with each other.</p>
+<p>When you get this error it means that the given ranges for standard Gibbs energies (in <code class="docutils literal notranslate"><span class="pre">thermoRxns</span></code>), the ranges for reactions fluxes (given in <code class="docutils literal notranslate"><span class="pre">measRates</span></code>), and the ranges for metabolite concentrations (given in <code class="docutils literal notranslate"><span class="pre">thermoMets</span></code>) are not compatible with each other.</p>
 <p>Along with this error message you also get a list of the metabolite concentrations as well as the reactions whose standard Gibbs energies are causing the error.</p>
 <p>You only need to fix either the metabolite concentrations or the standard Gibbs energies, not both.</p>
-<p>By using the jupyter notebook, <cite>visualize_initial_dgs_and_fluxes</cite> in <cite>visualization</cite> you can get an idea of how off the Gibbs energies and reactions fluxes are.</p>
+<p>By using the jupyter notebook, <code class="docutils literal notranslate"><span class="pre">visualize_initial_dgs_and_fluxes</span></code> in <code class="docutils literal notranslate"><span class="pre">visualization</span></code> you can get an idea of how off the Gibbs energies and reactions fluxes are.</p>
 </div>
 <div class="section" id="the-tmfa-is-infeasible-the-milp-model-has-been-written-in-the-examples-folder-so-that-you-can-inspect-it">
 <h2><a class="toc-backref" href="#id6">‘The TMFA is infeasible. The MILP model has been written in the examples folder so that you can inspect it.’</a><a class="headerlink" href="#the-tmfa-is-infeasible-the-milp-model-has-been-written-in-the-examples-folder-so-that-you-can-inspect-it" title="Permalink to this headline">¶</a></h2>
-<p>Sometimes the TMFA problem is infeasible and our diagnostics function cannot find which reaction or metabolite is the problem, in that case, we use <cite>gurobi_iis</cite> to find which constraint or variable bounds are causing the issue and add that to the error message.</p>
-<p>We also write the MILP problem into the folder where you’re running your script from (maybe the <cite>examples</cite> folder) so that you can inspect it and find out what the issue is with the given constraint or variable bounds.</p>
+<p>Sometimes the TMFA problem is infeasible and our diagnostics function cannot find which reaction or metabolite is the problem, in that case, we use <code class="docutils literal notranslate"><span class="pre">gurobi_iis</span></code> to find which constraint or variable bounds are causing the issue and add that to the error message.</p>
+<p>We also write the MILP problem into the folder where you’re running your script from (maybe the <code class="docutils literal notranslate"><span class="pre">examples</span></code> folder) so that you can inspect it and find out what the issue is with the given constraint or variable bounds.</p>
 </div>
 </div>
 
@@ -316,11 +327,10 @@ Here we go through some of the most common (or tricky) errors, what they mean an
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mathjax/MathJax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

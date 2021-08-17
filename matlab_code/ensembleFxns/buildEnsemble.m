@@ -203,6 +203,7 @@ if ensemble.parallel
 
         parpool(ensemble.numCores);
         parfor ix = (sampleCount+1):(sampleCount+nSamples)
+            disp(['Sampling model: ', num2str(ix)]);
             if ensemble.testing == true
                 rng(1+ix);
             else
@@ -234,7 +235,8 @@ else
     ix = 1;
 
     while ix <= ensemble.numParticles && sampleCount <= maxNumberOfSamples
-
+        
+        disp(['Sampling model: ', num2str(sampleCount)]);
         [isModelValid,model,strucIdxTemp,xoptTemp,tolScoreTemp,simFluxesTemp] = initialSampler(ensemble,sampleCount);
 
         if isModelValid
