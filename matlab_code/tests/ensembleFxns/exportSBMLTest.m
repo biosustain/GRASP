@@ -39,31 +39,31 @@ classdef exportSBMLTest < matlab.unittest.TestCase
         end
        
         
-       function testExportSBMLPromiscuous(testCase)
-            
-            seed = 1;
-            rng(seed)
-            
-            loadEnsembleStructure(fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_allosteric2'));
-            ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_allosteric2.mat'));
-            ensemble = ensemble.ensemble;
-            
-            outputFolder = fullfile(testCase.currentPath{1}, 'testFiles');
-            modelI = 1;
-            exportSBML(ensemble, modelI, outputFolder);
-            
-            filepath = (fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_allosteric2_1.xml'));
-            SBMLres = fileread(filepath);
-            
-            filepath = (fullfile(testCase.currentPath{1}, 'testFiles', 'trueRes_toy_model1_allosteric2_1.xml'));
-            trueRes = fileread(filepath);
-            
-            % Need to skip Simbiology version in the xml file, otherwise
-            % the test will fail for different versions.       
-            indTrueRes = strfind(trueRes, '<model id=');
-            indRes = strfind(SBMLres, '<model id=');
-            testCase.verifyEqual(SBMLres(indRes:end), trueRes(indTrueRes:end));
-        end
+%        function testExportSBMLPromiscuous(testCase)
+%             
+%             seed = 1;
+%             rng(seed)
+%             
+%             loadEnsembleStructure(fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_allosteric2'));
+%             ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_allosteric2.mat'));
+%             ensemble = ensemble.ensemble;
+%             
+%             outputFolder = fullfile(testCase.currentPath{1}, 'testFiles');
+%             modelI = 1;
+%             exportSBML(ensemble, modelI, outputFolder);
+%             
+%             filepath = (fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_allosteric2_1.xml'));
+%             SBMLres = fileread(filepath);
+%             
+%             filepath = (fullfile(testCase.currentPath{1}, 'testFiles', 'trueRes_toy_model1_allosteric2_1.xml'));
+%             trueRes = fileread(filepath);
+%             
+%             % Need to skip Simbiology version in the xml file, otherwise
+%             % the test will fail for different versions.       
+%             indTrueRes = strfind(trueRes, '<model id=');
+%             indRes = strfind(SBMLres, '<model id=');
+%             testCase.verifyEqual(SBMLres(indRes:end), trueRes(indTrueRes:end));
+%         end
         
     end
 end

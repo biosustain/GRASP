@@ -26,8 +26,6 @@ classdef sampleFluxesAndGibbsFreeEnergiesTest < matlab.unittest.TestCase
             ensemble.thermoPrior = 'normal';
             
             ensemble = sampleFluxesAndGibbsFreeEnergies(ensemble,maxNumberOfSamples);
-            ensemble = rmfield(ensemble, 'fluxPrior');
-            ensemble = rmfield(ensemble, 'thermoPrior');
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSampleFluxesAndGibbsFreeEnergiesNormal.mat'));
             trueResEnsemble = trueRes.ensemble;
@@ -40,7 +38,7 @@ classdef sampleFluxesAndGibbsFreeEnergiesTest < matlab.unittest.TestCase
             
             seed = 1;
             rng(seed)
-
+            
             ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'initializedEnsemble_toy_model1_sampleFluxGibbs'));
             ensemble = ensemble.ensemble;
             maxNumberOfSamples = 100;
@@ -48,12 +46,10 @@ classdef sampleFluxesAndGibbsFreeEnergiesTest < matlab.unittest.TestCase
             ensemble.thermoPrior = 'uniform';
             
             ensemble = sampleFluxesAndGibbsFreeEnergies(ensemble,maxNumberOfSamples);
-            ensemble = rmfield(ensemble, 'fluxPrior');
-            ensemble = rmfield(ensemble, 'thermoPrior');
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSampleFluxesAndGibbsFreeEnergiesUniform.mat'));
             trueResEnsemble = trueRes.ensemble;
-           
+            
             testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueResEnsemble, ...
                  'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
         end
