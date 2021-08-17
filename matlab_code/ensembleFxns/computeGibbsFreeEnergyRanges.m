@@ -147,7 +147,7 @@ while fluxdGInconsistent
                                 'IntegerTolerance', 1e-6, ...                    % equivalent to IntFeasTol
                                 'Display', 'off');
 
-        model.intcon = [(nflux+n+2*m+1):numel(model.f)];
+        model.intcon = [(nflux+2*n+m+1):numel(model.f)];
 
         [x,fval] = intlinprog(model.f, model.intcon, model.A, model.b, model.Aeq, model.beq, model.lb, model.ub, options);
         
@@ -173,7 +173,7 @@ while fluxdGInconsistent
     xprev_min = zeros(nflux+2*n+m,1);
     xprev_max = zeros(nflux+2*n+m,1);
 
-    for ix = 1:nflux+n+m
+    for ix = 1:nflux+n+n+m
 
          if strcmp(ensemble.LPSolver, 'gurobi')
 

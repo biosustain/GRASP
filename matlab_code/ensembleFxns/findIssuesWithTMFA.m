@@ -187,7 +187,7 @@ if strcmp(ensemble.LPSolver, 'gurobi')
 
 elseif strcmp(ensemble.LPSolver, 'linprog')
     
-    model.intcon = [(nflux+n+2*m+1):numel(model.f)];
+    model.intcon = [(nflux+2*n+m+1):numel(model.f)];
     [solX,fval] = intlinprog(model.f, model.intcon, model.A, model.b, model.Aeq, model.beq, model.lb, model.ub, options);
 
 end
@@ -343,7 +343,7 @@ if strcmp(ensemble.LPSolver, 'gurobi')
 
 elseif strcmp(ensemble.LPSolver, 'linprog')
 
-    model.intcon = [(nflux+n+2*m+1):numel(model.f)];
+    model.intcon = [(nflux+2*n+m+1):numel(model.f)];
 
     [solX,fval] = intlinprog(model.f, model.intcon, model.A, model.b, model.Aeq, model.beq, model.lb, model.ub, options);
 
