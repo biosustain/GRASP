@@ -68,7 +68,7 @@ else
     thermoPoints = cell2mat(thermoPoints);
 end
 ensemble.gibbsEnergies = thermoPoints(1:n,end-maxNumberOfSamples+1:end);
-ensemble.metConcRef = exp(thermoPoints(n+m+1:end,end-maxNumberOfSamples+1:end));
+ensemble.metConcRef = exp(thermoPoints(2*n+1:end,end-maxNumberOfSamples+1:end));
 
 
 % Check that everything is consistent
