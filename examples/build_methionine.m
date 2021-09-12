@@ -1,8 +1,8 @@
 addpath /usr/local/lib/matlab/% Sample a kinetic model ensemble (reference point)
 
 clearvars
-rng('shuffle');																											% for reproducibility
-delete(gcp('nocreate'));       				            																% check first that no other process is running
+rng('shuffle');																									% for reproducibility
+delete(gcp('nocreate'));                                														% check first that no other process is running
 addpath(fullfile('..', 'matlab_code', 'analysisFxns'), ...
         fullfile('..', 'matlab_code', 'ensembleFxns'), ...
         fullfile('..', 'matlab_code', 'patternFxns'));
@@ -17,7 +17,7 @@ maxNumberOfSamples = 5000;
 % threshold of the jacobian's eigenvalues
 eigThreshold = 10^-5;
 
-modelID = 'methionine_cycle';
+modelID = 'tutorial_04_methionine_cycle';
 inputFile = fullfile('..', 'io', 'input', modelID);
 outputFile = fullfile('..', 'io','output', [modelID, '.mat']);
 

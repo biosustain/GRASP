@@ -232,55 +232,8 @@
 <h1>Calculate Michaelis-Menten curves<a class="headerlink" href="#calculate-michaelis-menten-curves" title="Permalink to this headline">¶</a></h1>
 <dl class="mat function">
 <dt class="sig sig-object mat" id="analysisFxns.calculateMMCurves">
-<span class="sig-name descname"><span class="pre">calculateMMCurves</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">outputFolder</span></em>, <em class="sig-param"><span class="pre">ensemble</span></em>, <em class="sig-param"><span class="pre">numModels</span></em>, <em class="sig-param"><span class="pre">structIdx</span></em>, <em class="sig-param"><span class="pre">saturatingConc</span></em>, <em class="sig-param"><span class="pre">substrateRange</span></em>, <em class="sig-param"><span class="pre">rxnList</span></em><span class="sig-paren">)</span><a class="headerlink" href="#analysisFxns.calculateMMCurves" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates Michaelis-Menten curves for enzymatic reactions in the model
-ensemble (i.e., reactions that are not massAction, diffusion,
-freeExchange, and fixedExchange).</p>
-<p>This basically implies setting product concentrations to 0, cosubstrate
-concentrations to a saturating value (so that they are not limiting), and
-varying the concentration of the substrate of interest from a very low
-concentration value to a saturating one.</p>
-<p>The results are written in files that go into outputFolder.</p>
-<p>The user can also specify the saturating concentration to be considered
-as well as the range of concentrations for which the reaction flux will
-be calculated.</p>
-<p>The user can further specify for which reactions will the MM curves be
-calculated.</p>
-<p><strong>Usage</strong></p>
-<blockquote>
-<div><p>mcaResults = controlAndResponseAnalysis(ensemble, saveResMatrices, strucIdx)</p>
-</div></blockquote>
-<p><strong>Inputs</strong></p>
-<blockquote>
-<div><ul class="simple">
-<li><p><strong>outputFolder</strong> (<em>char</em>) –
-path to folder where output files will be written</p></li>
-<li><p><strong>ensemble</strong> (<em>struct</em>) –
-model ensemble, see buildEnsemble for fields description</p></li>
-<li><p><strong>numModels</strong> (<em>int</em>) –
-number of models in the ensemble to consider</p></li>
-</ul>
-</div></blockquote>
-<p><strong>Optional inputs</strong></p>
-<blockquote>
-<div><ul class="simple">
-<li><p><strong>structIdx</strong> (<em>int</em>) –
-structure ID, default: 1</p></li>
-<li><p><strong>saturatingConc</strong> (<em>int</em>) –
-saturation concentration (that would lead to Vmax), default: 10 mol/L</p></li>
-<li><p><strong>substrateRange</strong> (<em>vector</em>) –
-vector of concentrations for which the flux will be calculated, default: [10^-9, 10] mol/L</p></li>
-<li><p><strong>rxnList</strong> (<em>vector</em>) –
-reactions for which Vmax will be calculated</p></li>
-</ul>
-</div></blockquote>
-<p><strong>Output</strong></p>
-<blockquote>
-<div><ul class="simple">
-<li><p><strong>None</strong></p></li>
-</ul>
-</div></blockquote>
-</dd></dl>
+<span class="sig-name descname"><span class="pre">calculateMMCurves</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#analysisFxns.calculateMMCurves" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 

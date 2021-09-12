@@ -4,7 +4,7 @@ function freeVars = buildKineticFxn(ensemble,kineticFxn,strucIdx)
 %
 % USAGE:
 %
-%    [freeVars, metsActive] = buildKineticFxn(ensemble, kineticFxn, strucIdx)
+%    freeVars = buildKineticFxn(ensemble, kineticFxn, strucIdx)
 %
 % INPUT:
 %    ensemble (struct):   model ensemble, see buildEnsemble for fields description
@@ -13,13 +13,12 @@ function freeVars = buildKineticFxn(ensemble,kineticFxn,strucIdx)
 %
 % OUTPUT:
 %    freeVars (char cell):      [TODO Pedro]
-%    metsActive (int cell):     [TODO Pedro]
 %    written .m file with the model
 %
 % .. Authors:
 %       - Pedro Saa         2016 original code 
 %       - Marta Matos       2018 extended for promiscuous reactions
-%       - Nicholas Cowie	2019 extended for isoenzymes [TODO: confirm this Nick please]
+%       - Nicholas Cowie	2019 extended for isoenzymes
 
 % Define active species (mets/enzymes)
 metsActive = ensemble.metsActive;

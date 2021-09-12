@@ -25,13 +25,13 @@ function mcaResults = controlAnalysis(ensemble,saveResMatrices,conditionI,strucI
 % OPTIONAL INPUT:
 %    conditionI (int):  condition for which the user wants for run MCA when having multiple coniditions, by
 %                       default MCA is run for all conditions
-%    strucIdx (int):	number of the model structure considered
+%    strucIdx (int):	index of the model structure considered
 %
 % OUTPUT:
 %    mcaResults (struct):	MCA results
 %
-%               * xControlAvg (*cell*)   : average concentration control coefficient for each model ensemble
-%               * vControlAvg (*cell*)   : average flux control coefficient for each model ensemble
+%               * xControlAvg (*cell*)   : average concentration control coefficient for the model ensemble
+%               * vControlAvg (*cell*)   : average flux control coefficient for the model ensemble
 %               * xcounter (*cell*)      : number of models in the average concentration control coefficient calculation
 %               * vcounter (*cell*)      : number of models in the average flux control coefficient calculation
 %               * xControl (*cell*)      : concentration control coefficient matrix for each model

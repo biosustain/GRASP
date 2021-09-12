@@ -3,7 +3,7 @@ function cellWithVariables = fixVariableNames(cellWithVariables, prefix, flag)
 % and adds the specified prefix to each name.
 %
 % For instance, if a metabolite is named nad and the prefix is specified 
-% as 'm', then the metabolite new name will be m_nad" ?
+% as 'm', then the metabolite new name will be m_nad.
 %
 % If *flag* is defined (independently of its value) the same is done on the 
 % kinetics sheet for the columns order, promiscuous, inhibitors, 

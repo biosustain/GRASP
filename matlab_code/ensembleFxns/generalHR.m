@@ -1,8 +1,9 @@
 function points = generalHR(Aeq,LB,UB,x0,nSamples,nSteps,nDiscard,priorType)
 % General Hit and Run algorithm v2.0 (homogeneous version)
+%
 % Samples from A*x = 0, with lb <= x <= ub 
-% (This is a different flavour of HR, which generates though the same
-% results)hich constraints/variable bounds are causing the issue.
+% This is a different flavour of HR, which generates though the same
+% results.
 %
 %
 % USAGE:

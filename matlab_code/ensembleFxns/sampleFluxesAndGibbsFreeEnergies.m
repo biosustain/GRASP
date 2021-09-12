@@ -1,4 +1,24 @@
 function ensemble = sampleFluxesAndGibbsFreeEnergies(ensemble,maxNumberOfSamples)
+% Define the parameters and use the general hit-and-run algorithm
+% to sample fluxes and gibbs free energies for each model, along with
+% reference metabolite concentrations.
+%
+%
+% USAGE:
+%
+%   ensemble = sampleFluxesAndGibbsFreeEnergies(ensemble,maxNumberOfSamples)
+%
+% INPUT:
+%    ensemble (struct):	            model ensemble, see buildEnsemble for fields description
+%    maxNumberOfSamples (int):      maximum number of models that can be sampled
+%
+% OUTPUT:
+%    ensemble (struct):       model ensemble, see buildEnsemble for fields description
+
+%
+% .. Authors:
+%       - Pedro A. Saa   	2020 original code
+%       - Marta Matos   	2021 small modifications
 
 % Define sampling parameters and sample
 nDiscard = 1e5;

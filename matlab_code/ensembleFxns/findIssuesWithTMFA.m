@@ -17,13 +17,12 @@ function findIssuesWithTMFA(ensemble,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax
 %
 % USAGE:
 %
-%    findIssuesWithTMFA(ensemble,model,DGf_std_min,DGf_std_max,vmin,vmax,xmin,xmax,ineqConstraints,K,RT,delta,M,tol)
+%    findIssuesWithTMFA(ensemble,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,ineqConstraints,K,RT,delta,M,tol,gurobiModel,options,params)
 %
 % INPUT:
 %    ensemble (struct):             model ensemble, see buildEnsemble for fields description
-%    model (struct):                MILP problem structure
-%    DGf_std_min (double vector):   minimum values for metabolite formation energies
-%    DGf_std_max (double vector):   maximum values for metabolite formation energies
+%    DGr_std_min (double vector):   minimum values for standard reaction Gibbs energies
+%    DGr_std_max (double vector):   maximum values for standard reaction Gibbs energies
 %    vmin (double vector):          minimum values for reaction fluxes
 %    vmax (double vector):          maximum values for reaction fluxes
 %    xmin (double vector):	        minimum values for metabolite concentrations
@@ -34,6 +33,9 @@ function findIssuesWithTMFA(ensemble,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax
 %    delta (double):                low value to use in the MILP problem
 %    M (double):                    large value to use in the MILP problem
 %    tol (double):                  tolerance value to use when comparing results to zero.
+%    gurobiModel (struct):          MILP problem structure for gurobi
+%    options (struct):              configurations for intlinprog
+%    params (struct):               configurations for gurobi
 %
 %
 % .. Authors:

@@ -259,19 +259,17 @@ computeGibbsFreeEnergyRanges). Thus the loop for decreasing K values
 when the lists of problematic reactions and metabolites are empty.</p>
 <p><strong>Usage</strong></p>
 <blockquote>
-<div><p>findIssuesWithTMFA(ensemble,model,DGf_std_min,DGf_std_max,vmin,vmax,xmin,xmax,ineqConstraints,K,RT,delta,M,tol)</p>
+<div><p>findIssuesWithTMFA(ensemble,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,ineqConstraints,K,RT,delta,M,tol,gurobiModel,options,params)</p>
 </div></blockquote>
 <p><strong>Inputs</strong></p>
 <blockquote>
 <div><ul class="simple">
 <li><p><strong>ensemble</strong> (<em>struct</em>) –
 model ensemble, see buildEnsemble for fields description</p></li>
-<li><p><strong>model</strong> (<em>struct</em>) –
-MILP problem structure</p></li>
-<li><p><strong>DGf_std_min</strong> (<em>double vector</em>) –
-minimum values for metabolite formation energies</p></li>
-<li><p><strong>DGf_std_max</strong> (<em>double vector</em>) –
-maximum values for metabolite formation energies</p></li>
+<li><p><strong>DGr_std_min</strong> (<em>double vector</em>) –
+minimum values for standard reaction Gibbs energies</p></li>
+<li><p><strong>DGr_std_max</strong> (<em>double vector</em>) –
+maximum values for standard reaction Gibbs energies</p></li>
 <li><p><strong>vmin</strong> (<em>double vector</em>) –
 minimum values for reaction fluxes</p></li>
 <li><p><strong>vmax</strong> (<em>double vector</em>) –
@@ -292,6 +290,12 @@ low value to use in the MILP problem</p></li>
 large value to use in the MILP problem</p></li>
 <li><p><strong>tol</strong> (<em>double</em>) –
 tolerance value to use when comparing results to zero.</p></li>
+<li><p><strong>gurobiModel</strong> (<em>struct</em>) –
+MILP problem structure for gurobi</p></li>
+<li><p><strong>options</strong> (<em>struct</em>) –
+configurations for intlinprog</p></li>
+<li><p><strong>params</strong> (<em>struct</em>) –
+configurations for gurobi</p></li>
 </ul>
 </div></blockquote>
 </dd></dl>

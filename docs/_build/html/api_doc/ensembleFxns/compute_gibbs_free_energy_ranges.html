@@ -249,14 +249,10 @@
 thermodynamically feasible ranges for reactions fluxes, metabolite
 concentrations, and reactions Gibbs energies.</p>
 <p>It is based on <a class="reference external" href="https://arxiv.org/pdf/1803.04999.pdf">https://arxiv.org/pdf/1803.04999.pdf</a></p>
-<p>The standard Gibbs energies are converted into metabolite
-formation energies, so that the dG values of reactions
-involved in a loop sum to zero.
-Note that those formation energies are compatible with the
-given standard Gibbs energies, but are not necessarily
-similar to formation energies obtained from e.g. eQuilibrator.</p>
-<dl class="simple">
-<dt>Note: The value for K is now decreased if the initial point to use for</dt><dd><p>sampling gibbs energies and fluxes is thermodynamically infeasible
+<p>We add a constraint to ensure that the sum of the dG values
+for all reactions involved in a close loop is zero.</p>
+<p>Note: The value for K is now decreased if the initial point to use for
+sampling gibbs energies and fluxes is thermodynamically infeasible
 (Gibbs energies and reaction fluxes are not compatible).
 This happens sometimes because of numerical precision issues.
 For instance, intlinprog considers anything lower than
@@ -268,8 +264,6 @@ due to numerical imprecision. Thus, in this case, K would be set
 to 1e7, so that K*e &gt;= 10^0 is true even when e=1e-7, forcing e
 to be 1 when it should be 1, e.g. to satisfy -dGr -K*e &lt;= -1e-6,
 with dGr = -10, K = 1e7.</p>
-</dd>
-</dl>
 <p><strong>Usage</strong></p>
 <blockquote>
 <div><p>[v_range,DGr_range,DGf_std_range,lnx_range,x0] = computeGibbsFreeEnergyRanges(ensemble,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,ineqConstraints)</p>
@@ -279,10 +273,10 @@ with dGr = -10, K = 1e7.</p>
 <div><ul class="simple">
 <li><p><strong>ensemble</strong> (<em>struct</em>) –
 model ensemble, see buildEnsemble for fields description</p></li>
-<li><p><strong>DGf_std_min</strong> (<em>double vector</em>) –
-minimum values for metabolite formation energies</p></li>
-<li><p><strong>DGf_std_max</strong> (<em>double vector</em>) –
-maximum values for metabolite formation energies</p></li>
+<li><p><strong>DGr_std_min</strong> (<em>double vector</em>) –
+minimum values for standard reaction Gibbs energies</p></li>
+<li><p><strong>DGr_std_max</strong> (<em>double vector</em>) –
+maximum values for standard reaction Gibbs energies</p></li>
 <li><p><strong>vmin</strong> (<em>double vector</em>) –
 minimum values for reaction fluxes</p></li>
 <li><p><strong>vmax</strong> (<em>double vector</em>) –
@@ -302,8 +296,8 @@ inequality constraints</p></li>
 range of feasible reaction fluxes</p></li>
 <li><p><strong>DGr_range</strong> (<em>double matrix</em>) –
 range of feasible Gibbs energies</p></li>
-<li><p><strong>DGf_std_range</strong> (<em>double matrix</em>) –
-range of feasible formation energies</p></li>
+<li><p><strong>DGr_std_range</strong> (<em>double matrix</em>) –
+range of feasible standard reaction Gibbs energies</p></li>
 <li><p><strong>lnx_range</strong> (<em>double matrix</em>) –
 range of feasible metabolite concentrations (ln)</p></li>
 <li><p><strong>x0</strong> (<em>double matrix</em>) –

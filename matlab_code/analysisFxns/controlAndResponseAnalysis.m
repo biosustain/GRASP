@@ -49,10 +49,10 @@ function mcaResults = controlAndResponseAnalysis(ensemble,saveResMatrices,condit
 % OUTPUT:
 %    mcaResults (struct):	control and response analysis results
 %
-%               * xControlAvg (*cell*)   : average concentration controls coefficient for each model ensemble
-%               * vControlAvg (*cell*)   : average flux control coefficients for each model ensemble
-%               * eResponseAvg (*cell*)	 : average enzyme response coefficient for each model ensemble
-%               * xResponseAvg (*cell*)	 : average concentration response coefficients for each model ensemble
+%               * xControlAvg (*cell*)   : average concentration controls coefficient for the model ensemble
+%               * vControlAvg (*cell*)   : average flux control coefficients for the model ensemble
+%               * eResponseAvg (*cell*)	 : average enzyme response coefficient for the model ensemble
+%               * xResponseAvg (*cell*)	 : average concentration response coefficients for the model ensemble
 %               * xcounter (*cell*)      : number of models in the average concentration control coefficient calculation
 %               * vcounter (*cell*)      : number of models in the average flux control coefficient calculation
 %               * xRcounter (*cell*)     : number of models in the average concentration response coefficient calculation

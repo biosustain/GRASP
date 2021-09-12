@@ -57,7 +57,7 @@
     <link rel="top" title="GRASP 2.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="Analysis functions" href="../analysis_functions.html"/>
         <link rel="next" title="Metabolic Control and Response Analysis" href="control_and_response_analysis.html"/>
-        <link rel="prev" title="Calculate Michaelis-Menten curves" href="calculate_mm_curves.html"/> 
+        <link rel="prev" title="Analysis functions" href="../analysis_functions.html"/> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
@@ -145,7 +145,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../troubleshoot.html">Troubleshooting</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../api_doc.html">API documentation</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../analysis_functions.html">Analysis functions</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="calculate_mm_curves.html">Calculate Michaelis-Menten curves</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Metabolic Control Analysis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="control_and_response_analysis.html">Metabolic Control and Response Analysis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ensemble_stability_test.html">Test ensemble stability</a></li>
@@ -265,7 +264,7 @@ whether or not to save the elasticity and control coefficient matrices for all m
 condition for which the user wants for run MCA when having multiple coniditions, by
 default MCA is run for all conditions</p></li>
 <li><p><strong>strucIdx</strong> (<em>int</em>) –
-number of the model structure considered</p></li>
+index of the model structure considered</p></li>
 </ul>
 </div></blockquote>
 <p><strong>Output</strong></p>
@@ -274,8 +273,8 @@ number of the model structure considered</p></li>
 <li><p><strong>mcaResults</strong> (<em>struct</em>) –
 MCA results</p>
 <ul>
-<li><p>xControlAvg (<em>cell</em>)   : average concentration control coefficient for each model ensemble</p></li>
-<li><p>vControlAvg (<em>cell</em>)   : average flux control coefficient for each model ensemble</p></li>
+<li><p>xControlAvg (<em>cell</em>)   : average concentration control coefficient for the model ensemble</p></li>
+<li><p>vControlAvg (<em>cell</em>)   : average flux control coefficient for the model ensemble</p></li>
 <li><p>xcounter (<em>cell</em>)      : number of models in the average concentration control coefficient calculation</p></li>
 <li><p>vcounter (<em>cell</em>)      : number of models in the average flux control coefficient calculation</p></li>
 <li><p>xControl (<em>cell</em>)      : concentration control coefficient matrix for each model</p></li>
@@ -302,7 +301,7 @@ MCA results</p>
         <a href="control_and_response_analysis.html" class="btn btn-default float-right" title="Metabolic Control and Response Analysis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="calculate_mm_curves.html" class="btn btn-default" title="Calculate Michaelis-Menten curves" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../analysis_functions.html" class="btn btn-default" title="Analysis functions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

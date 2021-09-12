@@ -245,7 +245,29 @@
 <dl class="mat function">
 <dt class="sig sig-object mat" id="ensembleFxns.sampleFluxesAndGibbsFreeEnergies">
 <span class="sig-name descname"><span class="pre">sampleFluxesAndGibbsFreeEnergies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">ensemble</span></em>, <em class="sig-param"><span class="pre">maxNumberOfSamples</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.sampleFluxesAndGibbsFreeEnergies" title="Permalink to this definition">¶</a></dt>
-<dd><p>Define sampling parameters and sample</p>
+<dd><p>Define the parameters and use the general hit-and-run algorithm
+to sample fluxes and gibbs free energies for each model, along with
+reference metabolite concentrations.</p>
+<p><strong>Usage</strong></p>
+<blockquote>
+<div><p>ensemble = sampleFluxesAndGibbsFreeEnergies(ensemble,maxNumberOfSamples)</p>
+</div></blockquote>
+<p><strong>Inputs</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>ensemble</strong> (<em>struct</em>) –
+model ensemble, see buildEnsemble for fields description</p></li>
+<li><p><strong>maxNumberOfSamples</strong> (<em>int</em>) –
+maximum number of models that can be sampled</p></li>
+</ul>
+</div></blockquote>
+<p><strong>Output</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>ensemble</strong> (<em>struct</em>) –
+model ensemble, see buildEnsemble for fields description</p></li>
+</ul>
+</div></blockquote>
 </dd></dl>
 
 </div>

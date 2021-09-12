@@ -12,15 +12,16 @@ For now the documentation can be accessed by opening the file `index.html` in `G
 
 ## Table of contents
 
-* [Introduction](#introduction)
-* [Installation](#installation)
-* [Usage](#usage)
-  * [Specifying the input](#specifying-the-input)
-  * [Building models](#building-models)
-  * [Analyzing model ensembles](#analyzing-model-ensembles)
-* [Building the documentation](#building-the-documentation)
-* [Running unit tests](#running-unit-tests)
-* [Known issues and limitations](#known-issues-and-limitations)
+- [GRASP](#grasp)
+  - [Introduction](#introduction)
+  - [Table of contents](#table-of-contents)
+  - [Installation](#installation)
+    - [Matlab requirements](#matlab-requirements)
+    - [Python requirements (only for the jupyter notebooks in `visualization`, which are not really part of GRASP)](#python-requirements-only-for-the-jupyter-notebooks-in-visualization-which-are-not-really-part-of-grasp)
+  - [Usage](#usage)
+  - [Building the documentation](#building-the-documentation)
+  - [Running unit tests](#running-unit-tests)
+  - [Know issues and limitations](#know-issues-and-limitations)
 
 
 ## Installation
@@ -49,7 +50,7 @@ GRASP allows you to:
  - do metabolic control analysis on the ensemble;
  - simulate the ensemble.
 
-To do these, you can find example scripts in the `examples` folder.
+To do these, you can find example scripts in the `examples` folder and tutorials in the `tutorials` folder.
  
 Once you have the results, you can use the jupyter notebooks in the `visualization` folder to visualize the results.
 
@@ -73,4 +74,3 @@ To run the unit tests, at the moment, go to `matlab_code/tests` and run the scri
  - if the uncertainty in the flux is such that it can be both positive and negative, it is possible that GRASP samples Gibbs energies incompatible with the reference flux. These models are discarded at the moment;
  - when using altair in the jupyter notebooks you might get the error `<VegaLite 2 object>` when trying to plot something. 
     - you should add `alt.renderers.enable('default')` after importing altair. 
- - GRASP might no longer work with more than one model structure.

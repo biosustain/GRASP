@@ -5,26 +5,22 @@ function [v_range,DGr_range,DGr_std_range,lnx_range,x0] = computeGibbsFreeEnergy
 %
 % It is based on https://arxiv.org/pdf/1803.04999.pdf
 %
-% The standard Gibbs energies are converted into metabolite
-% formation energies, so that the dG values of reactions 
-% involved in a loop sum to zero.
-% Note that those formation energies are compatible with the
-% given standard Gibbs energies, but are not necessarily
-% similar to formation energies obtained from e.g. eQuilibrator.
+% We add a constraint to ensure that the sum of the dG values
+% for all reactions involved in a close loop is zero.
 %
 % Note: The value for K is now decreased if the initial point to use for
-%       sampling gibbs energies and fluxes is thermodynamically infeasible
-%       (Gibbs energies and reaction fluxes are not compatible).
-%       This happens sometimes because of numerical precision issues.
-%       For instance, intlinprog considers anything lower than 
-%       1e-6 to be the same as zero. Thus, it is possible to have 
-%       a constraint like -dGr -K*e <= -1e-6, if dGr = -10, K = 1e10,
-%       and e= 1e-7 the constraint is satisfied, even though it wouldn't
-%       be if e=0. In this case e should be 1, which is not the case 
-%       due to numerical imprecision. Thus, in this case, K would be set 
-%       to 1e7, so that K*e >= 10^0 is true even when e=1e-7, forcing e 
-%       to be 1 when it should be 1, e.g. to satisfy -dGr -K*e <= -1e-6,
-%       with dGr = -10, K = 1e7. 
+% sampling gibbs energies and fluxes is thermodynamically infeasible
+% (Gibbs energies and reaction fluxes are not compatible).
+% This happens sometimes because of numerical precision issues.
+% For instance, intlinprog considers anything lower than 
+% 1e-6 to be the same as zero. Thus, it is possible to have 
+% a constraint like -dGr -K*e <= -1e-6, if dGr = -10, K = 1e10,
+% and e= 1e-7 the constraint is satisfied, even though it wouldn't
+% be if e=0. In this case e should be 1, which is not the case 
+% due to numerical imprecision. Thus, in this case, K would be set 
+% to 1e7, so that K*e >= 10^0 is true even when e=1e-7, forcing e 
+% to be 1 when it should be 1, e.g. to satisfy -dGr -K*e <= -1e-6,
+% with dGr = -10, K = 1e7. 
 %
 %
 % USAGE:
@@ -33,8 +29,8 @@ function [v_range,DGr_range,DGr_std_range,lnx_range,x0] = computeGibbsFreeEnergy
 %
 % INPUT:
 %    ensemble (struct):             model ensemble, see buildEnsemble for fields description
-%    DGf_std_min (double vector):   minimum values for metabolite formation energies
-%    DGf_std_max (double vector):   maximum values for metabolite formation energies
+%    DGr_std_min (double vector):   minimum values for standard reaction Gibbs energies
+%    DGr_std_max (double vector):   maximum values for standard reaction Gibbs energies
 %    vmin (double vector):          minimum values for reaction fluxes
 %    vmax (double vector):          maximum values for reaction fluxes
 %    xmin (double vector):	        minimum values for metabolite concentrations
@@ -44,7 +40,7 @@ function [v_range,DGr_range,DGr_std_range,lnx_range,x0] = computeGibbsFreeEnergy
 % OUTPUT:
 %    v_range (double matrix):        range of feasible reaction fluxes
 %    DGr_range (double matrix):	     range of feasible Gibbs energies
-%    DGf_std_range (double matrix):	 range of feasible formation energies
+%    DGr_std_range (double matrix):	 range of feasible standard reaction Gibbs energies
 %    lnx_range (double matrix):      range of feasible metabolite concentrations (ln)
 %    x0 (double matrix):             initial point to be used for the sampling with hit-and-run method
 %

@@ -10,8 +10,8 @@ function ensemble = buildEnsemble(inputFile,outputFile,maxNumberOfSamples,eigThr
 %  - the difference between the predicted flux and the reference flux
 %    is negligible.
 %
-% It will sample models until there are *n* valid models, where n is
-% specified in the input excel file as the number of particles.
+% It will sample models until there are *n* valid models, where *n* is
+% specified in the input excel file as the number of models.
 % To avoid sampling forever, *maxNumberOfSamples* is defined and no more
 % than *maxNumberOfSamples* models will be sampled, regardless of the number
 % of valid models sampled.
@@ -188,7 +188,7 @@ if ensemble.parallel
     sampleCount = 0;
     nValidModels = 0;
 
-    while nValidModels < ensemble.numParticles
+    while nValidModels < ensemble.numParticles && sampleCount <= maxNumberOfSamples
 
         if sampleCount == 0                                             % if no models have been sampled yet, sample ensemble.numParticles models
             nSamples = ceil(ensemble.numParticles * 1.3);
