@@ -321,6 +321,7 @@ while true
 
                 % Check tolerance inmediately for this condition
                 if (tolScore(ix)>ensemble.tolerance)
+                    disp(['The model score is higher than the defined tolerance: ', num2str(tolScore(ix)), ', tolerance: ', num2str(ensemble.tolerance), '.']);
                     isModelValid = false;
                     break;
                 end
