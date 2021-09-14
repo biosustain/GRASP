@@ -101,7 +101,7 @@ for ix = startCondition:endCondition
         disp(['Model: ', num2str(jx)]);
         
         if ~isempty(ensemble.populations(end).models(jx).fixedExch)
-            fixedExchs = ensemble.populations(end).models(jx).fixedExch(:,ix);
+            fixedExchs = ensemble.populations(end).models(jx).fixedExch;
         else
             fixedExchs = [];
         end

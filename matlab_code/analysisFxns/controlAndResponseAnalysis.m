@@ -130,14 +130,18 @@ for ix = startCondition:endCondition
     for jx = 1:numModels
         disp(['Model: ', num2str(jx)]);
         
-        fixedExchs = ensemble.populations(end).models(jx).fixedExch;
+        if ~isempty(ensemble.populations(end).models(jx).fixedExch)
+            fixedExchs = ensemble.populations(end).models(jx).fixedExch;
+        else
+            fixedExchs = [];
+        end
         
         mcaResults.enzNames = rxnNames;
         model = ensemble.populations(end).models(particleIdx(jx));
         if ix == 1
             xopt = ones(freeVars,1);
             xconst = ones(numel(ensemble.metsFixed), 1);
-            vref = feval(kineticFxn,xopt,xconst,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits,0);
+            vref = feval(kineticFxn,xopt,xconst,model,fixedExchs,Sred,kinInactRxns,subunits,0);
         else
             xopt = ensemble.populations(end).xopt{particleIdx(jx)}(:,ix-1);
             vref = ensemble.populations(end).simFluxes{particleIdx(jx)}(:,ix-1);
@@ -155,7 +159,7 @@ for ix = startCondition:endCondition
         xconst  = ones(numel(ensemble.metsFixed), numel(ix_mets));
         
         % Simulate flux for metabolite perturbation
-        simFlux = feval(kineticFxn,xstep,xconst,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits,0);
+        simFlux = feval(kineticFxn,xstep,xconst,model,fixedExchs,Sred,kinInactRxns,subunits,0);
         
         % Define step length to perturb enzyme concentrations
         hstep_e      = hstep*Eref;
@@ -179,7 +183,7 @@ for ix = startCondition:endCondition
         xconst  = ones(numel(ensemble.metsFixed), size(estep,2));
         
         % Simulate flux for enzyme perturbation
-        simFluxEnz = feval(kineticFxn,estep,xconst,model,fixedExchs(:,ix),Sred,kinInactRxns,subunits,0);
+        simFluxEnz = feval(kineticFxn,estep,xconst,model,fixedExchs,Sred,kinInactRxns,subunits,0);
         
         % Compute elasticiy matrices
         E_x_abs  = -(imag(simFlux')./hstep_x(:,ones(1,numFluxes)))'; % equivalent to imag(simFlux)./1.0e-10 ? 
