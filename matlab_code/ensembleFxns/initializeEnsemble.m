@@ -32,7 +32,7 @@ function ensemble = initializeEnsemble(ensemble,popIdx,verbose)
 %               * exchRxns (*int vector*)         : exchange reactions, marked as transport in rxns sheet
 %               * activeRxns (*int vector*)       : list with reactions marked as modeled
 %               * isoenzymes (*cell*)             : list with isoenzymes
-%               * uniqueIso (*cell*)              : [TODO Nick]
+%               * uniqueIso (*cell*)              : list of unique isoenzymes
 %               * mets (*char cell*)              : metabolite IDs
 %               * metNames (*char cell*)          : metabolite names
 %               * rxnMets (*char cell*)           : names of reaction metabolites
