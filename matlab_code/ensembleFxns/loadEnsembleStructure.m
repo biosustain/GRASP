@@ -30,24 +30,24 @@ function ensemble = loadEnsembleStructure(xlsxFile)
 %               * exchRxns (*int vector*)         : exchange reactions, marked as transport in rxns sheet
 %               * activeRxns (*int vector*)       : list with reactions marked as modeled
 %               * isoenzymes (*cell*)             : list with isoenzymes
-%               * uniqueIso (*cell*)              : [TODO Nick]
+%               * uniqueIso (*cell*)              : list of unique isoenzymes
 %               * mets (*char cell*)              : metabolite IDs
 %               * metNames (*char cell*)          : metabolite names
-%               * rxnMets (*char cell*)           : [TODO Pedro]
-%               * metsBalanced (*int vector*)     : [TODO Pedro]  
-%               * metsSimulated (*int vector*)    : [TODO Pedro]  
+%               * rxnMets (*char cell*)           : names of reaction metabolites
+%               * metsBalanced (*int vector*)     : indices of balanced metabolites  
+%               * metsSimulated (*int vector*)    : indices of simulated metabolites
 %               * metsFixed (*int vector*)        : which metabolites concentrations are defined as fixed (constant)
 %               * Sred (*int matrix*)             : reduced stoichiometric matrix, includes only balanced metabolites and active reactions
 %               * measRates (*double matrix*)     : measured reaction fluxes means
 %               * measRatesStd (*double matrix*)  : measured reaction fluxes standard deviations 
-%               * poolConst (*vector*)            : [TODO Pedro]  
-%               * ineqThermoConst (*vector*)      : [TODO Pedro]      
-%               * expFluxes (*double vector*)     : [TODO Pedro]  
-%               * expFluxesStd (*double vector*)  : [TODO Pedro]     
+%               * poolConst (*vector*)            : coefficients with pool constraints
+%               * ineqThermoConst (*vector*)      : coefficients of thermodynamic inequeality constraints
+%               * expFluxes (*double vector*)     : experimental fluxes mean
+%               * expFluxesStd (*double vector*)  : experimental fluxes standard deviations
 %               * fluxRef (*double vector*)       : reference reaction fluxes means
 %               * fluxRefStd (*double vector*)    : reference reaction fluxes standard deviations
-%               * freeFluxes (*int vector*)       : [TODO Pedro]  
-%               * simWeights (*double vector*)    : [TODO Pedro]  
+%               * freeFluxes (*int vector*)       : free flux variables
+%               * simWeights (*double vector*)    :flux weights for the computation of the data and model discrepancies
 %               * Sthermo (*int matrix*)          : stoichiometric matrix used for thermodynamics, excludes exchange reactions
 %               * gibbsRanges (*double matrix*)   : thermodynamically feasible ranges for Gibbs energies  
 %               * metRanges (*double matrix*)     : thermodynamically feasible ranges for metabolite concentrations
@@ -55,8 +55,8 @@ function ensemble = loadEnsembleStructure(xlsxFile)
 %               * metsDataMin (*double vector*)   : minimum value for scaled metabolite concentrations   
 %               * metsDataMax (*double vector*)   : maximum value for scaled metabolite concentrations  
 %               * metsDataMean (*double vector*)  : mean value for scaled metabolite concentrations   
-%               * prevPrior (*cell*)              : [TODO Pedro] 
-%               * prevPriorInfo (*cell*)          : [TODO Pedro]     
+%               * prevPrior (*cell*)              : previous prior for kinetic parameters (not implemented)
+%               * prevPriorInfo (*cell*)          : information about previous prior (not implemented) 
 %               * allosteric (*cell*)             : which reactions are allosterically regulated
 %               * subunits (*int cell*)           : number of enzyme subunits for each reaction
 %               * rxnMechanisms (*char cell*)     : reaction mechanisms    

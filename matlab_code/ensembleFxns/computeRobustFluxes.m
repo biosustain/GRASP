@@ -11,8 +11,6 @@ function [vMean,vStd] = computeRobustFluxes(Sflux,xMean,xStd)
 %
 % and solving for :math:`v_{unknown}`. 
 %
-% Otherwise, [TODO : need Pedro's help xD]
-%
 %
 % USAGE:
 %

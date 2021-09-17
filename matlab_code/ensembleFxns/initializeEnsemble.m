@@ -24,33 +24,32 @@ function ensemble = initializeEnsemble(ensemble,popIdx,verbose)
 %               * numParticles (*int*)            : how many models to be sampled   
 %               * parallel (*int*)                : whether or not to parallelize sampling process
 %               * numCores (*int*)                : if *parallel* is true, how many cores to use
-%               * alphaAlive (*double*)           : [TODO Pedro]
-%               * tolerance (*double vector*)     : [TODO Pedro]
+%               * alphaAlive (*double*)           : percentage of alive models per iteration (SMC sampler only, not implemented yet)
+%               * tolerance (*double vector*)     : target tolerance vector
 %               * S (*int matrix*)                : stoichiometric matrix as defined in the input file
 %               * rxns (*char cell*)              : reaction IDs
 %               * rxnNames (*char cell*)          : reaction names
 %               * exchRxns (*int vector*)         : exchange reactions, marked as transport in rxns sheet
 %               * activeRxns (*int vector*)       : list with reactions marked as modeled
 %               * isoenzymes (*cell*)             : list with isoenzymes
-%               * uniqueIso (*cell*)              : [TODO Nick]
+%               * uniqueIso (*cell*)              : list of unique isoenzymes
 %               * mets (*char cell*)              : metabolite IDs
 %               * metNames (*char cell*)          : metabolite names
-%               * rxnMets (*char cell*)           : [TODO Pedro]
-%               * metsBalanced (*int vector*)     : [TODO Pedro]  
-%               * metsSimulated (*int vector*)    : [TODO Pedro]  
+%               * rxnMets (*char cell*)           : names of reaction metabolites
+%               * metsBalanced (*int vector*)     : indices of balanced metabolites
+%               * metsSimulated (*int vector*)    : indices of simulated metabolites
 %               * metsFixed (*int vector*)        : which metabolites concentrations are defined as fixed (constant)
 %               * Sred (*int matrix*)             : reduced stoichiometric matrix, includes only balanced metabolites and active reactions
 %               * measRates (*double matrix*)     : measured reaction fluxes means
 %               * measRatesStd (*double matrix*)  : measured reaction fluxes standard deviations
-%               * splitRatios (*vector*)          : [TODO Pedro]  
-%               * poolConst (*vector*)            : [TODO Pedro]  
-%               * ineqThermoConst (*vector*)      : [TODO Pedro]      
-%               * expFluxes (*double vector*)     : [TODO Pedro]  
-%               * expFluxesStd (*double vector*)  : [TODO Pedro]     
+%               * poolConst (*vector*)            : coefficients with pool constraints
+%               * ineqThermoConst (*vector*)      : coefficients of thermodynamic inequeality constraints
+%               * expFluxes (*double vector*)     : experimental fluxes mean
+%               * expFluxesStd (*double vector*)  : experimental fluxes standard deviations
 %               * fluxRef (*double vector*)       : reference reaction fluxes means
 %               * fluxRefStd (*double vector*)    : reference reaction fluxes standard deviations
-%               * freeFluxes (*int vector*)       : [TODO Pedro]  
-%               * simWeights (*double vector*)    : [TODO Pedro]  
+%               * freeFluxes (*int vector*)       : free flux variables
+%               * simWeights (*double vector*)    : flux weights for the computation of the data and model discrepancies
 %               * Sthermo (*int matrix*)          : stoichiometric matrix used for thermodynamics, excludes exchange reactions
 %               * gibbsRanges (*double matrix*)   : thermodynamically feasible ranges for Gibbs energies  
 %               * metRanges (*double matrix*)     : thermodynamically feasible ranges for metabolite concentrations
@@ -58,8 +57,8 @@ function ensemble = initializeEnsemble(ensemble,popIdx,verbose)
 %               * metsDataMin (*double vector*)   : minimum value for scaled metabolite concentrations   
 %               * metsDataMax (*double vector*)   : maximum value for scaled metabolite concentrations  
 %               * metsDataMean (*double vector*)  : mean value for scaled metabolite concentrations   
-%               * prevPrior (*cell*)              : [TODO Pedro] 
-%               * prevPriorInfo (*cell*)          : [TODO Pedro]     
+%               * prevPrior (*cell*)              : previous prior for kinetic parameters (not implemented)
+%               * prevPriorInfo (*cell*)          : information about previous prior (not implemented) 
 %               * allosteric (*cell*)             : which reactions are allosterically regulated
 %               * subunits (*int cell*)           : number of enzyme subunits for each reaction
 %               * rxnMechanisms (*char cell*)     : reaction mechanisms    
@@ -79,41 +78,38 @@ function ensemble = initializeEnsemble(ensemble,popIdx,verbose)
 %               * fixedExch (*double matrix*)     : fixed exchange reactions
 %               * kineticFxn (*char cell*)        : name of kinetic function used to build the model with all rate laws
 %               * metLists (*char cell*)          : list of metabolites (as defined in patterns) for each reaction
-%               * revMatrix (*int matrix*)        : [TODO Pedro]
-%               * forwardFlux (*int cell*)        : [TODO Pedro]  
-%               * Nelem (*int cell*)              : [TODO Pedro]
-%               * freeVars (*char cell*)          : [TODO Pedro]
-%               * metsActive (*int vector*)       : [TODO Pedro]
+%               * revMatrix (*int matrix*)        : reversibility matrix for elementary reaction mechanisms
+%               * forwardFlux (*int cell*)        : link matrix of elementary reaction steps
+%               * Nelem (*int cell*)              : null space basis matrix of the stoichiometric matrix of the reaction mechanism
+%               * freeVars (*char cell*)          : free variables
+%               * metsActive (*int vector*)       : active metabolite indices
 %               * eigThreshold (*double*)         : threshold for the real part of the jacobian eigenvalues, if there is any higher than the threshold the model is discarded
-%               * thermoActive (*int vector*)     : [TODO Pedro]
-%               * populations (*struct*)          : [TODO Pedro]
+%               * thermoActive (*int vector*)     : thermodynamically active reactions
+%               * populations (*struct*)          : structure with intermediate model populations (only required for SMC sampler, not implemented yet)
 %
 %                       * probParams (*struct*)
 %
-%                               * muGibbsFactor (*double vector*)     : [TODO Pedro]
-%                               * sigmaGibbsFactor (*double vector*)  : [TODO Pedro]
 %                               * rxnParams (*struct*)                : reaction parameters
 %
-%                                       * alphaEnzymeAbundances (*int vector*)  : [TODO Pedro]
-%                                       * alphaReversibilities (*int vector*)   : [TODO Pedro]
-%                                       * betaModifierElemeFlux (*int vector*)  : [TODO Pedro]
-%                                       * betaBranchFactor (*int vector*)       : [TODO Pedro]
-%                       * weights (*double vector*)  : [TODO Pedro]
+%                                       * alphaEnzymeAbundances (*int vector*)  : hyperparameters for enzyme abundances (currently not used)
+%                                       * alphaReversibilities (*int vector*)   : hyperparameters for microscopic reversibilities (currently not used)
+%                                       * betaModifierElemeFlux (*int vector*)  : hyperparameters for elementary flux sampling (currently not used)
+%                                       * betaBranchFactor (*int vector*)       : hyperparameters for branching factors (currently not used)
+%                       * weights (*double vector*)  : model weights (only for SMC, not implemented yet)
 %                       * models (*struct*)          : models in the ensemble
 %
-%                                * poolFactor (*double vector*)  : [TODO Pedro]
-%                                * gibbsFactor (*double vector*) : [TODO Pedro]
+%                                * poolFactor (*double vector*)  : hyperparameters for pool constraints
 %                                * rxnParams (*struct*)          : reaction parameters
 %
 %                                        * reversibilities (*double vector*)   : sampled elementary reaction reversibilities
 %                                        * enzymeAbundances (*double vector*)  : sampled enzyme intermediates abundances
-%                                        * branchFactor (*double vector*)      : [TODO Pedro]
-%                                        * modifierElemeFlux (*double vector*) : [TODO Pedro]
-%                                        * allostericFactors (*double vector*) : [TODO Pedro]
-%                                        * L (*double vector*)                 : [TODO Pedro]
-%                                        * KnegEff (*double vector*)           : [TODO Pedro]
-%                                        * KposEff (*double vector*)           : [TODO Pedro]
-%               * replenished particles (*int*)   : [TODO Pedro]
+%                                        * branchFactor (*double vector*)      : sampled branching factor (for branched mechanisms only)
+%                                        * modifierElemeFlux (*double vector*) : sampled elementary flux for mechanisms with modifiers (inhibitors, activators)
+%                                        * allostericFactors (*double vector*) : sampled enzyme intermediates bound to allosteric effectors 
+%                                        * L (*double vector*)                 : sampled allosteric constant
+%                                        * KnegEff (*double vector*)           : sampled allosteric effector (negative) constant
+%                                        * KposEff (*double vector*)           : sampled allosteric effector (positive) constant
+%               * replenished particles (*int*)   : number of models that are to be replenished in each iteration (only for SMC sampler, not implemented yet)
 %
 % .. Authors:
 %       - Pedro Saa         2016 original code
