@@ -71,6 +71,6 @@ To run the unit tests, at the moment, go to `matlab_code/tests` and run the scri
 ## Know issues and limitations
 
  - massAction mechanisms only work for one substrate and one product;
- - if the uncertainty in the flux is such that it can be both positive and negative, it is possible that GRASP samples Gibbs energies incompatible with the reference flux. These models are discarded at the moment;
+ - if the uncertainty in the flux is such that it can be both positive and negative, it is possible that GRASP samples Gibbs energies incompatible with the reference flux. This generates an error;
  - when using altair in the jupyter notebooks you might get the error `<VegaLite 2 object>` when trying to plot something. 
     - you should add `alt.renderers.enable('default')` after importing altair. 
