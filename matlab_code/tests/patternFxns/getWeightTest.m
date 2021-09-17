@@ -11,7 +11,7 @@ classdef getWeightTest < matlab.unittest.TestCase
             
             trueResW = [2;1;2;2;1;1];
            
-            testCase.verifyEqual(trueResW, W);            
+            testCase.verifyEqual(W, trueResW);            
         end
 
         function testGetWeight2(testCase)
@@ -23,7 +23,7 @@ classdef getWeightTest < matlab.unittest.TestCase
             
             trueResW = [2;1;1;1;2;2];
            
-            testCase.verifyEqual(trueResW, W);            
+            testCase.verifyEqual(W, trueResW);            
         end
 
         function testGetWeight3(testCase)
@@ -35,7 +35,7 @@ classdef getWeightTest < matlab.unittest.TestCase
             
             trueResW = [1;1;1;1;1;2];
            
-            testCase.verifyEqual(trueResW, W);            
+            testCase.verifyEqual(W, trueResW);            
         end
 
         function testGetWeight4(testCase)
@@ -47,7 +47,7 @@ classdef getWeightTest < matlab.unittest.TestCase
             
             trueResW = [1;1;1;1;1;1;1;1;1;1;2;2];
            
-            testCase.verifyEqual(trueResW, W);            
+            testCase.verifyEqual(W, trueResW);            
         end
 
         function testGetWeight5(testCase)
@@ -59,7 +59,7 @@ classdef getWeightTest < matlab.unittest.TestCase
             
             trueResW = [1;1;2;1;2;1;1;1;1];
            
-            testCase.verifyEqual(trueResW, W);            
+            testCase.verifyEqual(W, trueResW);            
         end
     end
 end

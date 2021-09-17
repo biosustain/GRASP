@@ -45,6 +45,10 @@
   
 
   
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/cobra.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
@@ -138,6 +142,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../model_analysis.html">Model analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualizing results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../troubleshoot.html">Troubleshooting</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../api_doc.html">API documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../analysis_functions.html">Analysis functions</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../ensemble_functions.html">Ensemble functions</a><ul class="current">
@@ -146,24 +151,20 @@
 <li class="toctree-l3"><a class="reference internal" href="check_stability.html">Check stability</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Compute Gibbs free energy ranges</a></li>
 <li class="toctree-l3"><a class="reference internal" href="compute_robust_fluxes.html">Compute robust fluxes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="control_analysis.html">Control analysis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="control_and_response_analysis.html">Control and response analysis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ensemble_stability_test.html">Ensemble stability test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="export_SBML.html">Export model to SBML</a></li>
 <li class="toctree-l3"><a class="reference internal" href="extract_prior.html">Extract prior</a></li>
-<li class="toctree-l3"><a class="reference internal" href="find_problematic_reactions.html">Find problematic reactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="find_issues_with_TMFA.html">Find issues with TMFA</a></li>
 <li class="toctree-l3"><a class="reference internal" href="fix_variable_names.html">Fix variable names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="general_HR.html">General Hit-and-Run sampler</a></li>
 <li class="toctree-l3"><a class="reference internal" href="initial_sampler.html">Initial sampler</a></li>
 <li class="toctree-l3"><a class="reference internal" href="initialize_ensemble.html">Initialize ensemble</a></li>
 <li class="toctree-l3"><a class="reference internal" href="load_ensemble_structure.html">Load ensemble structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot_control_analysis.html">Plot control analysis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot_control_and_response_analysis.html">Plot control and response analysis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pool_constraint_fxn.html">Pool constraint function</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sample_allostery.html">Sample allostery</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sample_enzyme_abundances.html">Sample enzyme abundances</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sample_flux_and_gibbs_free_energies.html">Sample fluxes and Gibbs free energies for each model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sample_general_reversibilities.html">Sample general reversibilities</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sample_gibbs_reaction_energies.html">Sample Gibbs reaction energies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sample_modifier_elem_fluxes.html">Sample modifier elementary fluxes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulate_ensemble.html">Simulate ensemble</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../pattern_functions.html">Pattern functions</a></li>
@@ -208,11 +209,13 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../api_doc.html">API documentation</a> &raquo;</li>
         
@@ -223,7 +226,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/api_doc/ensembleFxns/compute_gibbs_free_energy_ranges.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -239,53 +242,66 @@
             
   <div class="section" id="compute-gibbs-free-energy-ranges">
 <h1>Compute Gibbs free energy ranges<a class="headerlink" href="#compute-gibbs-free-energy-ranges" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="ensembleFxns.computeGibbsFreeEnergyRanges">
-<code class="sig-name descname">computeGibbsFreeEnergyRanges</code><span class="sig-paren">(</span><em class="sig-param">Sflux</em>, <em class="sig-param">Sthermo</em>, <em class="sig-param">DGr_std_min</em>, <em class="sig-param">DGr_std_max</em>, <em class="sig-param">vmin</em>, <em class="sig-param">vmax</em>, <em class="sig-param">xmin</em>, <em class="sig-param">xmax</em>, <em class="sig-param">idxNotExch</em>, <em class="sig-param">ineqConstraints</em>, <em class="sig-param">rxnNames</em><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.computeGibbsFreeEnergyRanges" title="Permalink to this definition">¶</a></dt>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="ensembleFxns.computeGibbsFreeEnergyRanges">
+<span class="sig-name descname"><span class="pre">computeGibbsFreeEnergyRanges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">ensemble</span></em>, <em class="sig-param"><span class="pre">DGr_std_min</span></em>, <em class="sig-param"><span class="pre">DGr_std_max</span></em>, <em class="sig-param"><span class="pre">vmin</span></em>, <em class="sig-param"><span class="pre">vmax</span></em>, <em class="sig-param"><span class="pre">xmin</span></em>, <em class="sig-param"><span class="pre">xmax</span></em>, <em class="sig-param"><span class="pre">ineqConstraints</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.computeGibbsFreeEnergyRanges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Applies Thermodynamic Flux Balance Analysis (TMFA) to find
 thermodynamically feasible ranges for reactions fluxes, metabolite
 concentrations, and reactions Gibbs energies.</p>
 <p>It is based on <a class="reference external" href="https://arxiv.org/pdf/1803.04999.pdf">https://arxiv.org/pdf/1803.04999.pdf</a></p>
+<p>We add a constraint to ensure that the sum of the dG values
+for all reactions involved in a close loop is zero.</p>
+<p>Note: The value for K is now decreased if the initial point to use for
+sampling gibbs energies and fluxes is thermodynamically infeasible
+(Gibbs energies and reaction fluxes are not compatible).
+This happens sometimes because of numerical precision issues.
+For instance, intlinprog considers anything lower than
+1e-6 to be the same as zero. Thus, it is possible to have
+a constraint like -dGr -K*e &lt;= -1e-6, if dGr = -10, K = 1e10,
+and e= 1e-7 the constraint is satisfied, even though it wouldn’t
+be if e=0. In this case e should be 1, which is not the case
+due to numerical imprecision. Thus, in this case, K would be set
+to 1e7, so that K*e &gt;= 10^0 is true even when e=1e-7, forcing e
+to be 1 when it should be 1, e.g. to satisfy -dGr -K*e &lt;= -1e-6,
+with dGr = -10, K = 1e7.</p>
 <p><strong>Usage</strong></p>
 <blockquote>
-<div><p>[DGr_rng, xrng, vrng] = computeGibbsFreeEnergyRanges(Sflux, Sthermo, DGr_std_min, DGr_std_max, vmin, vmax, xmin, xmax, idxNotExch, ineqConstraints, rxnNames)</p>
+<div><p>[v_range,DGr_range,DGf_std_range,lnx_range,x0] = computeGibbsFreeEnergyRanges(ensemble,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,ineqConstraints)</p>
 </div></blockquote>
 <p><strong>Inputs</strong></p>
 <blockquote>
 <div><ul class="simple">
-<li><p><strong>Sflux</strong> (<em>int matrix</em>) –
-stoichiometric matrix used for flux calculations</p></li>
-<li><p><strong>Sthermo</strong> (<em>int matrix</em>) –
-stoichiometric matrix used for  thermodynamic calculations</p></li>
+<li><p><strong>ensemble</strong> (<em>struct</em>) –
+model ensemble, see buildEnsemble for fields description</p></li>
 <li><p><strong>DGr_std_min</strong> (<em>double vector</em>) –
-lower bound for standard Gibbs energies</p></li>
-<li><p><strong>DGr_std_max</strong> (<em>double</em>) –
-upper bound for standard Gibbs energies</p></li>
-<li><p><strong>vmin</strong> (<em>double</em>) –
-lower bound for reactions fluxes</p></li>
-<li><p><strong>vmax</strong> (<em>double</em>) –
-upper bound for reactions fluxes</p></li>
-<li><p><strong>xmin</strong> (<em>double</em>) –
-lower bound for metabolite concentrations</p></li>
-<li><p><strong>xmax</strong> (<em>double</em>) –
-upper bound for metabolite concentrations</p></li>
-<li><p><strong>idxNotExch</strong> (<em>int vector</em>) –
-IDs for reactions that are not exchange reactions</p></li>
+minimum values for standard reaction Gibbs energies</p></li>
+<li><p><strong>DGr_std_max</strong> (<em>double vector</em>) –
+maximum values for standard reaction Gibbs energies</p></li>
+<li><p><strong>vmin</strong> (<em>double vector</em>) –
+minimum values for reaction fluxes</p></li>
+<li><p><strong>vmax</strong> (<em>double vector</em>) –
+maximum values for reaction fluxes</p></li>
+<li><p><strong>xmin</strong> (<em>double vector</em>) –
+minimum values for metabolite concentrations</p></li>
+<li><p><strong>xmax</strong> (<em>double vector</em>) –
+maximu values for metabolite concentrations</p></li>
 <li><p><strong>ineqConstraints</strong> (<em>double</em>) –
 inequality constraints</p></li>
-<li><p><strong>rxnNames</strong> (<em>char vector</em>) –
-reaction names</p></li>
 </ul>
 </div></blockquote>
 <p><strong>Outputs</strong></p>
 <blockquote>
 <div><ul class="simple">
-<li><p><strong>DGr_rng</strong> (<em>double matrix</em>) –
-range of feasible Gibbs energies</p></li>
-<li><p><strong>xrng</strong> (<em>double matrix</em>) –
-range of feasible metabolite concentrations</p></li>
-<li><p><strong>vrng</strong> (<em>double matrix</em>) –
+<li><p><strong>v_range</strong> (<em>double matrix</em>) –
 range of feasible reaction fluxes</p></li>
+<li><p><strong>DGr_range</strong> (<em>double matrix</em>) –
+range of feasible Gibbs energies</p></li>
+<li><p><strong>DGr_std_range</strong> (<em>double matrix</em>) –
+range of feasible standard reaction Gibbs energies</p></li>
+<li><p><strong>lnx_range</strong> (<em>double matrix</em>) –
+range of feasible metabolite concentrations (ln)</p></li>
+<li><p><strong>x0</strong> (<em>double matrix</em>) –
+initial point to be used for the sampling with hit-and-run method</p></li>
 </ul>
 </div></blockquote>
 </dd></dl>
@@ -342,11 +358,10 @@ range of feasible reaction fluxes</p></li>
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+    <script type="text/javascript" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mathjax/MathJax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

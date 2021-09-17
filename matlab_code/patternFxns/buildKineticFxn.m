@@ -1,10 +1,10 @@
-function [freeVars,metsActive] = buildKineticFxn(ensemble,kineticFxn,strucIdx)
+function freeVars = buildKineticFxn(ensemble,kineticFxn,strucIdx)
 % Builds kinetic model .m file that is used to actually run the model.
 %
 %
 % USAGE:
 %
-%    [freeVars, metsActive] = buildKineticFxn(ensemble, kineticFxn, strucIdx)
+%    freeVars = buildKineticFxn(ensemble, kineticFxn, strucIdx)
 %
 % INPUT:
 %    ensemble (struct):   model ensemble, see buildEnsemble for fields description
@@ -13,17 +13,17 @@ function [freeVars,metsActive] = buildKineticFxn(ensemble,kineticFxn,strucIdx)
 %
 % OUTPUT:
 %    freeVars (char cell):      [TODO Pedro]
-%    metsActive (int cell):     [TODO Pedro]
 %    written .m file with the model
 %
 % .. Authors:
 %       - Pedro Saa         2016 original code 
 %       - Marta Matos       2018 extended for promiscuous reactions
-%       - Nicholas Cowie	2019 extended for isoenzymes [TODO: confirm this Nick please]
+%       - Nicholas Cowie	2019 extended for isoenzymes
 
 % Define active species (mets/enzymes)
-metsActive = ensemble.metsSimulated(~ismember(ensemble.metsSimulated,ensemble.metsFixed));
+metsActive = ensemble.metsActive;
 enzActive  = ensemble.activeRxns;
+%enzActive  = ensemble.activeRxns(~ismember(ensemble.activeRxns,ensemble.kinInactRxns));
 totalEvals = numel(metsActive) + numel(enzActive) + 1;
 freeVars   = [ensemble.mets(metsActive);ensemble.rxns(enzActive)];                             % return indexes of the free variables
 
@@ -52,7 +52,7 @@ fprintf(fid,'xconst = xconst(:);\n');									% Column vector
 fprintf(fid,['v = zeros(',num2str(size(ensemble.Sred,2)),',',num2str(totalEvals),');\n']);      % Preallocation of memory (rxns)
 fprintf(fid,['E = zeros(',num2str(size(ensemble.Sred,2)),',',num2str(totalEvals),');\n']);      % Preallocation of memory (enz)
 fprintf(fid,['x = [x,x(:,ones(1,',num2str(totalEvals-1),')) + diag(h*1i*ones(',num2str(totalEvals-1),',1))];\n']);      % Preallocation of memory (free vars)
-fprintf(fid,['xconst = [xconst,xconst(:,ones(1,',num2str(numel(ensemble.metsFixed)),')) + diag(h*1i*ones(',num2str(numel(ensemble.metsFixed)),',1))];\n']);      % Preallocation of memory (constant metabolites)
+fprintf(fid,['xconst = [xconst,xconst(:,ones(1,',num2str(totalEvals-1),'))];\n']);      % Preallocation of memory (constant metabolites)
 fprintf(fid,'else\n');
 fprintf(fid,['v = zeros(',num2str(size(ensemble.Sred,2)),',size(x,2));\n']);      % Preallocation of memory (rxns)
 fprintf(fid,['E = zeros(',num2str(size(ensemble.Sred,2)),',size(x,2));\n']);      % Preallocation of memory (enz)
@@ -96,7 +96,16 @@ for i = 1:numel(ensemble.activeRxns)
         inhCount = 1;
         actCount = 1;
         for react = 1:length(ensemble.metLists{i,1})
-            if ~isempty(strfind(ensemble.metLists{i,1}{react}, 'A'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'B'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'C'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'D'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'E'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'F'))
+            if (~isempty(strfind(ensemble.metLists{i,1}{react}, 'A')) || ...
+                ~isempty(strfind(ensemble.metLists{i,1}{react}, 'B')) || ...
+                ~isempty(strfind(ensemble.metLists{i,1}{react}, 'C')) || ...
+                ~isempty(strfind(ensemble.metLists{i,1}{react}, 'D')) || ...
+                ~isempty(strfind(ensemble.metLists{i,1}{react}, 'E')) || ...
+                ~isempty(strfind(ensemble.metLists{i,1}{react}, 'F')) || ...
+                ~isempty(strfind(ensemble.metLists{i,1}{react}, 'G')) || ...
+                ~isempty(strfind(ensemble.metLists{i,1}{react}, 'H')) || ...
+                ~isempty(strfind(ensemble.metLists{i,1}{react}, 'J')))
+            
                 if elemCount < w
                     reactants = [reactants, ensemble.subOrder{1, 1}{i}{subCount}, ';'];
                     subCount = subCount+1;
@@ -104,7 +113,16 @@ for i = 1:numel(ensemble.activeRxns)
                 else
                     reactants = [reactants, ensemble.subOrder{1, 1}{i}{subCount}];
                 end
-            elseif ~isempty(strfind(ensemble.metLists{i,1}{react}, 'P'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'Q'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'R'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'S'))
+            elseif (~isempty(strfind(ensemble.metLists{i,1}{react}, 'P')) || ...
+                    ~isempty(strfind(ensemble.metLists{i,1}{react}, 'Q')) || ...
+                    ~isempty(strfind(ensemble.metLists{i,1}{react}, 'R')) || ...
+                    ~isempty(strfind(ensemble.metLists{i,1}{react}, 'S')) || ...
+                    ~isempty(strfind(ensemble.metLists{i,1}{react}, 'T')) || ...
+                    ~isempty(strfind(ensemble.metLists{i,1}{react}, 'U')) || ...    
+                    ~isempty(strfind(ensemble.metLists{i,1}{react}, 'V')) || ...
+                    ~isempty(strfind(ensemble.metLists{i,1}{react}, 'W')) || ...
+                    ~isempty(strfind(ensemble.metLists{i,1}{react}, 'X')))
+                
                 if elemCount < w
                     reactants = [reactants,ensemble.prodOrder{1, 1}{i}{prodCount},';'];
                     prodCount = prodCount+1;
@@ -160,7 +178,7 @@ for i = 1:numel(ensemble.activeRxns)
         else
             substrates  = (ensemble.mets(ensemble.S(:,ensemble.activeRxns(i))<0));
         end
-        substrates  = substrates(ismember(substrates,ensemble.mets(ensemble.metsSimulated)));         % Extract only active substrates
+        
         stoicCoeffsSub = abs(ensemble.S(ismember(ensemble.mets,substrates),ensemble.activeRxns(i)));
       
         % Extract and organize products
@@ -174,7 +192,7 @@ for i = 1:numel(ensemble.activeRxns)
         else
             products    = (ensemble.mets(ensemble.S(:,ensemble.activeRxns(i))>0));
         end
-        products    = products(ismember(products,ensemble.mets(ensemble.metsSimulated)));               % Extract only active products
+        
         stoicCoeffsProd = abs(ensemble.S(ismember(ensemble.mets,products),ensemble.activeRxns(i)));
 
         % Non-enzymatic reactions (diffusion)
@@ -191,14 +209,14 @@ for i = 1:numel(ensemble.activeRxns)
             subCoefList = [];
             for subI=1:numel(substrates)
                 subCoefList = [subCoefList, num2str(stoicCoeffsSub(subI)), '*ones(1,size(x,2));'];
-                subList      = [subList, substrates{subI}, ';'];
+                subList     = [subList, substrates{subI}, ';'];
             end
             
             prodList = [];
             prodCoefList = [];
             for prodI=1:numel(products)
                 prodCoefList = [prodCoefList, num2str(stoicCoeffsProd(prodI)), '*ones(1,size(x,2));'];
-                prodList      = [prodList, products{prodI}, ';'];
+                prodList     = [prodList, products{prodI}, ';'];
             end
             
             
@@ -218,7 +236,16 @@ for i = 1:numel(ensemble.activeRxns)
             inhCount = 1;
             actCount = 1;
             for react = 1:length(ensemble.metLists{i,1})
-                if ~isempty(strfind(ensemble.metLists{i,1}{react}, 'A'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'B'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'C'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'D'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'E'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'F'))
+                 if (~isempty(strfind(ensemble.metLists{i,1}{react}, 'A')) || ...
+                     ~isempty(strfind(ensemble.metLists{i,1}{react}, 'B')) || ...
+                     ~isempty(strfind(ensemble.metLists{i,1}{react}, 'C')) || ...
+                     ~isempty(strfind(ensemble.metLists{i,1}{react}, 'D')) || ...
+                     ~isempty(strfind(ensemble.metLists{i,1}{react}, 'E')) || ...
+                     ~isempty(strfind(ensemble.metLists{i,1}{react}, 'F')) || ...
+                     ~isempty(strfind(ensemble.metLists{i,1}{react}, 'G')) || ...
+                     ~isempty(strfind(ensemble.metLists{i,1}{react}, 'H')) || ...
+                     ~isempty(strfind(ensemble.metLists{i,1}{react}, 'J')))
+                
                     if elemCount < w
                         reactants = [reactants,substrates{subCount}, ';'];
                         subCount = subCount+1;
@@ -226,7 +253,16 @@ for i = 1:numel(ensemble.activeRxns)
                     else
                         reactants = [reactants, substrates{subCount}];
                     end
-                elseif ~isempty(strfind(ensemble.metLists{i,1}{react}, 'P'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'Q'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'R'))||~isempty(strfind(ensemble.metLists{i,1}{react}, 'S'))
+                elseif (~isempty(strfind(ensemble.metLists{i,1}{react}, 'P')) || ...
+                        ~isempty(strfind(ensemble.metLists{i,1}{react}, 'Q')) || ...
+                        ~isempty(strfind(ensemble.metLists{i,1}{react}, 'R')) || ...
+                        ~isempty(strfind(ensemble.metLists{i,1}{react}, 'S')) || ...
+                        ~isempty(strfind(ensemble.metLists{i,1}{react}, 'T')) || ...
+                        ~isempty(strfind(ensemble.metLists{i,1}{react}, 'U')) || ...    
+                        ~isempty(strfind(ensemble.metLists{i,1}{react}, 'V')) || ...
+                        ~isempty(strfind(ensemble.metLists{i,1}{react}, 'W')) || ...
+                        ~isempty(strfind(ensemble.metLists{i,1}{react}, 'X')))
+                
                     if elemCount < w
                         reactants = [reactants,products{prodCount},';'];
                         prodCount = prodCount+1;

@@ -2,6 +2,8 @@ classdef computeGibbsFreeEnergyRangesTest < matlab.unittest.TestCase
 
     properties
         currentPath
+        relTol = 1e-4;
+        absTol = 1e-4;
     end
     
     methods(TestClassSetup)
@@ -17,41 +19,43 @@ classdef computeGibbsFreeEnergyRangesTest < matlab.unittest.TestCase
             seed = 1;
             rng(seed)
             
-            ensemble =  load(fullfile(testCase.currentPath{1}, 'testFiles', 'ensemble_toy_model1.mat'));
+            ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'ensemble_toy_model1.mat'));
             ensemble = ensemble.ensemble;
             
-            xlsxFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1');
-            xlsxFile            = [xlsxFile,'.xlsx'];                               % add extension to the file
+            xlsxFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1.xlsx');
             xDG_std             = xlsread(xlsxFile,'thermoRxns');                   % load thermodynamic data (rxns)
             xMetsThermo         = xlsread(xlsxFile,'thermoMets');                   % load thermodynamic data (mets)
             ineqConstraints     = xlsread(xlsxFile,'thermo_ineq_constraints');      % load ineq. thermodynamic constraints
 
-            Sflux       = ensemble.S(ensemble.metsBalanced,:);
-            idxNotExch  = find(~ismember(1:numel(ensemble.rxns),ensemble.exchRxns));
-            ensemble.Sthermo     = ensemble.S(:,idxNotExch);
-            DGr_std     = xDG_std(idxNotExch,:);                                                        % Use only reactions with known thermodynamics
-            vmin        = ensemble.fluxRef - 2*ensemble.fluxRefStd;
-            vmax        = ensemble.fluxRef + 2*ensemble.fluxRefStd;
-            xmin        = xMetsThermo(:,1);
-            xmax        = xMetsThermo(:,2);
-            DGr_std_min = DGr_std(:,1);
-            DGr_std_max = DGr_std(:,2);
+            DGr_std        = xDG_std(ensemble.idxNotExch,:);                                                        % Use only reactions with known thermodynamics
+            vmin           = ensemble.fluxRef - 2*ensemble.fluxRefStd;
+            vmax           = ensemble.fluxRef + 2*ensemble.fluxRefStd;
+            xmin           = xMetsThermo(:,1);
+            xmax           = xMetsThermo(:,2);
+            DGr_std_min    = DGr_std(:,1);
+            DGr_std_max    = DGr_std(:,2);
             
             ensemble.LPSolver = 'gurobi';
             
-            [DGr_rng,xrng,vrng] = computeGibbsFreeEnergyRanges(Sflux,ensemble.Sthermo,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,idxNotExch,ineqConstraints', ensemble.rxnNames, ensemble.LPSolver);
-           
+            [v_range,DGr_range,DGf_std_range,lnx_range,x0] = computeGibbsFreeEnergyRanges(ensemble,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,ineqConstraints);
+
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResComputeGibbsFreeEnergyRanges1'));
-            trueResDGr = trueRes.DGr_rng;
-            trueResMets = trueRes.xrng;
-            trueResFluxes = trueRes.vrng;
-                   
-            testCase.verifyThat(trueResDGr, matlab.unittest.constraints.IsEqualTo(DGr_rng, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
-            testCase.verifyThat(trueResMets, matlab.unittest.constraints.IsEqualTo(xrng, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-10)))
-            testCase.verifyThat(trueResFluxes, matlab.unittest.constraints.IsEqualTo(vrng, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
+            trueResFluxes = trueRes.v_range;
+            trueResDGr = trueRes.DGr_range;
+            trueResDGf = trueRes.DGf_std_range;
+            trueResLnMets = trueRes.lnx_range;
+            trueResX0 = trueRes.x0;
+            
+            testCase.verifyThat(v_range, matlab.unittest.constraints.IsEqualTo(trueResFluxes, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)))
+            testCase.verifyThat(DGr_range, matlab.unittest.constraints.IsEqualTo(trueResDGr, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)))
+            testCase.verifyThat(DGf_std_range, matlab.unittest.constraints.IsEqualTo(trueResDGf, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)))
+            testCase.verifyThat(lnx_range, matlab.unittest.constraints.IsEqualTo(trueResLnMets, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)))
+            testCase.verifyThat(x0, matlab.unittest.constraints.IsEqualTo(trueResX0, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(1e-2) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)))
         end
         
         function testComputeGibbsFreeEnergyRangesLinprog(testCase)
@@ -59,41 +63,43 @@ classdef computeGibbsFreeEnergyRangesTest < matlab.unittest.TestCase
             seed = 1;
             rng(seed)
             
-            ensemble =  load(fullfile(testCase.currentPath{1}, 'testFiles', 'ensemble_toy_model1.mat'));
+            ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'ensemble_toy_model1.mat'));
             ensemble = ensemble.ensemble;
             
-            xlsxFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1');
-            xlsxFile            = [xlsxFile,'.xlsx'];                               % add extension to the file
+            xlsxFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1.xlsx');
             xDG_std             = xlsread(xlsxFile,'thermoRxns');                   % load thermodynamic data (rxns)
             xMetsThermo         = xlsread(xlsxFile,'thermoMets');                   % load thermodynamic data (mets)
             ineqConstraints     = xlsread(xlsxFile,'thermo_ineq_constraints');      % load ineq. thermodynamic constraints
 
-            Sflux       = ensemble.S(ensemble.metsBalanced,:);
-            idxNotExch  = find(~ismember(1:numel(ensemble.rxns),ensemble.exchRxns));
-            ensemble.Sthermo     = ensemble.S(:,idxNotExch);
-            DGr_std     = xDG_std(idxNotExch,:);                                                        % Use only reactions with known thermodynamics
-            vmin        = ensemble.fluxRef - 2*ensemble.fluxRefStd;
-            vmax        = ensemble.fluxRef + 2*ensemble.fluxRefStd;
-            xmin        = xMetsThermo(:,1);
-            xmax        = xMetsThermo(:,2);
-            DGr_std_min = DGr_std(:,1);
-            DGr_std_max = DGr_std(:,2);
+            DGr_std        = xDG_std(ensemble.idxNotExch,:);                                                        % Use only reactions with known thermodynamics
+            vmin           = ensemble.fluxRef - 2*ensemble.fluxRefStd;
+            vmax           = ensemble.fluxRef + 2*ensemble.fluxRefStd;
+            xmin           = xMetsThermo(:,1);
+            xmax           = xMetsThermo(:,2);
+            DGr_std_min    = DGr_std(:,1);
+            DGr_std_max    = DGr_std(:,2);
             
             ensemble.LPSolver = 'linprog';
             
-            [DGr_rng,xrng,vrng] = computeGibbsFreeEnergyRanges(Sflux,ensemble.Sthermo,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,idxNotExch,ineqConstraints', ensemble.rxnNames, ensemble.LPSolver);
-           
-            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResComputeGibbsFreeEnergyRanges1'));
-            trueResDGr = trueRes.DGr_rng;
-            trueResMets = trueRes.xrng;
-            trueResFluxes = trueRes.vrng;
-                   
-            testCase.verifyThat(trueResDGr, matlab.unittest.constraints.IsEqualTo(DGr_rng, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
-            testCase.verifyThat(trueResMets, matlab.unittest.constraints.IsEqualTo(xrng, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-10)))
-            testCase.verifyThat(trueResFluxes, matlab.unittest.constraints.IsEqualTo(vrng, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
+            [v_range,DGr_range,DGf_std_range,lnx_range,x0] = computeGibbsFreeEnergyRanges(ensemble,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,ineqConstraints);
+
+            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResComputeGibbsFreeEnergyRangesLinprog'));
+            trueResFluxes = trueRes.v_range;
+            trueResDGr = trueRes.DGr_range;
+            trueResDGf = trueRes.DGf_std_range;
+            trueResLnMets = trueRes.lnx_range;
+            trueResX0 = trueRes.x0;
+            
+            testCase.verifyThat(v_range, matlab.unittest.constraints.IsEqualTo(trueResFluxes, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)))
+            testCase.verifyThat(DGr_range, matlab.unittest.constraints.IsEqualTo(trueResDGr, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)))
+            testCase.verifyThat(DGf_std_range, matlab.unittest.constraints.IsEqualTo(trueResDGf, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)))
+            testCase.verifyThat(lnx_range, matlab.unittest.constraints.IsEqualTo(trueResLnMets, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)))
+            testCase.verifyThat(x0, matlab.unittest.constraints.IsEqualTo(trueResX0, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(0.2) | matlab.unittest.constraints.AbsoluteTolerance(0.2)))
         end
        
     end

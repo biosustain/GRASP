@@ -36,7 +36,7 @@ classdef buildDiffusionTest < matlab.unittest.TestCase
             filepath = fullfile(testCase.currentPath{1}, 'testFiles', 'trueResBuildDiffusion1.txt');
             trueRes = textread(filepath,'%s');
             
-            testCase.verifyEqual(trueRes,res);            
+            testCase.verifyEqual(res, trueRes);            
         end
     end
 end

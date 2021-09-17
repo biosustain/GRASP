@@ -2,6 +2,8 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
 
     properties
         currentPath
+        relTol = 1e-2;
+        absTol = 1e-4;        
     end
     
     methods(TestClassSetup)
@@ -32,13 +34,12 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             
             xlsxFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1');
             ensemble = loadEnsembleStructure(xlsxFile);
-
+            
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model1.mat'));
             trueRes = trueRes.ensemble;
-            trueRes.LPSolver = 'gurobi';
-             
-            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
-                'Within', matlab.unittest.constraints.AbsoluteTolerance(1e-10) & matlab.unittest.constraints.RelativeTolerance(1)));
+            
+            testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
         end
         
         function testLoadEnsembleStructure1WithAllostery(testCase)
@@ -48,10 +49,9 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model1_allosteric.mat'));
             trueRes = trueRes.ensemble;
-            trueRes.LPSolver = 'gurobi';
-                        
-            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
-                'Within', matlab.unittest.constraints.AbsoluteTolerance(1e-10) & matlab.unittest.constraints.RelativeTolerance(1)));
+            
+            testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
         end
         
         function testLoadEnsembleStructure1WithRandom(testCase)
@@ -59,24 +59,24 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
             xlsxFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_random');
             ensemble = loadEnsembleStructure(xlsxFile);
 
-            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model1_random.mat'));
+            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model1_random.mat'));            
             trueRes = trueRes.ensemble;
-            trueRes.LPSolver = 'gurobi';
-                        
-            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
+                                              
+            testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
         end
         
         function testLoadEnsembleStructureWithFreeExchange(testCase)
+            % This test is expected to fail
             
             xlsxFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_freeExchange');
             ensemble = loadEnsembleStructure(xlsxFile);
             
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model1_freeExchange.mat'));
-            trueRes = trueRes.ensemble;
-            trueRes.LPSolver = 'gurobi';
+            trueRes = trueRes.ensemble;            
             
-            testCase.verifyEqual(trueRes,ensemble);            
+            testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));         
         end
        
         function testLoadEnsembleStructureInputValidationGeneral(testCase)
@@ -198,10 +198,9 @@ classdef loadEnsembleStructureTest < matlab.unittest.TestCase
 
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResLoadEnsemble_toy_model4.mat'));
             trueRes = trueRes.ensemble;
-            trueRes.LPSolver = 'gurobi';
-                        
-            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(ensemble, ...
-                'Within', matlab.unittest.constraints.RelativeTolerance(1e-4)))
+            
+            testCase.verifyThat(ensemble, matlab.unittest.constraints.IsEqualTo(trueRes, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
         end
     end
 end

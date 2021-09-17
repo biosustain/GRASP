@@ -45,6 +45,10 @@
   
 
   
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/cobra.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
@@ -138,6 +142,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../model_analysis.html">Model analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualizing results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../troubleshoot.html">Troubleshooting</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../api_doc.html">API documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../analysis_functions.html">Analysis functions</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../ensemble_functions.html">Ensemble functions</a><ul class="current">
@@ -146,24 +151,20 @@
 <li class="toctree-l3"><a class="reference internal" href="check_stability.html">Check stability</a></li>
 <li class="toctree-l3"><a class="reference internal" href="compute_gibbs_free_energy_ranges.html">Compute Gibbs free energy ranges</a></li>
 <li class="toctree-l3"><a class="reference internal" href="compute_robust_fluxes.html">Compute robust fluxes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="control_analysis.html">Control analysis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="control_and_response_analysis.html">Control and response analysis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ensemble_stability_test.html">Ensemble stability test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="export_SBML.html">Export model to SBML</a></li>
 <li class="toctree-l3"><a class="reference internal" href="extract_prior.html">Extract prior</a></li>
-<li class="toctree-l3"><a class="reference internal" href="find_problematic_reactions.html">Find problematic reactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="find_issues_with_TMFA.html">Find issues with TMFA</a></li>
 <li class="toctree-l3"><a class="reference internal" href="fix_variable_names.html">Fix variable names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="general_HR.html">General Hit-and-Run sampler</a></li>
 <li class="toctree-l3"><a class="reference internal" href="initial_sampler.html">Initial sampler</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Initialize ensemble</a></li>
 <li class="toctree-l3"><a class="reference internal" href="load_ensemble_structure.html">Load ensemble structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot_control_analysis.html">Plot control analysis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot_control_and_response_analysis.html">Plot control and response analysis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pool_constraint_fxn.html">Pool constraint function</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sample_allostery.html">Sample allostery</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sample_enzyme_abundances.html">Sample enzyme abundances</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sample_flux_and_gibbs_free_energies.html">Sample fluxes and Gibbs free energies for each model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sample_general_reversibilities.html">Sample general reversibilities</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sample_gibbs_reaction_energies.html">Sample Gibbs reaction energies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sample_modifier_elem_fluxes.html">Sample modifier elementary fluxes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulate_ensemble.html">Simulate ensemble</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../pattern_functions.html">Pattern functions</a></li>
@@ -208,11 +209,13 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../api_doc.html">API documentation</a> &raquo;</li>
         
@@ -223,7 +226,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/api_doc/ensembleFxns/initialize_ensemble.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -239,9 +242,9 @@
             
   <div class="section" id="initialize-ensemble">
 <h1>Initialize ensemble<a class="headerlink" href="#initialize-ensemble" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="ensembleFxns.initializeEnsemble">
-<code class="sig-name descname">initializeEnsemble</code><span class="sig-paren">(</span><em class="sig-param">ensemble</em>, <em class="sig-param">popIdx</em>, <em class="sig-param">verbose</em><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.initializeEnsemble" title="Permalink to this definition">¶</a></dt>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="ensembleFxns.initializeEnsemble">
+<span class="sig-name descname"><span class="pre">initializeEnsemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">ensemble</span></em>, <em class="sig-param"><span class="pre">popIdx</span></em>, <em class="sig-param"><span class="pre">verbose</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ensembleFxns.initializeEnsemble" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize ensemble structure.</p>
 <p><strong>Usage</strong></p>
 <blockquote>
@@ -270,7 +273,7 @@ verbosity level</p></li>
 initialized model ensemble data structure</p>
 <ul>
 <li><p>description (<em>char</em>)            : model name basically</p></li>
-<li><p>sampler (<em>char</em>)                : specifies the sampling mode: ORACLE or rejection [TODO Pedro check if this is correct]</p></li>
+<li><p>sampler (<em>char</em>)                : specifies the sampling mode: GRASP or rejection</p></li>
 <li><p>solver (<em>char</em>)                 : which solver to use for the rejection sampler</p></li>
 <li><p>numConditions (<em>int</em>)           : how many experimental conditions</p></li>
 <li><p>numStruct (<em>int</em>)               : how many model structures</p></li>
@@ -292,7 +295,6 @@ initialized model ensemble data structure</p>
 <li><p>metsBalanced (<em>int vector</em>)     : [TODO Pedro]</p></li>
 <li><p>metsSimulated (<em>int vector</em>)    : [TODO Pedro]</p></li>
 <li><p>metsFixed (<em>int vector</em>)        : which metabolites concentrations are defined as fixed (constant)</p></li>
-<li><p>measuredMets (<em>int vector</em>)     : which metabolite concentrations were actually measured (vs. estimated)</p></li>
 <li><p>Sred (<em>int matrix</em>)             : reduced stoichiometric matrix, includes only balanced metabolites and active reactions</p></li>
 <li><p>measRates (<em>double matrix</em>)     : measured reaction fluxes means</p></li>
 <li><p>measRatesStd (<em>double matrix</em>)  : measured reaction fluxes standard deviations</p></li>
@@ -446,11 +448,10 @@ initialized model ensemble data structure</p>
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+    <script type="text/javascript" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mathjax/MathJax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

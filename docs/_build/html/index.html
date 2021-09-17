@@ -45,6 +45,10 @@
   
 
   
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/css/cobra.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
@@ -136,6 +140,7 @@
 <li class="toctree-l1"><a class="reference internal" href="model_analysis.html">Model analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="visualization.html">Visualizing results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot.html">Troubleshooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_doc.html">API documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="how_to_contribute.html">How to contribute</a></li>
 </ul>
@@ -175,18 +180,20 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="#">Docs</a> &raquo;</li>
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
         
       <li>Welcome to GRASP’s documentation!</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -202,19 +209,19 @@
             
   <div class="section" id="welcome-to-grasp-s-documentation">
 <h1>Welcome to GRASP’s documentation!<a class="headerlink" href="#welcome-to-grasp-s-documentation" title="Permalink to this headline">¶</a></h1>
-<p>GRASP is a framework used to build kinetic model ensembles based on a single data point, which is characterized by a flux distribution and reaction free Gibbs energies.</p>
+<p>GRASP is a framework used to build kinetic model ensembles based on a single data point, which is characterized by a flux distribution and respective reaction Gibbs free energies.</p>
 <p>The resulting model ensemble can then be simulated or subject to Metabolic Control Analysis.</p>
 <p>What do you actually need to build the model?</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>fluxes for all reactions;</p></li>
+<li><p>fluxes for all reactions (or enough to determine the fluxes of missing reactions);</p></li>
 <li><p>standard Gibbs energies for all reactions;</p></li>
 <li><p>absolute metabolite concentrations;</p></li>
 <li><p>if available, enzyme regulation information (enzyme inhibitors and activators);</p></li>
 <li><p>if available, enzyme mechanism information.</p></li>
 </ul>
 </div></blockquote>
-<p>For more information on how the framework works, please see</p>
+<p>For more information on how the framework works, please see:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p><a class="reference external" href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004195">https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004195</a></p></li>
@@ -230,6 +237,7 @@
 <li class="toctree-l1"><a class="reference internal" href="model_analysis.html">Model analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="visualization.html">Visualizing results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot.html">Troubleshooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_doc.html">API documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="how_to_contribute.html">How to contribute</a></li>
 </ul>
@@ -285,11 +293,10 @@
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mathjax/MathJax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

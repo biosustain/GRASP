@@ -39,5 +39,19 @@ classdef plotControlAnalysisTest < matlab.unittest.TestCase
             plotControlAnalysis(mcaResults, ensemble, categories);
 
         end
+        
+        function testPlotControlAnalysisTestNumbers(testCase)
+                        
+            ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_numbers.mat'));
+            ensemble = ensemble.ensemble;
+            
+            mcaResults = load(fullfile(testCase.currentPath{1}, 'testFiles', 'mca_toy_model1_numbers.mat'));
+            mcaResults = mcaResults.mcaResults;            
+            
+            categories = {};
+            
+            plotControlAnalysis(mcaResults, ensemble, categories);
+
+        end
     end
 end

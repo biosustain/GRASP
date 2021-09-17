@@ -18,11 +18,11 @@ classdef fixVariableNamesTest < matlab.unittest.TestCase
             [xRxns,rxnsList] = xlsread(xlsxFile,'rxns');                         % load rxn info            
            
             rxnsList = fixVariableNames(rxnsList, 'r');
-                       
+
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResFixVariableNames1'));
             trueRes = trueRes.rxnsList;
                    
-            testCase.verifyEqual(trueRes, rxnsList)
+            testCase.verifyEqual(rxnsList, trueRes)
         end
         
         function testFixVariableNamesKinetics(testCase)
@@ -35,7 +35,7 @@ classdef fixVariableNamesTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResFixVariableNamesKinetics'));
             trueRes = trueRes.strKinetic;
                    
-            testCase.verifyEqual(trueRes, strKinetic);
+            testCase.verifyEqual(strKinetic, trueRes);
         end
         
         function testFixVariableNamesStoicCoeffs(testCase)
@@ -48,7 +48,7 @@ classdef fixVariableNamesTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResFixVariableNamesStoicCoeffs'));
             trueRes = trueRes.strKinetic;
                    
-            testCase.verifyEqual(trueRes, strKinetic);
+            testCase.verifyEqual(strKinetic, trueRes);
         end
         
     end

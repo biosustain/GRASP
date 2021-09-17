@@ -28,7 +28,7 @@ function plotControlAnalysis(mcaResults, ensemble, categories)
 %       - Marina de Leeuw   2019 added categories
 
 % Check sampler mode to determine the numer of conditions
-if ~strcmpi(ensemble.sampler,'ORACLE')
+if ~strcmpi(ensemble.sampler,'GRASP')
     nCondition   = size(ensemble.expFluxes,2)+1;
 else
     nCondition = 1;
@@ -49,6 +49,17 @@ numFluxes    = numel(ensemble.fluxRef);
 ix_mets      = 1:numel(ensemble.metsActive);
 metNames     = ensemble.mets(ensemble.metsActive);
 rxnNames     = ensemble.rxns;
+
+% Remove prefixes
+for ix = 1:numel(metNames)
+    metTemp = strsplit(metNames{ix},'m_');
+    metNames{ix} = metTemp{2};
+end
+
+for ix = 1:numel(rxnNames)
+    rxnTemp = strsplit(rxnNames{ix},'r_');
+    rxnNames{ix} = rxnTemp{2};
+end
 
 % Checks whether any categories were defined
 if (nargin < 3) || isempty(categories)

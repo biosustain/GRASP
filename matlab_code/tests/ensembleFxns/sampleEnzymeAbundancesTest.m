@@ -2,6 +2,8 @@ classdef sampleEnzymeAbundancesTest < matlab.unittest.TestCase
 
     properties
         currentPath
+        relTol = 1e-4;
+        absTol = 1e-4;
     end
     
     methods(TestClassSetup)
@@ -26,7 +28,8 @@ classdef sampleEnzymeAbundancesTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSampleEnzymeAbundances1'));
             trueRes = trueRes.models;
                    
-            testCase.verifyEqual(trueRes, models);   
+            testCase.verifyThat(models, matlab.unittest.constraints.IsEqualTo(trueRes, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
         end
         
         function testSampleEnzymeAbundancesRandom(testCase)
@@ -44,7 +47,8 @@ classdef sampleEnzymeAbundancesTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResSampleEnzymeAbundancesRandom'));
             trueRes = trueRes.models;
                    
-            testCase.verifyEqual(trueRes, models);   
+            testCase.verifyThat(models, matlab.unittest.constraints.IsEqualTo(trueRes, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
         end
     end
 end

@@ -31,7 +31,7 @@ classdef buildKineticFxnTest < matlab.unittest.TestCase
             kineticFxn = 'toy_model1_Kinetics1';
             strucIdx = 1;
             
-            [freeVars,metsActive] = buildKineticFxn(ensemble,kineticFxn,strucIdx);
+            freeVars = buildKineticFxn(ensemble,kineticFxn,strucIdx);
             
             kineticFxn = fileread(fullfile(testCase.reactionsFolder, 'toy_model1_Kinetics1.m'));
             
@@ -41,12 +41,9 @@ classdef buildKineticFxnTest < matlab.unittest.TestCase
                                'm_m10'; 'm_m11'; 'r_r1'; 'r_r2'; 'r_r3';
                                'r_r4'; 'r_r5'; 'r_r6'; 'r_r7'; 'r_r8';
                                'r_r9'; 'r_r10'; 'r_r11'; 'r_r12'; 'r_r13'};
-                           
-            trueResMetsActive = [5; 6; 7; 8; 9; 10; 11];
-            
-            testCase.verifyEqual(trueResKineticFxn,kineticFxn);  
-            testCase.verifyEqual(trueResFreeVars,freeVars);            
-            testCase.verifyEqual(trueResMetsActive, metsActive);            
+                                       
+            testCase.verifyEqual(kineticFxn, trueResKineticFxn);  
+            testCase.verifyEqual(freeVars, trueResFreeVars);            
         end
         
         function testKineticFxnStoicCoef(testCase)
@@ -56,7 +53,7 @@ classdef buildKineticFxnTest < matlab.unittest.TestCase
             kineticFxn = 'toy_model1_Kinetics1';
             strucIdx = 1;
             
-            [freeVars,metsActive] = buildKineticFxn(ensemble,kineticFxn,strucIdx);
+            freeVars = buildKineticFxn(ensemble,kineticFxn,strucIdx);
             
             kineticFxn = fileread(fullfile(testCase.reactionsFolder, 'toy_model1_Kinetics1.m'));
             
@@ -67,13 +64,9 @@ classdef buildKineticFxnTest < matlab.unittest.TestCase
                                'm_m10'; 'm_m11'; 'r_r1'; 'r_r2'; 'r_r3';
                                'r_r4'; 'r_r5'; 'r_r6'; 'r_r7'; 'r_r8';
                                'r_r9'; 'r_r10'; 'r_r11'; 'r_r12'; 'r_r13'};
-                           
-            trueResMetsActive = [5; 6; 7; 8; 9; 10; 11];
-            
-            
-            testCase.verifyEqual(trueResKineticFxn,kineticFxn);  
-            testCase.verifyEqual(trueResFreeVars,freeVars);            
-            testCase.verifyEqual(trueResMetsActive, metsActive);            
+                                                 
+            testCase.verifyEqual(kineticFxn, trueResKineticFxn);  
+            testCase.verifyEqual(freeVars, trueResFreeVars);            
         end
     end
 end

@@ -45,6 +45,10 @@
   
 
   
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/css/cobra.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
@@ -142,6 +146,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="visualization.html">Visualizing results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot.html">Troubleshooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_doc.html">API documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="how_to_contribute.html">How to contribute</a></li>
 </ul>
@@ -181,18 +186,20 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Model analysis</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/model_analysis.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -220,76 +227,73 @@
 <h2>Simulating the model ensemble<a class="headerlink" href="#simulating-the-model-ensemble" title="Permalink to this headline">¶</a></h2>
 <p>To simulate the model you can use the script <code class="docutils literal notranslate"><span class="pre">simulate_model.m</span></code> in the <code class="docutils literal notranslate"><span class="pre">examples</span></code> folder.</p>
 <p>It is worth keeping in mind that GRASP uses scaled enzyme and metabolite concentrations. This is important when simulating perturbations.</p>
-<p>While for enzymes, the concentrations are always scaled concentrations and any perturbations applied will be relative to the reference state (1), for metabolites perturbations can be defined either relative to the reference state (2) or in terms of absolute concentrations, by setting the variable <code class="docutils literal notranslate"><span class="pre">metsAbsOrRel</span></code> to <code class="docutils literal notranslate"><span class="pre">'rel'</span></code> or <code class="docutils literal notranslate"><span class="pre">'abs'</span></code>, respectively.</p>
+<p>While for enzymes, the concentrations are always scaled concentrations and any perturbations applied will be relative to the reference state, for metabolites perturbations can be defined either relative to the reference state or in terms of absolute concentrations, by setting the variable <code class="docutils literal notranslate"><span class="pre">metsAbsOrRel</span></code> to <code class="docutils literal notranslate"><span class="pre">'rel'</span></code> or <code class="docutils literal notranslate"><span class="pre">'abs'</span></code>, respectively.</p>
 <p>As an example, if the initial concentration for a given enzyme is set to <code class="docutils literal notranslate"><span class="pre">2</span></code>, this means its concentration will be twice its concentration in the reference state. The same is true for metabolites if <code class="docutils literal notranslate"><span class="pre">metsAbsOrRel</span></code> is set to <code class="docutils literal notranslate"><span class="pre">'rel'</span></code>.</p>
 <p>If you want to define the initial concentration for a given metabolite in terms of absolute concentrations, <code class="docutils literal notranslate"><span class="pre">metsAbsOrRel</span></code> must be set to <code class="docutils literal notranslate"><span class="pre">'abs'</span></code> and the initial concentration must be specified in <code class="docutils literal notranslate"><span class="pre">mol/L</span></code>.</p>
 <p>Other important variables to define are:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">finalTime</span></code>:  the time of the simulation given in hours;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">interruptTime</span></code>:  when the simulation will be aborted if it is still running, this time is specified in seconds. The idea is to skip simulations that take a long time to run;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">interruptTime</span></code>:  when the simulation will be aborted if it is still running, this time is specified in seconds. The idea is to skip simulations that take a long time to run (probably something is wrong with them anyways);</p></li>
 </ul>
 </div></blockquote>
 <p>Example:</p>
-<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="c">% Add all GRASP functions to the Matlab path</span>
-<span class="n">addpath</span><span class="p">(</span><span class="n">fullfile</span><span class="p">(</span><span class="s">&#39;..&#39;</span><span class="p">,</span> <span class="s">&#39;matlab_code&#39;</span><span class="p">,</span> <span class="s">&#39;patternFxns&#39;</span><span class="p">),</span> <span class="c">...</span>
-        <span class="n">fullfile</span><span class="p">(</span><span class="s">&#39;..&#39;</span><span class="p">,</span> <span class="s">&#39;matlab_code&#39;</span><span class="p">,</span> <span class="s">&#39;ensembleFxns&#39;</span><span class="p">));</span>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="c">% Add all GRASP functions to the Matlab path</span><span class="w"></span>
+<span class="nb">addpath</span><span class="p">(</span><span class="nb">fullfile</span><span class="p">(</span><span class="s">&#39;..&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;matlab_code&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;analysisFxns&#39;</span><span class="p">),</span><span class="w"> </span><span class="k">...</span><span class="w"></span>
+<span class="w">        </span><span class="nb">fullfile</span><span class="p">(</span><span class="s">&#39;..&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;matlab_code&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;ensembleFxns&#39;</span><span class="p">),</span><span class="w"> </span><span class="k">...</span><span class="w"></span>
+<span class="w">        </span><span class="nb">fullfile</span><span class="p">(</span><span class="s">&#39;..&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;matlab_code&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;patternFxns&#39;</span><span class="p">));</span><span class="w"></span>
 
 
-<span class="c">% Define the model ID (file name of the model ensemble)</span>
-<span class="n">modelID</span> <span class="p">=</span> <span class="s">&#39;toy_model&#39;</span><span class="p">;</span>
+<span class="c">% Define the model ID (file name of the model ensemble)</span><span class="w"></span>
+<span class="n">modelID</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;toy_model&#39;</span><span class="p">;</span><span class="w"></span>
 
-<span class="c">% Define the path to the input/output files</span>
-<span class="n">outputFolder</span> <span class="p">=</span> <span class="n">fullfile</span><span class="p">(,</span> <span class="s">&#39;..&#39;</span><span class="p">,</span> <span class="s">&#39;io&#39;</span><span class="p">,</span> <span class="s">&#39;output&#39;</span><span class="p">);</span>
+<span class="c">% Define the path to the input/output files</span><span class="w"></span>
+<span class="n">outputFolder</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">fullfile</span><span class="p">(,</span><span class="w"> </span><span class="s">&#39;..&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;io&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;output&#39;</span><span class="p">);</span><span class="w"></span>
 
-<span class="c">% Define how many seconds until ODE solver is interrupted. The idea is to</span>
-<span class="c">% skip models that take ages to simulate.</span>
-<span class="n">interruptTime</span> <span class="p">=</span> <span class="mi">40</span><span class="p">;</span>
+<span class="c">% How many models in the ensemble you want to simulate</span><span class="w"></span>
+<span class="n">numModels</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span><span class="w"></span>
 
-<span class="c">% Load model ensemble previously generated</span>
-<span class="n">load</span><span class="p">(</span><span class="n">fullfile</span><span class="p">(</span><span class="n">outputFolder</span><span class="p">,</span> <span class="p">[</span><span class="n">modelID</span><span class="p">,</span> <span class="s">&#39;.mat&#39;</span><span class="p">]))</span>
+<span class="c">% How many cores you want to use to run the simulation</span><span class="w"></span>
+<span class="n">numCores</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w"></span>
+
+<span class="c">% Define how many seconds until ODE solver is interrupted. The idea is to</span><span class="w"></span>
+<span class="c">% skip models that take ages to simulate.</span><span class="w"></span>
+<span class="n">interruptTime</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">40</span><span class="p">;</span><span class="w"></span>
+
+<span class="c">% Load model ensemble previously generated</span><span class="w"></span>
+<span class="nb">load</span><span class="p">(</span><span class="nb">fullfile</span><span class="p">(</span><span class="n">outputFolder</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="n">modelID</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;.mat&#39;</span><span class="p">]))</span><span class="w"></span>
+
+<span class="c">% Define whether the initial condition for metabolites is a relative or an</span><span class="w"></span>
+<span class="c">% absolute concentration by setting metsAbsOrRel to either &#39;rel&#39; or &#39;abs&#39;,</span><span class="w"></span>
+<span class="c">% respectively</span><span class="w"></span>
+<span class="n">metsAbsOrRel</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;rel&#39;</span><span class="p">;</span><span class="w"></span>
+
+<span class="c">% Change initial conditions here if you want, format: {rxn/met ID, initial value}</span><span class="w"></span>
+<span class="n">enzymesIC</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">{{</span><span class="s">&#39;r1&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="s">&#39;r10&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">}};</span><span class="w">       </span><span class="c">% Always relative concentrations for enzymes</span><span class="w"></span>
+<span class="n">metsIC</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">{{</span><span class="s">&#39;m5&#39;</span><span class="p">,</span><span class="w"> </span><span class="mf">0.6</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="s">&#39;m11&#39;</span><span class="p">,</span><span class="w"> </span><span class="mf">1.2</span><span class="p">}};</span><span class="w">      </span><span class="c">% When setting metsAbsOrRel = &#39;abs&#39;, absolute concentrations must be given in mol/L</span><span class="w"></span>
+
+<span class="c">% Specifiy the time of simulation (in hours)</span><span class="w"></span>
+<span class="n">finalTime</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"></span>
+
+<span class="c">% Run simulation</span><span class="w"></span>
+<span class="n">simulationRes</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">simulateEnsemble</span><span class="p">(</span><span class="n">ensemble</span><span class="p">,</span><span class="w"> </span><span class="n">finalTime</span><span class="p">,</span><span class="w"> </span><span class="n">enzymesIC</span><span class="p">,</span><span class="w"> </span><span class="n">metsIC</span><span class="p">,</span><span class="w"> </span><span class="n">metsAbsOrRel</span><span class="p">,</span><span class="w"> </span><span class="n">interruptTime</span><span class="p">,</span><span class="w"> </span><span class="n">numModels</span><span class="p">,</span><span class="w"> </span><span class="n">numCores</span><span class="p">);</span><span class="w"></span>
 
 
-<span class="c">% Get default initial conditions, all ones</span>
-<span class="n">freeVars</span> <span class="p">=</span> <span class="nb">numel</span><span class="p">(</span><span class="n">ensemble</span><span class="p">.</span><span class="n">freeVars</span><span class="p">);</span>
-<span class="n">xopt</span> <span class="p">=</span> <span class="nb">ones</span><span class="p">(</span><span class="n">freeVars</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
-<span class="n">ix_mets</span> <span class="p">=</span> <span class="mi">1</span><span class="p">:</span> <span class="nb">numel</span><span class="p">(</span><span class="n">ensemble</span><span class="p">.</span><span class="n">metsActive</span><span class="p">);</span>
-<span class="n">ix_enz</span> <span class="p">=</span> <span class="n">ix_mets</span><span class="p">(</span><span class="k">end</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span> <span class="n">freeVars</span><span class="p">;</span>
-<span class="n">metsIC</span> <span class="p">=</span> <span class="n">xopt</span><span class="p">(</span><span class="n">ix_mets</span><span class="p">);</span>
-<span class="n">enzymesIC</span> <span class="p">=</span> <span class="n">xopt</span><span class="p">(</span><span class="n">ix_enz</span><span class="p">);</span>
-
-<span class="c">% Define whether the initial condition for metabolites is a relative or an</span>
-<span class="c">% absolute concentration by setting metsAbsOrRel to either &#39;rel&#39; or &#39;abs&#39;,</span>
-<span class="c">% respectively</span>
-<span class="n">metsAbsOrRel</span> <span class="p">=</span> <span class="s">&#39;rel&#39;</span><span class="p">;</span>
-
-<span class="c">% Change initial conditions here if you want</span>
-
-<span class="c">% Setting relative concentration for enzyme number 2 to be 1.5x the initial one.</span>
-<span class="n">enzymesIC</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="p">=</span> <span class="mf">1.5</span><span class="p">;</span>
-<span class="c">% Setting the relative metabolite concentrations for metabolite 5 to be 2x the initial one</span>
-<span class="n">metsIC</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="p">=</span> <span class="mi">2</span><span class="p">;</span>          <span class="c">% If metsAbsOrRel = &#39;abs&#39;, the  concentrations must be given in mol/L</span>
-
-<span class="c">% Specifiy the time of simulation (in hours)</span>
-<span class="n">finalTime</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
-
-<span class="c">% Run simulation</span>
-<span class="n">simulationRes</span> <span class="p">=</span> <span class="n">simulateEnsemble</span><span class="p">(</span><span class="n">ensemble</span><span class="p">,</span> <span class="n">finalTime</span><span class="p">,</span> <span class="n">enzymesIC</span><span class="p">,</span> <span class="n">metsIC</span><span class="p">,</span> <span class="n">metsAbsOrRel</span><span class="p">,</span> <span class="n">interruptTime</span><span class="p">);</span>
-
-<span class="c">% Save the results</span>
-<span class="n">save</span><span class="p">(</span><span class="n">fullfile</span><span class="p">(</span><span class="n">outputFolder</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;simulation_&#39;</span><span class="p">,</span> <span class="n">modelID</span><span class="p">,</span> <span class="s">&#39;.mat&#39;</span><span class="p">]),</span> <span class="s">&#39;simulationRes&#39;</span><span class="p">)</span>
-<span class="n">write</span><span class="p">(</span><span class="n">cell2table</span><span class="p">(</span><span class="n">ensemble</span><span class="p">.</span><span class="n">mets</span><span class="p">(</span><span class="n">ensemble</span><span class="p">.</span><span class="n">metsActive</span><span class="p">)),</span> <span class="n">fullfile</span><span class="p">(</span><span class="n">outputFolder</span><span class="p">,</span> <span class="p">[</span><span class="n">modelID</span><span class="p">,</span> <span class="s">&#39;_metsActive.dat&#39;</span><span class="p">]));</span>
-<span class="n">write</span><span class="p">(</span><span class="n">cell2table</span><span class="p">(</span><span class="n">ensemble</span><span class="p">.</span><span class="n">rxns</span><span class="p">(</span><span class="n">ensemble</span><span class="p">.</span><span class="n">activeRxns</span><span class="p">)),</span> <span class="n">fullfile</span><span class="p">(</span><span class="n">outputFolder</span><span class="p">,</span> <span class="p">[</span><span class="n">modelID</span><span class="p">,</span> <span class="s">&#39;_rxnsActive.dat&#39;</span><span class="p">]));</span>
+<span class="c">% Save the results</span><span class="w"></span>
+<span class="nb">save</span><span class="p">(</span><span class="nb">fullfile</span><span class="p">(</span><span class="n">outputFolder</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="s">&#39;simulation_&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">modelID</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;.mat&#39;</span><span class="p">]),</span><span class="w"> </span><span class="s">&#39;simulationRes&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="nb">write</span><span class="p">(</span><span class="nb">cell2table</span><span class="p">(</span><span class="n">ensemble</span><span class="p">.</span><span class="n">mets</span><span class="p">(</span><span class="n">ensemble</span><span class="p">.</span><span class="n">metsActive</span><span class="p">)),</span><span class="w"> </span><span class="nb">fullfile</span><span class="p">(</span><span class="n">outputFolder</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="n">modelID</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;_metsActive.dat&#39;</span><span class="p">]));</span><span class="w"></span>
+<span class="nb">write</span><span class="p">(</span><span class="nb">cell2table</span><span class="p">(</span><span class="n">ensemble</span><span class="p">.</span><span class="n">rxns</span><span class="p">(</span><span class="n">ensemble</span><span class="p">.</span><span class="n">activeRxns</span><span class="p">)),</span><span class="w"> </span><span class="nb">fullfile</span><span class="p">(</span><span class="n">outputFolder</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="n">modelID</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;_rxnsActive.dat&#39;</span><span class="p">]));</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The resulting Matlab structure contains the following fields:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">t</span></code>: time points in each model simulation;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">conc</span></code>: concentrations for each time point and model simulation;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">flux</span></code>: fluxes for each time point and model simulation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">conc</span></code>: metabolite concentrations (relative) for each time point and model simulation;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">flux</span></code>: reaction fluxes (absolute) for each time point and model simulation.</p></li>
 </ul>
 </div></blockquote>
+<p>Metabolite concentrations are always returned as relative values while reaction fluxes are always returned as absolute values.</p>
 <p>To visualize the simulation results you can use the jupyter notebook <code class="docutils literal notranslate"><span class="pre">visualize_simulations.ipynb</span></code> in the <code class="docutils literal notranslate"><span class="pre">visualization</span></code> folder. More details about this notebook can be found in the <a class="reference internal" href="visualization.html#visualization-python"><span class="std std-ref">Visualizing results</span></a> section.</p>
 </div>
 <div class="section" id="metabolic-control-analysis-mca">
@@ -300,8 +304,8 @@
 <p>The resulting Matlab structure contains the following fields:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">xControlAvg</span></code>: average concentration control coefficient for each model ensemble;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">vControlAvg</span></code>: average flux control coefficient for each model ensemble;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xControlAvg</span></code>: average concentration control coefficient for each metabolite over the whole model ensemble;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vControlAvg</span></code>: average flux control coefficient for each reaction over the whole model ensemble;</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">xcounter</span></code>: number of models in the average concentration control coefficient calculation;</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">vcounter</span></code>: number of models in the average flux control coefficient calculation;</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">xControl</span></code>: concentration control coefficient matrix for each model;</p></li>
@@ -310,38 +314,38 @@
 </ul>
 </div></blockquote>
 <p>Example:</p>
-<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="c">% Add all GRASP functions to Matlab&#39;s path</span>
-<span class="n">addpath</span><span class="p">(</span><span class="n">fullfile</span><span class="p">(</span><span class="s">&#39;..&#39;</span><span class="p">,</span> <span class="s">&#39;matlab_code&#39;</span><span class="p">,</span> <span class="s">&#39;patternFxns&#39;</span><span class="p">),</span> <span class="c">...</span>
-        <span class="n">fullfile</span><span class="p">(</span><span class="s">&#39;..&#39;</span><span class="p">,</span> <span class="s">&#39;matlab_code&#39;</span><span class="p">,</span> <span class="s">&#39;ensembleFxns&#39;</span><span class="p">));</span>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="c">% Add all GRASP functions to Matlab&#39;s path</span><span class="w"></span>
+<span class="nb">addpath</span><span class="p">(</span><span class="nb">fullfile</span><span class="p">(</span><span class="s">&#39;..&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;matlab_code&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;patternFxns&#39;</span><span class="p">),</span><span class="w"> </span><span class="k">...</span><span class="w"></span>
+<span class="w">        </span><span class="nb">fullfile</span><span class="p">(</span><span class="s">&#39;..&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;matlab_code&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;ensembleFxns&#39;</span><span class="p">));</span><span class="w"></span>
 
-<span class="c">% Whether or not to save the MCA results for all models and not just mean values</span>
-<span class="n">saveMCAMatrices</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="c">% Whether or not to save the MCA results for all models and not just mean values</span><span class="w"></span>
+<span class="n">saveMCAMatrices</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"></span>
 
-<span class="c">% Define the model ID (file name of the model ensemble)</span>
-<span class="n">modelID</span> <span class="p">=</span> <span class="s">&#39;toy_model&#39;</span><span class="p">;</span>
+<span class="c">% Define the model ID (file name of the model ensemble)</span><span class="w"></span>
+<span class="n">modelID</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;toy_model&#39;</span><span class="p">;</span><span class="w"></span>
 
-<span class="c">% Define the path to the input/output files</span>
-<span class="n">outputFolder</span> <span class="p">=</span> <span class="n">fullfile</span><span class="p">(,</span> <span class="s">&#39;..&#39;</span><span class="p">,</span> <span class="s">&#39;io&#39;</span><span class="p">,</span> <span class="s">&#39;output&#39;</span><span class="p">);</span>
+<span class="c">% Define the path to the input/output files</span><span class="w"></span>
+<span class="n">outputFolder</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">fullfile</span><span class="p">(,</span><span class="w"> </span><span class="s">&#39;..&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;io&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;output&#39;</span><span class="p">);</span><span class="w"></span>
 
-<span class="c">% Load previously generated model ensemble</span>
-<span class="n">load</span><span class="p">(</span><span class="n">fullfile</span><span class="p">(</span><span class="n">outputFolder</span><span class="p">,</span> <span class="p">[</span><span class="n">modelID</span><span class="p">,</span> <span class="s">&#39;.mat&#39;</span><span class="p">]))</span>
+<span class="c">% Load previously generated model ensemble</span><span class="w"></span>
+<span class="nb">load</span><span class="p">(</span><span class="nb">fullfile</span><span class="p">(</span><span class="n">outputFolder</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="n">modelID</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;.mat&#39;</span><span class="p">]))</span><span class="w"></span>
 
-<span class="c">% Run MCA analysis</span>
-<span class="n">mcaResults</span> <span class="p">=</span> <span class="n">controlAnalysis</span><span class="p">(</span><span class="n">ensemble</span><span class="p">,</span> <span class="n">saveMCAMatrices</span><span class="p">);</span>
+<span class="c">% Run MCA analysis</span><span class="w"></span>
+<span class="n">mcaResults</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">controlAnalysis</span><span class="p">(</span><span class="n">ensemble</span><span class="p">,</span><span class="w"> </span><span class="n">saveMCAMatrices</span><span class="p">);</span><span class="w"></span>
 
-<span class="c">% Save MCA results</span>
-<span class="n">save</span><span class="p">(</span><span class="n">fullfile</span><span class="p">(</span><span class="n">outputFolder</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;MCA_&#39;</span><span class="p">,</span> <span class="n">modelID</span><span class="p">,</span> <span class="s">&#39;.mat&#39;</span><span class="p">]),</span> <span class="s">&#39;mcaResults&#39;</span><span class="p">);</span>
-<span class="n">write</span><span class="p">(</span><span class="n">cell2table</span><span class="p">(</span><span class="n">ensemble</span><span class="p">.</span><span class="n">rxns</span><span class="p">(</span><span class="n">ensemble</span><span class="p">.</span><span class="n">activeRxns</span><span class="p">)),</span> <span class="n">fullfile</span><span class="p">(</span><span class="n">outputFolder</span><span class="p">,</span> <span class="p">[</span><span class="n">modelID</span><span class="p">,</span> <span class="s">&#39;_rxnsActive.dat&#39;</span><span class="p">]));</span>
-<span class="n">write</span><span class="p">(</span><span class="n">cell2table</span><span class="p">(</span><span class="n">ensemble</span><span class="p">.</span><span class="n">mets</span><span class="p">(</span><span class="n">ensemble</span><span class="p">.</span><span class="n">metsActive</span><span class="p">)),</span> <span class="n">fullfile</span><span class="p">(</span><span class="n">outputFolder</span><span class="p">,</span> <span class="p">[</span><span class="n">modelID</span><span class="p">,</span> <span class="s">&#39;_metsActive.dat&#39;</span><span class="p">]));</span>
-<span class="n">write</span><span class="p">(</span><span class="n">cell2table</span><span class="p">(</span><span class="n">mcaResults</span><span class="p">.</span><span class="n">enzNames</span><span class="p">),</span> <span class="n">fullfile</span><span class="p">(</span><span class="n">outputFolder</span><span class="p">,</span> <span class="p">[</span><span class="n">modelID</span><span class="p">,</span> <span class="s">&#39;_enzNames.dat&#39;</span><span class="p">]));</span>
+<span class="c">% Save MCA results</span><span class="w"></span>
+<span class="nb">save</span><span class="p">(</span><span class="nb">fullfile</span><span class="p">(</span><span class="n">outputFolder</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="s">&#39;MCA_&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">modelID</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;.mat&#39;</span><span class="p">]),</span><span class="w"> </span><span class="s">&#39;mcaResults&#39;</span><span class="p">);</span><span class="w"></span>
+<span class="nb">write</span><span class="p">(</span><span class="nb">cell2table</span><span class="p">(</span><span class="n">ensemble</span><span class="p">.</span><span class="n">rxns</span><span class="p">(</span><span class="n">ensemble</span><span class="p">.</span><span class="n">activeRxns</span><span class="p">)),</span><span class="w"> </span><span class="nb">fullfile</span><span class="p">(</span><span class="n">outputFolder</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="n">modelID</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;_rxnsActive.dat&#39;</span><span class="p">]));</span><span class="w"></span>
+<span class="nb">write</span><span class="p">(</span><span class="nb">cell2table</span><span class="p">(</span><span class="n">ensemble</span><span class="p">.</span><span class="n">mets</span><span class="p">(</span><span class="n">ensemble</span><span class="p">.</span><span class="n">metsActive</span><span class="p">)),</span><span class="w"> </span><span class="nb">fullfile</span><span class="p">(</span><span class="n">outputFolder</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="n">modelID</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;_metsActive.dat&#39;</span><span class="p">]));</span><span class="w"></span>
+<span class="nb">write</span><span class="p">(</span><span class="nb">cell2table</span><span class="p">(</span><span class="n">mcaResults</span><span class="p">.</span><span class="n">enzNames</span><span class="p">),</span><span class="w"> </span><span class="nb">fullfile</span><span class="p">(</span><span class="n">outputFolder</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="n">modelID</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;_enzNames.dat&#39;</span><span class="p">]));</span><span class="w"></span>
 
-<span class="c">% Plot MCA results - optional</span>
+<span class="c">% Plot MCA results - optional</span><span class="w"></span>
 
-<span class="c">% Optional, Define ranges for displaying the MCA results``:  {1st category, range; 2nd category, range}</span>
-<span class="c">% For example, categories = {&#39;Glycolysis&#39;,[1,20]; &#39;Pentose Phosphate Pathway&#39;,[21,30];&#39;Others&#39;, [31,37]};</span>
-<span class="n">categories</span> <span class="p">=</span> <span class="p">{</span><span class="s">&#39;all&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">]};</span>
+<span class="c">% Optional, Define ranges for displaying the MCA results``:  {1st category, range; 2nd category, range}</span><span class="w"></span>
+<span class="c">% For example, categories = {&#39;Glycolysis&#39;,[1,20]; &#39;Pentose Phosphate Pathway&#39;,[21,30];&#39;Others&#39;, [31,37]};</span><span class="w"></span>
+<span class="nb">categories</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">{</span><span class="s">&#39;all&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">]};</span><span class="w"></span>
 
-<span class="n">plotControlAnalysis</span><span class="p">(</span><span class="n">mcaResults</span><span class="p">,</span> <span class="n">ensemble</span><span class="p">,</span> <span class="n">categories</span><span class="p">);</span>
+<span class="n">plotControlAnalysis</span><span class="p">(</span><span class="n">mcaResults</span><span class="p">,</span><span class="w"> </span><span class="n">ensemble</span><span class="p">,</span><span class="w"> </span><span class="nb">categories</span><span class="p">);</span><span class="w"></span>
 </pre></div>
 </div>
 <p>If you have promiscuous enzymes in your model, you should do response analysis instead of simple control analysis.</p>
@@ -375,30 +379,30 @@
 </ul>
 </div></blockquote>
 <p>Example:</p>
-<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="c">% Add all GRASP functions to Matlab&#39;s path</span>
-<span class="n">addpath</span><span class="p">(</span><span class="n">fullfile</span><span class="p">(</span><span class="s">&#39;..&#39;</span><span class="p">,</span> <span class="s">&#39;matlab_code&#39;</span><span class="p">,</span> <span class="s">&#39;patternFxns&#39;</span><span class="p">),</span> <span class="c">...</span>
-        <span class="n">fullfile</span><span class="p">(</span><span class="s">&#39;..&#39;</span><span class="p">,</span> <span class="s">&#39;matlab_code&#39;</span><span class="p">,</span> <span class="s">&#39;ensembleFxns&#39;</span><span class="p">));</span>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="c">% Add all GRASP functions to Matlab&#39;s path</span><span class="w"></span>
+<span class="nb">addpath</span><span class="p">(</span><span class="nb">fullfile</span><span class="p">(</span><span class="s">&#39;..&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;matlab_code&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;patternFxns&#39;</span><span class="p">),</span><span class="w"> </span><span class="k">...</span><span class="w"></span>
+<span class="w">        </span><span class="nb">fullfile</span><span class="p">(</span><span class="s">&#39;..&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;matlab_code&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;ensembleFxns&#39;</span><span class="p">));</span><span class="w"></span>
 
-<span class="c">% Whether or not to save the MCA results for all models and not just mean values</span>
-<span class="n">saveMCAMatrices</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="c">% Whether or not to save the MCA results for all models and not just mean values</span><span class="w"></span>
+<span class="n">saveMCAMatrices</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"></span>
 
-<span class="c">% Define the model ID (file name of the model ensemble)</span>
-<span class="n">modelID</span> <span class="p">=</span> <span class="s">&#39;toy_model&#39;</span><span class="p">;</span>
+<span class="c">% Define the model ID (file name of the model ensemble)</span><span class="w"></span>
+<span class="n">modelID</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;toy_model&#39;</span><span class="p">;</span><span class="w"></span>
 
-<span class="c">% Define the path to the input/output files</span>
-<span class="n">outputFolder</span> <span class="p">=</span> <span class="n">fullfile</span><span class="p">(,</span> <span class="s">&#39;..&#39;</span><span class="p">,</span> <span class="s">&#39;io&#39;</span><span class="p">,</span> <span class="s">&#39;output&#39;</span><span class="p">);</span>
+<span class="c">% Define the path to the input/output files</span><span class="w"></span>
+<span class="n">outputFolder</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">fullfile</span><span class="p">(,</span><span class="w"> </span><span class="s">&#39;..&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;io&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;output&#39;</span><span class="p">);</span><span class="w"></span>
 
-<span class="c">% threshold of the jacobian&#39;s eigenvalues</span>
-<span class="n">eigThreshold</span> <span class="p">=</span> <span class="mi">10</span>^<span class="o">-</span><span class="mi">5</span><span class="p">;</span>
+<span class="c">% threshold of the jacobian&#39;s eigenvalues</span><span class="w"></span>
+<span class="n">eigThreshold</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">10</span>^<span class="o">-</span><span class="mi">5</span><span class="p">;</span><span class="w"></span>
 
-<span class="c">% Load the model ensemble generated by GRASP</span>
-<span class="n">load</span><span class="p">(</span><span class="n">fullfile</span><span class="p">(</span><span class="n">outputFolder</span><span class="p">,</span> <span class="p">[</span><span class="n">modelID</span><span class="p">,</span> <span class="s">&#39;.mat&#39;</span><span class="p">]));</span>
+<span class="c">% Load the model ensemble generated by GRASP</span><span class="w"></span>
+<span class="nb">load</span><span class="p">(</span><span class="nb">fullfile</span><span class="p">(</span><span class="n">outputFolder</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="n">modelID</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;.mat&#39;</span><span class="p">]));</span><span class="w"></span>
 
-<span class="c">% Run stability analysis</span>
-<span class="n">stabilityRes</span> <span class="p">=</span> <span class="n">ensembleStabilityTest</span><span class="p">(</span><span class="n">ensemble</span><span class="p">,</span> <span class="n">eigThreshold</span><span class="p">);</span>
+<span class="c">% Run stability analysis</span><span class="w"></span>
+<span class="n">stabilityRes</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">ensembleStabilityTest</span><span class="p">(</span><span class="n">ensemble</span><span class="p">,</span><span class="w"> </span><span class="n">eigThreshold</span><span class="p">);</span><span class="w"></span>
 
-<span class="c">% Save the results</span>
-<span class="n">save</span><span class="p">(</span><span class="n">fullfile</span><span class="p">(</span><span class="n">outputFolder</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;stability_&#39;</span><span class="p">,</span> <span class="n">modelID</span><span class="p">,</span> <span class="s">&#39;.mat&#39;</span><span class="p">]),</span> <span class="s">&#39;stabilityRes&#39;</span><span class="p">);</span>
+<span class="c">% Save the results</span><span class="w"></span>
+<span class="nb">save</span><span class="p">(</span><span class="nb">fullfile</span><span class="p">(</span><span class="n">outputFolder</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="s">&#39;stability_&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">modelID</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;.mat&#39;</span><span class="p">]),</span><span class="w"> </span><span class="s">&#39;stabilityRes&#39;</span><span class="p">);</span><span class="w"></span>
 </pre></div>
 </div>
 </div>
@@ -454,10 +458,10 @@
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mathjax/MathJax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   

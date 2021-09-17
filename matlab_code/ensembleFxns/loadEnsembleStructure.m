@@ -15,7 +15,7 @@ function ensemble = loadEnsembleStructure(xlsxFile)
 %    ensemble (struct):   model ensemble data structure
 %
 %               * description (*char*)            : model name basically
-%               * sampler (*char*)                : specifies the sampling mode: ORACLE or rejection [TODO Pedro check if this is correct]
+%               * sampler (*char*)                : specifies the sampling mode: GRASP or rejection
 %               * solver (*char*)                 : which solver to use for the rejection sampler
 %               * numConditions (*int*)           : how many experimental conditions    
 %               * numStruct (*int*)               : how many model structures
@@ -30,26 +30,24 @@ function ensemble = loadEnsembleStructure(xlsxFile)
 %               * exchRxns (*int vector*)         : exchange reactions, marked as transport in rxns sheet
 %               * activeRxns (*int vector*)       : list with reactions marked as modeled
 %               * isoenzymes (*cell*)             : list with isoenzymes
-%               * uniqueIso (*cell*)              : [TODO Nick]
+%               * uniqueIso (*cell*)              : list of unique isoenzymes
 %               * mets (*char cell*)              : metabolite IDs
 %               * metNames (*char cell*)          : metabolite names
-%               * rxnMets (*char cell*)           : [TODO Pedro]
-%               * metsBalanced (*int vector*)     : [TODO Pedro]  
-%               * metsSimulated (*int vector*)    : [TODO Pedro]  
+%               * rxnMets (*char cell*)           : names of reaction metabolites
+%               * metsBalanced (*int vector*)     : indices of balanced metabolites  
+%               * metsSimulated (*int vector*)    : indices of simulated metabolites
 %               * metsFixed (*int vector*)        : which metabolites concentrations are defined as fixed (constant)
-%               * measuredMets (*int vector*)     : which metabolite concentrations were actually measured (vs. estimated)
 %               * Sred (*int matrix*)             : reduced stoichiometric matrix, includes only balanced metabolites and active reactions
 %               * measRates (*double matrix*)     : measured reaction fluxes means
-%               * measRatesStd (*double matrix*)  : measured reaction fluxes standard deviations
-%               * splitRatios (*vector*)          : [TODO Pedro]  
-%               * poolConst (*vector*)            : [TODO Pedro]  
-%               * ineqThermoConst (*vector*)      : [TODO Pedro]      
-%               * expFluxes (*double vector*)     : [TODO Pedro]  
-%               * expFluxesStd (*double vector*)  : [TODO Pedro]     
+%               * measRatesStd (*double matrix*)  : measured reaction fluxes standard deviations 
+%               * poolConst (*vector*)            : coefficients with pool constraints
+%               * ineqThermoConst (*vector*)      : coefficients of thermodynamic inequeality constraints
+%               * expFluxes (*double vector*)     : experimental fluxes mean
+%               * expFluxesStd (*double vector*)  : experimental fluxes standard deviations
 %               * fluxRef (*double vector*)       : reference reaction fluxes means
 %               * fluxRefStd (*double vector*)    : reference reaction fluxes standard deviations
-%               * freeFluxes (*int vector*)       : [TODO Pedro]  
-%               * simWeights (*double vector*)    : [TODO Pedro]  
+%               * freeFluxes (*int vector*)       : free flux variables
+%               * simWeights (*double vector*)    :flux weights for the computation of the data and model discrepancies
 %               * Sthermo (*int matrix*)          : stoichiometric matrix used for thermodynamics, excludes exchange reactions
 %               * gibbsRanges (*double matrix*)   : thermodynamically feasible ranges for Gibbs energies  
 %               * metRanges (*double matrix*)     : thermodynamically feasible ranges for metabolite concentrations
@@ -57,8 +55,8 @@ function ensemble = loadEnsembleStructure(xlsxFile)
 %               * metsDataMin (*double vector*)   : minimum value for scaled metabolite concentrations   
 %               * metsDataMax (*double vector*)   : maximum value for scaled metabolite concentrations  
 %               * metsDataMean (*double vector*)  : mean value for scaled metabolite concentrations   
-%               * prevPrior (*cell*)              : [TODO Pedro] 
-%               * prevPriorInfo (*cell*)          : [TODO Pedro]     
+%               * prevPrior (*cell*)              : previous prior for kinetic parameters (not implemented)
+%               * prevPriorInfo (*cell*)          : information about previous prior (not implemented) 
 %               * allosteric (*cell*)             : which reactions are allosterically regulated
 %               * subunits (*int cell*)           : number of enzyme subunits for each reaction
 %               * rxnMechanisms (*char cell*)     : reaction mechanisms    
@@ -78,11 +76,12 @@ function ensemble = loadEnsembleStructure(xlsxFile)
 %               * fixedExch (*double matrix*)     : fixed exchange reactions
 %               * kineticFxn (*char cell*)        : name of kinetic function used to build the model with all rate laws
 %               * metLists (*char cell*)          : list of metabolites (as defined in patterns) for each reaction
-%               * revMatrix (*int matrix*)        : [TODO Pedro]
-%               * forwardFlux (*int cell*)        : [TODO Pedro]  
-%               * Nelem (*int cell*)              : [TODO Pedro]
-%               * freeVars (*char cell*)          : [TODO Pedro]
-%               * metsActive (*int vector*)       : [TODO Pedro]
+%               * revMatrix (*int matrix*)        : reversibility matrix of the reaction mechanism
+%               * forwardFlux (*int cell*)        : link matrix of enzyme intermediate (nodes) connections in the forward direction 
+%               * Nelem (*int cell*)              : null space basis of the stoichiometric matrix of elementary steps
+%               * freeVars (*char cell*)          : free variables of the model
+%               * metsActive (*int vector*)       : indices of metabolites participating in kinetic reactions
+%               * metsLi (*int vector*)           : indices of linearly independent mass-balanced active metabolites
 %
 % .. Authors:
 %       - Pedro Saa         2016 original code
@@ -99,7 +98,6 @@ xlsxFile            = [xlsxFile,'.xlsx'];                               % add ex
 Sfull               = xlsread(xlsxFile,'stoic');                        % load full stoichiometry
 [xRxns,rxnsList]    = xlsread(xlsxFile,'rxns');                         % load rxn info
 [xMets,metsList]    = xlsread(xlsxFile,'mets');                         % load mets info
-splitRatios         = xlsread(xlsxFile,'splitRatios');                  % load split ratios
 poolConstraints     = xlsread(xlsxFile,'poolConst');                    % load pool constraints
 [measRates,idxMeas] = xlsread(xlsxFile,'measRates');                    % load meas rates data
 xDG_std             = xlsread(xlsxFile,'thermoRxns');                   % load thermodynamic data (rxns)
@@ -117,26 +115,26 @@ idxProt = fixVariableNames(idxProt, 'r');
 idxMets = fixVariableNames(idxMets, 'm');
 
 % Validate input dimensions
-if ~all(size(xData) == [10, 1]) || ~all(size(strData) == [15, 2])
-    error('Check the general sheet, it should have 15 rows and 2 columns.');
+if ~all(size(xData) == [7, 1]) || ~all(size(strData) == [14, 2])
+    error('Check the general sheet, it should have 14 rows and 2 columns.');
 end
 
 nMets = size(Sfull, 2);
 nRxns = size(Sfull, 1);
 
 
-if ~all(size(rxnsList) == [nRxns+1, 5])
-    error(['Check the rxns sheet, it should have ', num2str(nRxns+1), ' rows and 5 columns.', ...
+if ~all(size(rxnsList) == [nRxns+1, 4])
+    error(['Check the rxns sheet, it should have ', num2str(nRxns+1), ' rows and 4 columns.', ...
            newline, ...
-           'Columns it should have: reaction ID, reaction name, transport reaction?, modelled?, isoenzymes.', ...
+           'Columns it should have: reaction ID, reaction name, transport reaction?, isoenzymes.', ...
            newline, ...
            'For a more detailed input validation please use the set_up_grasp_models package.']);
 end
 
-if ~all(size(metsList) == [nMets+1, 6])
-    error(['Check the mets sheet, it should have ', num2str(nMets+1), ' rows and 6 columns.', ...
+if ~all(size(metsList) == [nMets+1, 3])
+    error(['Check the mets sheet, it should have ', num2str(nMets+1), ' rows and 3 columns.', ...
            newline, ...
-           'Columns it should have: metabolite ID, Metabolite name, balanced?, active?, constant?, measured?',...
+           'Columns it should have: metabolite ID, Metabolite name, balanced?',...
            newline, ...
            'For a more detailed input validation please use the set_up_grasp_models package.']);
 end
@@ -165,12 +163,58 @@ if ~all(size(xMetsThermo) == [nMets, 2])
            'For a more detailed input validation please use the set_up_grasp_models package.']);
 end
 
-nRxnsActive = size(find(xRxns(:,2)), 1);
-nMetsActive = size(find(xMets(:,2)), 1);
+
+% Build initial ensemble structure
+ensemble.description   = strData{2,2};
+ensemble.sampler       = strData{3,2};
+ensemble.solver        = strData{4,2};
+ensemble.LPSolver      = strData{5,2};
+ensemble.fluxPrior     = strData{6,2};
+ensemble.thermoPrior   = strData{7,2};
+ensemble.numConditions = xData(1);
+ensemble.numStruct     = xData(2);
+ensemble.numParticles  = xData(3);
+ensemble.parallel      = xData(4);
+ensemble.numCores      = xData(5);
+robustFluxes           = xData(6);
+ensemble.tolerance     = xData(7);
+
+ensemble.S             = Sfull';
+ensemble.rxns          = rxnsList(2:end,1);
+ensemble.rxnNames      = rxnsList(2:end,2);
+ensemble.exchRxns      = find(xRxns(:,1));
+ensemble.activeRxns    = [1:numel(ensemble.rxns)]';
+ensemble.isoenzymes    = rxnsList([2:end],4);
+ensemble.uniqueIso     = unique(ensemble.isoenzymes(~cellfun(@isempty, ensemble.isoenzymes)));
+ensemble.mets          = metsList(2:end,1);
+ensemble.metNames      = metsList(2:end,2);
+ensemble.rxnMets       = cell(length(ensemble.rxnNames),1);
+ensemble.metsBalanced  = find(xMets(:,1));
+ensemble.Sred          = ensemble.S(ensemble.metsBalanced,ensemble.activeRxns);   % Reduced stoichiometry for kinetic model simulation
+ensemble.Sred(sum(abs(ensemble.Sred),2)==0,:) = [];                               % Remove zero rows
+ensemble.Sred(sum(ensemble.Sred~=0,2)==1,:)   = [];                               % Remove unbalanced mets
+[~,ensemble.metsLI] = rref(ensemble.Sred');                                       % Determine linearly independent mass balances    
+
+metsAll = 1:numel(ensemble.mets);
+
+if ensemble.numConditions < 2
+    ensemble.metsFixed = find(~ismember(metsAll, ensemble.metsBalanced))';
+    ensemble.metsActive = ensemble.metsBalanced;
+else
+    metsDataMax = zeros(size(metsData,1), ensemble.numConditions);
+    for ix = 1:ensemble.numConditions
+        metsDataMax(:,ix) = metsData(:,3*ix);
+    end
+    [row, col] = find(metsDataMax == 1);
+    ensemble.metsFixed = unique(row);
+    ensemble.metsActive = find(~ismember(metsAll, ensemble.metsFixed));
+end
 
 
-if size(idxProt,1) ~= nRxnsActive+1 || size(idxProt,2) < 4
-    error(['Check the protData sheet, it should have ', num2str(nRxnsActive+1), ' rows and 4 columns.', ...
+nMetsActive = numel(ensemble.metsActive);
+
+if size(idxProt,1) ~= nRxns+1 || size(idxProt,2) < 1+3*ensemble.numConditions
+    error(['Check the protData sheet, it should have ', num2str(nRxns+1), ' rows and 4 columns.', ...
           newline, ...
           'Columns it should have: reaction/enzyme ID, lower_bound, mean, upper_bound',...
            newline, ...
@@ -179,7 +223,7 @@ if size(idxProt,1) ~= nRxnsActive+1 || size(idxProt,2) < 4
            'Check that only the reactions marked as active in the rxns sheet are included in the protData sheet.']);
 end
 
-if size(idxMets,1) < nMetsActive+1 || size(idxMets,2) < 4
+if size(idxMets,1) < nMetsActive+1 || size(idxMets,2) < 1+3*ensemble.numConditions
     error(['Check the metsData sheet, it should have at least', num2str(nMetsActive), ' rows and 4 columns.', ...
            newline, ...
            'Columns it should have: metabolite ID, lower_bound, mean, upper_bound.',...
@@ -187,44 +231,17 @@ if size(idxMets,1) < nMetsActive+1 || size(idxMets,2) < 4
            'For a more detailed input validation please use the set_up_grasp_models package.']);
 end
 
-% Build initial ensemble structure
-ensemble.description   = strData{2,2};
-ensemble.sampler       = strData{3,2};
-ensemble.solver        = strData{4,2};
-ensemble.LPSolver      = strData{5,2};
-ensemble.numConditions = xData(1);
-ensemble.numStruct     = xData(2);
-ensemble.numParticles  = xData(3);
-ensemble.parallel      = xData(4);
-ensemble.numCores      = xData(5);
-ensemble.alphaAlive    = xData(6);
-robustFluxes           = xData(7);
-computeThermo          = xData(8);
-if isnan(xData(9))
-    ensemble.tolerance = [Inf,xData(10)];
-else
-    ensemble.tolerance = [xData(9),xData(10)];
-end
-ensemble.S             = Sfull';
-ensemble.rxns          = rxnsList(2:end,1);
-ensemble.rxnNames      = rxnsList(2:end,2);
-ensemble.exchRxns      = find(xRxns(:,1));
-ensemble.activeRxns    = find(xRxns(:,2));
-ensemble.isoenzymes    = rxnsList([2:end],5);
-ensemble.uniqueIso     = unique(ensemble.isoenzymes(~cellfun(@isempty, ensemble.isoenzymes)));
-ensemble.mets          = metsList(2:end,1);
-ensemble.metNames      = metsList(2:end,2);
-ensemble.rxnMets       = cell(length(ensemble.rxnNames),1);
-ensemble.metsBalanced  = find(xMets(:,1));
-ensemble.metsSimulated = find(xMets(:,2));
-ensemble.metsFixed     = find(xMets(:,3));
-ensemble.measuredMets  = find(xMets(:,4));
-ensemble.Sred          = ensemble.S(ensemble.metsBalanced,ensemble.activeRxns);   % Reduced stoichiometry for kinetic model simulation
-ensemble.Sred(sum(abs(ensemble.Sred),2)==0,:) = [];                               % Remove zero rows
-ensemble.Sred(sum(ensemble.Sred~=0,2)==1,:)   = [];                               % Remove unbalanced mets
 
 if ~strcmp(ensemble.LPSolver, 'gurobi') && ~strcmp(ensemble.LPSolver, 'linprog')
     error('The linear programming solver must be specified and the value should be either "gurobi" or "linprog".');
+end
+
+if ~strcmp(ensemble.fluxPrior, 'uniform') && ~strcmp(ensemble.fluxPrior, 'normal')
+    error('The prior distribution for the fluxes must be specified and the value should be either "uniform" or "normal".');
+end
+
+if ~strcmp(ensemble.thermoPrior, 'uniform') && ~strcmp(ensemble.thermoPrior, 'normal')
+    error('The prior distribution for the thermodynamic quantities must be specified and the value should be either "uniform" or "normal".');
 end
 
 disp('General information loaded.');
@@ -237,13 +254,6 @@ for ix = 1:ensemble.numConditions+1                     % We have to add the ref
     ensemble.measRates(:,ix)    = measRates(:,2*ix-1);
     ensemble.measRatesStd(:,ix) = measRates(:,2*ix);
 end    
-
-
-% Add split ratios (if any)
-ensemble.splitRatios = [];
-if ~isempty(splitRatios)
-    ensemble.splitRatios = splitRatios';
-end
 
 % Add pool constraints (if any)
 ensemble.poolConst = [];
@@ -260,12 +270,12 @@ if ~isempty(ineqConstraints)
 end
 
 %% 2. Define matrix for flux calculation and compute fluxes based on measured Rates
-Sflux                 = ensemble.S(ensemble.metsBalanced,:);
+ensemble.Sflux                 = ensemble.S(ensemble.metsBalanced,:);
 ensemble.expFluxes    = zeros(length(ensemble.activeRxns),ensemble.numConditions);
 ensemble.expFluxesStd = ensemble.expFluxes;
 idxMeas               = idxMeas(2:end,1);                  % Extract only the meaningful information
 for ix = 1:ensemble.numConditions+1
-    xMean = zeros(size(Sflux,2),1);
+    xMean = zeros(size(ensemble.Sflux,2),1);
     xStd  = xMean;
     for jx = 1:size(idxMeas)                               % Extract information in the right order
         index        = strcmp(ensemble.rxns,idxMeas(jx));
@@ -273,13 +283,9 @@ for ix = 1:ensemble.numConditions+1
         xStd(index)  = ensemble.measRatesStd(jx,ix);
     end
 
-    % Compute fluxes robustly (add split ratios if any)
+    % Compute fluxes robustly
     if robustFluxes
-        if (~isempty(ensemble.splitRatios) && any(ensemble.splitRatios(ix,:)))
-            [vMean,vStd] = computeRobustFluxes([Sflux;ensemble.splitRatios(ix,:)],xMean,xStd);
-        else
-            [vMean,vStd] = computeRobustFluxes(Sflux,xMean,xStd);
-        end
+        [vMean,vStd] = computeRobustFluxes(ensemble.Sflux,xMean,xStd);
     else
         vMean = xMean;
         vStd  = xStd;
@@ -316,43 +322,48 @@ assert(all(abs(ensemble.Sred * ensemble.fluxRef) <10^-8), ...
 
 
 %% 3. Perform thermodynamic calculations
-if computeThermo
-    idxNotExch  = find(~ismember(1:numel(ensemble.rxns),ensemble.exchRxns));
-    ensemble.Sthermo     = ensemble.S(:,idxNotExch);
-    DGr_std     = xDG_std(idxNotExch,:);                                                        % Use only reactions with known thermodynamics
-    vmin        = ensemble.fluxRef; % - 2*ensemble.fluxRefStd;
-    vmax        = ensemble.fluxRef; % + 2*ensemble.fluxRefStd;
-    xmin        = xMetsThermo(:,1);
-    xmax        = xMetsThermo(:,2);
-    DGr_std_min = DGr_std(:,1);
-    DGr_std_max = DGr_std(:,2);
-    [gibbsRanges, metRanges, fluxRanges] = computeGibbsFreeEnergyRanges(Sflux,ensemble.Sthermo,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,idxNotExch,ineqConstraints', ensemble.rxns, ensemble.LPSolver);
-    ensemble.gibbsRanges               = -1e2*ones(size(Sfull,1),2);                            % Allocate memory for DGr calculations
-    ensemble.gibbsRanges(idxNotExch,:) = gibbsRanges;                                           % Remove thermodynamic info from exchang rxns
-    ensemble.metRanges = metRanges;
-    ensemble.G0Ranges = -1e2*ones(size(Sfull,1),2);      
-    ensemble.G0Ranges(idxNotExch,:) = DGr_std;
-    
-else
-    ensemble.gibbsRanges = xDG_std;
-end
+ensemble.idxNotExch   = find(~ismember(1:numel(ensemble.rxns),ensemble.exchRxns));
+ensemble.Sthermo     = ensemble.S(:,ensemble.idxNotExch);
+DGr_std      = xDG_std(ensemble.idxNotExch,:);                                                        % Use only reactions with known thermodynamics
+vmin         = ensemble.fluxRef - 2*abs(ensemble.fluxRefStd);
+vmax         = ensemble.fluxRef + 2*abs(ensemble.fluxRefStd);
+xmin         = xMetsThermo(:,1);
+xmax         = xMetsThermo(:,2);
+DGr_std_min  = DGr_std(:,1);
+DGr_std_max  = DGr_std(:,2);
+
+assert(sum(sign(vmin) - sign(vmax)) == 0, 'The flux directions are not consistent. Please make sure that both the lower and upper bound of the flux ranges (fluxMean - 2*fluxStd and fluxMean + 2*fluxStd, respectively) are either positive or negative.');    
+assert(all(DGr_std_min <= DGr_std_max), "Check the thermoRxns sheet, at least one lower bound is greater than the respective upper bound");
+assert(all(xmin <= xmax), "Check the thermoMets sheet, at least one lower bound is greater than the respective upper bound");
+
+[fluxRanges,DGrRange,DGrStdRange,lnMetRanges,initialTMFAPoint] = computeGibbsFreeEnergyRanges(ensemble,DGr_std_min,DGr_std_max,vmin,vmax,xmin,xmax,ineqConstraints);
+
+ensemble.fluxRanges = fluxRanges;
+ensemble.gibbsRanges = [-100*ones(size(ensemble.S',1),1), 100*ones(size(ensemble.S',1),1)];                          % Allocate memory for DGr calculations
+ensemble.gibbsRanges(ensemble.idxNotExch,:) = DGrRange;                                           % Remove thermodynamic info from exchang rxns
+ensemble.DGrStdRange = DGrStdRange;
+ensemble.lnMetRanges = lnMetRanges;
+ensemble.initialTMFAPoint = initialTMFAPoint;
+
 disp('Thermodynamic data computed and loaded.');
 
 %% 4. Load metabolomic data
 % Determine the kinetically active rxns
 idxMets = idxMets(2:end,1);               % Extract only the meaningful information
-ensemble.metsDataMin  = zeros(length(ensemble.metsSimulated),ensemble.numConditions);
+ensemble.metsDataMin  = zeros(length(ensemble.metsActive),ensemble.numConditions);
 ensemble.metsDataMax  = ensemble.metsDataMin;
 ensemble.metsDataMean = ensemble.metsDataMin;
+
 for ix = 1:ensemble.numConditions
     for jx = 1:size(idxMets,1)            % Extract information in the right order
-        index = strcmp(ensemble.mets(ensemble.metsSimulated),idxMets(jx));
+        index = strcmp(ensemble.mets(ensemble.metsActive),idxMets(jx));
         ensemble.metsDataMin(index,ix)  = metsData(jx,3*ix-2);
         ensemble.metsDataMean(index,ix) = metsData(jx,3*ix-1);
         ensemble.metsDataMax(index,ix)  = metsData(jx,3*ix);
     end
 end
-invalidMets                          = (ismember(ensemble.metsSimulated,ensemble.metsFixed));          % Keep only the information related to simulated mets not fixed
+
+invalidMets                          = (ismember(ensemble.metsActive,ensemble.metsFixed));          % Keep only the information related to simulated mets not fixed
 ensemble.metsDataMin(invalidMets,:)  = [];
 ensemble.metsDataMean(invalidMets,:) = [];
 ensemble.metsDataMax(invalidMets,:)  = [];
@@ -378,8 +389,8 @@ for jx = 1:ensemble.numStruct
     end
     try
         [xKinetic,strKinetic] = xlsread(xlsxFile,['kinetics',num2str(jx)]);                    % read kinetic info from structure jx
-        if size(strKinetic, 1) ~= nRxnsActive+1 || size(strKinetic, 2) < 11
-            error(['Check the kinetics sheet, it should have ', num2str(nRxnsActive+1), ' rows and at least 11 columns.', ...
+        if size(strKinetic, 1) ~= nRxns+1 || size(strKinetic, 2) < 11
+            error(['Check the kinetics sheet, it should have ', num2str(nRxns+1), ' rows and at least 11 columns.', ...
                    newline, ...
                    'Columns it should have: reaction ID, kinetic mechanism, substrate order, product order, promiscuous, inhibitors, activators, negative effectors, positive effectors, allosteric, subunits',...
                    newline, ...
@@ -437,7 +448,7 @@ for jx = 1:ensemble.numStruct
                 ensemble.protDataMax(index,lx)  = protData(kx,3*lx);
             end
         end
-        rxnWithNoProteinData = find(all(ensemble.protDataMax'==1)&all(ensemble.protDataMin'==1)&all(ensemble.protDataMean'==1));        % These rxns are a different kind of 'inactive rxns' thus they are still considered in the active field
+        rxnWithNoProteinData = []; %find(all(ensemble.protDataMax'==1)&all(ensemble.protDataMin'==1)&all(ensemble.protDataMean'==1));        % These rxns are a different kind of 'inactive rxns' thus they are still considered in the active field
         ensemble.protDataMin(rxnWithNoProteinData,:)  = [];                                                                             % remove protein entries for rxns without protein information
         ensemble.protDataMax(rxnWithNoProteinData,:)  = [];
         ensemble.protDataMean(rxnWithNoProteinData,:) = [];
@@ -596,10 +607,9 @@ for jx = 1:ensemble.numStruct
     rmdir(tempReactionsFolder,'s');
 
     % Build kinetic fxn and find active species (do not build hess partern)
-    [freeVars,metsActive] = buildKineticFxn(ensemble,ensemble.kineticFxn{jx},jx);
+    freeVars = buildKineticFxn(ensemble,ensemble.kineticFxn{jx},jx);
     if (jx==1)                                                 % freeVars and freeMets are the same for all the structure
-        ensemble.freeVars    = freeVars;
-        ensemble.metsActive  = metsActive;
+        ensemble.freeVars = freeVars;
     end
     buildKineticFxn(ensemble,ensemble.kineticFxn{jx},jx);
     buildOdeFxn(ensemble,ensemble.kineticFxn{jx},jx);

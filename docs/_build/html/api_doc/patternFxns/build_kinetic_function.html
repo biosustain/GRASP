@@ -45,6 +45,10 @@
   
 
   
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/cobra.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
@@ -138,6 +142,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../model_analysis.html">Model analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualizing results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../troubleshoot.html">Troubleshooting</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../api_doc.html">API documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../analysis_functions.html">Analysis functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../ensemble_functions.html">Ensemble functions</a></li>
@@ -204,11 +209,13 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../api_doc.html">API documentation</a> &raquo;</li>
         
@@ -219,7 +226,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/api_doc/patternFxns/build_kinetic_function.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -235,13 +242,13 @@
             
   <div class="section" id="build-kinetic-function">
 <h1>Build kinetic function<a class="headerlink" href="#build-kinetic-function" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="patternFxns.buildKineticFxn">
-<code class="sig-name descname">buildKineticFxn</code><span class="sig-paren">(</span><em class="sig-param">ensemble</em>, <em class="sig-param">kineticFxn</em>, <em class="sig-param">strucIdx</em><span class="sig-paren">)</span><a class="headerlink" href="#patternFxns.buildKineticFxn" title="Permalink to this definition">¶</a></dt>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="patternFxns.buildKineticFxn">
+<span class="sig-name descname"><span class="pre">buildKineticFxn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">ensemble</span></em>, <em class="sig-param"><span class="pre">kineticFxn</span></em>, <em class="sig-param"><span class="pre">strucIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#patternFxns.buildKineticFxn" title="Permalink to this definition">¶</a></dt>
 <dd><p>Builds kinetic model .m file that is used to actually run the model.</p>
 <p><strong>Usage</strong></p>
 <blockquote>
-<div><p>[freeVars, metsActive] = buildKineticFxn(ensemble, kineticFxn, strucIdx)</p>
+<div><p>freeVars = buildKineticFxn(ensemble, kineticFxn, strucIdx)</p>
 </div></blockquote>
 <p><strong>Inputs</strong></p>
 <blockquote>
@@ -258,8 +265,6 @@ ID of the model structure</p></li>
 <blockquote>
 <div><ul class="simple">
 <li><p><strong>freeVars</strong> (<em>char cell</em>) –
-[TODO Pedro]</p></li>
-<li><p><strong>metsActive</strong> (<em>int cell</em>) –
 [TODO Pedro]</p></li>
 <li><p><strong>written .m file with the model</strong></p></li>
 </ul>
@@ -318,11 +323,10 @@ ID of the model structure</p></li>
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+    <script type="text/javascript" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mathjax/MathJax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

@@ -7,18 +7,9 @@ function [vMean,vStd] = computeRobustFluxes(Sflux,xMean,xStd)
 %
 % .. math::
 %
-%       S_{known} * v_{known} = S_{unknown} * v_{unknown}
+%       S_{known} * v_{known} = - S_{unknown} * v_{unknown}
 %
 % and solving for :math:`v_{unknown}`. 
-% This follows from the fact that 
-%
-% .. math::
-%           
-%       S_{known} * v_{known} = 0  
-%
-%       S_{unknown} * v_{unknown} = 0
-%
-% Otherwise, [TODO : need Pedro's help xD]
 %
 %
 % USAGE:
@@ -59,7 +50,7 @@ Rred     = Rred(abs(singVals)>1e-12,:);
 if isempty(Rred)
     vMean(idxUnkn) = -pinv(Sc)*Sm*xMean(idxMeas);
     
-    assert(size(vMean(~vMean), 1) == size(xMean(idxMeas), 1), 'size(vMean(~vMean), 1) ~= size(xMean(idxMeas), 1), most likely some met that should be balanced was set as not balanced or vice versa. Check the met sheet. Also make sure the reactions in measRates are part of the stoichiometry matrix.');    
+    assert(size(vMean(~vMean), 1) == size(xMean(idxMeas), 1), 'size(vMean(~vMean), 1) ~= size(xMean(idxMeas), 1), most likely some met that should be balanced was set as not balanced or vice versa. Check the met sheet. Also make sure the reactions in measRates are part of the stoichiometric matrix.');    
     
     vMean(~vMean)  = xMean(idxMeas);                                        
     vStd(idxUnkn)  = diag(pinv(Sc)*Sm*Dm*Sm'*pinv(Sc)');

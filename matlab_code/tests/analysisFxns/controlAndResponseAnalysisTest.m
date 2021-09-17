@@ -2,6 +2,8 @@ classdef controlAndResponseAnalysisTest < matlab.unittest.TestCase
    
     properties
         currentPath
+        relTol = 1e-10;
+        absTol = 1e-10;
     end
     
     methods(TestClassSetup)
@@ -36,11 +38,31 @@ classdef controlAndResponseAnalysisTest < matlab.unittest.TestCase
             
             saveResMatrices = 0;
             mcaResults = controlAndResponseAnalysis(ensemble,saveResMatrices);
+
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResControlAndResponseAnalysis1'));
             trueRes = trueRes.mcaResults;
                    
-            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(mcaResults, ...
-                'Within', matlab.unittest.constraints.AbsoluteTolerance(1e-10)));
+            testCase.verifyThat(mcaResults, matlab.unittest.constraints.IsEqualTo(trueRes, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
+        end
+        
+        function testControlAndResponseAnalysisNumbers(testCase)
+                        
+            % To make sure reaction files are created properly
+            xlsxFile = fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_numbers');
+            loadEnsembleStructure(xlsxFile);
+
+            ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_numbers.mat'));
+            ensemble = ensemble.ensemble;
+            
+            saveResMatrices = 0;
+            mcaResults = controlAndResponseAnalysis(ensemble,saveResMatrices);
+
+            trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResControlAndResponseAnalysisNumbers'));
+            trueRes = trueRes.mcaResults;
+
+            testCase.verifyThat(mcaResults, matlab.unittest.constraints.IsEqualTo(trueRes, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
         end
     end
 end

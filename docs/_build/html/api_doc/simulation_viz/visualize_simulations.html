@@ -45,6 +45,10 @@
   
 
   
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/cobra.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
@@ -53,7 +57,7 @@
     <link rel="top" title="GRASP 2.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="Simulation visualization" href="../simulation_viz.html"/>
         <link rel="next" title="Visualize simulations, interactively" href="visualize_simulations_interactive.html"/>
-        <link rel="prev" title="Import simulation data" href="import_simulation_data.html"/> 
+        <link rel="prev" title="Visualize MCA" href="visualize_MCA.html"/> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
@@ -138,12 +142,16 @@
 <li class="toctree-l1"><a class="reference internal" href="../../model_analysis.html">Model analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualizing results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../troubleshoot.html">Troubleshooting</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../api_doc.html">API documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../analysis_functions.html">Analysis functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../ensemble_functions.html">Ensemble functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../pattern_functions.html">Pattern functions</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../simulation_viz.html">Simulation visualization</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="check_simulations.html">Check simulations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="import_simulation_data.html">Import simulation data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="process_thermodynamics.html">Process thermodynamic data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="visualize_MCA.html">Visualize MCA</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Visualize simulations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="visualize_simulations_interactive.html">Visualize simulations, interactively</a></li>
 </ul>
@@ -188,11 +196,13 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../api_doc.html">API documentation</a> &raquo;</li>
         
@@ -203,7 +213,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/api_doc/simulation_viz/visualize_simulations.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -220,9 +230,9 @@
   <div class="section" id="visualize-simulations">
 <h1>Visualize simulations<a class="headerlink" href="#visualize-simulations" title="Permalink to this headline">¶</a></h1>
 <p>This module implements functions to visualize simulation results using <a class="reference external" href="https://matplotlib.org/">matplotlib</a>.</p>
-<span class="target" id="module-simulation_viz.visualize_simulations"></span><dl class="function">
-<dt id="simulation_viz.visualize_simulations.plot_ensemble">
-<code class="sig-name descname">plot_ensemble</code><span class="sig-paren">(</span><em class="sig-param">data_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">quant_type: str</em>, <em class="sig-param">selected_data: list</em>, <em class="sig-param">x_scale: str = 'linear'</em>, <em class="sig-param">y_scale: str = 'linear'</em>, <em class="sig-param">x_lim: tuple = None</em>, <em class="sig-param">y_lim: tuple = None</em>, <em class="sig-param">fig_size: tuple = None</em>, <em class="sig-param">save_plot: bool = False</em>, <em class="sig-param">output_file: str = ''</em><span class="sig-paren">)</span><a class="headerlink" href="#simulation_viz.visualize_simulations.plot_ensemble" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="module-simulation_viz.visualize_simulations"></span><dl class="py function">
+<dt class="sig sig-object py" id="simulation_viz.visualize_simulations.plot_ensemble">
+<span class="sig-name descname"><span class="pre">plot_ensemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quant_type</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_scale</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_scale</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_lim</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_lim</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_plot</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simulation_viz.visualize_simulations.plot_ensemble" title="Permalink to this definition">¶</a></dt>
 <dd><p>Does the same as plot_ensemble_interactive but using matplotlib instead of altair.
 Takes in a pandas dataframe with median and 1st and 3rd quartile concentration or flux values calculated
 over all models in the ensemble for each time point, and plots them using matplotlib.
@@ -260,22 +270,17 @@ path to plot file to be saved, if save_plot == True.</p></li>
 </div></blockquote>
 </dd></dl>
 
-<dl class="function">
-<dt id="simulation_viz.visualize_simulations.plot_model">
-<code class="sig-name descname">plot_model</code><span class="sig-paren">(</span><em class="sig-param">data_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">data_interp_df: pandas.core.frame.DataFrame</em>, <em class="sig-param">model_i: int</em>, <em class="sig-param">quant_type: str</em>, <em class="sig-param">selected_data: list</em>, <em class="sig-param">x_scale: str = 'linear'</em>, <em class="sig-param">y_scale: str = 'linear'</em>, <em class="sig-param">x_lim: tuple = None</em>, <em class="sig-param">y_lim: tuple = None</em>, <em class="sig-param">fig_size: tuple = None</em>, <em class="sig-param">save_plot: bool = False</em>, <em class="sig-param">output_file: str = ''</em><span class="sig-paren">)</span><a class="headerlink" href="#simulation_viz.visualize_simulations.plot_model" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="simulation_viz.visualize_simulations.plot_model">
+<span class="sig-name descname"><span class="pre">plot_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_i</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quant_type</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_scale</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_scale</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_lim</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_lim</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_plot</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simulation_viz.visualize_simulations.plot_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a pandas dataframe with metabolite concentrations or reaction fluxes, it plots the selected ones
 (specified in selected data) for the selected model.
-The plots are made using altair.
-The data plotted depends on which dataframes are given, data_df contains the pure simulation results, while the
-data_interp_df contains the interpolated simulations. The latter is mandatory and is always plotted, while the
-former is optional.</p>
+The plots are made using matplotlib.</p>
 <p><strong>Inputs</strong></p>
 <blockquote>
 <div><ul class="simple">
 <li><p><strong>data_df</strong> –
 dataframe with metabolite concentrations or reaction fluxes.</p></li>
-<li><p><strong>data_interp_df</strong> –
-dataframe with interpolated metabolite concentrations or reactions fluxes.</p></li>
 <li><p><strong>model_i</strong> –
 number of the model to plot.</p></li>
 <li><p><strong>quant_type</strong> –
@@ -321,7 +326,7 @@ path to plot file to be saved, if save_plot == True.</p></li>
         <a href="visualize_simulations_interactive.html" class="btn btn-default float-right" title="Visualize simulations, interactively" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="import_simulation_data.html" class="btn btn-default" title="Import simulation data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="visualize_MCA.html" class="btn btn-default" title="Visualize MCA" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -358,11 +363,10 @@ path to plot file to be saved, if save_plot == True.</p></li>
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+    <script type="text/javascript" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mathjax/MathJax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

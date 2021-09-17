@@ -17,8 +17,8 @@ classdef exportSBMLTest < matlab.unittest.TestCase
             seed = 1;
             rng(seed)
             
-            loadEnsembleStructure(fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_no_promiscuous2'));
-            ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_no_promiscuous2.mat'));
+            loadEnsembleStructure(fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_no_promiscuous2_sbml'));
+            ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_no_promiscuous2_sbml.mat'));
             ensemble = ensemble.ensemble;
             
             outputFolder = fullfile(testCase.currentPath{1}, 'testFiles');
@@ -35,7 +35,7 @@ classdef exportSBMLTest < matlab.unittest.TestCase
             % the test will fail for different versions.
             indTrueRes = strfind(trueRes, '<model id=');
             indRes = strfind(SBMLres, '<model id=');
-            testCase.verifyEqual(trueRes(indTrueRes:end), SBMLres(indRes:end));
+            testCase.verifyEqual(SBMLres(indRes:end), trueRes(indTrueRes:end));
         end
        
         
@@ -44,8 +44,8 @@ classdef exportSBMLTest < matlab.unittest.TestCase
             seed = 1;
             rng(seed)
             
-            loadEnsembleStructure(fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_allosteric2'));
-            ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_allosteric2.mat'));
+            loadEnsembleStructure(fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_allosteric2_sbml'));
+            ensemble = load(fullfile(testCase.currentPath{1}, 'testFiles', 'toy_model1_allosteric2_sbml.mat'));
             ensemble = ensemble.ensemble;
             
             outputFolder = fullfile(testCase.currentPath{1}, 'testFiles');
@@ -62,7 +62,7 @@ classdef exportSBMLTest < matlab.unittest.TestCase
             % the test will fail for different versions.       
             indTrueRes = strfind(trueRes, '<model id=');
             indRes = strfind(SBMLres, '<model id=');
-            testCase.verifyEqual(trueRes(indTrueRes:end), SBMLres(indRes:end));
+            testCase.verifyEqual(SBMLres(indRes:end), trueRes(indTrueRes:end));
         end
         
     end

@@ -5,11 +5,21 @@ Visualizing results
 
 Three jupyter notebooks are provided in the ``visualization`` folder to visualize:
 
- - the reactions free Gibbs energies and fluxes, to check if these are compatible;
+ - the reactions Gibbs free energies and fluxes, to check if these are compatible;
  - the metabolic control analysis (MCA) results;
  - the results from model simulations.
 
-The package requirements are specified in the ``requirements.txt`` file.
+The package requirements are specified in the ``requirements.txt`` file. |br|
+In particular you'll need to install the following packages:
+
+ - jupyter notebook or jupyter lab 
+ - pandas
+ - numpy
+ - scipy
+ - matplotlib
+ - altair
+
+To install the visualization package itself, open the terminal, go to the ``visualization/simulation_viz`` folder and type ``pip install .``
 
 
 
@@ -56,3 +66,7 @@ To run the notebook you need to specify:
 
 For more info about each function in the notebook, what it does and what are the arguments, please see :ref:`simulation_viz_python`.
 
+
+.. |br| raw:: html
+
+      <br>

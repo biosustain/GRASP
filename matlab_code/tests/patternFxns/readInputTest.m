@@ -18,10 +18,10 @@ classdef readInputTest < matlab.unittest.TestCase
                                     'k11',0,0,0,'k10.*P',0};
             trueResForwardFlux = [1,2;1,3;2,4;4,5;5,6;6,1];
             
-            testCase.verifyEqual(trueResNodeList,nodeList);
-            testCase.verifyEqual(trueResEdge,edge);
-            testCase.verifyEqual(trueResKineticMatrix,kineticMatrix);
-            testCase.verifyEqual(trueResForwardFlux,forwardFlux);
+            testCase.verifyEqual(nodeList, trueResNodeList);
+            testCase.verifyEqual(edge, trueResEdge);
+            testCase.verifyEqual(kineticMatrix, trueResKineticMatrix);
+            testCase.verifyEqual(forwardFlux, trueResForwardFlux);
             
         end
         
@@ -47,10 +47,10 @@ classdef readInputTest < matlab.unittest.TestCase
                                     0,'k21';'k23',0,0,0,0,0,0,0,0,'k22.*P2',0};
             trueResForwardFlux = [1,2;2,3;2,4;4,5;5,6;6,1;1,7;7,8;7,9;9,10;10,11;11,1];
             
-            testCase.verifyEqual(trueResNodeList,nodeList);
-            testCase.verifyEqual(trueResEdge,edge);
-            testCase.verifyEqual(trueResKineticMatrix,kineticMatrix);
-            testCase.verifyEqual(trueResForwardFlux,forwardFlux);
+            testCase.verifyEqual(nodeList, trueResNodeList);
+            testCase.verifyEqual(edge, trueResEdge);
+            testCase.verifyEqual(kineticMatrix, trueResKineticMatrix);
+            testCase.verifyEqual(forwardFlux, trueResForwardFlux);
             
         end
         
@@ -70,10 +70,10 @@ classdef readInputTest < matlab.unittest.TestCase
                                     'k15',0,0,0,'k12.*P',0,0;'k17',0,0,0,'k14.*Q',0,0};
             trueResForwardFlux = [1,2;1,3;2,4;3,4;4,5;5,6;5,7;6,1;7,1];
             
-            testCase.verifyEqual(trueResNodeList,nodeList);
-            testCase.verifyEqual(trueResEdge,edge);
-            testCase.verifyEqual(trueResKineticMatrix,kineticMatrix);
-            testCase.verifyEqual(trueResForwardFlux,forwardFlux);
+            testCase.verifyEqual(nodeList, trueResNodeList);
+            testCase.verifyEqual(edge, trueResEdge);
+            testCase.verifyEqual(kineticMatrix, trueResKineticMatrix);
+            testCase.verifyEqual(forwardFlux, trueResForwardFlux);
             
         end
     end

@@ -39,9 +39,9 @@ classdef reactionPatternTest < matlab.unittest.TestCase
             trueResForwardFlux = [1,2;1,3;2,4;4,5;5,6;6,1];
             trueResMetList = {'*A','*B','*I','*P','*Q'};
            
-            testCase.verifyEqual(trueResRevMatrix, revMatrix);  
-            testCase.verifyEqual(trueResForwardFlux, forwardFlux);  
-            testCase.verifyEqual(trueResMetList, metList);  
+            testCase.verifyEqual(revMatrix, trueResRevMatrix);  
+            testCase.verifyEqual(forwardFlux, trueResForwardFlux);  
+            testCase.verifyEqual(metList, trueResMetList);  
             
         end
         
@@ -60,9 +60,9 @@ classdef reactionPatternTest < matlab.unittest.TestCase
             trueResForwardFlux = [1,2;2,3;3,4;4,5;5,1];
             trueResMetList = {'*A','*B','*P','*Q'};
            
-            testCase.verifyEqual(trueResRevMatrix, revMatrix);  
-            testCase.verifyEqual(trueResForwardFlux, forwardFlux);  
-            testCase.verifyEqual(trueResMetList, metList);  
+            testCase.verifyEqual(revMatrix, trueResRevMatrix);  
+            testCase.verifyEqual(forwardFlux, trueResForwardFlux);  
+            testCase.verifyEqual(metList, trueResMetList);  
             
         end
         
@@ -81,9 +81,9 @@ classdef reactionPatternTest < matlab.unittest.TestCase
             trueResForwardFlux = [1,2;2,3;2,4;4,5;5,6;6,1;1,7;7,8;7,9;9,10;10,11;11,1];
             trueResMetList = {'*A','*B','*C','*D','*I','*P1','*P2','*Q','*R'};
            
-            testCase.verifyEqual(trueResRevMatrix, revMatrix);  
-            testCase.verifyEqual(trueResForwardFlux, forwardFlux);  
-            testCase.verifyEqual(trueResMetList, metList);  
+            testCase.verifyEqual(revMatrix, trueResRevMatrix);  
+            testCase.verifyEqual(forwardFlux, trueResForwardFlux);  
+            testCase.verifyEqual(metList, trueResMetList);  
             
         end
         
@@ -102,9 +102,9 @@ classdef reactionPatternTest < matlab.unittest.TestCase
             trueResForwardFlux = [1,2;1,3;2,4;3,4;4,5;5,6;5,7;6,1;7,1];
             trueResMetList = {'*A','*B','*P','*Q'};
            
-            testCase.verifyEqual(trueResRevMatrix, revMatrix);  
-            testCase.verifyEqual(trueResForwardFlux, forwardFlux);  
-            testCase.verifyEqual(trueResMetList, metList);  
+            testCase.verifyEqual(revMatrix, trueResRevMatrix);  
+            testCase.verifyEqual(forwardFlux, trueResForwardFlux);  
+            testCase.verifyEqual(metList, trueResMetList);  
             
         end
     end

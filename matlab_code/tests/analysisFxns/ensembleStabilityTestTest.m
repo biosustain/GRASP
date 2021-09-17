@@ -2,6 +2,8 @@ classdef ensembleStabilityTestTest < matlab.unittest.TestCase
    
     properties
         currentPath
+        relTol = 1e-10;
+        absTol = 1e-10;
     end
     
     methods(TestClassSetup)
@@ -39,8 +41,8 @@ classdef ensembleStabilityTestTest < matlab.unittest.TestCase
             trueRes = load(fullfile(testCase.currentPath{1}, 'testFiles', 'trueResEnsembleStabilityTest1'));
             trueRes = trueRes.stabilityRes;
                    
-            testCase.verifyThat(trueRes, matlab.unittest.constraints.IsEqualTo(stabilityRes, ...
-                'Within', matlab.unittest.constraints.AbsoluteTolerance(1e-10) & matlab.unittest.constraints.RelativeTolerance(1e-10)));
+            testCase.verifyThat(stabilityRes, matlab.unittest.constraints.IsEqualTo(trueRes, ...
+                'Within', matlab.unittest.constraints.RelativeTolerance(testCase.relTol) | matlab.unittest.constraints.AbsoluteTolerance(testCase.absTol)));  
             
         end
     end
