@@ -35,8 +35,8 @@ It has the following sheets:
  - stoic_: where the model's (transposed) stoichiometric matrix is defined;
  - mets_: where all the metabolites are specified;
  - rxns_: where all reactions are specified;
- - poolConst_: [TODO Pedro];
- - thermo_ineq_constraints_: [TODO Pedro];
+ - poolConst_: where the pool (conservation) constraints are specified;
+ - thermo_ineq_constraints_: where thermodynamic constraints for the log-concentrations are specified in the form of linear inequality constraints (ratio contraints in concentration space);
  - thermoRxns_: where the standard Gibbs energies are specified for each reaction in the model (in kJ/mol);
  - thermoMets_: where the metabolite concentrations used to calculate reaction Gibbs energies are specified (in mol/L);
  - measRates_: where known reactions fluxes are specified (in mmol/L/h);
