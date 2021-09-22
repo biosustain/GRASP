@@ -99,13 +99,19 @@ This sheet must have 4 columns:
 poolConst
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-[TODO Pedro]
+This sheet must have 2 or more columns (1 + number of experimental conditions):
+ 
+ - ``metabolite ID``: the metabolite ids, where the last row corresponds to the right-hand side of the (normalized) total pool value;
+ - ``row 2``: the stoichiometric coefficients of each constraint. For example, if the pool constraint involves metabolites such as ``adp`` and ``atp``, there should be a 1 in the corresponding rows and zeros in the rows associated with the other metabolites, i.e., adp + atp = normalized_pool_value. The final row value corresponds to the (normalized) total pool value
 
 
 thermo_ineq_constraints
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-[TODO Pedro]
+This sheet must have 2 or more columns (1 + number of metabolite ratio constraints to be implemented at the reference state):
+ 
+ - ``metabolite ID``: the metabolite ids, where the last row corresponds to the right-hand side of the ratio constraint. The constraint sense is ``<=``;
+ - ``row 2``: the stoichiometric coefficients of the ratio constraints (typically ones). For example, if the ratio constraint is ``adp/atp <= ratio_value``, there should be a 1 in front of ``adp`` and -1 in front of ``atp`` (this is because ratio constraints become linear in log-space). The final row value corresponds to the log of the ratio_value.
 
 
 thermoRxns
