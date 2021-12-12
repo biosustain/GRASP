@@ -74,3 +74,6 @@ To run the unit tests, at the moment, go to `matlab_code/tests` and run the scri
  - when using altair in the jupyter notebooks you might get the error `<VegaLite 2 object>` when trying to plot something. 
     - you should add `alt.renderers.enable('default')` after importing altair. 
  - GRASP might no longer work with more than one model structure.
+
+
+adding stuff
