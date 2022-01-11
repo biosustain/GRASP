@@ -279,7 +279,7 @@ while fluxdGInconsistent
             if max(abs(loopConditionDGr)) <= 1e-4 && max(abs(loopConditionDGrStd)) <= 1e-4
                 disp('The initial point obtained from TMFA is feasible and valid for starting the sampler.');
             else
-                error(['The initial point obtained from TMFA is not thermodynamically feasible, the sum of dGs for all reactions involved in a loop is not zero. This can probably be solved by loosening some bounds in thermoRxns or thermoMets. The residual for DGr is ', num2str(max(abs(loopConditionDGr))), ' and ', num2str(max(abs(loopConditionDGrStd))), ' for standard dG. If you want to change the tolerances open the file matlab_code/ensembleFxns/computGibbsFreenEnergyRanges.m and modify the line 283.'])
+                error(['The initial point obtained from TMFA is not thermodynamically feasible, the sum of dGs for all reactions involved in a loop is not zero. This can probably be solved by loosening some bounds in thermoRxns or thermoMets. The residual for DGr is ', num2str(max(abs(loopConditionDGr))), ' and ', num2str(max(abs(loopConditionDGrStd))), ' for standard dG. If you want to change the tolerances open the file matlab_code/ensembleFxns/computGibbsFreenEnergyRanges.m and modify the line 279.'])
             end
         else
             disp('The initial point obtained from TMFA is feasible and valid for starting the sampler.');
