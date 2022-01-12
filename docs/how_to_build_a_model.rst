@@ -14,7 +14,7 @@ The input file contains the following information:
 
 To define an enzyme mechanism, a pattern file needs to be specified, which defines the metabolites binding/release order. Instructions on how to specify such file can be found below in :ref:`pattern_file_specification`.
 
-Setting up the excel input file is a fairly tedious and error prone process, thus we advise you to use the python package  `set_up_grasp_models <https://github.com/biosustain/set_up_grasp_models>`_.
+Setting up the excel input file is a fairly tedious and error prone process, thus we advise you to use the python package  `set_up_grasp_models <https://github.com/biosustain/set_up_grasp_models>`_ as a starting point.
 This package can also be used to make sure the excel input file is valid.
 
 Below is a description of every sheet and every column that must be filled in the excel input file.
@@ -35,8 +35,8 @@ It has the following sheets:
  - stoic_: where the model's (transposed) stoichiometric matrix is defined;
  - mets_: where all the metabolites are specified;
  - rxns_: where all reactions are specified;
- - poolConst_: [TODO Pedro];
- - thermo_ineq_constraints_: [TODO Pedro];
+ - poolConst_: where conservation relations can be defined for groups of pool metabolites (e.g., NAD/NADH) for each experimental condition;
+ - thermo_ineq_constraints_: where ratio inequality constraints on metabolite concentrations can be defined;
  - thermoRxns_: where the standard Gibbs energies are specified for each reaction in the model (in kJ/mol);
  - thermoMets_: where the metabolite concentrations used to calculate reaction Gibbs energies are specified (in mol/L);
  - measRates_: where known reactions fluxes are specified (in mmol/L/h);

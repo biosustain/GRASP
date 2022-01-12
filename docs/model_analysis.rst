@@ -167,9 +167,9 @@ where :math:`C_v^J` is the flux control coefficient matrix and :math:`\Pi` is th
 
 The implementation is based on
 
- - https://doi.org/10.1002/9780470475935.ch3, section on MCA;
- - https://doi.org/10.1111/j.1432-1033.1990.tb15329.x;
- - https://doi.org/10.1111/j.1432-1033.1990.tb15330.x.
+ - `Computational Models of Metabolism: Stability and Regulation in Metabolic Networks <https://doi.org/10.1002/9780470475935.ch3>`_, section on MCA;
+ - `Enzyme-enzyme interactions and control analysis: 1. The case of non-additivity: monomer-oligomer associations <https://doi.org/10.1111/j.1432-1033.1990.tb15329.x>`_;
+ - `Enzyme-enzyme interactions and control analysis: 2. The case of non-independence: heterologous associations <https://doi.org/10.1111/j.1432-1033.1990.tb15330.x>`_.
 
 
 You can do response analysis by using the functions ``controlAndResponseAnalysis`` instead of ``controlAnalysis`` and ``plotControlAndResponseAnalysis`` instead of ``plotControlAnalysis``.

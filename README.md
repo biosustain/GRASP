@@ -5,23 +5,21 @@
 GRASP is a Matlab package to sample thermodynamically feasible kinetic model ensembles.
 As input it takes an excel file containing the model stoichiometry, a flux distribution, and Gibbs energies.
 
-It also performs Metabolic Control Analysis (MCA) and stability analysis on the resulting ensembles. The resulting ensembles can also be simulated. 
+It also performs Metabolic Control Analysis (MCA) and stability analysis on the resulting ensembles. The resulting ensembles can also be simulated, and individual models can be exported to SBML.
 
-For now the documentation can be accessed by opening the file `index.html` in `GRASP/docs/_build/html`  (temporary solution).
+The documentation can be found [here](https://graspk.readthedocs.io).
 
 
 ## Table of contents
 
-- [GRASP](#grasp)
-  - [Introduction](#introduction)
-  - [Table of contents](#table-of-contents)
-  - [Installation](#installation)
-    - [Matlab requirements](#matlab-requirements)
-    - [Python requirements (only for the jupyter notebooks in `visualization`, which are not really part of GRASP)](#python-requirements-only-for-the-jupyter-notebooks-in-visualization-which-are-not-really-part-of-grasp)
-  - [Usage](#usage)
-  - [Building the documentation](#building-the-documentation)
-  - [Running unit tests](#running-unit-tests)
-  - [Know issues and limitations](#know-issues-and-limitations)
+- [Introduction](#introduction)
+- [Installation](#installation)
+  - [Matlab requirements](#matlab-requirements)
+  - [Python requirements (only for the jupyter notebooks in `visualization`, which are not really part of GRASP)](#python-requirements-only-for-the-jupyter-notebooks-in-visualization-which-are-not-really-part-of-grasp)
+- [Usage](#usage)
+- [Building the documentation](#building-the-documentation)
+- [Running unit tests](#running-unit-tests)
+- [Know issues and limitations](#know-issues-and-limitations)
 
 
 ## Installation
@@ -29,19 +27,20 @@ For now the documentation can be accessed by opening the file `index.html` in `G
 ### Matlab requirements
 
 * Matlab's Parallel Computing Toolbox
-* Matlab's Optimization Toobox
 * Matlab's Bioinformatics Toolbox
+* Matlab's Optimization Toobox (to run GRASP in parallel mode)
 * Matlab's SimBiology Toolbox (to export models to SBML)
 
 If you don't want to use the Matlab solver to solve the linear programming problems, you can install Gurobi and just specify in the input file (`general` sheet) that you want to use gurobi instead of linprog.
 
 ### Python requirements (only for the jupyter notebooks in `visualization`, which are not really part of GRASP)
 
+* jupyter lab or jupyter notebook
 * numpy
 * pandas
 * scipy
-* altair (only for the jupyter notebook)
-* vega (dependency of altair)
+* matplotlib
+* altair
 
 ## Usage
 
@@ -54,7 +53,7 @@ To do these, you can find example scripts in the `examples` folder and tutorials
  
 Once you have the results, you can use the jupyter notebooks in the `visualization` folder to visualize the results.
 
-For more details, see the documentation by opening the `index.html` file at `GRASP/docs/_build/html` (temporary solution).
+For more details, see the documentation [here](https://graspk.readthedocs.io).
 
 
 ## Building the documentation
@@ -65,7 +64,7 @@ Once all the dependencies are installed (please make sure the versions are corre
 
 ## Running unit tests
 
-To run the unit tests, at the moment, go to `matlab_code/tests` and run the script `run_unit_tests.m`.
+To run the unit tests go to `matlab_code/tests` and run the script `run_unit_tests.m`.
 
 
 ## Know issues and limitations
