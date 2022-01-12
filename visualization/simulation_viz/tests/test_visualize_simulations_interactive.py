@@ -3,9 +3,9 @@ import unittest
 
 import scipy.io
 
-from simulation_viz.simulation_viz.import_simulation_data import gather_conc_data, gather_flux_data,\
+from simulation_viz.import_simulation_data import gather_conc_data, gather_flux_data,\
     get_met_rxn_names, aggregate_time_series, import_ref_conc, import_ref_flux
-from simulation_viz.simulation_viz.visualize_simulations_interactive import plot_ensemble_interactive, \
+from simulation_viz.visualize_simulations_interactive import plot_ensemble_interactive, \
     plot_model_interactive
 
 
