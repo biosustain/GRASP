@@ -13,7 +13,7 @@ The resulting model ensemble can then be simulated or subject to Metabolic Contr
 
 What do you actually need to build the model?
 
- - fluxes for all reactions (or enough to determine the fluxes of missing reactions);
+ - absolute fluxes for all reactions (or enough to determine the fluxes of missing reactions);
  - standard Gibbs energies for all reactions;
  - absolute metabolite concentrations;
  - if available, enzyme regulation information (enzyme inhibitors and activators);
@@ -22,8 +22,8 @@ What do you actually need to build the model?
 
 For more information on how the framework works, please see:
 
- - https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004195
- - https://www.nature.com/articles/srep29635
+ - `A General Framework for Thermodynamically Consistent Parameterization and Efficient Sampling of Enzymatic Reactions <https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004195>`_ 
+ - `Construction of feasible and accurate kinetic models of metabolism: A Bayesian approach <https://www.nature.com/articles/srep29635>`_
 
 
 
