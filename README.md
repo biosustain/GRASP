@@ -1,5 +1,9 @@
 # GRASP
 
+<a href='https://graspk.readthedocs.io/en/latest/?badge=latest'>
+    <img src='https://readthedocs.org/projects/graspk/badge/?version=latest' alt='Documentation Status' />
+</a>
+
 ## Introduction 
 
 GRASP is a Matlab package to sample thermodynamically feasible kinetic model ensembles.
