@@ -95,17 +95,18 @@ This sheet must have 4 columns:
  - ``isoenzymes``: if there are isoenzymes they must be specified in this column, e.g. if PFK1 and PFK2 are isoenzymes, in the isoenzymes column you should write PFK in PFK1 and PFK2 rows. This is important when the flux through the whole reaction is known but not how much is catalyzed by each isoenzyme individually. By specifying the isoenzymes in this sheet the fraction of flux catalyzed by each isoenzyme individually is sampled randomly for each model.
 
 
-
 poolConst
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-[TODO Pedro]
+This sheet is optional and it is only required if pool concentration data is to be used (rejection mode). If the latter is the case, the sheet must have the first column indicating the names of all the active species (metabolites and enzymes, in this order) in the model including an additional row (the ID of the last row is not important, but should be filled). After the first column is defined, there should be one column per experimental condition (excluding the reference condition). The headers of these columns are irrelevant, but should be filled. In each of these columns, there should be a ‘1’ in the position of each conserved species and a ‘0’ otherwise. Finally, the last value in these columns should be filled with the experimental relative pool concentration value for each condition. Currently, GRASP supports only the addition of one of these constraints per experimental condition.
+
+See tutorial_02_adenine_cycle under `io/input` for an example.
 
 
 thermo_ineq_constraints
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-[TODO Pedro]
+This sheet is optional and it is only required if concentration ratio inequalities are to be used (rejection mode). In log space, these constraints translate into linear relationships that can be included in GRASP. If this information is available, the sheet must have the first column indicating the names of all the considered metabolites in the model including an additional row (the ID of the last row is not important, but should be filled). After the first column is defined, there should be one column per ratio condition. The headers of these columns are irrelevant, but should be filled. In each of these columns, there should be a ‘1’ (metabolite in the numerator) or ‘-1’ (metabolite in the denominator) in the position of the metabolites whose ratios are known. The rest of entries should be filled with ‘0’. Finally, the last value in these columns should be filled with the right-hand side value of the inequality with ‘<’. GRASP treats these constraints globally, which means that they will included in the fitting of all experimental conditions.
 
 
 thermoRxns
