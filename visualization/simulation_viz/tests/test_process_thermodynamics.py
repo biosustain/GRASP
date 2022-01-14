@@ -4,7 +4,7 @@ import unittest.mock
 
 import pandas as pd
 
-from simulation_viz.simulation_viz.process_thermodynamics import get_fluxes_and_dGs, calculate_dG
+from simulation_viz.process_thermodynamics import get_fluxes_and_dGs, calculate_dG
 
 
 class TestThermodynamicsChecks(unittest.TestCase):
@@ -18,7 +18,7 @@ class TestThermodynamicsChecks(unittest.TestCase):
         true_res_flux = pd.read_hdf(os.path.join(self.test_folder, 'true_res_get_fluxes_and_dGs_modelv1_flux.h5'), 'df')
 
         data_dict = pd.read_excel(os.path.join(self.test_folder, 'model_v1_base.xlsx'), sheet_name=None, index_col=0)
-        dG_df, flux_df = get_fluxes_and_dGs(data_dict)
+        flux_df, dG_df = get_fluxes_and_dGs(data_dict)
 
         self.assertTrue(dG_df.equals(true_res_dG))
         self.assertTrue(flux_df.equals(true_res_flux))
@@ -27,8 +27,8 @@ class TestThermodynamicsChecks(unittest.TestCase):
         true_res_dG = pd.read_hdf(os.path.join(self.test_folder, 'true_res_get_fluxes_and_dGs_HMP_dG.h5'), 'df')
         true_res_flux = pd.read_hdf(os.path.join(self.test_folder, 'true_res_get_fluxes_and_dGs_HMP_flux.h5'), 'df')
 
-        data_dict = pd.read_excel(os.path.join(self.test_folder, 'HMP2360_r0_t0.xlsx'), sheet_name=None, index_col=0)
-        dG_df, flux_df = get_fluxes_and_dGs(data_dict)
+        data_dict = pd.read_excel(os.path.join(self.test_folder, 'toy_model_promiscuous.xlsx'), sheet_name=None, index_col=0)
+        flux_df, dG_df = get_fluxes_and_dGs(data_dict)
 
         self.assertTrue(dG_df.equals(true_res_dG))
         self.assertTrue(flux_df.equals(true_res_flux))

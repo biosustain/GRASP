@@ -162,14 +162,6 @@ def _get_meas_rates(data_dict: dict, rxn_list: list) -> tuple:
     return meas_rates_mean, meas_rates_std
 
 
-def _get_inactive_reactions(data_dict: dict) -> np.ndarray:
-    reactions_df = data_dict['rxns']
-
-    inactive_rxns_ind = np.where(reactions_df['modelled?'].values == 0)
-
-    return inactive_rxns_ind
-
-
 def get_robust_fluxes(data_dict: dict, rxn_order: list = None) -> pd.DataFrame:
     """
     Given a dictionary representing a GRASP input file, it calculates the robust fluxes (almost) as in GRASP,
@@ -187,12 +179,8 @@ def get_robust_fluxes(data_dict: dict, rxn_order: list = None) -> pd.DataFrame:
     stoic_balanced, rxn_list = _get_balanced_s_matrix(data_dict)
 
     meas_rates_mean, meas_rates_std = _get_meas_rates(data_dict, rxn_list)
-    inactive_rxns_ind = _get_inactive_reactions(data_dict)
 
     v_mean, v_std = _compute_robust_fluxes(stoic_balanced, meas_rates_mean, meas_rates_std, rxn_list)
-
-    v_mean[inactive_rxns_ind] = 0
-    v_std[inactive_rxns_ind] = 0
 
     fluxes_df['vref_mean (mmol/L/h)'] = v_mean
     fluxes_df['vref_std (mmol/L/h)'] = v_std

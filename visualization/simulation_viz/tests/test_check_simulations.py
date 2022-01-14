@@ -4,9 +4,9 @@ import unittest.mock
 
 import scipy.io
 
-from simulation_viz.simulation_viz.check_simulations import check_for_negative_concentrations, \
+from simulation_viz.check_simulations import check_for_negative_concentrations, \
     get_non_converging_models, remove_models
-from simulation_viz.simulation_viz.import_simulation_data import gather_conc_data, gather_flux_data, get_met_rxn_names,\
+from simulation_viz.import_simulation_data import gather_conc_data, gather_flux_data, get_met_rxn_names,\
     import_ref_conc, import_ref_flux
 
 

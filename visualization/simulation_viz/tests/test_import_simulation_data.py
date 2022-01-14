@@ -5,7 +5,7 @@ import unittest
 import pandas as pd
 import scipy.io
 
-from simulation_viz.simulation_viz.import_simulation_data import gather_conc_data, gather_flux_data, get_met_rxn_names,\
+from simulation_viz.import_simulation_data import gather_conc_data, gather_flux_data, get_met_rxn_names,\
     aggregate_time_series, get_time_series_quartiles, import_ref_conc, load_simulation, import_ref_flux
 
 
