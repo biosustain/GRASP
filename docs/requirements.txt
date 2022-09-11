@@ -41,8 +41,6 @@ pexpect==4.8.0
 Pillow==9.2.0
 pip==22.1.2
 pkginfo==1.8.2
-poetry==1.1.15
-poetry-core==1.0.8
 ptyprocess==0.7.0
 pycparser==2.21
 Pygments==2.13.0
