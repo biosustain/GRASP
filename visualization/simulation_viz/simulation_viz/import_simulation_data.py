@@ -18,13 +18,13 @@ def get_met_rxn_names(raw_data_dir: str, model_name: str) -> tuple:
     """
 
     file_met_names = os.path.join(raw_data_dir, f'{model_name}_metsActive.dat')
-    met_names = pd.read_csv(file_met_names, sep='\n').values
+    met_names = pd.read_csv(file_met_names, sep='\t').values
     met_names = list(met_names.transpose()[0])
     met_names = [met_name[2:] for met_name in met_names]
 
     # get reaction names
     file_rxn_names = os.path.join(raw_data_dir, f'{model_name}_rxnsActive.dat')
-    rxn_names = pd.read_csv(file_rxn_names, sep='\n').values
+    rxn_names = pd.read_csv(file_rxn_names, sep='\t').values
     rxn_names = list(rxn_names.transpose()[0])
     rxn_names = [rxn_name[2:] for rxn_name in rxn_names]
 
