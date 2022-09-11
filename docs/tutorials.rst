@@ -259,6 +259,7 @@ Build the kinetic ensemble. In this case, we will build an ensemble of 16 models
 
 
 .. code-block:: matlab
+
     tic
     ensemble = buildEnsemble(inputFile, outputFile, maxNumberOfSamples, eigThreshold);
     toc
