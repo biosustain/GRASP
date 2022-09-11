@@ -62,8 +62,25 @@ For more details, see the documentation [here](https://graspk.readthedocs.io).
 
 ## Building the documentation
 
-The documentation is done in sphinx, so first you need to install all the dependencies listed in the requirements file `requirements.txt` in `docs`. 
-Once all the dependencies are installed (please make sure the versions are correct, very important!), you can just run `make html`  while on the `docs` folder.
+The documentation is done in sphinx, to build it locally start by creating a conda environment with:
+
+```
+conda env create -f environment.yml
+```
+
+then activate the conda environment with:
+
+```
+conda activate grasp_docs
+```
+
+and finally install all other dependencies with poetry:
+
+```
+poetry install
+```
+
+Once all the dependencies are installed, you can just run `make html`  while on the `docs` folder and that will create a folder `_build/html` where you can find the html documentation.
 
 
 ## Running unit tests
