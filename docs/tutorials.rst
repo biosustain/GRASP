@@ -121,6 +121,7 @@ Build the kinetic ensemble. In this case, we will build an ensemble of 12 models
     adp_i + adp_i + adp_i = totalPool_i,
 
 where i = {1,...,5} represent exp. conditions (all these concentrations are normalized by the reference state concentrations)
+
 To accelerate the execution of the sampler, we will use the parallel mode with 4 cores assigned.
 
 .. code-block:: matlab
@@ -200,6 +201,7 @@ Build the kinetic ensemble. In this case, we will build an ensemble of 12 models
 Using this ensemble, we compute flux and metabolite control coefficients and visualize the final results for all the conditions (reference + five experimental conditions)
 
 .. code-block:: matlab
+
     mcaResults = controlAnalysis(ensemble,1);
     categories = {};         % Displays MCA results for all the reactions
     plotControlAnalysis(mcaResults, ensemble, categories);
@@ -278,7 +280,8 @@ References
 Tutorial 5
 -----------------------
 
-The aim of this tutorial is to illustrate the execution and use of GRASP for building and analyzing kinetic models of metabolism. This tutorial demonstrates how to build an ensemble of models for a fairly large system and perform Metabolic Control Analysis (MCA) on the resulting ensemble. Model ensembles built with GRASP are particularly suitable to perform MCA. 
+The aim of this tutorial is to illustrate the execution and use of GRASP for building and analyzing kinetic models of metabolism. This tutorial demonstrates how to build an ensemble of models for a fairly large system and perform Metabolic Control Analysis (MCA) on the resulting ensemble. Model ensembles built with GRASP are particularly suitable to perform MCA.
+
 Inspired in Pseudomonas putida's central carbon metabolism, the model is composed by a total of 79 reactions, where 27 of those are either exchange reactions (to allow metabolites to be exchanged with the cell's environment) or re-generation reactions to re-convert certain metabolites, .e.g. NAD/NADH, NADP/NADPH, ADP/ATP. These reactions are modeled by simple mass action rate laws, while the remaining 52 reactions are decomposed into microscopic reactions and each microscopic reaction is modeled by a mass action rate law. The model also includes two isoenzymes, PYK1 and PYK2, where we don't know how the flux is distributed by the two isoenzymes, and several promiscuous enzymes. Finally the model includes several competitive inhibitors and allosteric effectors. See the kinetics sheet in the tutorial_05_large_scale in io/input for more details about the model.
 
 
@@ -327,6 +330,7 @@ Build the kinetic ensemble. In this case, we will build an ensemble of 10.000 mo
 
 
 Using this ensemble, we compute flux and metabolite control coefficients and visualize the final results. Note that since the model includes promiscuous enzymes, we actually run the response analysis as well.
+
 If saveMCAMatrices is set to 1, then the control/response coefficient matrices for each model will be saved. This might result in longer runtimes as it can occupy a large amount of memory. If saveMCAMatrices is set to 1, only the average control/response coefficients over the whole ensemble will be returned.
 
 .. code-block:: matlab
