@@ -34,4 +34,25 @@ If you want to use the jupyter notebooks in the visualization folder to visualiz
  - matplotlib
  - altair
 
-There is also a ``requirements.txt`` file in the visualization folder that you can use to install the above packages.
+You can also just create a conda environment and install the dependencies with poetry:
+
+.. code-block:: shell
+
+    conda env create -f environment.yml
+
+
+then activate the conda environment with:
+
+.. code-block:: shell
+
+    conda activate grasp_viz
+
+
+and finally install all other dependencies with poetry:
+
+.. code-block:: shell
+    
+    poetry install
+
+
+The commands above should be run from tho folder `visualization`.

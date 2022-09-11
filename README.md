@@ -21,6 +21,7 @@ The documentation can be found [here](https://graspk.readthedocs.io).
   - [Matlab requirements](#matlab-requirements)
   - [Python requirements (only for the jupyter notebooks in `visualization`, which are not really part of GRASP)](#python-requirements-only-for-the-jupyter-notebooks-in-visualization-which-are-not-really-part-of-grasp)
 - [Usage](#usage)
+- [Create visualizations environment](#create-visualizations-environment)
 - [Building the documentation](#building-the-documentation)
 - [Running unit tests](#running-unit-tests)
 - [Know issues and limitations](#know-issues-and-limitations)
@@ -60,9 +61,30 @@ Once you have the results, you can use the jupyter notebooks in the `visualizati
 For more details, see the documentation [here](https://graspk.readthedocs.io).
 
 
+## Create visualizations environment
+
+To use the jupyter notebooks for result visualization (under `visualization` folder), make sure you first go to the folder `visualization`, create the conda environment and install the necessary dependencies with:
+
+```
+conda env create -f environment.yml
+```
+
+then activate the conda environment with:
+
+```
+conda activate grasp_viz
+```
+
+and finally install all other dependencies with poetry:
+
+```
+poetry install
+```
+
+
 ## Building the documentation
 
-The documentation is done in sphinx, to build it locally start by creating a conda environment with:
+The documentation is done in sphinx, to build it locally start by going to the folder `docs` and creating a conda environment with:
 
 ```
 conda env create -f environment.yml
