@@ -63,7 +63,7 @@ shellingham==1.3.1
 six==1.16.0
 snowballstemmer==2.2.0
 Sphinx==5.1.1
-sphinx-cobra-theme==0.0.1
+sphinx-cobra-theme @ git+https://github.com/martamatos/sphinx_cobra_theme.git@76872ad63b72196509bd68ec4a82ea1bacb9abcf
 sphinx-rtd-theme==1.0.0
 sphinxcontrib-applehelp==1.0.2
 sphinxcontrib-devhelp==1.0.2
@@ -71,7 +71,7 @@ sphinxcontrib-fulltoc==1.2.0
 sphinxcontrib-htmlhelp==2.0.0
 sphinxcontrib-jsmath==1.0.1
 sphinxcontrib-matlabdomain==0.14.1
-sphinxcontrib-napoleon==0.2.1
+sphinxcontrib-napoleon @ git+https://github.com/martamatos/sphinxcontrib-napoleon.git@f2ed43e177f6dd983bc161ed804a602da257002c
 sphinxcontrib-qthelp==1.0.3
 sphinxcontrib-serializinghtml==1.1.5
 tomli==2.0.1
