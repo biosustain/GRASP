@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "visualization"
+version = "0.1.0"
+description = "Visualize the results from GRASP"
+authors = ["martamatos <marta.ra.matos@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "3.10.*"
+altair = "^4.2.0"
+jupyterlab = "^3.4.6"
+pandas = "^1.4.4"
+numpy = "^1.23.3"
+matplotlib = "^3.5.3"
+seaborn = "^0.12.0"
+scipy = "^1.9.1"
+openpyxl = "^3.0.10"
+tables = "^3.7.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
