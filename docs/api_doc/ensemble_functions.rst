@@ -1,5 +1,5 @@
 Ensemble functions
-=================
+===================
 
 .. toctree::
    :glob:
