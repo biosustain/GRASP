@@ -14,8 +14,9 @@ sphinxcontrib-matlabdomain = "^0.14.1"
 sphinx-rtd-theme = "^1.0.0"
 sphinxcontrib-fulltoc = "^1.2.0"
 sphinxcontrib-jsmath = "^1.0.1"
-sphinxcontrib-napoleon = {git = "https://github.com/martamatos/sphinxcontrib-napoleon.git", rev = "f2ed43e177f6dd983bc161ed804a602da257002c"}
+sphinxcontrib-napoleon = {git = "https://github.com/martamatos/sphinxcontrib-napoleon.git", rev = "2d9d0bb887679b296de28f712abe17f947fe5149"}
 scipy = "^1.9.1"
+docutils = "0.16"
 
 
 [tool.poetry.dev-dependencies]

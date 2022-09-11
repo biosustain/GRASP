@@ -87,7 +87,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "docutils"
-version = "0.17.1"
+version = "0.16"
 description = "Docutils -- Python Documentation Utilities"
 category = "main"
 optional = false
@@ -500,7 +500,7 @@ Sphinx = ">=4.0.0"
 
 [[package]]
 name = "sphinxcontrib-napoleon"
-version = "0.2.1"
+version = "0.2.2"
 description = "Sphinx \"napoleon\" extension."
 category = "main"
 optional = false
@@ -513,8 +513,8 @@ Sphinx = ">=0.6"
 [package.source]
 type = "git"
 url = "https://github.com/martamatos/sphinxcontrib-napoleon.git"
-reference = "f2ed43e177f6dd983bc161ed804a602da257002c"
-resolved_reference = "f2ed43e177f6dd983bc161ed804a602da257002c"
+reference = "2d9d0bb887679b296de28f712abe17f947fe5149"
+resolved_reference = "2d9d0bb887679b296de28f712abe17f947fe5149"
 
 [[package]]
 name = "sphinxcontrib-qthelp"
@@ -572,7 +572,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "3.10.*"
-content-hash = "63333c4cd7995bc65f0bbf96fc8f3e522797dff8e8f9334152ae41f0371bca87"
+content-hash = "9088afceceb49d938573675498c176705309e6e2534f498785aa7749a343fdd0"
 
 [metadata.files]
 alabaster = [
@@ -608,8 +608,8 @@ cycler = [
     {file = "cycler-0.11.0.tar.gz", hash = "sha256:9c87405839a19696e837b3b818fed3f5f69f16f1eec1a1ad77e043dcea9c772f"},
 ]
 docutils = [
-    {file = "docutils-0.17.1-py2.py3-none-any.whl", hash = "sha256:cf316c8370a737a022b72b56874f6602acf974a37a9fba42ec2876387549fc61"},
-    {file = "docutils-0.17.1.tar.gz", hash = "sha256:686577d2e4c32380bb50cbb22f575ed742d58168cee37e99117a854bcd88f125"},
+    {file = "docutils-0.16-py2.py3-none-any.whl", hash = "sha256:0c5b78adfbf7762415433f5515cd5c9e762339e23369dbe8000d84a4bf4ab3af"},
+    {file = "docutils-0.16.tar.gz", hash = "sha256:c2de3a60e9e7d07be26b7f2b00ca0309c207e06c100f9cc2a94931fc75a478fc"},
 ]
 entrypoints = [
     {file = "entrypoints-0.4-py3-none-any.whl", hash = "sha256:f174b5ff827504fd3cd97cc3f8649f3693f51538c7e4bdf3ef002c8429d42f9f"},
