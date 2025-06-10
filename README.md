@@ -1,3 +1,6 @@
+> [!WARNING]
+> This repository has been archived. To follow the latest developments in GRASP refer to <https://github.com/dtu-qmcm/GRASP>.
+
 # GRASP
 
 <a href='https://graspk.readthedocs.io/en/latest/?badge=latest'>
